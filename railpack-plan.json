@@ -1,10 +1,11 @@
 {
   "install": {
-    "packages": ["caddy@2.11.4"],
+    "packages": [],
     "nodeVersion": "18"
   },
   "preinstall": ["mkdir -p /app/node_modules/.cache"],
   "copy": ["package.json", "package-lock.json", "/"],
   "build": "npm ci && npm run build",
-  "postbuild": "caddy run --config /railpack/caddy/Caddyfile"
+  "postbuild": "echo 'Postbuild complete'",
+  "start": "sirv dist --port $PORT --host 0.0.0.0 --single"
 }

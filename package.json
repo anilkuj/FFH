@@ -8,9 +8,11 @@
     "dev": "vite",
     "build": "node ./node_modules/vite/bin/vite.js build",
     "preview": "vite preview",
-    "sync": "node sync.js"
+    "sync": "node sync.js",
+    "start": "sirv dist --port $PORT --host 0.0.0.0 --single"
   },
   "dependencies": {
+    "sirv-cli": "^3.0.1",
     "vite": "^5.0.0"
   },
   "devDependencies": {}
