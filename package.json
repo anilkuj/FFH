@@ -10,8 +10,8 @@
     "preview": "vite preview",
     "sync": "node sync.js"
   },
-  "dependencies": {},
-  "devDependencies": {
+  "dependencies": {
     "vite": "^5.0.0"
-  }
+  },
+  "devDependencies": {}
 }
