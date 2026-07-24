@@ -1,0 +1,10 @@
+{
+  "install": {
+    "packages": ["caddy@2.11.4"],
+    "nodeVersion": "18"
+  },
+  "preinstall": ["mkdir -p /app/node_modules/.cache"],
+  "copy": ["package.json", "package-lock.json", "/"],
+  "build": "npm ci && npm run build",
+  "postbuild": "caddy run --config /railpack/caddy/Caddyfile"
+}
