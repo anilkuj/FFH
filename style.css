@@ -462,7 +462,6 @@ body {
     position: relative;
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 70px);
     min-height: 0;
 }
 
@@ -2386,7 +2385,8 @@ body {
 @media (max-width: 1024px) {
     .planner-grid {
         grid-template-columns: 1fr !important;
-        overflow-y: auto;
+        height: auto !important;
+        overflow: visible !important;
     }
     
     .grid-split-3-1 {
@@ -2405,19 +2405,17 @@ body {
         grid-template-columns: 1fr !important;
     }
 
-    /* On tablet/mobile, we let the container scroll */
-    .view-container {
-        height: auto !important;
-        overflow-y: visible !important;
-    }
-
     .pitch-container {
         height: auto !important;
         max-height: none !important;
+        padding: 16px !important;
     }
     
     .football-pitch {
+        height: 560px !important; /* Fixed height for tablets/ipad to keep layout from squishing */
         max-height: none !important;
+        min-height: auto !important;
+        flex: none !important;
     }
 }
 
@@ -2511,7 +2509,10 @@ body {
     /* Mobile scaling of the football pitch slots to fit 100% width cleanly */
     .football-pitch {
         padding: 6px 0;
-        min-height: 280px;
+        height: 480px !important; /* Stable fixed height on mobiles so layout does not squish or overflow */
+        max-height: none !important;
+        min-height: auto !important;
+        flex: none !important;
     }
 
     .player-pitch-card {
