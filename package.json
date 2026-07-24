@@ -1,0 +1,17 @@
+{
+  "name": "fpl-hub",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Premium FPL Hub Tool modeled after Fantasy Football Hub",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "sync": "node sync.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}

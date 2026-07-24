@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FPL Hub - Premium Fantasy Premier League Tools</title>
+    <!-- Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Vanilla CSS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        // Load initial theme immediately to prevent flashing
+        const savedTheme = localStorage.getItem('fpl_hub_theme') || 'dark';
+        if (savedTheme === 'light') {
+            document.documentElement.classList.add('light-theme');
+        } else {
+            document.documentElement.classList.remove('light-theme');
+        }
+    </script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-accent">FPL</span><span class="logo-main">HUB</span>
+                    <span class="logo-badge">ULTIMATE</span>
+                </div>
+                <button class="mobile-close-btn" id="mobileCloseBtn">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-tab="planner">
+                    <i data-lucide="users"></i>
+                    <span>My Team Planner</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="optimizer">
+                    <i data-lucide="cpu"></i>
+                    <span>AI Optimizer</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="differentials">
+                    <i data-lucide="zap"></i>
+                    <span>AI Differentials</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="stats">
+                    <i data-lucide="bar-chart-3"></i>
+                    <span>OPTA Stats</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="compare">
+                    <i data-lucide="git-compare"></i>
+                    <span>Player Compare</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="ticker">
+                    <i data-lucide="calendar"></i>
+                    <span>Fixture Ticker</span>
+                </a>
+
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-tier-card">
+                    <div class="tier-icon">
+                        <i data-lucide="shield-check" class="shield-gold"></i>
+                    </div>
+                    <div class="tier-info">
+                        <p class="tier-label">Current Tier</p>
+                        <h4 class="tier-name" id="userTierDisplay">Starter Plan</h4>
+                    </div>
+                    <button class="tier-action-btn" id="sidebarUpgradeBtn">Upgrade</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Dashboard Bar -->
+            <header class="top-bar">
+                <div class="top-bar-left">
+                    <button class="mobile-menu-btn" id="mobileMenuBtn">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <div class="gameweek-controller">
+                        <button class="gw-btn" id="prevGwBtn"><i data-lucide="chevron-left"></i></button>
+                        <div class="gw-text-container">
+                            <span class="gw-title">Gameweek Planner</span>
+                            <span class="gw-number" id="currentGwDisplay">Gameweek 1</span>
+                        </div>
+                        <button class="gw-btn" id="nextGwBtn"><i data-lucide="chevron-right"></i></button>
+                    </div>
+                </div>
+
+                <div class="top-bar-right" style="display: flex; align-items: center; gap: 16px;">
+                    <div class="squad-quick-stats">
+                        <div class="stat-pill">
+                            <span class="pill-label">Squad Value:</span>
+                            <span class="pill-value" id="squadValueDisplay">£100.0m</span>
+                        </div>
+                        <div class="stat-pill">
+                            <span class="pill-label">In Bank:</span>
+                            <span class="pill-value highlight-bank" id="bankValueDisplay">£0.0m</span>
+                        </div>
+                        <div class="stat-pill">
+                            <span class="pill-label">Free Transfers:</span>
+                            <span class="pill-value highlight-transfers" id="freeTransfersDisplay">1</span>
+                        </div>
+                        <div class="stat-pill clickable" id="activeChipsDisplay">
+                            <span class="pill-label">Chips:</span>
+                            <span class="pill-value">None</span>
+                        </div>
+                    </div>
+                    <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Light/Dark Mode" style="border: none; background: var(--bg-panel); color: var(--text-main); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid var(--border-color); transition: all var(--transition-fast);">
+                        <i data-lucide="sun" class="sun-icon"></i>
+                        <i data-lucide="moon" class="moon-icon"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dynamic Views Container -->
+            <div class="view-container" id="viewContainer">
+                <!-- Views will be dynamically injected here by app.js -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals Container -->
+    <div id="modalContainer" class="modal-backdrop hidden">
+        <div class="modal-content" id="modalContent">
+            <!-- Modal content injected dynamically -->
+        </div>
+    </div>
+
+    <!-- Import Modules -->
+    <script type="module" src="data.js"></script>
+    <script type="module" src="components/planner.js"></script>
+    <script type="module" src="components/optimizer.js"></script>
+    <script type="module" src="components/stats.js"></script>
+    <script type="module" src="components/compare.js"></script>
+    <script type="module" src="components/ticker.js"></script>
+    <script type="module" src="components/differentials.js"></script>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
