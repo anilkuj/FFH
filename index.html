@@ -97,6 +97,9 @@
             </div>
         </aside>
 
+        <!-- Sidebar Overlay for Mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
         <!-- Main Content Area -->
         <main class="main-content">
             <!-- Top Dashboard Bar -->
@@ -140,6 +143,26 @@
                     </button>
                 </div>
             </header>
+
+            <!-- Mobile Quick Stats Bar -->
+            <div class="mobile-quick-stats-bar" id="mobileQuickStatsBar">
+                <div class="stat-pill">
+                    <span class="pill-label">Value:</span>
+                    <span class="pill-value" id="mobileSquadValueDisplay">£100.0m</span>
+                </div>
+                <div class="stat-pill">
+                    <span class="pill-label">Bank:</span>
+                    <span class="pill-value highlight-bank" id="mobileBankValueDisplay">£0.0m</span>
+                </div>
+                <div class="stat-pill">
+                    <span class="pill-label">Transfers:</span>
+                    <span class="pill-value highlight-transfers" id="mobileFreeTransfersDisplay">1</span>
+                </div>
+                <div class="stat-pill clickable" id="mobileActiveChipsDisplay">
+                    <span class="pill-label">Chips:</span>
+                    <span class="pill-value">None</span>
+                </div>
+            </div>
 
             <!-- Dynamic Views Container -->
             <div class="view-container" id="viewContainer">

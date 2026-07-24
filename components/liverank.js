@@ -103,7 +103,7 @@ export function renderLiveRank(container, state, actions) {
                 </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1.8fr 2.2fr; gap: 24px; align-items: start; flex-wrap: wrap;">
+            <div class="grid-split-2-3" style="align-items: start;">
                 
                 <!-- Left Column: Status Displays -->
                 <div style="display: flex; flex-direction: column; gap: 20px;">

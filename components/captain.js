@@ -105,7 +105,7 @@ export function renderCaptain(container, state, actions) {
                 </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; flex-wrap: wrap;">
+            <div class="grid-2-col" style="align-items: start;">
                 <!-- Squad Captaincy Recommendations -->
                 <div class="optimizer-card" style="display: flex; flex-direction: column; gap: 16px;">
                     <h3 style="font-family: var(--font-heading); font-size: 18px; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 8px;">

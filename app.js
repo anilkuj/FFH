@@ -206,7 +206,9 @@ const actions = {
 
         // Close mobile drawer if open
         const sidebar = document.querySelector('.sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
         if (sidebar) sidebar.classList.remove('open');
+        if (overlay) overlay.classList.remove('active');
 
         // Trigger dynamic view render
         actions.renderActiveView();
@@ -270,9 +272,21 @@ const actions = {
             return sum + (p ? p.price : 0);
         }, 0);
 
-        document.getElementById('squadValueDisplay').innerText = `£${(totalVal + squadInfo.bank).toFixed(1)}m`;
-        document.getElementById('bankValueDisplay').innerText = `£${squadInfo.bank.toFixed(1)}m`;
-        document.getElementById('freeTransfersDisplay').innerText = state.currentGw === 1 ? 'Unlimited' : squadInfo.freeTransfers;
+        const formattedSquadValue = `£${(totalVal + squadInfo.bank).toFixed(1)}m`;
+        const formattedBankValue = `£${squadInfo.bank.toFixed(1)}m`;
+        const formattedTransfers = state.currentGw === 1 ? 'Unlimited' : squadInfo.freeTransfers;
+
+        document.getElementById('squadValueDisplay').innerText = formattedSquadValue;
+        document.getElementById('bankValueDisplay').innerText = formattedBankValue;
+        document.getElementById('freeTransfersDisplay').innerText = formattedTransfers;
+
+        // Sync mobile stats bar
+        const mobVal = document.getElementById('mobileSquadValueDisplay');
+        const mobBank = document.getElementById('mobileBankValueDisplay');
+        const mobTrans = document.getElementById('mobileFreeTransfersDisplay');
+        if (mobVal) mobVal.innerText = formattedSquadValue;
+        if (mobBank) mobBank.innerText = formattedBankValue;
+        if (mobTrans) mobTrans.innerText = formattedTransfers;
 
         // Sync Sidebar details
         const tierDisplay = document.getElementById('userTierDisplay');
@@ -287,15 +301,28 @@ const actions = {
             badge.style.background = 'linear-gradient(135deg, #ec4899, #fbbf24)';
         }
 
-        // Active Chips Indicator
+        // Active Chips Indicator (Desktop & Mobile)
         const chipsPillVal = document.querySelector('#activeChipsDisplay .pill-value');
+        const mobChipsPillVal = document.querySelector('#mobileActiveChipsDisplay .pill-value');
         const activeChips = Object.keys(state.chips).filter(k => state.chips[k]);
-        if (activeChips.length > 0) {
-            chipsPillVal.innerText = activeChips.map(c => c === 'tripleCaptain' ? 'TC' : (c === 'benchBoost' ? 'BB' : 'WC')).join(', ');
-            chipsPillVal.style.color = 'var(--primary)';
-        } else {
-            chipsPillVal.innerText = 'None';
-            chipsPillVal.style.color = 'inherit';
+        const formattedChips = activeChips.length > 0 ? activeChips.map(c => c === 'tripleCaptain' ? 'TC' : (c === 'benchBoost' ? 'BB' : 'WC')).join(', ') : 'None';
+
+        if (chipsPillVal) {
+            chipsPillVal.innerText = formattedChips;
+            if (activeChips.length > 0) {
+                chipsPillVal.style.color = 'var(--primary)';
+            } else {
+                chipsPillVal.style.color = 'inherit';
+            }
+        }
+
+        if (mobChipsPillVal) {
+            mobChipsPillVal.innerText = formattedChips;
+            if (activeChips.length > 0) {
+                mobChipsPillVal.style.color = 'var(--primary)';
+            } else {
+                mobChipsPillVal.style.color = 'inherit';
+            }
         }
     },
 
@@ -709,12 +736,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const mobileBtn = document.getElementById('mobileMenuBtn');
     const closeBtn = document.getElementById('mobileCloseBtn');
     const sidebar = document.querySelector('.sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
 
-    if (mobileBtn && sidebar) {
-        mobileBtn.addEventListener('click', () => sidebar.classList.add('open'));
+    const openSidebar = () => {
+        if (sidebar) sidebar.classList.add('open');
+        if (overlay) overlay.classList.add('active');
+    };
+
+    const closeSidebar = () => {
+        if (sidebar) sidebar.classList.remove('open');
+        if (overlay) overlay.classList.remove('active');
+    };
+
+    if (mobileBtn) {
+        mobileBtn.addEventListener('click', openSidebar);
     }
-    if (closeBtn && sidebar) {
-        closeBtn.addEventListener('click', () => sidebar.classList.remove('open'));
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeSidebar);
+    }
+    if (overlay) {
+        overlay.addEventListener('click', closeSidebar);
     }
 
     // Render Initial View

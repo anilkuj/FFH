@@ -169,7 +169,7 @@ export function renderDifferentials(container, state, actions) {
                             <h3 class="diff-pos-title" style="font-family: var(--font-heading); font-size: 18px; font-weight:700; border-bottom:1px solid var(--border-color); padding-bottom:8px; margin-bottom:16px;">
                                 <i data-lucide="chevron-right" style="color:var(--primary); vertical-align:middle; width:20px; height:20px;"></i> ${positionLabels[pos]} (Ownership &lt; 12%)
                             </h3>
-                            <div class="diff-cards-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:20px;">
+                            <div class="diff-cards-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px;">
                                 ${list.map(player => {
                                     const fdr = getAvgFDR(player);
                                     const csOdds = getCleanSheetOdds(player);

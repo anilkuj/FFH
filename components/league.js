@@ -60,7 +60,7 @@ export function renderLeague(container, state, actions) {
                 </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 3.5fr 1.5fr; gap: 24px; align-items: start; flex-wrap: wrap;">
+            <div class="grid-split-3-1" style="align-items: start;">
                 <!-- Standings Table -->
                 <div class="stats-table-wrapper">
                     <table class="stats-table">
