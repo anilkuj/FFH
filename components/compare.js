@@ -84,8 +84,8 @@ export function renderCompare(container, state, actions) {
                         <thead>
                             <tr>
                                 <th>Metric</th>
-                                <th style="color:var(--primary); font-weight:700;">${player1.name.split(' ')[1] || player1.name}</th>
-                                <th style="color:var(--secondary); font-weight:700;">${player2.name.split(' ')[1] || player2.name}</th>
+                                <th style="color:var(--primary); font-weight:700;">${player1.name.split(' ').pop() || player1.name}</th>
+                                <th style="color:var(--secondary); font-weight:700;">${player2.name.split(' ').pop() || player2.name}</th>
                             </tr>
                         </thead>
                         <tbody>

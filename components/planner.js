@@ -49,9 +49,16 @@ export function renderPlanner(container, state, actions) {
                         <button class="pitch-btn ${state.chips.tripleCaptain ? 'active-chip' : ''}" id="chipTcBtn">
                             <i data-lucide="award"></i> Triple Capt.
                         </button>
-                        <button class="pitch-btn ${state.chips.benchBoost ? 'active-chip' : ''}" id="chipBbBtn">
-                            <i data-lucide="arrow-up-circle"></i> Bench Boost
-                        </button>
+                        <select id="formationSelect" class="formation-select" style="margin-left: 12px;">
+                            <option value="4-3-3" ${state.formation === '4-3-3' ? 'selected' : ''}>4-3-3</option>
+                            <option value="4-4-2" ${state.formation === '4-4-2' ? 'selected' : ''}>4-4-2</option>
+                            <option value="3-5-2" ${state.formation === '3-5-2' ? 'selected' : ''}>3-5-2</option>
+                            <option value="3-4-3" ${state.formation === '3-4-3' ? 'selected' : ''}>3-4-3</option>
+                            <option value="4-5-1" ${state.formation === '4-5-1' ? 'selected' : ''}>4-5-1</option>
+                            <option value="5-3-2" ${state.formation === '5-3-2' ? 'selected' : ''}>5-3-2</option>
+                            <option value="5-4-1" ${state.formation === '5-4-1' ? 'selected' : ''}>5-4-1</option>
+                            <option value="5-2-3" ${state.formation === '5-2-3' ? 'selected' : ''}>5-2-3</option>
+                        </select>
                         <button class="pitch-btn" id="resetTeamBtn" title="Reset/Clear Team">
                             <i data-lucide="rotate-ccw"></i> Reset Team
                         </button>
@@ -156,6 +163,38 @@ export function renderPlanner(container, state, actions) {
     setupPlannerListeners(container, state, actions, starters, bench);
 }
 
+function getFdrColor(diff) {
+    switch (diff) {
+        case 1:
+        case 2:
+            return '#02b056'; // Green
+        case 3:
+            return '#94a3b8'; // Grey / Neutral
+        case 4:
+            return '#e90052'; // Light Red / Pink
+        case 5:
+            return '#800030'; // Dark Red
+        default:
+            return '#334155'; // Dark Grey for BYE
+    }
+}
+
+function renderFdrDots(player, currentGw) {
+    let html = '<div class="fdr-dots-container" style="display: inline-flex; gap: 3px; align-items: center; justify-content: center; vertical-align: middle;">';
+    for (let gw = currentGw; gw < currentGw + 5; gw++) {
+        const pr = player.predictions.find(p => p.gw === gw);
+        if (pr) {
+            const oppText = pr.opp !== 'BYE' ? `${pr.opp} (${pr.loc})` : 'BYE';
+            const fdrColor = getFdrColor(pr.diff);
+            html += `<span class="fdr-dot" title="GW${gw}: ${oppText} (FDR ${pr.diff})" style="width: 6px; height: 6px; border-radius: 50%; background-color: ${fdrColor}; display: inline-block;"></span>`;
+        } else {
+            html += `<span class="fdr-dot" title="GW${gw}: BYE" style="width: 6px; height: 6px; border-radius: 50%; background-color: #334155; display: inline-block;"></span>`;
+        }
+    }
+    html += '</div>';
+    return html;
+}
+
 function renderPlayerRow(squadSlots, position, currentGw, captain, vice) {
     const rowSlots = squadSlots.filter(s => s.position === position && s.isStarting);
 
@@ -188,8 +227,6 @@ function renderPlayerRow(squadSlots, position, currentGw, captain, vice) {
             designationBadge = `<span class="badge-vice">V</span>`;
         }
 
-        const fixtureText = prediction.opp !== 'BYE' ? `${prediction.opp}(${prediction.loc})` : 'BYE';
-
         return `
             <div class="player-pitch-card" data-id="${player.id}" data-type="starter">
                 <button class="pitch-sell-btn" data-id="${player.id}" title="Remove Player">&times;</button>
@@ -199,9 +236,13 @@ function renderPlayerRow(squadSlots, position, currentGw, captain, vice) {
                     ${player.transferredThisSeason ? `<div class="pitch-transfer-icon" title="Transferred from ${player.oldTeam}">⇆</div>` : ''}
                 </div>
                 <div class="player-card-info">
-                    <div class="player-pitch-name">${player.name.split(' ')[1] || player.name}</div>
+                    <div class="player-pitch-name">${player.name.split(' ').pop() || player.name}</div>
                     <div class="player-pitch-points">£${player.price.toFixed(1)}m • ${prediction.pts.toFixed(1)} XP</div>
-                    <div class="player-pitch-points-sub">${fixtureText} • 5-GW: ${player.xp5 !== undefined ? player.xp5.toFixed(1) : 'N/A'}</div>
+                    <div class="player-pitch-points-sub" style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 2px;">
+                        ${renderFdrDots(player, currentGw)}
+                        <span style="opacity: 0.6;">•</span>
+                        <span>5-GW: ${player.xp5 !== undefined ? player.xp5.toFixed(1) : 'N/A'} XP</span>
+                    </div>
                 </div>
             </div>
         `;
@@ -244,8 +285,6 @@ function renderBenchRow(squadSlots, currentGw, captain, vice) {
             designationBadge = `<span class="badge-vice">V</span>`;
         }
 
-        const fixtureText = prediction.opp !== 'BYE' ? `${prediction.opp}(${prediction.loc})` : 'BYE';
-
         return `
             <div class="bench-slot-wrapper" style="width: 22%; display: flex; flex-direction: column; align-items: center;">
                 <span class="bench-slot-label">${label}</span>
@@ -257,9 +296,13 @@ function renderBenchRow(squadSlots, currentGw, captain, vice) {
                         ${player.transferredThisSeason ? `<div class="pitch-transfer-icon" title="Transferred from ${player.oldTeam}">⇆</div>` : ''}
                     </div>
                     <div class="player-card-info">
-                        <div class="player-pitch-name">${player.name.split(' ')[1] || player.name}</div>
+                        <div class="player-pitch-name">${player.name.split(' ').pop() || player.name}</div>
                         <div class="player-pitch-points">£${player.price.toFixed(1)}m • ${prediction.pts.toFixed(1)} XP</div>
-                        <div class="player-pitch-points-sub">${fixtureText} • 5-GW: ${player.xp5 !== undefined ? player.xp5.toFixed(1) : 'N/A'}</div>
+                        <div class="player-pitch-points-sub" style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 2px;">
+                            ${renderFdrDots(player, currentGw)}
+                            <span style="opacity: 0.6;">•</span>
+                            <span>5-GW: ${player.xp5 !== undefined ? player.xp5.toFixed(1) : 'N/A'} XP</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -385,6 +428,14 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
     if (resetBtn) {
         resetBtn.addEventListener('click', () => {
             openResetModal(state, actions);
+        });
+    }
+
+    // Formation Select
+    const formationSelect = container.querySelector('#formationSelect');
+    if (formationSelect) {
+        formationSelect.addEventListener('change', () => {
+            actions.setFormation(formationSelect.value);
         });
     }
 

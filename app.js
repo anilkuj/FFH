@@ -5,6 +5,11 @@ import { renderStats } from './components/stats.js';
 import { renderCompare } from './components/compare.js';
 import { renderTicker } from './components/ticker.js';
 import { renderDifferentials } from './components/differentials.js';
+import { getFormationConstraints } from './components/formation.js';
+import { renderCaptain } from './components/captain.js';
+import { renderLeague } from './components/league.js';
+import { renderLiveRank } from './components/liverank.js';
+import { renderReveals } from './components/reveals.js';
 
 // Application State class
 class AppState {
@@ -74,11 +79,17 @@ class AppState {
             }
         }
 
-        // Captain & Vice
-        const savedCaptain = localStorage.getItem('fpl_hub_captain');
-        this.captain = (savedCaptain && savedCaptain !== 'null') ? parseInt(savedCaptain) : null;
-        const savedVice = localStorage.getItem('fpl_hub_vice');
-        this.vice = (savedVice && savedVice !== 'null') ? parseInt(savedVice) : null;
+        // Load formation selection
+        const savedFormation = localStorage.getItem('fpl_hub_formation');
+        this.formation = savedFormation || "4-3-3";
+
+        // Load must include / exclude players
+        const savedMustInclude = localStorage.getItem('fpl_hub_must_include');
+        this.mustInclude = savedMustInclude ? JSON.parse(savedMustInclude) : [];
+
+        const savedMustExclude = localStorage.getItem('fpl_hub_must_exclude');
+        this.mustExclude = savedMustExclude ? JSON.parse(savedMustExclude) : [];
+
 
         // Active chips
         this.chips = {
@@ -112,8 +123,15 @@ class AppState {
         localStorage.setItem('fpl_hub_starters', JSON.stringify(this.starters));
         localStorage.setItem('fpl_hub_captain', this.captain ? this.captain.toString() : 'null');
         localStorage.setItem('fpl_hub_vice', this.vice ? this.vice.toString() : 'null');
-        localStorage.setItem('fpl_hub_transfers', JSON.stringify(this.transfers));
+// Persist formation selection
+        localStorage.setItem('fpl_hub_formation', this.formation);
+        // Existing saveState lines continue
+
         localStorage.setItem('fpl_hub_squad_slots', JSON.stringify(this.squadSlots));
+
+        // Persist must include / exclude lists
+        localStorage.setItem('fpl_hub_must_include', JSON.stringify(this.mustInclude));
+        localStorage.setItem('fpl_hub_must_exclude', JSON.stringify(this.mustExclude));
     }
 
     // Resolves squad, bench, bank, and free transfers specifically for a given gameweek
@@ -224,6 +242,18 @@ const actions = {
             case 'differentials':
                 renderDifferentials(container, state, actions);
                 break;
+            case 'captain':
+                renderCaptain(container, state, actions);
+                break;
+            case 'league':
+                renderLeague(container, state, actions);
+                break;
+            case 'liverank':
+                renderLiveRank(container, state, actions);
+                break;
+            case 'reveals':
+                renderReveals(container, state, actions);
+                break;
         }
     },
 
@@ -283,6 +313,50 @@ const actions = {
         actions.showToast('Vice-Captain updated successfully!', 'success');
     },
 
+    // Set formation and adjust starters accordingly
+    setFormation(formation) {
+        state.formation = formation;
+        // Recalculate starters based on formation constraints
+        const cons = getFormationConstraints(formation);
+        // Reset starters
+        state.squadSlots.forEach(s => s.isStarting = false);
+        // Assign GK starters
+        let assigned = 0;
+        for (const slot of state.squadSlots) {
+            if (slot.position === 'GKP' && assigned < cons.GKP) {
+                slot.isStarting = true;
+                assigned++;
+            }
+        }
+        // Assign DEF starters
+        assigned = 0;
+        for (const slot of state.squadSlots) {
+            if (slot.position === 'DEF' && assigned < cons.DEF) {
+                slot.isStarting = true;
+                assigned++;
+            }
+        }
+        // Assign MID starters
+        assigned = 0;
+        for (const slot of state.squadSlots) {
+            if (slot.position === 'MID' && assigned < cons.MID) {
+                slot.isStarting = true;
+                assigned++;
+            }
+        }
+        // Assign FWD starters
+        assigned = 0;
+        for (const slot of state.squadSlots) {
+            if (slot.position === 'FWD' && assigned < cons.FWD) {
+                slot.isStarting = true;
+                assigned++;
+            }
+        }
+        state.saveState();
+        actions.renderActiveView();
+        actions.showToast(`Formation set to ${formation}`, 'success');
+    },
+
     swapPlayers(id1, id2) {
         // Find positions
         const inStarters1 = state.starters.includes(id1);
@@ -302,27 +376,28 @@ const actions = {
             // Create hypothetical starting lineup
             const hypStarters = state.starters.map(id => id === id1 ? id2 : (id === id2 ? id1 : id));
             
-            // Validate formation only if the lineup is complete (11 players)
+            // Validate formation based on selected formation constraints
             if (hypStarters.length === 11) {
+                const constraints = getFormationConstraints(state.formation);
                 const gkpCount = hypStarters.filter(id => PLAYERS.find(p => p.id === id)?.position === 'GKP').length;
                 const defCount = hypStarters.filter(id => PLAYERS.find(p => p.id === id)?.position === 'DEF').length;
                 const midCount = hypStarters.filter(id => PLAYERS.find(p => p.id === id)?.position === 'MID').length;
                 const fwdCount = hypStarters.filter(id => PLAYERS.find(p => p.id === id)?.position === 'FWD').length;
 
-                if (gkpCount !== 1) {
-                    actions.showToast('Starting lineup must contain exactly 1 Goalkeeper.', 'error');
+                if (gkpCount !== constraints.GKP) {
+                    actions.showToast(`Starting lineup must contain exactly ${constraints.GKP} Goalkeeper(s).`, 'error');
                     return;
                 }
-                if (defCount < 3 || defCount > 5) {
-                    actions.showToast('Starting lineup must contain between 3 and 5 Defenders.', 'error');
+                if (defCount !== constraints.DEF) {
+                    actions.showToast(`Starting lineup must contain exactly ${constraints.DEF} Defenders.`, 'error');
                     return;
                 }
-                if (midCount < 2 || midCount > 5) {
-                    actions.showToast('Starting lineup must contain between 2 and 5 Midfielders.', 'error');
+                if (midCount !== constraints.MID) {
+                    actions.showToast(`Starting lineup must contain exactly ${constraints.MID} Midfielders.`, 'error');
                     return;
                 }
-                if (fwdCount < 1 || fwdCount > 3) {
-                    actions.showToast('Starting lineup must contain between 1 and 3 Forwards.', 'error');
+                if (fwdCount !== constraints.FWD) {
+                    actions.showToast(`Starting lineup must contain exactly ${constraints.FWD} Forwards.`, 'error');
                     return;
                 }
             }

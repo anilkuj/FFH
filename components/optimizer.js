@@ -1,4 +1,5 @@
 import { PLAYERS, TEAMS } from '../data.js';
+import { getFormationConstraints } from './formation.js';
 
 export function renderOptimizer(container, state, actions) {
     // Premium Lock Check
@@ -40,6 +41,51 @@ export function renderOptimizer(container, state, actions) {
                         </select>
                         <span class="setting-help" id="phaseHelpText">Respects FPL rules.</span>
                     </div>
+
+                    <div class="setting-group">
+                        <label for="optimizerFormationSelect">Preferred Formation</label>
+                        <select id="optimizerFormationSelect" class="settings-select">
+                            <option value="4-3-3" ${state.formation === '4-3-3' ? 'selected' : ''}>4-3-3</option>
+                            <option value="4-4-2" ${state.formation === '4-4-2' ? 'selected' : ''}>4-4-2</option>
+                            <option value="3-5-2" ${state.formation === '3-5-2' ? 'selected' : ''}>3-5-2</option>
+                            <option value="3-4-3" ${state.formation === '3-4-3' ? 'selected' : ''}>3-4-3</option>
+                            <option value="4-5-1" ${state.formation === '4-5-1' ? 'selected' : ''}>4-5-1</option>
+                            <option value="5-3-2" ${state.formation === '5-3-2' ? 'selected' : ''}>5-3-2</option>
+                            <option value="5-4-1" ${state.formation === '5-4-1' ? 'selected' : ''}>5-4-1</option>
+                            <option value="5-2-3" ${state.formation === '5-2-3' ? 'selected' : ''}>5-2-3</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="optimizer-rules-container" style="margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 20px;">
+                    <h4 style="font-family: var(--font-heading); font-size: 15px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="shield-alert" style="color: var(--primary); width:16px; height:16px;"></i> Solver Constraints (Optional)
+                    </h4>
+                    <div class="settings-form-grid">
+                        <div class="setting-group">
+                            <label style="font-size: 13px; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 6px;">Force Include Players</label>
+                            <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                                <input type="text" list="mustIncludeOptions" id="mustIncludeSearch" placeholder="Type to search player..." class="settings-select" style="flex: 1; min-width: 140px; border-color: rgba(255, 255, 255, 0.08);">
+                                <datalist id="mustIncludeOptions"></datalist>
+                                <button id="addMustIncludeBtn" class="pitch-btn" style="padding: 10px 14px; border-radius: 8px; height: 38px; display: flex; align-items: center; justify-content: center;"><i data-lucide="plus"></i></button>
+                            </div>
+                            <div id="mustIncludeTags" style="display: flex; flex-wrap: wrap; gap: 8px; min-height: 24px;">
+                                <!-- Badges dynamic -->
+                            </div>
+                        </div>
+
+                        <div class="setting-group">
+                            <label style="font-size: 13px; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 6px;">Force Exclude Players</label>
+                            <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                                <input type="text" list="mustExcludeOptions" id="mustExcludeSearch" placeholder="Type to search player..." class="settings-select" style="flex: 1; min-width: 140px; border-color: rgba(255, 255, 255, 0.08);">
+                                <datalist id="mustExcludeOptions"></datalist>
+                                <button id="addMustExcludeBtn" class="pitch-btn" style="padding: 10px 14px; border-radius: 8px; height: 38px; display: flex; align-items: center; justify-content: center;"><i data-lucide="plus"></i></button>
+                            </div>
+                            <div id="mustExcludeTags" style="display: flex; flex-wrap: wrap; gap: 8px; min-height: 24px;">
+                                <!-- Badges dynamic -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <button class="run-optimization-btn" id="runOptBtn" style="margin-top: 20px; width: 100%; justify-content: center;">
                     <i data-lucide="play-circle"></i> Run AI Analysis
@@ -70,6 +116,147 @@ export function renderOptimizer(container, state, actions) {
 
     phaseSelect.addEventListener('change', updateHelpText);
     updateHelpText();
+
+    const formationSelect = container.querySelector('#optimizerFormationSelect');
+    if (formationSelect) {
+        formationSelect.addEventListener('change', () => {
+            actions.setFormation(formationSelect.value);
+        });
+    }
+
+    // Populate include/exclude selects and search filters using datalist
+    const includeSearch = container.querySelector('#mustIncludeSearch');
+    const excludeSearch = container.querySelector('#mustExcludeSearch');
+    const includeDatalist = container.querySelector('#mustIncludeOptions');
+    const excludeDatalist = container.querySelector('#mustExcludeOptions');
+
+    const populatePlayerSelects = () => {
+        const sortedPlayers = [...PLAYERS].sort((a, b) => a.name.localeCompare(b.name));
+        
+        let html = '';
+        sortedPlayers.forEach(p => {
+            html += `<option value="${p.name} (${p.team} - £${p.price.toFixed(1)}m)"></option>`;
+        });
+        
+        if (includeDatalist) includeDatalist.innerHTML = html;
+        if (excludeDatalist) excludeDatalist.innerHTML = html;
+    };
+    populatePlayerSelects();
+
+    // Render tags
+    const includeTagsContainer = container.querySelector('#mustIncludeTags');
+    const excludeTagsContainer = container.querySelector('#mustExcludeTags');
+
+    const renderTags = () => {
+        if (includeTagsContainer) {
+            includeTagsContainer.innerHTML = state.mustInclude.map(id => {
+                const p = PLAYERS.find(pl => pl.id === id);
+                if (!p) return '';
+                return `
+                    <span class="pill-value" style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: rgba(0, 255, 136, 0.1); border: 1px solid var(--primary-glow); border-radius: 20px; font-size: 11px; color: var(--primary);">
+                        ${p.name}
+                        <i data-lucide="x" class="remove-include-tag" data-id="${id}" style="width: 12px; height: 12px; cursor: pointer; color: var(--text-muted);"></i>
+                    </span>
+                `;
+            }).join('');
+        }
+
+        if (excludeTagsContainer) {
+            excludeTagsContainer.innerHTML = state.mustExclude.map(id => {
+                const p = PLAYERS.find(pl => pl.id === id);
+                if (!p) return '';
+                return `
+                    <span class="pill-value" style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 20px; font-size: 11px; color: #ef4444;">
+                        ${p.name}
+                        <i data-lucide="x" class="remove-exclude-tag" data-id="${id}" style="width: 12px; height: 12px; cursor: pointer; color: var(--text-muted);"></i>
+                    </span>
+                `;
+            }).join('');
+        }
+
+        lucide.createIcons();
+        registerTagListeners();
+    };
+
+    const registerTagListeners = () => {
+        container.querySelectorAll('.remove-include-tag').forEach(el => {
+            el.addEventListener('click', () => {
+                const id = parseInt(el.getAttribute('data-id'));
+                state.mustInclude = state.mustInclude.filter(includeId => includeId !== id);
+                state.saveState();
+                renderTags();
+            });
+        });
+
+        container.querySelectorAll('.remove-exclude-tag').forEach(el => {
+            el.addEventListener('click', () => {
+                const id = parseInt(el.getAttribute('data-id'));
+                state.mustExclude = state.mustExclude.filter(excludeId => excludeId !== id);
+                state.saveState();
+                renderTags();
+            });
+        });
+    };
+
+    renderTags();
+
+    container.querySelector('#addMustIncludeBtn').addEventListener('click', () => {
+        const val = includeSearch.value;
+        if (!val) return;
+        
+        // Find player by matching the datalist value string
+        const selectedPlayer = PLAYERS.find(p => `${p.name} (${p.team} - £${p.price.toFixed(1)}m)` === val);
+        if (!selectedPlayer) {
+            actions.showToast("Please select a player from the autocomplete list.", "error");
+            return;
+        }
+
+        const id = selectedPlayer.id;
+        if (!state.mustInclude.includes(id)) {
+            // Check team counts beforehand (max 3 per team)
+            const hypIncludes = [...state.mustInclude, id];
+            const teamCounts = {};
+            for (const incId of hypIncludes) {
+                const player = PLAYERS.find(pl => pl.id === incId);
+                if (player) {
+                    teamCounts[player.team] = (teamCounts[player.team] || 0) + 1;
+                    if (teamCounts[player.team] > 3) {
+                        actions.showToast(`Team limit exceeded! You cannot force include more than 3 players from ${player.team}.`, 'error');
+                        return;
+                    }
+                }
+            }
+
+            state.mustInclude.push(id);
+            // Remove from exclude if present
+            state.mustExclude = state.mustExclude.filter(excludeId => excludeId !== id);
+            state.saveState();
+            renderTags();
+        }
+        includeSearch.value = '';
+    });
+
+    container.querySelector('#addMustExcludeBtn').addEventListener('click', () => {
+        const val = excludeSearch.value;
+        if (!val) return;
+
+        // Find player by matching the datalist value string
+        const selectedPlayer = PLAYERS.find(p => `${p.name} (${p.team} - £${p.price.toFixed(1)}m)` === val);
+        if (!selectedPlayer) {
+            actions.showToast("Please select a player from the autocomplete list.", "error");
+            return;
+        }
+
+        const id = selectedPlayer.id;
+        if (!state.mustExclude.includes(id)) {
+            state.mustExclude.push(id);
+            // Remove from include if present
+            state.mustInclude = state.mustInclude.filter(includeId => includeId !== id);
+            state.saveState();
+            renderTags();
+        }
+        excludeSearch.value = '';
+    });
 
     runBtn.addEventListener('click', () => {
         runBtn.innerHTML = `<i data-lucide="loader" class="animate-spin" style="margin-right: 8px;"></i> Running AI Solver...`;
@@ -280,38 +467,212 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
     if (mode === 'preseason') {
         // --- PRESEASON SOLVER: UNLIMITED TRANSFERS ---
         let optimizedSquadSlots = JSON.parse(JSON.stringify(state.squadSlots)); // deep clone
-        let totalValue = optimizedSquadSlots.reduce((sum, slot) => {
+        let currentSquadVal = optimizedSquadSlots.reduce((sum, slot) => {
             if (slot.playerId === null) return sum;
             const p = PLAYERS.find(pl => pl.id === slot.playerId);
             return sum + (p ? p.price : 0);
         }, 0) + bank;
+        let totalValue = Math.max(100.0, currentSquadVal);
 
-        let improved = true;
-        let iterations = 0;
+        // Separate and force recalculation of starting/bench slots based on selected formation
+        const cons = getFormationConstraints(state.formation);
+        optimizedSquadSlots.forEach(s => {
+            s.isStarting = false;
+            s.locked = false;
+        });
         
-        while (improved && iterations < 15) {
-            improved = false;
-            iterations++;
+        let assignedGKP = 0, assignedDEF = 0, assignedMID = 0, assignedFWD = 0;
+        optimizedSquadSlots.forEach(slot => {
+            if (slot.position === 'GKP' && assignedGKP < cons.GKP) { slot.isStarting = true; assignedGKP++; }
+            else if (slot.position === 'DEF' && assignedDEF < cons.DEF) { slot.isStarting = true; assignedDEF++; }
+            else if (slot.position === 'MID' && assignedMID < cons.MID) { slot.isStarting = true; assignedMID++; }
+            else if (slot.position === 'FWD' && assignedFWD < cons.FWD) { slot.isStarting = true; assignedFWD++; }
+        });
+
+        const startingIndices = [];
+        const benchIndices = [];
+        for (let i = 0; i < optimizedSquadSlots.length; i++) {
+            if (optimizedSquadSlots[i].isStarting) {
+                startingIndices.push(i);
+            } else {
+                benchIndices.push(i);
+            }
+        }
+
+        const initUsedIds = [];
+
+        // 1. Assign must-include players to slots first and lock them
+        if (state.mustInclude && state.mustInclude.length > 0) {
+            for (const incId of state.mustInclude) {
+                const player = PLAYERS.find(p => p.id === incId);
+                if (!player) continue;
+
+                // Find an empty matching position slot
+                let targetSlotIndex = -1;
+                for (const idx of startingIndices) {
+                    if (optimizedSquadSlots[idx].position === player.position && optimizedSquadSlots[idx].playerId === null && !optimizedSquadSlots[idx].locked) {
+                        targetSlotIndex = idx;
+                        break;
+                    }
+                }
+                if (targetSlotIndex === -1) {
+                    for (const idx of benchIndices) {
+                        if (optimizedSquadSlots[idx].position === player.position && optimizedSquadSlots[idx].playerId === null && !optimizedSquadSlots[idx].locked) {
+                            targetSlotIndex = idx;
+                            break;
+                        }
+                    }
+                }
+
+                // If no empty slot, replace an unlocked player's slot
+                if (targetSlotIndex === -1) {
+                    for (const idx of startingIndices) {
+                        if (optimizedSquadSlots[idx].position === player.position && !optimizedSquadSlots[idx].locked) {
+                            targetSlotIndex = idx;
+                            break;
+                        }
+                    }
+                }
+                if (targetSlotIndex === -1) {
+                    for (const idx of benchIndices) {
+                        if (optimizedSquadSlots[idx].position === player.position && !optimizedSquadSlots[idx].locked) {
+                            targetSlotIndex = idx;
+                            break;
+                        }
+                    }
+                }
+
+                if (targetSlotIndex !== -1) {
+                    optimizedSquadSlots[targetSlotIndex].playerId = player.id;
+                    optimizedSquadSlots[targetSlotIndex].locked = true;
+                    initUsedIds.push(player.id);
+                }
+            }
+        }
+
+        // Budget boundaries
+        const minBenchBudget = 17.0;
+        const maxBenchBudget = 19.0;
+        const maxStartingBudget = totalValue - minBenchBudget; // 83.0M for starting 11 if totalValue is 100.0M
+
+        // Cheapest players for fallback and initialization (excluding mustExclude)
+        const cheapestGKPs = PLAYERS.filter(p => p.position === 'GKP' && !state.mustExclude.includes(p.id)).sort((a, b) => a.price - b.price);
+        const cheapestDEFs = PLAYERS.filter(p => p.position === 'DEF' && !state.mustExclude.includes(p.id)).sort((a, b) => a.price - b.price);
+        const cheapestMIDs = PLAYERS.filter(p => p.position === 'MID' && !state.mustExclude.includes(p.id)).sort((a, b) => a.price - b.price);
+        const cheapestFWDs = PLAYERS.filter(p => p.position === 'FWD' && !state.mustExclude.includes(p.id)).sort((a, b) => a.price - b.price);
+
+        const getCheapestPlayersList = (pos, count, usedIds) => {
+            const list = pos === 'GKP' ? cheapestGKPs : (pos === 'DEF' ? cheapestDEFs : (pos === 'MID' ? cheapestMIDs : cheapestFWDs));
+            const result = [];
+            for (const p of list) {
+                if (!usedIds.includes(p.id)) {
+                    result.push(p);
+                    usedIds.push(p.id);
+                    if (result.length === count) break;
+                }
+            }
+            return result;
+        };
+
+        // Initialize starting slots first (with cheapest) if they are not locked
+        for (const idx of startingIndices) {
+            const slot = optimizedSquadSlots[idx];
+            if (!slot.locked) {
+                const cheapest = getCheapestPlayersList(slot.position, 1, initUsedIds)[0];
+                slot.playerId = cheapest ? cheapest.id : null;
+            }
+        }
+        // Initialize bench slots (with cheapest) if they are not locked
+        for (const idx of benchIndices) {
+            const slot = optimizedSquadSlots[idx];
+            if (!slot.locked) {
+                const cheapest = getCheapestPlayersList(slot.position, 1, initUsedIds)[0];
+                slot.playerId = cheapest ? cheapest.id : null;
+            }
+        }
+
+        // Duplicates and team-limit resolution helper for bench
+        const resolveBenchDuplicates = () => {
+            const startingIds = startingIndices.map(sIdx => optimizedSquadSlots[sIdx].playerId).filter(id => id !== null);
+            const usedInBench = [];
             
-            for (let i = 0; i < optimizedSquadSlots.length; i++) {
-                const currentSlot = optimizedSquadSlots[i];
+            // Calculate starting team counts
+            const startingTeamCounts = {};
+            for (const id of startingIds) {
+                const p = PLAYERS.find(pl => pl.id === id);
+                if (p) {
+                    startingTeamCounts[p.team] = (startingTeamCounts[p.team] || 0) + 1;
+                }
+            }
+
+            for (const bIdx of benchIndices) {
+                const slot = optimizedSquadSlots[bIdx];
+                if (slot.locked) {
+                    usedInBench.push(slot.playerId);
+                    continue;
+                }
+
+                const currentPlayer = slot.playerId !== null ? PLAYERS.find(pl => pl.id === slot.playerId) : null;
+                
+                // If current bench player is also in starting 11, is a duplicate on the bench, or causes a team count violation
+                let needsReplacement = (slot.playerId === null || startingIds.includes(slot.playerId) || usedInBench.includes(slot.playerId));
+                if (!needsReplacement && currentPlayer) {
+                    if ((startingTeamCounts[currentPlayer.team] || 0) >= 3) {
+                        needsReplacement = true;
+                    }
+                }
+
+                if (needsReplacement) {
+                    // Replace with the cheapest player of the same position not in startingIds/usedInBench and doesn't violate team limit (and not excluded)
+                    const pool = slot.position === 'GKP' ? cheapestGKPs : (slot.position === 'DEF' ? cheapestDEFs : (slot.position === 'MID' ? cheapestMIDs : cheapestFWDs));
+                    for (const p of pool) {
+                        if (!startingIds.includes(p.id) && !usedInBench.includes(p.id)) {
+                            if ((startingTeamCounts[p.team] || 0) < 3) {
+                                slot.playerId = p.id;
+                                usedInBench.push(p.id);
+                                startingTeamCounts[p.team] = (startingTeamCounts[p.team] || 0) + 1;
+                                break;
+                            }
+                        }
+                    }
+                } else if (currentPlayer) {
+                    usedInBench.push(slot.playerId);
+                    startingTeamCounts[currentPlayer.team] = (startingTeamCounts[currentPlayer.team] || 0) + 1;
+                }
+            }
+        };
+
+        // --- OPTIMIZE STARTING 11 ---
+        let startingImproved = true;
+        let startingIter = 0;
+        while (startingImproved && startingIter < 20) {
+            startingImproved = false;
+            startingIter++;
+
+            for (const idx of startingIndices) {
+                const currentSlot = optimizedSquadSlots[idx];
+                if (currentSlot.locked) continue; // Skip locked force-included players!
+
                 const currentSlotPlayer = currentSlot.playerId !== null ? PLAYERS.find(p => p.id === currentSlot.playerId) : null;
                 const currentPts = currentSlotPlayer ? getExpectedPts(currentSlotPlayer) : 0;
-                
-                let otherCost = optimizedSquadSlots.reduce((sum, slot, idx) => {
-                    if (idx === i || slot.playerId === null) return sum;
-                    const p = PLAYERS.find(pl => pl.id === slot.playerId);
+
+                // Cost of other starting players
+                const otherStartingCost = startingIndices.reduce((sum, sIdx) => {
+                    if (sIdx === idx) return sum;
+                    const pId = optimizedSquadSlots[sIdx].playerId;
+                    const p = pId !== null ? PLAYERS.find(pl => pl.id === pId) : null;
                     return sum + (p ? p.price : 0);
                 }, 0);
-                
-                let maxBudgetForSlot = totalValue - otherCost;
 
-                const existingIds = optimizedSquadSlots.map((s, idx) => idx !== i ? s.playerId : null).filter(id => id !== null);
+                const maxBudgetForSlot = maxStartingBudget - otherStartingCost;
+                const usedStartingIds = startingIndices.filter(sIdx => sIdx !== idx).map(sIdx => optimizedSquadSlots[sIdx].playerId).filter(id => id !== null);
+                
                 const candidates = PLAYERS.filter(p => 
                     p.position === currentSlot.position && 
-                    !existingIds.includes(p.id) &&
-                    p.price <= maxBudgetForSlot
-                );
+                    !usedStartingIds.includes(p.id) && 
+                    p.price <= maxBudgetForSlot &&
+                    !state.mustExclude.includes(p.id)
+                ).sort((a, b) => getExpectedPts(b) - getExpectedPts(a));
 
                 let bestCandidate = null;
                 let bestPts = currentPts;
@@ -319,7 +680,90 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                 for (const cand of candidates) {
                     const candPts = getExpectedPts(cand);
                     if (candPts > bestPts) {
-                        const tempSquadIds = [...existingIds, cand.id];
+                        // Check max 3 players per team constraint for starting 11
+                        const tempStartingIds = [...usedStartingIds, cand.id];
+                        const teamCounts = {};
+                        let ok = true;
+                        for (const id of tempStartingIds) {
+                            const p = PLAYERS.find(pl => pl.id === id);
+                            if (p) {
+                                teamCounts[p.team] = (teamCounts[p.team] || 0) + 1;
+                                if (teamCounts[p.team] > 3) {
+                                    ok = false;
+                                    break;
+                                }
+                            }
+                        }
+                        if (ok) {
+                            bestPts = candPts;
+                            bestCandidate = cand;
+                        }
+                    }
+                }
+
+                if (bestCandidate) {
+                    currentSlot.playerId = bestCandidate.id;
+                    startingImproved = true;
+                }
+            }
+        }
+
+        // Ensure bench is clean and has no duplicates before starting bench optimization
+        resolveBenchDuplicates();
+
+        // --- OPTIMIZE BENCH ---
+        const startingCost = startingIndices.reduce((sum, sIdx) => {
+            const pId = optimizedSquadSlots[sIdx].playerId;
+            const p = pId !== null ? PLAYERS.find(pl => pl.id === pId) : null;
+            return sum + (p ? p.price : 0);
+        }, 0);
+        
+        const remainingForBench = totalValue - startingCost;
+        const benchBudget = Math.min(maxBenchBudget, remainingForBench);
+
+        let benchImproved = true;
+        let benchIter = 0;
+        while (benchImproved && benchIter < 20) {
+            benchImproved = false;
+            benchIter++;
+
+            for (const idx of benchIndices) {
+                const currentSlot = optimizedSquadSlots[idx];
+                if (currentSlot.locked) continue; // Skip locked force-included players!
+
+                const currentSlotPlayer = currentSlot.playerId !== null ? PLAYERS.find(p => p.id === currentSlot.playerId) : null;
+                const currentPts = currentSlotPlayer ? getExpectedPts(currentSlotPlayer) : 0;
+
+                // Cost of other bench players
+                const otherBenchCost = benchIndices.reduce((sum, bIdx) => {
+                    if (bIdx === idx) return sum;
+                    const pId = optimizedSquadSlots[bIdx].playerId;
+                    const p = pId !== null ? PLAYERS.find(pl => pl.id === pId) : null;
+                    return sum + (p ? p.price : 0);
+                }, 0);
+
+                const maxBudgetForSlot = benchBudget - otherBenchCost;
+                
+                const startingIds = startingIndices.map(sIdx => optimizedSquadSlots[sIdx].playerId).filter(id => id !== null);
+                const otherBenchIds = benchIndices.filter(bIdx => bIdx !== idx).map(bIdx => optimizedSquadSlots[bIdx].playerId).filter(id => id !== null);
+                const unavailableIds = [...startingIds, ...otherBenchIds];
+
+                const candidates = PLAYERS.filter(p => 
+                    p.position === currentSlot.position && 
+                    !unavailableIds.includes(p.id) && 
+                    p.price <= maxBudgetForSlot &&
+                    getExpectedPts(p) >= 0.5 &&
+                    !state.mustExclude.includes(p.id)
+                ).sort((a, b) => getExpectedPts(b) - getExpectedPts(a));
+
+                let bestCandidate = null;
+                let bestPts = currentPts;
+
+                for (const cand of candidates) {
+                    const candPts = getExpectedPts(cand);
+                    if (candPts > bestPts) {
+                        // Check max 3 players per team constraint across entire 15-player squad
+                        const tempSquadIds = [...startingIds, ...otherBenchIds, cand.id];
                         const teamCounts = {};
                         let ok = true;
                         for (const id of tempSquadIds) {
@@ -341,7 +785,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
 
                 if (bestCandidate) {
                     currentSlot.playerId = bestCandidate.id;
-                    improved = true;
+                    benchImproved = true;
                 }
             }
         }
@@ -485,11 +929,21 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
             const soldPts = getExpectedPts(soldPlayer);
             const sellBudget = soldPlayer.price + bank;
 
-            const candidates = PLAYERS.filter(p => 
+            let candidates = PLAYERS.filter(p => 
                 p.position === soldPlayer.position && 
                 !currentSquadIds.includes(p.id) &&
-                p.price <= sellBudget
+                p.price <= sellBudget &&
+                !state.mustExclude.includes(p.id)
             );
+
+            // If there are must-include players not in the squad for this position, restrict candidates to only those!
+            const mustIncludeNotInSquad = state.mustInclude.filter(id => 
+                !currentSquadIds.includes(id) && 
+                PLAYERS.find(pl => pl.id === id)?.position === soldPlayer.position
+            );
+            if (mustIncludeNotInSquad.length > 0) {
+                candidates = candidates.filter(p => mustIncludeNotInSquad.includes(p.id));
+            }
 
             for (const boughtPlayer of candidates) {
                 if (!checkTeamConstraints(currentSquadIds, soldId, boughtPlayer.id)) continue;
@@ -521,8 +975,31 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                 const soldPts = getExpectedPts(s1) + getExpectedPts(s2);
                 const sellBudget = s1.price + s2.price + bank;
 
-                const candidates1 = PLAYERS.filter(p => p.position === s1.position && !currentSquadIds.includes(p.id));
-                const candidates2 = PLAYERS.filter(p => p.position === s2.position && !currentSquadIds.includes(p.id));
+                let candidates1 = PLAYERS.filter(p => 
+                    p.position === s1.position && 
+                    !currentSquadIds.includes(p.id) &&
+                    !state.mustExclude.includes(p.id)
+                );
+                const mustIncludeNotInSquad1 = state.mustInclude.filter(id => 
+                    !currentSquadIds.includes(id) && 
+                    PLAYERS.find(pl => pl.id === id)?.position === s1.position
+                );
+                if (mustIncludeNotInSquad1.length > 0) {
+                    candidates1 = candidates1.filter(p => mustIncludeNotInSquad1.includes(p.id));
+                }
+
+                let candidates2 = PLAYERS.filter(p => 
+                    p.position === s2.position && 
+                    !currentSquadIds.includes(p.id) &&
+                    !state.mustExclude.includes(p.id)
+                );
+                const mustIncludeNotInSquad2 = state.mustInclude.filter(id => 
+                    !currentSquadIds.includes(id) && 
+                    PLAYERS.find(pl => pl.id === id)?.position === s2.position
+                );
+                if (mustIncludeNotInSquad2.length > 0) {
+                    candidates2 = candidates2.filter(p => mustIncludeNotInSquad2.includes(p.id));
+                }
 
                 for (const b1 of candidates1) {
                     for (const b2 of candidates2) {
