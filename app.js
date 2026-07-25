@@ -406,6 +406,7 @@ const actions = {
             });
 
             if (btnContainer) {
+                btnContainer.innerHTML = ''; // Force clear previous iframe to redraw
                 google.accounts.id.renderButton(btnContainer, {
                     type: 'standard',
                     theme: 'filled_black',
@@ -418,6 +419,7 @@ const actions = {
             }
 
             if (modalBtnContainer) {
+                modalBtnContainer.innerHTML = ''; // Force clear previous iframe to redraw
                 google.accounts.id.renderButton(modalBtnContainer, {
                     type: 'standard',
                     theme: 'filled_black',
@@ -541,8 +543,13 @@ const actions = {
                         localStorage.removeItem('fpl_hub_google_client_id');
                         actions.showToast("Cleared custom Google Client ID. Falling back to default.", "info");
                     } else {
+                        // Warn if it looks like a project ID instead of client ID
+                        if (!/^\d+-/.test(val)) {
+                            actions.showToast("Warning: ID should start with digits (e.g. 123456-abc.apps...)", "warning");
+                        } else {
+                            actions.showToast("Saved custom Client ID! Reinitializing...", "success");
+                        }
                         localStorage.setItem('fpl_hub_google_client_id', val);
-                        actions.showToast("Saved custom Client ID! Reinitializing...", "success");
                     }
                     actions.initGoogleSignInButton();
                 });
