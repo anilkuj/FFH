@@ -151,8 +151,8 @@ class AppState {
         localStorage.setItem('fpl_hub_bench_budget', this.benchBudget.toString());
 
         // Save drafts state
-        localStorage.setItem('fpl_hub_drafts', JSON.stringify(this.drafts));
-        localStorage.setItem('fpl_hub_active_draft_idx', this.activeDraftIndex.toString());
+        localStorage.setItem(this.getDraftsStorageKey(), JSON.stringify(this.drafts));
+        localStorage.setItem(this.getActiveDraftIdxStorageKey(), this.activeDraftIndex.toString());
     }
 
     // Resolves squad, bench, bank, and free transfers specifically for a given gameweek
