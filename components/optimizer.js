@@ -62,6 +62,23 @@ export function renderOptimizer(container, state, actions) {
                         </select>
                     </div>
 
+                    <div class="setting-group">
+                        <label for="optimizerDraftSelect">Active Optimization Draft</label>
+                        <div style="display: flex; gap: 8px;">
+                            <select id="optimizerDraftSelect" class="settings-select" style="flex: 1;">
+                                ${state.drafts.map((draft, idx) => `
+                                    <option value="${idx}" ${state.activeDraftIndex === idx ? 'selected' : ''}>
+                                        ${draft.name}
+                                    </option>
+                                `).join('')}
+                            </select>
+                            <button id="renameOptDraftBtn" class="pitch-btn" title="Rename Selected Draft" style="padding: 10px 14px; border-radius: 8px; height: 38px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.02);">
+                                <i data-lucide="edit-3" style="width: 14px; height: 14px;"></i>
+                            </button>
+                        </div>
+                        <span class="setting-help">Select which draft the optimizer will read from and save recommendations into.</span>
+                    </div>
+
                     <div class="setting-group" id="benchBudgetGroup">
                         <label for="benchBudgetRange">Reserved Bench Budget: <span id="benchBudgetValue" style="color: var(--primary); font-weight: 800;">£${state.benchBudget.toFixed(1)}m</span></label>
                         <div style="display: flex; align-items: center; gap: 12px; margin-top: 8px; height: 38px;">
@@ -152,6 +169,58 @@ export function renderOptimizer(container, state, actions) {
     if (formationSelect) {
         formationSelect.addEventListener('change', () => {
             actions.setFormation(formationSelect.value);
+        });
+    }
+
+    // Draft selection listener
+    const draftSelect = container.querySelector('#optimizerDraftSelect');
+    if (draftSelect) {
+        draftSelect.addEventListener('change', () => {
+            const newIdx = parseInt(draftSelect.value);
+            if (newIdx === state.activeDraftIndex) return;
+
+            // Auto-save current squad state to previous active draft slot
+            state.drafts[state.activeDraftIndex].squadSlots = JSON.parse(JSON.stringify(state.squadSlots));
+            state.drafts[state.activeDraftIndex].captain = state.captain;
+            state.drafts[state.activeDraftIndex].vice = state.vice;
+            state.drafts[state.activeDraftIndex].formation = state.formation;
+
+            // Load new active draft state
+            const targetDraft = state.drafts[newIdx];
+            if (!targetDraft.squadSlots) {
+                // Initialize to current squad state if first time loaded
+                targetDraft.squadSlots = JSON.parse(JSON.stringify(state.squadSlots));
+                targetDraft.captain = state.captain;
+                targetDraft.vice = state.vice;
+                targetDraft.formation = state.formation;
+            }
+
+            // Set active state variables
+            state.squadSlots = JSON.parse(JSON.stringify(targetDraft.squadSlots));
+            state.captain = targetDraft.captain;
+            state.vice = targetDraft.vice;
+            state.formation = targetDraft.formation;
+            state.activeDraftIndex = newIdx;
+
+            // Save and render optimizer view
+            state.saveState();
+            renderOptimizer(container, state, actions);
+            actions.showToast(`Loaded ${targetDraft.name} for optimization`, 'success');
+        });
+    }
+
+    // Rename draft listener
+    const renameDraftBtn = container.querySelector('#renameOptDraftBtn');
+    if (renameDraftBtn) {
+        renameDraftBtn.addEventListener('click', () => {
+            const currentDraft = state.drafts[state.activeDraftIndex];
+            const newName = prompt("Rename this draft:", currentDraft.name);
+            if (newName && newName.trim()) {
+                currentDraft.name = newName.trim();
+                state.saveState();
+                renderOptimizer(container, state, actions);
+                actions.showToast(`Draft renamed to "${newName.trim()}"`, 'success');
+            }
         });
     }
 

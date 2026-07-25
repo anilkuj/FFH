@@ -126,6 +126,14 @@ class AppState {
     }
 
     saveState() {
+        // Sync active draft slot with current active variables
+        if (this.drafts && this.drafts[this.activeDraftIndex]) {
+            this.drafts[this.activeDraftIndex].squadSlots = JSON.parse(JSON.stringify(this.squadSlots));
+            this.drafts[this.activeDraftIndex].captain = this.captain;
+            this.drafts[this.activeDraftIndex].vice = this.vice;
+            this.drafts[this.activeDraftIndex].formation = this.formation;
+        }
+
         localStorage.setItem('fpl_hub_tier', this.tier);
         localStorage.setItem('fpl_hub_squad', JSON.stringify(this.squad));
         localStorage.setItem('fpl_hub_starters', JSON.stringify(this.starters));
