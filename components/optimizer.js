@@ -583,7 +583,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
 
         // Budget boundaries based on user selection
         const minBenchBudget = state.benchBudget || 17.0;
-        const maxBenchBudget = Math.max(minBenchBudget, 19.0);
+        const maxBenchBudget = minBenchBudget;
         const maxStartingBudget = totalValue - minBenchBudget; // remaining budget for starting 11
 
         // Cheapest players for fallback and initialization (excluding mustExclude)
