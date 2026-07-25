@@ -243,13 +243,86 @@ class AppState {
             this.captain = activeDraft.captain;
             this.vice = activeDraft.vice;
             this.formation = activeDraft.formation;
-        } else {
-            // Fallback to baseline default/localStorage if draft is uninitialized
-            const savedSquadSlots = localStorage.getItem('fpl_hub_squad_slots');
-            if (savedSquadSlots) {
-                this.squadSlots = JSON.parse(savedSquadSlots);
-            }
         }
+    }
+
+    createDefaultSquadSlots() {
+        const gkps = DEFAULT_SQUAD.filter(id => PLAYERS.find(p => p.id === id)?.position === 'GKP');
+        const defs = DEFAULT_SQUAD.filter(id => PLAYERS.find(p => p.id === id)?.position === 'DEF');
+        const mids = DEFAULT_SQUAD.filter(id => PLAYERS.find(p => p.id === id)?.position === 'MID');
+        const fwds = DEFAULT_SQUAD.filter(id => PLAYERS.find(p => p.id === id)?.position === 'FWD');
+        
+        const slots = [];
+        const addSlotsForPosition = (position, allIds, totalCount) => {
+            let ids = [...allIds];
+            while (ids.length < totalCount) ids.push(null);
+            ids.forEach((id, index) => {
+                let isStarting = false;
+                if (position === 'GKP' && index === 0) isStarting = true;
+                if (position === 'DEF' && index < 3) isStarting = true;
+                if (position === 'MID' && index < 4) isStarting = true;
+                if (position === 'FWD' && index < 3) isStarting = true;
+                slots.push({
+                    position,
+                    playerId: id,
+                    isStarting
+                });
+            });
+        };
+        
+        addSlotsForPosition('GKP', gkps, 2);
+        addSlotsForPosition('DEF', defs, 5);
+        addSlotsForPosition('MID', mids, 5);
+        addSlotsForPosition('FWD', fwds, 3);
+        return slots;
+    }
+
+    logoutAndClearData() {
+        // 1. Wipe user profile
+        this.userProfile = null;
+        localStorage.removeItem('fpl_hub_user_profile');
+
+        // 2. Remove all active squad/settings keys from localStorage so they don't leak to guest
+        const keysToRemove = [
+            'fpl_hub_squad_slots',
+            'fpl_hub_squad',
+            'fpl_hub_starters',
+            'fpl_hub_captain',
+            'fpl_hub_vice',
+            'fpl_hub_formation',
+            'fpl_hub_transfers',
+            'fpl_hub_must_include',
+            'fpl_hub_must_exclude',
+            'fpl_hub_bench_budget',
+            'fpl_hub_drafts',
+            'fpl_hub_active_draft_idx'
+        ];
+        keysToRemove.forEach(k => localStorage.removeItem(k));
+
+        // 3. Reset in-memory active variables to fresh defaults
+        this.captain = null;
+        this.vice = null;
+        this.formation = '4-3-3';
+        this.mustInclude = [];
+        this.mustExclude = [];
+        this.benchBudget = 17.0;
+        this.chips = {
+            wildcard: false,
+            tripleCaptain: false,
+            benchBoost: false
+        };
+        this.transfers = {
+            1: [], 2: [], 3: [], 4: [], 5: []
+        };
+
+        // Create a clean default squad
+        this.squadSlots = this.createDefaultSquadSlots();
+
+        // 4. Load/initialize guest drafts (which will be clean since we deleted 'fpl_hub_drafts')
+        this.loadUserDrafts();
+
+        // 5. Save the clean guest state
+        this.saveState();
     }
 }
 
@@ -680,12 +753,7 @@ const actions = {
             const signOutBtn = document.getElementById('modalSignOutBtn');
             if (signOutBtn) {
                 signOutBtn.addEventListener('click', () => {
-                    state.userProfile = null;
-                    localStorage.removeItem('fpl_hub_user_profile');
-                    
-                    // Reload user drafts (loads guest drafts)
-                    state.loadUserDrafts();
-                    
+                    state.logoutAndClearData();
                     actions.syncUserProfile();
                     actions.renderActiveView(); // Refresh the planner view immediately
                     actions.hideModal();
@@ -1093,12 +1161,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const signOutBtn = document.getElementById('sidebarSignOutBtn');
     if (signOutBtn) {
         signOutBtn.addEventListener('click', () => {
-            state.userProfile = null;
-            localStorage.removeItem('fpl_hub_user_profile');
-            
-            // Reload user drafts (loads guest drafts)
-            state.loadUserDrafts();
-            
+            state.logoutAndClearData();
             actions.syncUserProfile();
             actions.renderActiveView(); // Refresh the planner view immediately
             actions.showToast("Signed out successfully.", "info");
