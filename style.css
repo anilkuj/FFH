@@ -1994,8 +1994,8 @@ body {
     transition: opacity var(--transition-normal);
 }
 
-.modal-backdrop.hidden {
-    display: none;
+.hidden {
+    display: none !important;
 }
 
 .modal-content {
