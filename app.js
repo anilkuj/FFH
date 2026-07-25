@@ -90,6 +90,9 @@ class AppState {
         const savedMustExclude = localStorage.getItem('fpl_hub_must_exclude');
         this.mustExclude = savedMustExclude ? JSON.parse(savedMustExclude) : [];
 
+        const savedBenchBudget = localStorage.getItem('fpl_hub_bench_budget');
+        this.benchBudget = savedBenchBudget ? parseFloat(savedBenchBudget) : 17.0;
+
 
         // Active chips
         this.chips = {
@@ -132,6 +135,7 @@ class AppState {
         // Persist must include / exclude lists
         localStorage.setItem('fpl_hub_must_include', JSON.stringify(this.mustInclude));
         localStorage.setItem('fpl_hub_must_exclude', JSON.stringify(this.mustExclude));
+        localStorage.setItem('fpl_hub_bench_budget', this.benchBudget.toString());
     }
 
     // Resolves squad, bench, bank, and free transfers specifically for a given gameweek

@@ -11,6 +11,12 @@ export function renderOptimizer(container, state, actions) {
     const squadInfo = state.getSquadForGw(state.currentGw);
     const { freeTransfers } = squadInfo;
 
+    const totalVal = squadInfo.squad.reduce((sum, id) => {
+        const p = PLAYERS.find(pl => pl.id === id);
+        return sum + (p ? p.price : 0);
+    }, 0);
+    const squadValue = totalVal + squadInfo.bank;
+
     container.innerHTML = `
         <div class="optimizer-view-container">
             <div class="optimizer-intro">
@@ -54,6 +60,16 @@ export function renderOptimizer(container, state, actions) {
                             <option value="5-4-1" ${state.formation === '5-4-1' ? 'selected' : ''}>5-4-1</option>
                             <option value="5-2-3" ${state.formation === '5-2-3' ? 'selected' : ''}>5-2-3</option>
                         </select>
+                    </div>
+
+                    <div class="setting-group" id="benchBudgetGroup">
+                        <label for="benchBudgetRange">Reserved Bench Budget: <span id="benchBudgetValue" style="color: var(--primary); font-weight: 800;">£${state.benchBudget.toFixed(1)}m</span></label>
+                        <div style="display: flex; align-items: center; gap: 12px; margin-top: 8px; height: 38px;">
+                            <span style="font-size: 11px; color: var(--text-muted);">£17.0m</span>
+                            <input type="range" id="benchBudgetRange" min="17.0" max="25.0" step="0.5" value="${state.benchBudget}" style="flex: 1; accent-color: var(--primary); cursor: pointer; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.1); outline: none;">
+                            <span style="font-size: 11px; color: var(--text-muted);">£25.0m</span>
+                        </div>
+                        <span class="setting-help">Reserves a portion of your total squad budget (£${squadValue.toFixed(1)}m) for the 4 bench slots.</span>
                     </div>
                 </div>
 
@@ -104,18 +120,33 @@ export function renderOptimizer(container, state, actions) {
     const resultsGrid = container.querySelector('#optResultsGrid');
     const phaseSelect = container.querySelector('#seasonPhase');
     const helpText = container.querySelector('#phaseHelpText');
+    const benchGroup = container.querySelector('#benchBudgetGroup');
 
     const updateHelpText = () => {
         if (phaseSelect.value === 'preseason') {
             helpText.textContent = `Allows unlimited squad upgrades within total squad budget. Perfect for preseason/wildcard planning.`;
+            if (benchGroup) benchGroup.style.display = 'flex';
         } else {
             const currentFt = state.currentGw === 1 ? 'Unlimited' : freeTransfers;
             helpText.textContent = `Respects your available free transfers (${currentFt} FT) for GW${state.currentGw} to avoid points hits.`;
+            if (benchGroup) benchGroup.style.display = 'none';
         }
     };
 
     phaseSelect.addEventListener('change', updateHelpText);
     updateHelpText();
+
+    // Wire bench budget slider listeners
+    const benchSlider = container.querySelector('#benchBudgetRange');
+    const benchValueDisplay = container.querySelector('#benchBudgetValue');
+    if (benchSlider && benchValueDisplay) {
+        benchSlider.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            benchValueDisplay.textContent = `£${val.toFixed(1)}m`;
+            state.benchBudget = val;
+            state.saveState();
+        });
+    }
 
     const formationSelect = container.querySelector('#optimizerFormationSelect');
     if (formationSelect) {
@@ -550,10 +581,10 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
             }
         }
 
-        // Budget boundaries
-        const minBenchBudget = 17.0;
-        const maxBenchBudget = 19.0;
-        const maxStartingBudget = totalValue - minBenchBudget; // 83.0M for starting 11 if totalValue is 100.0M
+        // Budget boundaries based on user selection
+        const minBenchBudget = state.benchBudget || 17.0;
+        const maxBenchBudget = Math.max(minBenchBudget, 19.0);
+        const maxStartingBudget = totalValue - minBenchBudget; // remaining budget for starting 11
 
         // Cheapest players for fallback and initialization (excluding mustExclude)
         const cheapestGKPs = PLAYERS.filter(p => p.position === 'GKP' && !state.mustExclude.includes(p.id)).sort((a, b) => a.price - b.price);
