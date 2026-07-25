@@ -93,6 +93,9 @@ class AppState {
         const savedBenchBudget = localStorage.getItem('fpl_hub_bench_budget');
         this.benchBudget = savedBenchBudget ? parseFloat(savedBenchBudget) : 17.0;
 
+        const savedProfile = localStorage.getItem('fpl_hub_user_profile');
+        this.userProfile = savedProfile ? JSON.parse(savedProfile) : null;
+
 
         // Active chips
         this.chips = {
@@ -327,6 +330,91 @@ const actions = {
             } else {
                 mobChipsPillVal.style.color = 'inherit';
             }
+        }
+    },
+
+    syncUserProfile() {
+        const guestView = document.getElementById('authGuestView');
+        const loggedInView = document.getElementById('authLoggedInView');
+        const userAvatar = document.getElementById('userAvatar');
+        const userNameDisplay = document.getElementById('userNameDisplay');
+
+        if (state.userProfile) {
+            if (guestView) guestView.classList.add('hidden');
+            if (loggedInView) loggedInView.classList.remove('hidden');
+            if (userAvatar) userAvatar.src = state.userProfile.picture;
+            if (userNameDisplay) userNameDisplay.textContent = state.userProfile.name;
+        } else {
+            if (guestView) guestView.classList.remove('hidden');
+            if (loggedInView) loggedInView.classList.add('hidden');
+            
+            // Re-render Google Sign-In Button if guest view is visible
+            actions.initGoogleSignInButton();
+        }
+    },
+
+    initGoogleSignInButton() {
+        if (typeof google === 'undefined') {
+            // If GSI script isn't loaded yet, wait and try again
+            setTimeout(() => actions.initGoogleSignInButton(), 500);
+            return;
+        }
+
+        const btnContainer = document.getElementById('googleSignInButton');
+        if (!btnContainer) return;
+
+        try {
+            google.accounts.id.initialize({
+                client_id: '485458293751-placeholder.apps.googleusercontent.com', // Google Sign-In Developer Client ID
+                callback: actions.handleGoogleSignInResponse
+            });
+
+            google.accounts.id.renderButton(btnContainer, {
+                type: 'standard',
+                theme: 'filled_black',
+                size: 'large',
+                text: 'signin_with',
+                shape: 'rectangular',
+                logo_alignment: 'left',
+                width: 230
+            });
+
+            // Prompt One Tap
+            google.accounts.id.prompt();
+        } catch (e) {
+            console.warn("Failed to initialize Google Sign-In:", e);
+        }
+    },
+
+    handleGoogleSignInResponse(response) {
+        if (!response.credential) return;
+
+        // Decode the JWT token on client-side
+        const payload = actions.decodeJwt(response.credential);
+        if (payload) {
+            state.userProfile = {
+                name: payload.name,
+                email: payload.email,
+                picture: payload.picture,
+                sub: payload.sub
+            };
+            localStorage.setItem('fpl_hub_user_profile', JSON.stringify(state.userProfile));
+            actions.syncUserProfile();
+            actions.showToast(`Welcome back, ${payload.name.split(' ')[0]}!`, 'success');
+        }
+    },
+
+    decodeJwt(token) {
+        try {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        } catch (e) {
+            console.error("JWT decoding failed:", e);
+            return null;
         }
     },
 
@@ -706,9 +794,39 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Sidebar Upgrade Button
-    document.getElementById('sidebarUpgradeBtn').addEventListener('click', () => {
-        actions.showToast('You already have the Ultimate Edition!', 'info');
-    });
+    const upgradeBtn = document.getElementById('sidebarUpgradeBtn');
+    if (upgradeBtn) {
+        upgradeBtn.addEventListener('click', () => {
+            actions.showToast('You already have the Ultimate Edition!', 'info');
+        });
+    }
+
+    // Sign Out Button Handler
+    const signOutBtn = document.getElementById('sidebarSignOutBtn');
+    if (signOutBtn) {
+        signOutBtn.addEventListener('click', () => {
+            state.userProfile = null;
+            localStorage.removeItem('fpl_hub_user_profile');
+            actions.syncUserProfile();
+            actions.showToast("Signed out successfully.", "info");
+        });
+    }
+
+    // Guest view click handler for mock authentication simulation
+    const guestView = document.getElementById('authGuestView');
+    if (guestView) {
+        guestView.addEventListener('dblclick', () => {
+            state.userProfile = {
+                name: 'Magnus Carlsen',
+                email: 'magnus@chess.com',
+                picture: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=120&h=120&q=80',
+                sub: 'mock_123456789'
+            };
+            localStorage.setItem('fpl_hub_user_profile', JSON.stringify(state.userProfile));
+            actions.syncUserProfile();
+            actions.showToast("Logged in as Magnus Carlsen (Mock Profile)!", "success");
+        });
+    }
 
     // Theme Toggle Handler
     const themeBtn = document.getElementById('themeToggleBtn');
@@ -761,6 +879,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (overlay) {
         overlay.addEventListener('click', closeSidebar);
     }
+
+    // Sync User profile state
+    actions.syncUserProfile();
 
     // Render Initial View
     actions.renderActiveView();

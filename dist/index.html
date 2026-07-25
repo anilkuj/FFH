@@ -11,6 +11,8 @@
     <!-- Vanilla CSS -->
     <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Confetti CDN -->
@@ -24,7 +26,7 @@
             document.documentElement.classList.remove('light-theme');
         }
     </script>
-  <script type="module" crossorigin src="/assets/index-zUmxmjnA.js"></script>
+  <script type="module" crossorigin src="/assets/index-CmKfxEor.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-CWuIa44j.css">
 </head>
 <body>
@@ -85,15 +87,40 @@
             </nav>
 
             <div class="sidebar-footer">
-                <div class="user-tier-card">
-                    <div class="tier-icon">
-                        <i data-lucide="shield-check" class="shield-gold"></i>
+                <!-- User Profile Box / Auth Section -->
+                <div class="user-profile-box" id="userProfileBox" style="width: 100%;">
+                    <!-- Guest View -->
+                    <div class="auth-guest-view" id="authGuestView">
+                        <div style="display:flex; flex-direction:column; gap:10px; width:100%;">
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <div class="tier-icon" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(255, 255, 255, 0.04); display: flex; align-items: center; justify-content: center;">
+                                    <i data-lucide="user" style="color: var(--text-muted); width: 18px; height: 18px;"></i>
+                                </div>
+                                <div class="tier-info">
+                                    <p class="tier-label">Welcome, Guest</p>
+                                    <h4 class="tier-name" style="font-size:12px; color: var(--text-muted); font-weight: normal;">Sign in to sync squad</h4>
+                                </div>
+                            </div>
+                            <!-- Google Sign-In Button Container -->
+                            <div id="googleSignInButton" style="width:100%; margin-top:4px;"></div>
+                        </div>
                     </div>
-                    <div class="tier-info">
-                        <p class="tier-label">Current Tier</p>
-                        <h4 class="tier-name" id="userTierDisplay">Starter Plan</h4>
+
+                    <!-- Logged In View -->
+                    <div class="auth-logged-in-view hidden" id="authLoggedInView">
+                        <div style="display:flex; flex-direction:column; gap:12px; width:100%;">
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <img id="userAvatar" src="" alt="Avatar" style="width:36px; height:36px; border-radius:50%; border:1px solid var(--primary-glow); background:#1e293b; object-fit: cover;">
+                                <div class="tier-info" style="overflow:hidden; flex: 1;">
+                                    <p class="tier-label" id="userNameDisplay" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:700; color:#fff; font-size: 13px; text-transform: none; letter-spacing: 0;">User Name</p>
+                                    <h4 class="tier-name" style="font-size:11px; color:var(--primary); font-weight: 700;">Ultimate Plan</h4>
+                                </div>
+                            </div>
+                            <button class="tier-action-btn" id="sidebarSignOutBtn" style="margin:0; background:rgba(239, 68, 68, 0.1); color:#ef4444; border:1px solid rgba(239, 68, 68, 0.2); width: 100%; padding: 8px; border-radius: 6px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                                <i data-lucide="log-out" style="width:12px; height:12px;"></i> Sign Out
+                            </button>
+                        </div>
                     </div>
-                    <button class="tier-action-btn" id="sidebarUpgradeBtn">Upgrade</button>
                 </div>
             </div>
         </aside>
