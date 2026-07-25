@@ -547,11 +547,15 @@ const actions = {
                         if (!/^\d+-/.test(val)) {
                             actions.showToast("Warning: ID should start with digits (e.g. 123456-abc.apps...)", "warning");
                         } else {
-                            actions.showToast("Saved custom Client ID! Reinitializing...", "success");
+                            actions.showToast("Saved custom Client ID! Reloading to apply...", "success");
                         }
                         localStorage.setItem('fpl_hub_google_client_id', val);
                     }
-                    actions.initGoogleSignInButton();
+                    
+                    // Reload page after 1 second so GSI script initializes with the new client ID on fresh load
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
                 });
             }
 
