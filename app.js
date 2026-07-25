@@ -335,6 +335,7 @@ const actions = {
         if (!name) return '';
         
         const webNameOverrides = {
+            "Igor Thiago Nascimento Rodrigues": "Thiago",
             "David Raya Martín": "Raya",
             "Gabriel dos Santos Magalhães": "Gabriel",
             "Emile Smith Rowe": "Smith Rowe",
