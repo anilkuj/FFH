@@ -1010,9 +1010,19 @@ const actions = {
     },
 
     toggleChip(chipName) {
-        state.chips[chipName] = !state.chips[chipName];
+        const wasActive = state.chips[chipName];
+        
+        // Deactivate all chips first
+        Object.keys(state.chips).forEach(k => state.chips[k] = false);
+        
+        // Toggle target chip
+        state.chips[chipName] = !wasActive;
+        
         actions.renderActiveView();
-        actions.showToast(`${chipName.toUpperCase()} chip ${state.chips[chipName] ? 'Activated' : 'Deactivated'}`, 'success');
+        
+        const statusText = state.chips[chipName] ? 'Activated' : 'Deactivated';
+        const formattedName = chipName === 'tripleCaptain' ? 'Triple Captain' : chipName === 'benchBoost' ? 'Bench Boost' : 'Wildcard';
+        actions.showToast(`${formattedName} chip ${statusText}`, 'success');
     },
 
     setTier(tier) {

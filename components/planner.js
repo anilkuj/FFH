@@ -31,6 +31,30 @@ export function renderPlanner(container, state, actions) {
         });
     }
 
+    // Deactivate Wildcard if we are in preseason (GW 1)
+    if (state.currentGw === 1 && state.chips.wildcard) {
+        state.chips.wildcard = false;
+        state.saveState();
+    }
+
+    const isPreseason = state.currentGw === 1;
+    let chipsHtml = '';
+    if (!isPreseason) {
+        chipsHtml += `
+            <button class="pitch-btn ${state.chips.wildcard ? 'active-chip' : ''}" id="chipWildcardBtn" title="Play Wildcard (Unlimited Free Transfers)">
+                <i data-lucide="zap"></i> Wildcard
+            </button>
+        `;
+    }
+    chipsHtml += `
+        <button class="pitch-btn ${state.chips.tripleCaptain ? 'active-chip' : ''}" id="chipTcBtn" title="Play Triple Captain (Captain points tripled)">
+            <i data-lucide="award"></i> Triple Capt.
+        </button>
+        <button class="pitch-btn ${state.chips.benchBoost ? 'active-chip' : ''}" id="chipBbBtn" title="Play Bench Boost (Bench points added to starting XI)">
+            <i data-lucide="shield"></i> Bench Boost
+        </button>
+    `;
+
     // Calculate AI Squad Rating (0-100) based on total expected points and average player quality
     const ratingScore = Math.min(100, Math.round((expectedPoints / 11) * 15));
 
@@ -43,12 +67,7 @@ export function renderPlanner(container, state, actions) {
                         <h2>Squad Selection</h2>
                     </div>
                     <div class="pitch-actions">
-                        <button class="pitch-btn ${state.chips.wildcard ? 'active-chip' : ''}" id="chipWildcardBtn">
-                            <i data-lucide="zap"></i> Wildcard
-                        </button>
-                        <button class="pitch-btn ${state.chips.tripleCaptain ? 'active-chip' : ''}" id="chipTcBtn">
-                            <i data-lucide="award"></i> Triple Capt.
-                        </button>
+                        ${chipsHtml}
                         <select id="formationSelect" class="formation-select" style="margin-left: 12px;">
                             <option value="4-3-3" ${state.formation === '4-3-3' ? 'selected' : ''}>4-3-3</option>
                             <option value="4-4-2" ${state.formation === '4-4-2' ? 'selected' : ''}>4-4-2</option>
