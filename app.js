@@ -331,6 +331,71 @@ const state = new AppState();
 
 // UI Render Action Controllers
 const actions = {
+    getWebName(name) {
+        if (!name) return '';
+        
+        const webNameOverrides = {
+            "David Raya Martín": "Raya",
+            "Gabriel dos Santos Magalhães": "Gabriel",
+            "Emile Smith Rowe": "Smith Rowe",
+            "Virgil van Dijk": "van Dijk",
+            "Kevin De Bruyne": "De Bruyne",
+            "Bruno Guimarães Rodriguez Moura": "Bruno G.",
+            "Bruno Guimarães": "Bruno G.",
+            "Diogo Teixeira da Silva": "Diogo J.",
+            "Diogo Jota": "Diogo J.",
+            "Matheus Santos Carneiro da Cunha": "Cunha",
+            "Matheus Cunha": "Cunha",
+            "Pedro Lomba Neto": "Pedro Neto",
+            "Pedro Neto": "Pedro Neto",
+            "Rodrigo Muniz Carvalho": "Rodrigo Muniz",
+            "Alex Moreno Lopera": "Alex Moreno",
+            "Alex Moreno": "Alex Moreno",
+            "Hwang Hee-chan": "Hwang",
+            "Son Heung-min": "Son",
+            "Andreas Hoelgebaum Pereira": "Andreas",
+            "Andreas Pereira": "Andreas",
+            "Alejandro Garnacho Ferreyra": "Garnacho",
+            "Darwin Núñez Ribeiro": "Darwin",
+            "Gabriel Fernando de Jesus": "Jesus",
+            "Gabriel Jesus": "Jesus",
+            "Gabriel Martinelli Silva": "Martinelli",
+            "Gabriel Martinelli": "Martinelli",
+            "Enzo Fernández": "Enzo",
+            "Moisés Caicedo Corozo": "Caicedo",
+            "Robert Sánchez": "Sánchez",
+            "Ederson Santana de Moraes": "Ederson",
+            "Bernardo Veiga de Carvalho e Silva": "Bernardo",
+            "Bernardo Silva": "Bernardo",
+            "Alexis Mac Allister": "Mac Allister",
+            "Luis Díaz": "Luis Díaz",
+            "Dominic Calvert-Lewin": "Calvert-Lewin",
+            "Trent Alexander-Arnold": "Alexander-Arnold",
+            "Dejan Kulusevski": "Kulusevski",
+            "Josko Gvardiol": "Gvardiol",
+            "Joško Gvardiol": "Gvardiol"
+        };
+
+        if (webNameOverrides[name]) {
+            return webNameOverrides[name];
+        }
+
+        // Handle "van " names dynamically (e.g. Micky van de Ven, Jan Paul van Hecke)
+        const vanIdx = name.toLowerCase().indexOf(' van ');
+        if (vanIdx !== -1) {
+            return name.substring(vanIdx + 1);
+        }
+
+        // Handle "de " names dynamically (e.g. Matthijs de Ligt, Bobby De Cordova-Reid)
+        const deIdx = name.toLowerCase().indexOf(' de ');
+        if (deIdx !== -1) {
+            return name.substring(deIdx + 1);
+        }
+
+        // Default to last word
+        return name.split(' ').pop() || name;
+    },
+
     switchTab(tab) {
         state.activeTab = tab;
         state.selectedEmptySlot = null;

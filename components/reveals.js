@@ -344,7 +344,7 @@ function openExpertBoardModal(expert, state, actions) {
                         ${designation}
                     </div>
                     <div class="player-card-info" style="padding: 2px;">
-                        <div class="player-pitch-name" style="font-size:10px;">${player.name.split(' ').pop() || player.name}</div>
+                        <div class="player-pitch-name" style="font-size:10px;">${actions.getWebName(player.name)}</div>
                         <div class="player-pitch-points" style="font-size:9px;">${pred.pts.toFixed(1)} pts</div>
                     </div>
                 </div>
@@ -398,7 +398,7 @@ function openExpertBoardModal(expert, state, actions) {
                                     ${getShirtSVG(teamObj.color, player.team)}
                                 </div>
                                 <div class="player-card-info" style="padding: 2px;">
-                                    <div class="player-pitch-name" style="font-size:10px;">${player.name.split(' ').pop() || player.name}</div>
+                                    <div class="player-pitch-name" style="font-size:10px;">${actions.getWebName(player.name)}</div>
                                     <div class="player-pitch-points" style="font-size:9px;">${pred.pts.toFixed(1)} pts</div>
                                 </div>
                             </div>

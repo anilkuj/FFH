@@ -15,7 +15,8 @@ export function renderLeague(container, state, actions) {
         return sum + (pred.pts * multiplier);
     }, 0);
 
-    const userCaptain = PLAYERS.find(p => p.id === state.captain)?.name.split(' ').pop() || 'None';
+    const capPlayer = PLAYERS.find(p => p.id === state.captain);
+    const userCaptain = capPlayer ? actions.getWebName(capPlayer.name) : 'None';
     const userTransfersCount = (state.transfers[currentGw] || []).length;
     const userActiveChip = Object.keys(state.chips).find(k => state.chips[k] === true) || 'None';
     

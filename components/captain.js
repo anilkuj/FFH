@@ -50,9 +50,9 @@ export function renderCaptain(container, state, actions) {
         // Custom AI Rationale text
         let rationale = '';
         if (player.position === 'FWD' || player.position === 'MID') {
-            rationale = `${player.name.split(' ').pop()} has an attacking xGI of ${xGI} this season. Facing ${pred.opp} (${pred.loc}) makes them a prime captaincy choice.`;
+            rationale = `${actions.getWebName(player.name)} has an attacking xGI of ${xGI} this season. Facing ${pred.opp} (${pred.loc}) makes them a prime captaincy choice.`;
         } else {
-            rationale = `High clean sheet probability for ${player.name.split(' ').pop()} playing at ${pred.loc === 'H' ? 'home' : 'away'} against ${pred.opp}.`;
+            rationale = `High clean sheet probability for ${actions.getWebName(player.name)} playing at ${pred.loc === 'H' ? 'home' : 'away'} against ${pred.opp}.`;
         }
 
         return `

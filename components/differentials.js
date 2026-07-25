@@ -114,7 +114,7 @@ export function renderDifferentials(container, state, actions) {
 
         let pointsText = '';
         if (gain > 0.1) {
-            pointsText = `Swapping out <strong>${weakest.name.split(' ').pop()}</strong> (lowest scoring ${diffPlayer.position} in your team) for <strong>${diffPlayer.name.split(' ').pop()}</strong> yields an extra **+${gain.toFixed(1)} Expected Points** over 5 weeks.`;
+            pointsText = `Swapping out <strong>${actions.getWebName(weakest.name)}</strong> (lowest scoring ${diffPlayer.position} in your team) for <strong>${actions.getWebName(diffPlayer.name)}</strong> yields an extra **+${gain.toFixed(1)} Expected Points** over 5 weeks.`;
         } else {
             pointsText = `Offers a high-scoring differential options compared to your current lineup bench alternatives.`;
         }

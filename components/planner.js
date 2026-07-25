@@ -266,7 +266,7 @@ function renderPlayerRow(squadSlots, position, currentGw, captain, vice) {
                     ${player.transferredThisSeason ? `<div class="pitch-transfer-icon" title="Transferred from ${player.oldTeam}">⇆</div>` : ''}
                 </div>
                 <div class="player-card-info">
-                    <div class="player-pitch-name">${player.name.split(' ').pop() || player.name}</div>
+                    <div class="player-pitch-name">${actions.getWebName(player.name)}</div>
                     <div class="player-pitch-points">£${player.price.toFixed(1)}m • ${prediction.pts.toFixed(1)} XP</div>
                     <div class="player-pitch-points-sub" style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 2px;">
                         ${renderFdrDots(player, currentGw)}
@@ -326,7 +326,7 @@ function renderBenchRow(squadSlots, currentGw, captain, vice) {
                         ${player.transferredThisSeason ? `<div class="pitch-transfer-icon" title="Transferred from ${player.oldTeam}">⇆</div>` : ''}
                     </div>
                     <div class="player-card-info">
-                        <div class="player-pitch-name">${player.name.split(' ').pop() || player.name}</div>
+                        <div class="player-pitch-name">${actions.getWebName(player.name)}</div>
                         <div class="player-pitch-points">£${player.price.toFixed(1)}m • ${prediction.pts.toFixed(1)} XP</div>
                         <div class="player-pitch-points-sub" style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 2px;">
                             ${renderFdrDots(player, currentGw)}

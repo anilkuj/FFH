@@ -26,7 +26,7 @@ export function renderLiveRank(container, state, actions) {
     // Generate potential events for starting players
     const events = [];
     starters.forEach(p => {
-        const lastName = p.name.split(' ').pop();
+        const lastName = actions.getWebName(p.name);
         const isCaptain = state.captain === p.id;
         const multiplier = isCaptain ? 2 : 1;
 
