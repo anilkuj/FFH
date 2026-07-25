@@ -338,19 +338,51 @@ const actions = {
         const loggedInView = document.getElementById('authLoggedInView');
         const userAvatar = document.getElementById('userAvatar');
         const userNameDisplay = document.getElementById('userNameDisplay');
+        const topBarContainer = document.getElementById('topBarAuthContainer');
 
         if (state.userProfile) {
+            // Update Sidebar Auth
             if (guestView) guestView.classList.add('hidden');
             if (loggedInView) loggedInView.classList.remove('hidden');
             if (userAvatar) userAvatar.src = state.userProfile.picture;
             if (userNameDisplay) userNameDisplay.textContent = state.userProfile.name;
+
+            // Update Top Bar Auth (show user avatar icon)
+            if (topBarContainer) {
+                topBarContainer.innerHTML = `
+                    <img id="topBarAvatar" src="${state.userProfile.picture}" alt="Profile" style="width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 1px solid var(--primary-glow); object-fit: cover;" title="View Profile">
+                `;
+                
+                // Wire click on avatar to open profile modal
+                const avatar = topBarContainer.querySelector('#topBarAvatar');
+                if (avatar) {
+                    avatar.addEventListener('click', actions.showUserProfileModal);
+                }
+            }
         } else {
+            // Update Sidebar Auth
             if (guestView) guestView.classList.remove('hidden');
             if (loggedInView) loggedInView.classList.add('hidden');
             
-            // Re-render Google Sign-In Button if guest view is visible
+            // Update Top Bar Auth (show Sign In button)
+            if (topBarContainer) {
+                topBarContainer.innerHTML = `
+                    <button class="apply-rec-btn" id="topBarSignInBtn" style="margin: 0; padding: 6px 12px; font-size: 11px; font-weight: 700; width: auto; height: 32px; border-radius: 6px; display: flex; align-items: center; gap: 6px;">
+                        <i data-lucide="log-in" style="width: 12px; height: 12px;"></i> Sign In
+                    </button>
+                `;
+                
+                // Wire click on sign in to open login modal
+                const signInBtn = topBarContainer.querySelector('#topBarSignInBtn');
+                if (signInBtn) {
+                    signInBtn.addEventListener('click', actions.showLoginModal);
+                }
+            }
+
+            // Re-render Google Sign-In Button if guest view is visible in sidebar
             actions.initGoogleSignInButton();
         }
+        lucide.createIcons();
     },
 
     initGoogleSignInButton() {
@@ -401,6 +433,7 @@ const actions = {
             localStorage.setItem('fpl_hub_user_profile', JSON.stringify(state.userProfile));
             actions.syncUserProfile();
             actions.showToast(`Welcome back, ${payload.name.split(' ')[0]}!`, 'success');
+            actions.hideModal(); // Close modal if open
         }
     },
 
@@ -416,6 +449,126 @@ const actions = {
             console.error("JWT decoding failed:", e);
             return null;
         }
+    },
+
+    showLoginModal() {
+        const contentHTML = `
+            <div class="modal-header-section">
+                <h3 style="display: flex; align-items: center; gap: 8px;"><i data-lucide="lock" class="highlight-transfers" style="width: 18px; height: 18px;"></i> Sign In to FPL Hub</h3>
+                <button class="close-modal-btn" id="closeLoginModalBtn"><i data-lucide="x"></i></button>
+            </div>
+            <div class="checkout-modal-body" style="padding: 24px; display: flex; flex-direction: column; gap: 16px; text-align: center; align-items: center;">
+                <div class="logo" style="font-size: 26px; justify-content: center; margin-bottom: 4px;">
+                    <span class="logo-accent">FPL</span><span class="logo-main">HUB</span>
+                    <span class="logo-badge" style="display: block !important; background: linear-gradient(135deg, #ec4899, #fbbf24);">ULTIMATE</span>
+                </div>
+                <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; max-width: 400px;">
+                    Log in with your Google account to unlock advanced squad optimization solvers, save constraints, and sync your FPL team predictions in real-time.
+                </p>
+                
+                <!-- Google Sign-In Button inside Modal -->
+                <div id="modalGoogleSignInButton" style="margin-top: 12px; min-height: 44px; display: flex; justify-content: center; width: 100%;"></div>
+                
+                <div style="border-top: 1px dashed var(--border-color); width: 100%; margin-top: 12px; padding-top: 16px;">
+                    <span style="font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 8px;">Reviewing or testing locally?</span>
+                    <button class="apply-rec-btn" id="modalMockSignInBtn" style="margin: 0; width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; background: rgba(0, 255, 136, 0.1); color: var(--primary); border: 1px solid var(--primary-glow);">
+                        <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> Demo Mock Log In
+                    </button>
+                </div>
+            </div>
+        `;
+
+        actions.showModal(contentHTML, () => {
+            // Close button
+            const closeBtn = document.getElementById('closeLoginModalBtn');
+            if (closeBtn) closeBtn.addEventListener('click', actions.hideModal);
+
+            // Mock login trigger
+            const mockBtn = document.getElementById('modalMockSignInBtn');
+            if (mockBtn) {
+                mockBtn.addEventListener('click', () => {
+                    state.userProfile = {
+                        name: 'Magnus Carlsen',
+                        email: 'magnus@chess.com',
+                        picture: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=120&h=120&q=80',
+                        sub: 'mock_123456789'
+                    };
+                    localStorage.setItem('fpl_hub_user_profile', JSON.stringify(state.userProfile));
+                    actions.syncUserProfile();
+                    actions.hideModal();
+                    actions.showToast("Logged in as Magnus Carlsen (Mock Profile)!", "success");
+                });
+            }
+
+            // Render Google Sign-in button in Modal
+            if (typeof google !== 'undefined') {
+                try {
+                    google.accounts.id.renderButton(document.getElementById('modalGoogleSignInButton'), {
+                        type: 'standard',
+                        theme: 'filled_black',
+                        size: 'large',
+                        text: 'signin_with',
+                        shape: 'rectangular',
+                        logo_alignment: 'left',
+                        width: 250
+                    });
+                } catch (e) {
+                    console.warn("Failed to render Google button in modal:", e);
+                }
+            }
+            lucide.createIcons();
+        });
+    },
+
+    showUserProfileModal() {
+        if (!state.userProfile) return;
+
+        const contentHTML = `
+            <div class="modal-header-section">
+                <h3 style="display: flex; align-items: center; gap: 8px;"><i data-lucide="user" class="highlight-bank" style="width: 18px; height: 18px;"></i> Manager Profile</h3>
+                <button class="close-modal-btn" id="closeProfileModalBtn"><i data-lucide="x"></i></button>
+            </div>
+            <div class="checkout-modal-body" style="padding: 24px; display: flex; flex-direction: column; gap: 20px; align-items: center; text-align: center;">
+                <img src="${state.userProfile.picture}" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--primary); box-shadow: var(--shadow-md); object-fit: cover;">
+                
+                <div>
+                    <h3 style="font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px;">${state.userProfile.name}</h3>
+                    <p style="font-size: 13px; color: var(--text-muted);">${state.userProfile.email}</p>
+                </div>
+
+                <div class="analysis-stats-grid" style="width: 100%; justify-content: center; gap: 12px; margin: 8px 0; display: flex;">
+                    <div class="stat-pill highlight" style="flex: 1; padding: 10px; min-width: auto;">
+                        <span class="stat-pill-label" style="font-size: 8.5px;">Account Level</span>
+                        <span class="stat-pill-val" style="font-size: 13px; color: var(--primary);">Ultimate Plan</span>
+                    </div>
+                    <div class="stat-pill" style="flex: 1; padding: 10px; min-width: auto;">
+                        <span class="stat-pill-label" style="font-size: 8.5px;">ID Provider</span>
+                        <span class="stat-pill-val" style="font-size: 13px;">Google Auth</span>
+                    </div>
+                </div>
+
+                <button class="tier-action-btn" id="modalSignOutBtn" style="margin: 10px 0 0 0; background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                    <i data-lucide="log-out" style="width: 14px; height: 14px;"></i> Sign Out
+                </button>
+            </div>
+        `;
+
+        actions.showModal(contentHTML, () => {
+            const closeBtn = document.getElementById('closeProfileModalBtn');
+            if (closeBtn) closeBtn.addEventListener('click', actions.hideModal);
+
+            const signOutBtn = document.getElementById('modalSignOutBtn');
+            if (signOutBtn) {
+                signOutBtn.addEventListener('click', () => {
+                    state.userProfile = null;
+                    localStorage.removeItem('fpl_hub_user_profile');
+                    actions.syncUserProfile();
+                    actions.hideModal();
+                    actions.showToast("Signed out successfully.", "info");
+                });
+            }
+            lucide.createIcons();
+        });
     },
 
     setCaptain(playerId) {
