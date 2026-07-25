@@ -641,6 +641,33 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
     });
 }
 
+// Levenshtein distance helper for spelling-tolerant searching
+function getEditDistance(a, b) {
+    if (a.length === 0) return b.length;
+    if (b.length === 0) return a.length;
+    const matrix = [];
+    for (let i = 0; i <= b.length; i++) {
+        matrix[i] = [i];
+    }
+    for (let j = 0; j <= a.length; j++) {
+        matrix[0][j] = j;
+    }
+    for (let i = 1; i <= b.length; i++) {
+        for (let j = 1; j <= a.length; j++) {
+            if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                matrix[i][j] = matrix[i - 1][j - 1];
+            } else {
+                matrix[i][j] = Math.min(
+                    matrix[i - 1][j - 1] + 1, // substitution
+                    matrix[i][j - 1] + 1,     // insertion
+                    matrix[i - 1][j] + 1      // deletion
+                );
+            }
+        }
+    }
+    return matrix[b.length][a.length];
+}
+
 // Opens the Add Player popup modal
 function openAddPlayerModal(container, state, actions, slotIndex, position) {
     const squadInfo = state.getSquadForGw(state.currentGw);
@@ -668,10 +695,13 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
             <button class="close-modal-btn" id="closeAddPlayerModalBtn"><i data-lucide="x"></i></button>
         </div>
         <div class="checkout-modal-body" style="padding: 20px; display: flex; flex-direction: column; gap: 16px; max-height: 80vh; overflow-y: auto;">
-            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; border-bottom: 1px dashed var(--border-color); padding-bottom: 16px; margin-bottom: 4px;">
-                <p style="font-size: 13px; color: var(--text-muted); margin: 0;">Max Budget: <strong class="highlight-bank" style="font-size: 14px;">£${bank.toFixed(1)}m</strong></p>
-                <div style="display: flex; gap: 8px; width: 100%; max-width: 400px; margin-top: 4px;">
-                    <input type="text" class="transfer-search-field" id="modalSearchField" placeholder="Search by name..." style="flex: 2; font-size: 12px; padding: 8px; background: rgba(255,255,255,0.02); color:#fff; border: 1px solid var(--border-color); border-radius: 6px;" />
+            <div style="display: flex; flex-direction: column; gap: 12px; border-bottom: 1px dashed var(--border-color); padding-bottom: 16px; margin-bottom: 4px; width: 100%;">
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; width: 100%;">
+                    <p style="font-size: 13px; color: var(--text-muted); margin: 0;">Max Budget: <strong class="highlight-bank" style="font-size: 14px;">£${bank.toFixed(1)}m</strong></p>
+                    <p style="font-size: 11px; color: var(--text-muted); margin: 0; opacity: 0.85;">Only showing <strong style="color: var(--primary);">${position}s</strong>. Search by name or team (e.g. "Coventry", "COV").</p>
+                </div>
+                <div style="display: flex; gap: 8px; width: 100%;">
+                    <input type="text" class="transfer-search-field" id="modalSearchField" placeholder="Search by name or team..." style="flex: 2; font-size: 12px; padding: 8px; background: rgba(255,255,255,0.02); color:#fff; border: 1px solid var(--border-color); border-radius: 6px;" />
                     <select class="panel-price-select" id="modalPriceSelect" style="flex: 1; font-size: 12px; padding: 8px; background: var(--bg-panel); color:#fff; border: 1px solid var(--border-color); border-radius: 6px;">
                         ${priceOptions}
                     </select>
@@ -693,14 +723,40 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
         const listContainer = document.getElementById('modalPlayerList');
 
         const applyFilters = () => {
-            const query = searchField.value.toLowerCase();
+            const query = searchField.value.trim().toLowerCase();
             const maxPriceStr = priceSelect.value;
             const maxPrice = maxPriceStr ? parseFloat(maxPriceStr) : Infinity;
 
-            const filtered = buyablePlayers.filter(p => 
-                p.name.toLowerCase().includes(query) && 
-                p.price <= maxPrice
-            );
+            const filtered = buyablePlayers.filter(p => {
+                if (!query) return p.price <= maxPrice;
+
+                // 1. Direct name match
+                if (p.name.toLowerCase().includes(query)) return p.price <= maxPrice;
+
+                // 2. Direct team name match
+                const teamObj = TEAMS.find(t => t.shortName === p.team);
+                if (teamObj && (teamObj.name.toLowerCase().includes(query) || p.team.toLowerCase().includes(query))) {
+                    return p.price <= maxPrice;
+                }
+
+                // 3. Edit distance match on individual words (for queries >= 3 chars)
+                if (query.length >= 3) {
+                    const queryWords = query.split(/\s+/);
+                    const nameWords = p.name.toLowerCase().split(/\s+/);
+                    
+                    const allQueryWordsMatch = queryWords.every(qw => {
+                        return nameWords.some(nw => {
+                            if (nw.includes(qw)) return true;
+                            const dist = getEditDistance(nw, qw);
+                            const maxDist = qw.length > 4 ? 2 : 1;
+                            return dist <= maxDist;
+                        });
+                    });
+                    if (allQueryWordsMatch) return p.price <= maxPrice;
+                }
+
+                return false;
+            });
             listContainer.innerHTML = renderModalPlayerRows(filtered, bank, state);
             wireAddButtons();
         };
