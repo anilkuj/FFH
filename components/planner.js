@@ -65,6 +65,19 @@ export function renderPlanner(container, state, actions) {
                     </div>
                 </div>
 
+                <!-- Draft Tabs Bar -->
+                <div class="draft-tabs-bar" style="display: flex; gap: 8px; margin: 0 0 16px 0; overflow-x: auto; padding: 4px 0; scrollbar-width: none; align-items: center; width: 100%;">
+                    ${state.drafts.map((draft, idx) => `
+                        <button class="pitch-btn draft-tab-btn ${state.activeDraftIndex === idx ? 'active-chip' : ''}" data-draft-idx="${idx}" style="flex: 0 0 auto; min-width: 80px; text-transform: none; font-size: 11px; padding: 6px 12px; border-radius: 6px; display: flex; align-items: center; gap: 6px; height: 32px;">
+                            <i data-lucide="folder" style="width: 12px; height: 12px;"></i>
+                            <span>${draft.name}</span>
+                        </button>
+                    `).join('')}
+                    <button class="pitch-btn" id="renameDraftBtn" title="Rename Current Draft" style="flex: 0 0 auto; padding: 6px; border-radius: 6px; background: rgba(255, 255, 255, 0.02); display: flex; align-items: center; justify-content: center; height: 32px; width: 32px;">
+                        <i data-lucide="edit-3" style="width: 14px; height: 14px;"></i>
+                    </button>
+                </div>
+
                 <!-- Football Pitch -->
                 <div class="football-pitch" id="pitchBoard">
                     <!-- Top Box (Away GK Box) -->
@@ -104,44 +117,42 @@ export function renderPlanner(container, state, actions) {
                 </div>
             </div>
 
-            <!-- Right Column: AI Rating & Transfers List OR Add Player Panel -->
+            <!-- Right Column: AI Rating & Transfers List -->
             <div class="planner-side-panel">
-                ${state.selectedEmptySlot ? renderAddPlayerPanel(state, actions) : `
-                    <!-- AI Team Rating -->
-                    <div class="ai-rating-card">
-                        <div class="rating-ring-container">
-                            <svg class="rating-svg">
-                                <defs>
-                                    <linearGradient id="rating-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stop-color="#00f2fe" />
-                                        <stop offset="100%" stop-color="#00ff88" />
-                                    </linearGradient>
-                                </defs>
-                                <circle class="rating-bg-circle" cx="70" cy="70" r="60"></circle>
-                                <circle class="rating-progress-circle" cx="70" cy="70" r="60" id="ratingIndicatorCircle"></circle>
-                            </svg>
-                            <div class="rating-text">
-                                <span class="rating-num">${ratingScore}</span>
-                                <span class="rating-max">/ 100</span>
-                            </div>
-                        </div>
-                        <div class="rating-meta">
-                            <h3>AI Squad Rating</h3>
-                            <p>Expected GW Points: <strong class="highlight-bank">${expectedPoints.toFixed(1)}</strong></p>
+                <!-- AI Team Rating -->
+                <div class="ai-rating-card">
+                    <div class="rating-ring-container">
+                        <svg class="rating-svg">
+                            <defs>
+                                <linearGradient id="rating-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#00f2fe" />
+                                    <stop offset="100%" stop-color="#00ff88" />
+                                </linearGradient>
+                            </defs>
+                            <circle class="rating-bg-circle" cx="70" cy="70" r="60"></circle>
+                            <circle class="rating-progress-circle" cx="70" cy="70" r="60" id="ratingIndicatorCircle"></circle>
+                        </svg>
+                        <div class="rating-text">
+                            <span class="rating-num">${ratingScore}</span>
+                            <span class="rating-max">/ 100</span>
                         </div>
                     </div>
+                    <div class="rating-meta">
+                        <h3>AI Squad Rating</h3>
+                        <p>Expected GW Points: <strong class="highlight-bank">${expectedPoints.toFixed(1)}</strong></p>
+                    </div>
+                </div>
 
-                    <!-- Gameweek Transfers planned -->
-                    <div class="gw-transfers-card">
-                        <h3>
-                            <span>GW${state.currentGw} Planned Transfers</span>
-                            <span class="pill-value highlight-transfers">${state.currentGw === 1 ? 'Unlimited' : freeTransfers + ' FT'}</span>
-                        </h3>
-                        <div class="transfer-list" id="plannedTransfersList">
-                            ${renderTransfersList(state, actions)}
-                        </div>
+                <!-- Gameweek Transfers planned -->
+                <div class="gw-transfers-card">
+                    <h3>
+                        <span>GW${state.currentGw} Planned Transfers</span>
+                        <span class="pill-value highlight-transfers">${state.currentGw === 1 ? 'Unlimited' : freeTransfers + ' FT'}</span>
+                    </h3>
+                    <div class="transfer-list" id="plannedTransfersList">
+                        ${renderTransfersList(state, actions)}
                     </div>
-                `}
+                </div>
             </div>
         </div>
     `;
@@ -350,15 +361,65 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
         });
     });
 
-    // Add Player slot click trigger
+    // Add Player slot click trigger (opens the add player popup modal)
     container.querySelectorAll('.player-pitch-card.empty-slot').forEach(card => {
         card.addEventListener('click', e => {
             const slotIndex = parseInt(card.getAttribute('data-slot-index'));
             const position = card.getAttribute('data-position');
-            state.selectedEmptySlot = { slotIndex, position };
-            actions.renderActiveView();
+            openAddPlayerModal(container, state, actions, slotIndex, position);
         });
     });
+
+    // Draft Tabs switching
+    container.querySelectorAll('.draft-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const newIdx = parseInt(btn.getAttribute('data-draft-idx'));
+            if (newIdx === state.activeDraftIndex) return;
+
+            // Auto-save current squad state to previous active draft slot
+            state.drafts[state.activeDraftIndex].squadSlots = JSON.parse(JSON.stringify(state.squadSlots));
+            state.drafts[state.activeDraftIndex].captain = state.captain;
+            state.drafts[state.activeDraftIndex].vice = state.vice;
+            state.drafts[state.activeDraftIndex].formation = state.formation;
+
+            // Load new active draft state
+            const targetDraft = state.drafts[newIdx];
+            if (!targetDraft.squadSlots) {
+                // Initialize to current squad state if first time loaded
+                targetDraft.squadSlots = JSON.parse(JSON.stringify(state.squadSlots));
+                targetDraft.captain = state.captain;
+                targetDraft.vice = state.vice;
+                targetDraft.formation = state.formation;
+            }
+
+            // Set active state variables
+            state.squadSlots = JSON.parse(JSON.stringify(targetDraft.squadSlots));
+            state.captain = targetDraft.captain;
+            state.vice = targetDraft.vice;
+            state.formation = targetDraft.formation;
+            state.activeDraftIndex = newIdx;
+
+            // Save and render
+            state.saveState();
+            actions.renderActiveView();
+            actions.showToast(`Loaded ${targetDraft.name}`, 'success');
+        });
+    });
+
+    // Draft renaming
+    const renameDraftBtn = container.querySelector('#renameDraftBtn');
+    if (renameDraftBtn) {
+        renameDraftBtn.addEventListener('click', () => {
+            const currentDraft = state.drafts[state.activeDraftIndex];
+            const newName = prompt("Enter a custom name for this draft:", currentDraft.name);
+            if (newName && newName.trim()) {
+                currentDraft.name = newName.trim();
+                state.saveState();
+                actions.renderActiveView();
+                actions.showToast(`Draft renamed to "${newName.trim()}"`, 'success');
+            }
+        });
+    }
 
     // Track if a player is selected to swap
     let selectedForSwap = null;
@@ -437,63 +498,6 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
         formationSelect.addEventListener('change', () => {
             actions.setFormation(formationSelect.value);
         });
-    }
-
-    // If empty slot is selected, wire up the add player panel listeners
-    if (state.selectedEmptySlot) {
-        const cancelBtn = container.querySelector('#cancelAddPlayerBtn');
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', () => {
-                state.selectedEmptySlot = null;
-                actions.renderActiveView();
-            });
-        }
-
-        const searchField = container.querySelector('#panelSearchField');
-        const priceSelect = container.querySelector('#panelPriceSelect');
-        const listContainer = container.querySelector('#panelPlayerList');
-        if (searchField && priceSelect && listContainer) {
-            const { position, slotIndex } = state.selectedEmptySlot;
-            const squadInfo = state.getSquadForGw(state.currentGw);
-            const { bank } = squadInfo;
-            const allSquadIds = state.squadSlots.map(s => s.playerId).filter(id => id !== null);
-            const buyablePlayers = PLAYERS.filter(p => 
-                p.position === position && 
-                !allSquadIds.includes(p.id)
-            ).sort((a, b) => (b.xp5 || 0) - (a.xp5 || 0));
-
-            const applyFilters = () => {
-                const query = searchField.value.toLowerCase();
-                const maxPriceStr = priceSelect.value;
-                const maxPrice = maxPriceStr ? parseFloat(maxPriceStr) : Infinity;
-
-                const filtered = buyablePlayers.filter(p => 
-                    p.name.toLowerCase().includes(query) && 
-                    p.price <= maxPrice
-                );
-                listContainer.innerHTML = renderPanelPlayerRows(filtered, bank, state);
-                wireAddButtons();
-            };
-
-            searchField.addEventListener('input', applyFilters);
-            priceSelect.addEventListener('change', applyFilters);
-
-            const wireAddButtons = () => {
-                listContainer.querySelectorAll('.add-player-action-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const playerId = parseInt(btn.getAttribute('data-id'));
-                        const success = actions.addPlayer(state.currentGw, slotIndex, playerId);
-                        if (success) {
-                            state.selectedEmptySlot = null;
-                            actions.renderActiveView();
-                        }
-                    });
-                });
-                lucide.createIcons();
-            };
-
-            wireAddButtons();
-        }
     }
 }
 
@@ -618,9 +622,8 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
     });
 }
 
-// Renders the Add Player sidebar panel in the right column
-function renderAddPlayerPanel(state, actions) {
-    const { slotIndex, position } = state.selectedEmptySlot;
+// Opens the Add Player popup modal
+function openAddPlayerModal(container, state, actions, slotIndex, position) {
     const squadInfo = state.getSquadForGw(state.currentGw);
     const { bank } = squadInfo;
 
@@ -637,53 +640,98 @@ function renderAddPlayerPanel(state, actions) {
         priceOptions += `<option value="${p.toFixed(1)}">Max: £${p.toFixed(1)}m</option>`;
     }
 
-    return `
-        <div class="add-player-panel-card">
-            <div class="panel-header">
-                <h3>Select ${position}</h3>
-                <button class="panel-close-btn" id="cancelAddPlayerBtn" title="Cancel">
-                    <i data-lucide="x"></i>
-                </button>
+    const modalHTML = `
+        <div class="modal-header-section">
+            <h3 style="display: flex; align-items: center; gap: 8px;">
+                <i data-lucide="plus-circle" class="highlight-transfers" style="width: 18px; height: 18px;"></i>
+                Add ${position} Slot
+            </h3>
+            <button class="close-modal-btn" id="closeAddPlayerModalBtn"><i data-lucide="x"></i></button>
+        </div>
+        <div class="checkout-modal-body" style="padding: 20px; display: flex; flex-direction: column; gap: 16px; max-height: 80vh; overflow-y: auto;">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; border-bottom: 1px dashed var(--border-color); padding-bottom: 16px; margin-bottom: 4px;">
+                <p style="font-size: 13px; color: var(--text-muted); margin: 0;">Max Budget: <strong class="highlight-bank" style="font-size: 14px;">£${bank.toFixed(1)}m</strong></p>
+                <div style="display: flex; gap: 8px; width: 100%; max-width: 400px; margin-top: 4px;">
+                    <input type="text" class="transfer-search-field" id="modalSearchField" placeholder="Search by name..." style="flex: 2; font-size: 12px; padding: 8px; background: rgba(255,255,255,0.02); color:#fff; border: 1px solid var(--border-color); border-radius: 6px;" />
+                    <select class="panel-price-select" id="modalPriceSelect" style="flex: 1; font-size: 12px; padding: 8px; background: var(--bg-panel); color:#fff; border: 1px solid var(--border-color); border-radius: 6px;">
+                        ${priceOptions}
+                    </select>
+                </div>
             </div>
-            <p class="panel-subtitle">Max Budget: £${bank.toFixed(1)}m</p>
-            <div class="panel-search-wrapper">
-                <input type="text" class="transfer-search-field" id="panelSearchField" placeholder="Search by name..." style="flex: 1;" />
-                <select class="panel-price-select" id="panelPriceSelect">
-                    ${priceOptions}
-                </select>
-            </div>
-            <div class="panel-player-list" id="panelPlayerList">
-                ${renderPanelPlayerRows(buyablePlayers, bank, state)}
+
+            <div class="modal-player-list-scroll" id="modalPlayerList" style="display: flex; flex-direction: column; gap: 10px; max-height: 48vh; overflow-y: auto; padding-right: 4px;">
+                ${renderModalPlayerRows(buyablePlayers, bank, state)}
             </div>
         </div>
     `;
+
+    actions.showModal(modalHTML, () => {
+        const closeBtn = document.getElementById('closeAddPlayerModalBtn');
+        if (closeBtn) closeBtn.addEventListener('click', actions.hideModal);
+
+        const searchField = document.getElementById('modalSearchField');
+        const priceSelect = document.getElementById('modalPriceSelect');
+        const listContainer = document.getElementById('modalPlayerList');
+
+        const applyFilters = () => {
+            const query = searchField.value.toLowerCase();
+            const maxPriceStr = priceSelect.value;
+            const maxPrice = maxPriceStr ? parseFloat(maxPriceStr) : Infinity;
+
+            const filtered = buyablePlayers.filter(p => 
+                p.name.toLowerCase().includes(query) && 
+                p.price <= maxPrice
+            );
+            listContainer.innerHTML = renderModalPlayerRows(filtered, bank, state);
+            wireAddButtons();
+        };
+
+        if (searchField) searchField.addEventListener('input', applyFilters);
+        if (priceSelect) priceSelect.addEventListener('change', applyFilters);
+
+        const wireAddButtons = () => {
+            listContainer.querySelectorAll('.add-player-action-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const playerId = parseInt(btn.getAttribute('data-id'));
+                    const success = actions.addPlayer(state.currentGw, slotIndex, playerId);
+                    if (success) {
+                        actions.hideModal();
+                        actions.renderActiveView();
+                    }
+                });
+            });
+            lucide.createIcons();
+        };
+
+        wireAddButtons();
+        lucide.createIcons();
+    });
 }
 
-// Renders individual player list items in the sidebar panel
-function renderPanelPlayerRows(players, bank, state) {
+// Renders individual player list items inside the modal
+function renderModalPlayerRows(players, bank, state) {
     if (players.length === 0) {
-        return `<div class="transfer-list-empty">No matching players found.</div>`;
+        return `<div class="transfer-list-empty" style="text-align: center; padding: 20px; color: var(--text-muted);">No matching players found.</div>`;
     }
     
     return players.map(player => {
-        const prediction = player.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 };
         const isAffordable = player.price <= bank;
         
         return `
-            <div class="panel-player-row ${!isAffordable ? 'disabled-row' : ''}" data-id="${player.id}">
-                <div class="player-info-left">
-                    <span class="player-name-main">${player.name}</span>
-                    <span class="player-team-sub">${player.team} • £${player.price.toFixed(1)}m • Owned: ${player.ownership.toFixed(1)}%</span>
-                    <span class="player-team-sub" style="font-size: 10px; opacity: 0.85;">Matches last year: ${player.GS} • Avg Min: ${player.MPPG.toFixed(0)}m</span>
+            <div class="panel-player-row ${!isAffordable ? 'disabled-row' : ''}" data-id="${player.id}" style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px; transition: all var(--transition-fast);">
+                <div class="player-info-left" style="display: flex; flex-direction: column; gap: 4px;">
+                    <span class="player-name-main" style="font-weight: 600; color: #fff; font-size: 13px;">${player.name}</span>
+                    <span class="player-team-sub" style="font-size: 11px; color: var(--text-muted);">${player.team} • £${player.price.toFixed(1)}m • Owned: ${player.ownership.toFixed(1)}%</span>
+                    <span class="player-team-sub" style="font-size: 10px; color: var(--text-muted); opacity: 0.85;">Matches last year: ${player.GS} • Avg Min: ${player.MPPG.toFixed(0)}m</span>
                 </div>
-                <div class="player-info-right">
-                    <span class="player-pts-val">${player.xp5 !== undefined ? player.xp5.toFixed(1) : '0.0'} XP (5-GW)</span>
+                <div class="player-info-right" style="display: flex; align-items: center; gap: 12px;">
+                    <span class="player-pts-val" style="font-size: 12px; font-weight: 700; color: var(--primary);">${player.xp5 !== undefined ? player.xp5.toFixed(1) : '0.0'} XP (5-GW)</span>
                     ${isAffordable ? `
-                        <button class="add-player-action-btn" data-id="${player.id}">
+                        <button class="add-player-action-btn apply-rec-btn" data-id="${player.id}" style="margin: 0; padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 4px; width: auto; height: 28px; display: flex; align-items: center; justify-content: center; gap: 4px;">
                             Add
                         </button>
                     ` : `
-                        <span class="price-locked-badge">Locked</span>
+                        <span class="price-locked-badge" style="font-size: 10px; padding: 4px 8px; border-radius: 4px; background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2);">Locked</span>
                     `}
                 </div>
             </div>

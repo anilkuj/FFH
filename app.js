@@ -96,6 +96,18 @@ class AppState {
         const savedProfile = localStorage.getItem('fpl_hub_user_profile');
         this.userProfile = savedProfile ? JSON.parse(savedProfile) : null;
 
+        const savedDrafts = localStorage.getItem('fpl_hub_drafts');
+        this.drafts = savedDrafts ? JSON.parse(savedDrafts) : Array.from({ length: 10 }, (_, i) => ({
+            name: `Draft ${i + 1}`,
+            squadSlots: null,
+            captain: null,
+            vice: null,
+            formation: '4-3-3'
+        }));
+
+        const savedActiveDraftIdx = localStorage.getItem('fpl_hub_active_draft_idx');
+        this.activeDraftIndex = savedActiveDraftIdx ? parseInt(savedActiveDraftIdx) : 0;
+
 
         // Active chips
         this.chips = {
@@ -139,6 +151,10 @@ class AppState {
         localStorage.setItem('fpl_hub_must_include', JSON.stringify(this.mustInclude));
         localStorage.setItem('fpl_hub_must_exclude', JSON.stringify(this.mustExclude));
         localStorage.setItem('fpl_hub_bench_budget', this.benchBudget.toString());
+
+        // Save drafts state
+        localStorage.setItem('fpl_hub_drafts', JSON.stringify(this.drafts));
+        localStorage.setItem('fpl_hub_active_draft_idx', this.activeDraftIndex.toString());
     }
 
     // Resolves squad, bench, bank, and free transfers specifically for a given gameweek
