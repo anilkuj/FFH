@@ -96,17 +96,7 @@ class AppState {
         const savedProfile = localStorage.getItem('fpl_hub_user_profile');
         this.userProfile = savedProfile ? JSON.parse(savedProfile) : null;
 
-        const savedDrafts = localStorage.getItem('fpl_hub_drafts');
-        this.drafts = savedDrafts ? JSON.parse(savedDrafts) : Array.from({ length: 10 }, (_, i) => ({
-            name: `Draft ${i + 1}`,
-            squadSlots: null,
-            captain: null,
-            vice: null,
-            formation: '4-3-3'
-        }));
-
-        const savedActiveDraftIdx = localStorage.getItem('fpl_hub_active_draft_idx');
-        this.activeDraftIndex = savedActiveDraftIdx ? parseInt(savedActiveDraftIdx) : 0;
+        this.loadUserDrafts();
 
 
         // Active chips
@@ -206,6 +196,52 @@ class AppState {
         }
 
         return { starters, bench, squad, bank, freeTransfers };
+    }
+
+    getDraftsStorageKey() {
+        if (this.userProfile && this.userProfile.sub) {
+            return `fpl_hub_drafts_${this.userProfile.sub}`;
+        }
+        return 'fpl_hub_drafts';
+    }
+
+    getActiveDraftIdxStorageKey() {
+        if (this.userProfile && this.userProfile.sub) {
+            return `fpl_hub_active_draft_idx_${this.userProfile.sub}`;
+        }
+        return 'fpl_hub_active_draft_idx';
+    }
+
+    loadUserDrafts() {
+        const draftsKey = this.getDraftsStorageKey();
+        const activeIdxKey = this.getActiveDraftIdxStorageKey();
+
+        const savedDrafts = localStorage.getItem(draftsKey);
+        this.drafts = savedDrafts ? JSON.parse(savedDrafts) : Array.from({ length: 10 }, (_, i) => ({
+            name: `Draft ${i + 1}`,
+            squadSlots: null,
+            captain: null,
+            vice: null,
+            formation: '4-4-2'
+        }));
+
+        const savedActiveDraftIdx = localStorage.getItem(activeIdxKey);
+        this.activeDraftIndex = savedActiveDraftIdx ? parseInt(savedActiveDraftIdx) : 0;
+
+        // Apply active draft to squad slots if it exists
+        const activeDraft = this.drafts[this.activeDraftIndex];
+        if (activeDraft && activeDraft.squadSlots) {
+            this.squadSlots = JSON.parse(JSON.stringify(activeDraft.squadSlots));
+            this.captain = activeDraft.captain;
+            this.vice = activeDraft.vice;
+            this.formation = activeDraft.formation;
+        } else {
+            // Fallback to baseline default/localStorage if draft is uninitialized
+            const savedSquadSlots = localStorage.getItem('fpl_hub_squad_slots');
+            if (savedSquadSlots) {
+                this.squadSlots = JSON.parse(savedSquadSlots);
+            }
+        }
     }
 }
 
@@ -467,7 +503,12 @@ const actions = {
                 sub: payload.sub
             };
             localStorage.setItem('fpl_hub_user_profile', JSON.stringify(state.userProfile));
+            
+            // Reload user drafts
+            state.loadUserDrafts();
+            
             actions.syncUserProfile();
+            actions.renderActiveView(); // Refresh the planner view immediately
             actions.showToast(`Welcome back, ${payload.name.split(' ')[0]}!`, 'success');
             actions.hideModal(); // Close modal if open
         }
@@ -548,7 +589,12 @@ const actions = {
                         sub: 'mock_123456789'
                     };
                     localStorage.setItem('fpl_hub_user_profile', JSON.stringify(state.userProfile));
+                    
+                    // Reload user drafts
+                    state.loadUserDrafts();
+                    
                     actions.syncUserProfile();
+                    actions.renderActiveView(); // Refresh the planner view immediately
                     actions.hideModal();
                     actions.showToast("Logged in as Magnus Carlsen (Mock Profile)!", "success");
                 });
@@ -628,7 +674,12 @@ const actions = {
                 signOutBtn.addEventListener('click', () => {
                     state.userProfile = null;
                     localStorage.removeItem('fpl_hub_user_profile');
+                    
+                    // Reload user drafts (loads guest drafts)
+                    state.loadUserDrafts();
+                    
                     actions.syncUserProfile();
+                    actions.renderActiveView(); // Refresh the planner view immediately
                     actions.hideModal();
                     actions.showToast("Signed out successfully.", "info");
                 });
@@ -1026,7 +1077,12 @@ document.addEventListener('DOMContentLoaded', () => {
         signOutBtn.addEventListener('click', () => {
             state.userProfile = null;
             localStorage.removeItem('fpl_hub_user_profile');
+            
+            // Reload user drafts (loads guest drafts)
+            state.loadUserDrafts();
+            
             actions.syncUserProfile();
+            actions.renderActiveView(); // Refresh the planner view immediately
             actions.showToast("Signed out successfully.", "info");
         });
     }
@@ -1042,7 +1098,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 sub: 'mock_123456789'
             };
             localStorage.setItem('fpl_hub_user_profile', JSON.stringify(state.userProfile));
+            
+            // Reload user drafts
+            state.loadUserDrafts();
+            
             actions.syncUserProfile();
+            actions.renderActiveView(); // Refresh the planner view immediately
             actions.showToast("Logged in as Magnus Carlsen (Mock Profile)!", "success");
         });
     }
