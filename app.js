@@ -393,23 +393,41 @@ const actions = {
         }
 
         const btnContainer = document.getElementById('googleSignInButton');
-        if (!btnContainer) return;
+        const modalBtnContainer = document.getElementById('modalGoogleSignInButton');
+        if (!btnContainer && !modalBtnContainer) return;
+
+        // Use custom client ID if saved, otherwise fallback to placeholder
+        const customClientId = localStorage.getItem('fpl_hub_google_client_id') || '485458293751-placeholder.apps.googleusercontent.com';
 
         try {
             google.accounts.id.initialize({
-                client_id: '485458293751-placeholder.apps.googleusercontent.com', // Google Sign-In Developer Client ID
+                client_id: customClientId,
                 callback: actions.handleGoogleSignInResponse
             });
 
-            google.accounts.id.renderButton(btnContainer, {
-                type: 'standard',
-                theme: 'filled_black',
-                size: 'large',
-                text: 'signin_with',
-                shape: 'rectangular',
-                logo_alignment: 'left',
-                width: 230
-            });
+            if (btnContainer) {
+                google.accounts.id.renderButton(btnContainer, {
+                    type: 'standard',
+                    theme: 'filled_black',
+                    size: 'large',
+                    text: 'signin_with',
+                    shape: 'rectangular',
+                    logo_alignment: 'left',
+                    width: 230
+                });
+            }
+
+            if (modalBtnContainer) {
+                google.accounts.id.renderButton(modalBtnContainer, {
+                    type: 'standard',
+                    theme: 'filled_black',
+                    size: 'large',
+                    text: 'signin_with',
+                    shape: 'rectangular',
+                    logo_alignment: 'left',
+                    width: 250
+                });
+            }
 
             // Prompt One Tap
             google.accounts.id.prompt();
@@ -471,9 +489,22 @@ const actions = {
                 
                 <div style="border-top: 1px dashed var(--border-color); width: 100%; margin-top: 12px; padding-top: 16px;">
                     <span style="font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 8px;">Reviewing or testing locally?</span>
-                    <button class="apply-rec-btn" id="modalMockSignInBtn" style="margin: 0; width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; background: rgba(0, 255, 136, 0.1); color: var(--primary); border: 1px solid var(--primary-glow);">
+                    <button class="apply-rec-btn" id="modalMockSignInBtn" style="margin: 0 0 16px 0; width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; background: rgba(0, 255, 136, 0.1); color: var(--primary); border: 1px solid var(--primary-glow);">
                         <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> Demo Mock Log In
                     </button>
+                    
+                    <details style="cursor: pointer; text-align: left; width: 100%;">
+                        <summary style="font-size: 11px; color: var(--text-muted); font-weight: 700; outline: none; margin-bottom: 6px;">Configure Google OAuth Client ID</summary>
+                        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;">
+                            <span style="font-size: 10px; color: var(--text-muted); line-height: 1.4;">
+                                If you are the developer or self-hosting, input your Google OAuth Client ID below to connect your own credentials (401 Client Not Found fix).
+                            </span>
+                            <input type="text" id="googleClientIdInput" placeholder="Enter your client_id.apps.googleusercontent.com" class="settings-select" style="font-size: 11px; padding: 8px; width: 100%; background: rgba(255, 255, 255, 0.02); color: #fff; border: 1px solid var(--border-color); border-radius: 4px;" value="${localStorage.getItem('fpl_hub_google_client_id') || ''}">
+                            <button class="apply-rec-btn" id="saveClientIdBtn" style="margin: 0; width: 100%; padding: 6px; font-size: 11px; font-weight: 700; height: 28px; border-radius: 4px;">
+                                Save & Reinitialize
+                            </button>
+                        </div>
+                    </details>
                 </div>
             </div>
         `;
@@ -500,22 +531,25 @@ const actions = {
                 });
             }
 
-            // Render Google Sign-in button in Modal
-            if (typeof google !== 'undefined') {
-                try {
-                    google.accounts.id.renderButton(document.getElementById('modalGoogleSignInButton'), {
-                        type: 'standard',
-                        theme: 'filled_black',
-                        size: 'large',
-                        text: 'signin_with',
-                        shape: 'rectangular',
-                        logo_alignment: 'left',
-                        width: 250
-                    });
-                } catch (e) {
-                    console.warn("Failed to render Google button in modal:", e);
-                }
+            // Client ID configuration save handler
+            const saveClientIdBtn = document.getElementById('saveClientIdBtn');
+            const clientIdInput = document.getElementById('googleClientIdInput');
+            if (saveClientIdBtn && clientIdInput) {
+                saveClientIdBtn.addEventListener('click', () => {
+                    const val = clientIdInput.value.trim();
+                    if (!val) {
+                        localStorage.removeItem('fpl_hub_google_client_id');
+                        actions.showToast("Cleared custom Google Client ID. Falling back to default.", "info");
+                    } else {
+                        localStorage.setItem('fpl_hub_google_client_id', val);
+                        actions.showToast("Saved custom Client ID! Reinitializing...", "success");
+                    }
+                    actions.initGoogleSignInButton();
+                });
             }
+
+            // Render Google Sign-in button in Modal
+            actions.initGoogleSignInButton();
             lucide.createIcons();
         });
     },
