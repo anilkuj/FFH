@@ -750,7 +750,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
         }, 0);
         
         const remainingForBench = totalValue - startingCost;
-        const benchBudget = Math.min(maxBenchBudget, remainingForBench);
+        const benchBudget = remainingForBench;
 
         let benchImproved = true;
         let benchIter = 0;
@@ -818,6 +818,86 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                     currentSlot.playerId = bestCandidate.id;
                     benchImproved = true;
                 }
+            }
+        }
+
+        // --- POST-SOLVER FINE-TUNING: REINVEST ANY REMAINING BANK BALANCE ---
+        let squadImproved = true;
+        let fineTuneIter = 0;
+        while (squadImproved && fineTuneIter < 15) {
+            squadImproved = false;
+            fineTuneIter++;
+
+            let currentSquadCost = optimizedSquadSlots.reduce((sum, slot) => {
+                if (slot.playerId === null) return sum;
+                const p = PLAYERS.find(pl => pl.id === slot.playerId);
+                return sum + (p ? p.price : 0);
+            }, 0);
+            let currentBank = totalValue - currentSquadCost;
+
+            if (currentBank < 0.1) break; // No budget left to reinvest
+
+            let bestUpgrade = null;
+            let bestPtsGain = -0.01; // Allow equal-points upgrades if they cost more (to spend budget)
+            let targetSlotIdx = -1;
+
+            const currentSquadIds = optimizedSquadSlots.map(s => s.playerId).filter(id => id !== null);
+
+            for (let i = 0; i < optimizedSquadSlots.length; i++) {
+                const slot = optimizedSquadSlots[i];
+                if (slot.locked) continue;
+
+                const player = slot.playerId !== null ? PLAYERS.find(p => p.id === slot.playerId) : null;
+                const playerPts = player ? getExpectedPts(player) : 0;
+                const playerPrice = player ? player.price : 0;
+
+                const maxPrice = playerPrice + currentBank;
+
+                const candidates = PLAYERS.filter(p => 
+                    p.position === slot.position && 
+                    !currentSquadIds.includes(p.id) && 
+                    p.price <= maxPrice &&
+                    !state.mustExclude.includes(p.id)
+                );
+
+                for (const cand of candidates) {
+                    const candPts = getExpectedPts(cand);
+                    const gain = candPts - playerPts;
+
+                    // Upgrade if we get more points, or if points are equal but the player is more expensive (to spend down budget)
+                    const isBetter = gain > bestPtsGain;
+                    const isSamePtsButMoreExpensive = Math.abs(gain - bestPtsGain) < 0.01 && bestUpgrade && cand.price > bestUpgrade.price;
+
+                    if (isBetter || isSamePtsButMoreExpensive) {
+                        // Check team limit (max 3 per team)
+                        const tempSquadIds = currentSquadIds.filter(id => id !== slot.playerId);
+                        tempSquadIds.push(cand.id);
+                        
+                        const teamCounts = {};
+                        let ok = true;
+                        for (const id of tempSquadIds) {
+                            const pl = PLAYERS.find(p => p.id === id);
+                            if (pl) {
+                                teamCounts[pl.team] = (teamCounts[pl.team] || 0) + 1;
+                                if (teamCounts[pl.team] > 3) {
+                                    ok = false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (ok) {
+                            bestPtsGain = gain;
+                            bestUpgrade = cand;
+                            targetSlotIdx = i;
+                        }
+                    }
+                }
+            }
+
+            if (bestUpgrade && targetSlotIdx !== -1) {
+                optimizedSquadSlots[targetSlotIdx].playerId = bestUpgrade.id;
+                squadImproved = true;
             }
         }
 
