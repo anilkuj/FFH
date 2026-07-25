@@ -225,6 +225,52 @@ function renderFdrDots(player, currentGw) {
     return html;
 }
 
+function renderFdrFixtures(player, currentGw) {
+    let html = '<div class="fdr-fixtures-container" style="display: flex; gap: 4px; align-items: center; flex-wrap: wrap; margin: 2px 0;">';
+    for (let gw = currentGw; gw < currentGw + 5; gw++) {
+        const pr = player.predictions.find(p => p.gw === gw);
+        if (pr) {
+            const oppText = pr.opp !== 'BYE' ? `${pr.opp} (${pr.loc})` : 'BYE';
+            const fdrColor = getFdrColor(pr.diff);
+            html += `
+                <span class="fdr-fixture-badge" title="GW${gw}: ${oppText} (FDR ${pr.diff})" style="
+                    font-size: 8.5px;
+                    font-weight: 800;
+                    color: #fff;
+                    background-color: ${fdrColor};
+                    padding: 2px 4px;
+                    border-radius: 4px;
+                    text-transform: uppercase;
+                    display: inline-block;
+                    min-width: 42px;
+                    text-align: center;
+                    box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+                ">
+                    ${pr.opp}${pr.opp !== 'BYE' ? `(${pr.loc})` : ''}
+                </span>
+            `;
+        } else {
+            html += `
+                <span class="fdr-fixture-badge" title="GW${gw}: BYE" style="
+                    font-size: 8.5px;
+                    font-weight: 800;
+                    color: #fff;
+                    background-color: #334155;
+                    padding: 2px 4px;
+                    border-radius: 4px;
+                    display: inline-block;
+                    min-width: 42px;
+                    text-align: center;
+                ">
+                    BYE
+                </span>
+            `;
+        }
+    }
+    html += '</div>';
+    return html;
+}
+
 function renderPlayerRow(squadSlots, position, currentGw, captain, vice, actions) {
     const rowSlots = squadSlots.filter(s => s.position === position && s.isStarting);
 
@@ -796,10 +842,7 @@ function renderModalPlayerRows(players, bank, state) {
             <div class="panel-player-row ${!isAffordable ? 'disabled-row' : ''}" data-id="${player.id}" style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px; transition: all var(--transition-fast);">
                 <div class="player-info-left" style="display: flex; flex-direction: column; gap: 4px;">
                     <span class="player-name-main" style="font-weight: 600; color: #fff; font-size: 13px;">${player.name}</span>
-                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 1px;">
-                        ${renderFdrDots(player, state.currentGw)}
-                        <span style="font-size: 10px; color: var(--text-muted); opacity: 0.85;">Next 5 FDR</span>
-                    </div>
+                    ${renderFdrFixtures(player, state.currentGw)}
                     <span class="player-team-sub" style="font-size: 11px; color: var(--text-muted);">${player.team} • £${player.price.toFixed(1)}m • Owned: ${player.ownership.toFixed(1)}%</span>
                     <span class="player-team-sub" style="font-size: 10px; color: var(--text-muted); opacity: 0.85;">Matches last year: ${player.GS} • Avg Min: ${player.MPPG.toFixed(0)}m</span>
                 </div>
