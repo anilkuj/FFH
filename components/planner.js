@@ -796,6 +796,10 @@ function renderModalPlayerRows(players, bank, state) {
             <div class="panel-player-row ${!isAffordable ? 'disabled-row' : ''}" data-id="${player.id}" style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px; transition: all var(--transition-fast);">
                 <div class="player-info-left" style="display: flex; flex-direction: column; gap: 4px;">
                     <span class="player-name-main" style="font-weight: 600; color: #fff; font-size: 13px;">${player.name}</span>
+                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 1px;">
+                        ${renderFdrDots(player, state.currentGw)}
+                        <span style="font-size: 10px; color: var(--text-muted); opacity: 0.85;">Next 5 FDR</span>
+                    </div>
                     <span class="player-team-sub" style="font-size: 11px; color: var(--text-muted);">${player.team} • £${player.price.toFixed(1)}m • Owned: ${player.ownership.toFixed(1)}%</span>
                     <span class="player-team-sub" style="font-size: 10px; color: var(--text-muted); opacity: 0.85;">Matches last year: ${player.GS} • Avg Min: ${player.MPPG.toFixed(0)}m</span>
                 </div>
