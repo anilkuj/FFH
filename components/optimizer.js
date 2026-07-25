@@ -750,7 +750,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
         }, 0);
         
         const remainingForBench = totalValue - startingCost;
-        const benchBudget = remainingForBench;
+        const benchBudget = Math.min(maxBenchBudget, remainingForBench);
 
         let benchImproved = true;
         let benchIter = 0;
@@ -847,9 +847,19 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                 const slot = optimizedSquadSlots[i];
                 if (slot.locked) continue;
 
+                const isBenchSlot = !slot.isStarting;
                 const player = slot.playerId !== null ? PLAYERS.find(p => p.id === slot.playerId) : null;
                 const playerPts = player ? getExpectedPts(player) : 0;
                 const playerPrice = player ? player.price : 0;
+
+                let currentBenchCost = 0;
+                if (isBenchSlot) {
+                    currentBenchCost = benchIndices.reduce((sum, bIdx) => {
+                        const pId = optimizedSquadSlots[bIdx].playerId;
+                        const pl = pId !== null ? PLAYERS.find(p => p.id === pId) : null;
+                        return sum + (pl ? pl.price : 0);
+                    }, 0);
+                }
 
                 const maxPrice = playerPrice + currentBank;
 
@@ -861,6 +871,13 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                 );
 
                 for (const cand of candidates) {
+                    if (isBenchSlot) {
+                        const newBenchCost = currentBenchCost - playerPrice + cand.price;
+                        if (newBenchCost > minBenchBudget) {
+                            continue; // Skip this candidate, it exceeds the reserved bench budget!
+                        }
+                    }
+
                     const candPts = getExpectedPts(cand);
                     const gain = candPts - playerPts;
 
