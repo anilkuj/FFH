@@ -472,6 +472,7 @@ const actions = {
     },
 
     showLoginModal() {
+        const customClientId = localStorage.getItem('fpl_hub_google_client_id') || '485458293751-placeholder.apps.googleusercontent.com';
         const contentHTML = `
             <div class="modal-header-section">
                 <h3 style="display: flex; align-items: center; gap: 8px;"><i data-lucide="lock" class="highlight-transfers" style="width: 18px; height: 18px;"></i> Sign In to FPL Hub</h3>
@@ -498,6 +499,10 @@ const actions = {
                     <details style="cursor: pointer; text-align: left; width: 100%;">
                         <summary style="font-size: 11px; color: var(--text-muted); font-weight: 700; outline: none; margin-bottom: 6px;">Configure Google OAuth Client ID</summary>
                         <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;">
+                            <div style="font-size: 11px; margin-bottom: 4px; color: var(--text-muted); word-break: break-all; line-height: 1.4;">
+                                <strong style="color: var(--text-main);">Active Client ID:</strong> 
+                                <span style="font-family: monospace; color: var(--primary);">${customClientId}</span>
+                            </div>
                             <span style="font-size: 10px; color: var(--text-muted); line-height: 1.4;">
                                 If you are the developer or self-hosting, input your Google OAuth Client ID below to connect your own credentials (401 Client Not Found fix).
                             </span>
