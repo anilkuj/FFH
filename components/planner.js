@@ -108,22 +108,22 @@ export function renderPlanner(container, state, actions) {
 
                     <!-- GKP Row -->
                     <div class="pitch-row" data-row="GKP">
-                        ${renderPlayerRow(state.squadSlots, "GKP", state.currentGw, state.captain, state.vice)}
+                        ${renderPlayerRow(state.squadSlots, "GKP", state.currentGw, state.captain, state.vice, actions)}
                     </div>
 
                     <!-- DEF Row -->
                     <div class="pitch-row" data-row="DEF">
-                        ${renderPlayerRow(state.squadSlots, "DEF", state.currentGw, state.captain, state.vice)}
+                        ${renderPlayerRow(state.squadSlots, "DEF", state.currentGw, state.captain, state.vice, actions)}
                     </div>
 
                     <!-- MID Row -->
                     <div class="pitch-row" data-row="MID">
-                        ${renderPlayerRow(state.squadSlots, "MID", state.currentGw, state.captain, state.vice)}
+                        ${renderPlayerRow(state.squadSlots, "MID", state.currentGw, state.captain, state.vice, actions)}
                     </div>
 
                     <!-- FWD Row -->
                     <div class="pitch-row" data-row="FWD">
-                        ${renderPlayerRow(state.squadSlots, "FWD", state.currentGw, state.captain, state.vice)}
+                        ${renderPlayerRow(state.squadSlots, "FWD", state.currentGw, state.captain, state.vice, actions)}
                     </div>
                 </div>
 
@@ -131,7 +131,7 @@ export function renderPlanner(container, state, actions) {
                 <div class="bench-container">
                     <span class="bench-title">Bench (Click starter to swap with bench)</span>
                     <div class="bench-row" id="benchRow">
-                        ${renderBenchRow(state.squadSlots, state.currentGw, state.captain, state.vice)}
+                        ${renderBenchRow(state.squadSlots, state.currentGw, state.captain, state.vice, actions)}
                     </div>
                 </div>
             </div>
@@ -225,7 +225,7 @@ function renderFdrDots(player, currentGw) {
     return html;
 }
 
-function renderPlayerRow(squadSlots, position, currentGw, captain, vice) {
+function renderPlayerRow(squadSlots, position, currentGw, captain, vice, actions) {
     const rowSlots = squadSlots.filter(s => s.position === position && s.isStarting);
 
     return rowSlots.map((slot, index) => {
@@ -279,7 +279,7 @@ function renderPlayerRow(squadSlots, position, currentGw, captain, vice) {
     }).join('');
 }
 
-function renderBenchRow(squadSlots, currentGw, captain, vice) {
+function renderBenchRow(squadSlots, currentGw, captain, vice, actions) {
     const benchSlots = squadSlots.filter(s => !s.isStarting);
     const labels = ["GKP", "1. DEF", "2. DEF", "3. FWD"];
     return benchSlots.map((slot, index) => {
