@@ -669,7 +669,7 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
         ${getPlayerNewsBanner(player, prediction) ? `<div style="padding: 0 20px 10px 20px;">${getPlayerNewsBanner(player, prediction)}</div>` : ''}
         
         <!-- AI Performance Ratings Grid -->
-        <div style="padding: 0 24px; margin-top: 12px;">
+        <div style="padding: 0 20px; margin-top: 12px;">
             <h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
                 <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> AI Performance Ratings (A-E Grades)
             </h4>
@@ -701,7 +701,7 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
             </div>
         </div>
 
-        <div style="padding: 0 24px;"><h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; gap: 6px; margin-bottom: 8px;"><i data-lucide="bar-chart-3" style="width: 14px; height: 14px;"></i> OPTA Match Stats</h4></div>
+        <div style="padding: 0 20px;"><h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; gap: 6px; margin-bottom: 8px;"><i data-lucide="bar-chart-3" style="width: 14px; height: 14px;"></i> OPTA Match Stats</h4></div>
         <div class="player-detail-stats-grid" style="margin-top: 0; padding-top: 0;">
             <div class="detail-stat-box">
                 <span class="detail-stat-val">£${player.price.toFixed(1)}m</span>
@@ -759,7 +759,7 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
         </div>
 
         <!-- Similarly Priced Alternatives -->
-        <div style="padding: 0 24px; margin-top: 16px; border-top: 1px solid var(--border-color); padding-top: 16px; text-align: left;">
+        <div style="padding: 0 20px; margin-top: 12px; border-top: 1px solid var(--border-color); padding-top: 12px; text-align: left;">
             <h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--secondary); display: flex; align-items: center; gap: 6px; margin-bottom: 12px;">
                 <i data-lucide="arrow-right-left" style="width: 14px; height: 14px;"></i> Similarly Priced Alternatives
             </h4>
