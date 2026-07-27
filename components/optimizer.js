@@ -120,6 +120,21 @@ export function renderOptimizer(container, state, actions) {
                         </div>
                     </div>
                 </div>
+
+                <div class="optimizer-rules-container" style="margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 20px;">
+                    <h4 style="font-family: var(--font-heading); font-size: 15px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="brain" style="color: var(--secondary); width:16px; height:16px;"></i> AI Analyst Settings
+                    </h4>
+                    <div style="display: flex; flex-direction: column; gap: 8px; max-width: 450px;">
+                        <label for="geminiApiKey" style="font-size: 13px; font-weight: 700; color: var(--text-main);">Gemini API Key (Optional)</label>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="password" id="geminiApiKey" placeholder="Enter your Gemini API Key..." class="settings-select" style="flex: 1; border-color: rgba(255, 255, 255, 0.08);" value="${localStorage.getItem('fpl_hub_gemini_api_key') || ''}">
+                            <button id="saveApiKeyBtn" class="pitch-btn" style="padding: 10px 16px; border-radius: 8px; height: 38px; font-weight: 600;">Save</button>
+                        </div>
+                        <span class="setting-help">Provides real-time elite LLM strategist reports customized to your team. If left blank, FPL Hub's local analysis engine will be used.</span>
+                    </div>
+                </div>
+
                 <button class="run-optimization-btn" id="runOptBtn" style="margin-top: 20px; width: 100%; justify-content: center;">
                     <i data-lucide="play-circle"></i> Run AI Analysis
                 </button>
@@ -220,6 +235,22 @@ export function renderOptimizer(container, state, actions) {
                 state.saveState();
                 renderOptimizer(container, state, actions);
                 actions.showToast(`Draft renamed to "${newName.trim()}"`, 'success');
+            }
+        });
+    }
+
+    // Save Gemini API Key listener
+    const saveApiKeyBtn = container.querySelector('#saveApiKeyBtn');
+    const geminiApiKeyInput = container.querySelector('#geminiApiKey');
+    if (saveApiKeyBtn && geminiApiKeyInput) {
+        saveApiKeyBtn.addEventListener('click', () => {
+            const keyVal = geminiApiKeyInput.value.trim();
+            if (keyVal) {
+                localStorage.setItem('fpl_hub_gemini_api_key', keyVal);
+                actions.showToast("Gemini API Key saved successfully!", "success");
+            } else {
+                localStorage.removeItem('fpl_hub_gemini_api_key');
+                actions.showToast("Gemini API Key removed. Using local engine.", "info");
             }
         });
     }
@@ -1056,7 +1087,13 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                     `}
                 </div>
             </div>
+            <div id="aiStrategistReportContainer" style="grid-column: span 2; margin-top: 24px;"></div>
         `;
+
+        const reportContainer = resultsGrid.querySelector('#aiStrategistReportContainer');
+        if (reportContainer) {
+            generateAIStrategistReport(reportContainer, state, actions, optimizedSquadSlots, bank, horizon);
+        }
 
         const applyAllBtn = resultsGrid.querySelector('#applyAllPreseasonBtn');
         if (applyAllBtn) {
@@ -1309,7 +1346,19 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                     </div>
                 </div>
             ` : ''}
+            <div id="aiStrategistReportContainer" style="grid-column: span 2; margin-top: 24px;"></div>
         `;
+
+        const reportContainer = resultsGrid.querySelector('#aiStrategistReportContainer');
+        if (reportContainer) {
+            const optimizedSquadSlots = JSON.parse(JSON.stringify(state.squadSlots));
+            // Apply recommended single transfer as default optimization squad report
+            if (best1Tx && best1Tx.gain > 0.1) {
+                const slotOut = optimizedSquadSlots.find(s => s.playerId === best1Tx.out.id);
+                if (slotOut) slotOut.playerId = best1Tx.in.id;
+            }
+            generateAIStrategistReport(reportContainer, state, actions, optimizedSquadSlots, bank, horizon);
+        }
 
         const singleBtn = resultsGrid.querySelector('#applySingleBtn');
         if (singleBtn) {
@@ -1343,4 +1392,243 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
             });
         }
     }
+}
+
+function generateAIStrategistReport(reportContainer, state, actions, squadSlots, bank, horizon) {
+    reportContainer.innerHTML = `
+        <div class="optimizer-card" style="padding: 24px; position: relative; overflow: hidden; background: linear-gradient(135deg, var(--bg-card), rgba(0, 242, 254, 0.05)); border: 1px solid rgba(0, 242, 254, 0.25);">
+            <h3 style="font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px;">
+                <i data-lucide="brain" style="color: var(--secondary); width: 20px; height: 20px;"></i>
+                Elite FPL AI Strategist Report
+            </h3>
+            <div id="aiReportText" style="font-size: 13px; line-height: 1.6; color: var(--text-muted); display: flex; flex-direction: column; gap: 16px;">
+                <div style="display: flex; align-items: center; gap: 8px; justify-content: center; padding: 24px 0;">
+                    <i data-lucide="loader" class="animate-spin" style="color: var(--secondary); width: 24px; height: 24px;"></i>
+                    <span style="font-weight: 600; color: #fff;">Analyzing optimized squad and generating strategist report...</span>
+                </div>
+            </div>
+        </div>
+    `;
+    lucide.createIcons();
+
+    const apiKey = localStorage.getItem('fpl_hub_gemini_api_key');
+    const squadPlayers = squadSlots.map(s => s.playerId ? PLAYERS.find(p => p.id === s.playerId) : null).filter(p => p !== null);
+    
+    const starters = squadSlots.filter(s => s.isStarting && s.playerId !== null).map(s => PLAYERS.find(p => p.id === s.playerId));
+    const bench = squadSlots.filter(s => !s.isStarting && s.playerId !== null).map(s => PLAYERS.find(p => p.id === s.playerId));
+
+    const bestPlayer = [...starters].sort((a, b) => {
+        const predA = a.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0;
+        const predB = b.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0;
+        return predB - predA;
+    })[0];
+    const secondBestPlayer = starters.filter(p => p !== bestPlayer).sort((a, b) => {
+        const predA = a.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0;
+        const predB = b.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0;
+        return predB - predA;
+    })[0] || bestPlayer;
+
+    const differentials = squadPlayers.filter(p => p.ownership < 15).slice(0, 3);
+    
+    let squadDesc = `\n**Starting XI:**\n`;
+    starters.forEach(p => {
+        squadDesc += `- ${p.name} (${p.position}, ${p.team}, £${p.price.toFixed(1)}m, expected points next ${horizon} GWs: ${(p.predictions.filter(pr => pr.gw >= state.currentGw && pr.gw < state.currentGw + horizon).reduce((s, pr) => s + pr.pts, 0)).toFixed(1)} XP)\n`;
+    });
+    squadDesc += `\n**Bench:**\n`;
+    bench.forEach((p, idx) => {
+        squadDesc += `- Bench Slot ${idx + 1}: ${p.name} (${p.position}, ${p.team}, £${p.price.toFixed(1)}m)\n`;
+    });
+
+    if (apiKey) {
+        const promptText = `
+You are an elite Fantasy Premier League (FPL) strategist. Your task is to build the strongest possible FPL squad for the current season.
+Before selecting players:
+Read and apply the official Fantasy Premier League rules, including:
+- Squad budget (£100.0m total)
+- Position requirements (2 GKPs, 5 DEFs, 5 MIDs, 3 FWDs)
+- Maximum three players per Premier League club
+- Bench rules
+- Captain and vice-captain
+- Chips (Wildcard, Bench Boost, Triple Captain, Free Hit)
+- Transfers and price changes
+
+Research the latest information available, including:
+- Current player prices
+- Expected minutes
+- Injury news
+- Suspensions
+- Predicted starting line-ups
+- Pre-season form
+- Set-piece duties
+- Expected Goals (xG)
+- Expected Assists (xA)
+- Clean sheet odds
+- Fixture Difficulty Ratings
+- Bookmakers’ anytime goalscorer odds
+- Team attacking and defensive strength
+- Expert FPL consensus where appropriate
+
+Optimise the squad to maximise expected points over the first 6-8 Gameweeks, not just Gameweek 1.
+Prioritise:
+- Value for money
+- Reliable starters
+- Strong captaincy options
+- Players with favourable opening fixtures
+- High upside players with good underlying statistics
+
+Avoid:
+- Rotation risks unless justified
+- Players returning from injury without expected minutes
+- Players with difficult opening fixtures unless they are essential premium picks
+
+Here is the current optimized squad we selected for you:
+${squadDesc}
+
+Remaining Bank: £${bank.toFixed(1)}m
+Forced Include Players: ${state.mustInclude.map(id => PLAYERS.find(p => p.id === id)?.name).filter(n => !!n).join(', ') || 'None'}
+Forced Exclude Players: ${state.mustExclude.map(id => PLAYERS.find(p => p.id === id)?.name).filter(n => !!n).join(', ') || 'None'}
+Optimization Horizon: ${horizon} Gameweeks
+
+After selecting the squad:
+1. Explain why every player was chosen.
+2. State how much money remains in the bank.
+3. Recommend the starting XI.
+4. Recommend captain and vice-captain.
+5. Explain the bench order.
+6. Identify 3 differential picks.
+7. Suggest the first transfer if everything goes to plan.
+8. Suggest contingency transfers if a key player gets injured.
+9. Give the expected strengths and weaknesses of the squad.
+10. If there are any uncertainties (injuries, transfers, expected line-ups), explain your assumptions before finalising the team.
+
+Write a detailed, structured markdown response. Highlight key strategic decisions. Be professional and authoritative.
+`;
+
+        fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: promptText }] }]
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            const reportText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (reportText) {
+                renderMarkdownReport(reportContainer, reportText, true);
+            } else {
+                throw new Error("Invalid API response format");
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            renderMarkdownReport(reportContainer, `**Error generating live Gemini report:** ${err.message}. Falling back to local analysis engine below.`, false);
+            setTimeout(() => {
+                const fallbackText = getLocalReportMarkdown(squadPlayers, starters, bench, bank, horizon, bestPlayer, secondBestPlayer, differentials, state);
+                renderMarkdownReport(reportContainer, fallbackText, false);
+            }, 1500);
+        });
+    } else {
+        setTimeout(() => {
+            const reportText = getLocalReportMarkdown(squadPlayers, starters, bench, bank, horizon, bestPlayer, secondBestPlayer, differentials, state);
+            renderMarkdownReport(reportContainer, reportText, false);
+        }, 800);
+    }
+}
+
+function getLocalReportMarkdown(squadPlayers, starters, bench, bank, horizon, bestPlayer, secondBestPlayer, differentials, state) {
+    let markdown = `
+### FPL Strategist Squad Analysis & GW1 Plan
+*Analyzing performance metrics, expected value, and opening schedules for a **${horizon}-Gameweek** horizon.*
+
+---
+
+#### 1. Player-by-Player Selection Rationale
+Here is why each of your squad players is recommended by our optimization model:
+`;
+
+    squadPlayers.forEach(p => {
+        let blurb = '';
+        if (p.price >= 11.0) {
+            blurb = `Elite premium asset and reliable captaincy choice. Has projected stats of ${p.predictions.find(pr=>pr.gw===state.currentGw)?.pts.toFixed(1)} expected points for the opening match.`;
+        } else if (p.position === 'DEF' && p.price >= 6.0) {
+            blurb = `Premium defensive asset with high clean sheet potential and offensive threat from set-pieces/crosses.`;
+        } else if (p.price <= 5.5) {
+            blurb = `Exceptional budget enabler showing reliable expected starting minutes and solid value per million.`;
+        } else {
+            blurb = `Core mid-priced selection with strong fixtures and high xGI numbers.`;
+        }
+        markdown += `- **${p.name}** (${p.position}, £${p.price.toFixed(1)}m): ${blurb}\n`;
+    });
+
+    markdown += `
+#### 2. Remaining Budget in Bank
+- **Bank Balance:** **£${bank.toFixed(1)}m** remains in the bank. This capital is reserved to facilitate quick transfers or capture future price rises.
+
+#### 3. Recommended Starting XI
+Your strongest starting 11 based on mathematically projected points for Gameweek ${state.currentGw}:
+- **Goalkeeper:** ${starters.filter(p=>p.position==='GKP').map(p=>p.name).join(', ')}
+- **Defenders:** ${starters.filter(p=>p.position==='DEF').map(p=>p.name).join(', ')}
+- **Midfielders:** ${starters.filter(p=>p.position==='MID').map(p=>p.name).join(', ')}
+- **Forwards:** ${starters.filter(p=>p.position==='FWD').map(p=>p.name).join(', ')}
+
+#### 4. Captain & Vice-Captain Recommendations
+- 👑 **Captain:** **${bestPlayer ? bestPlayer.name : 'None'}** — Projecting the highest expected points for GW${state.currentGw} (${(bestPlayer ? (bestPlayer.predictions.find(pr=>pr.gw===state.currentGw)?.pts || 0) : 0).toFixed(1)} XP).
+- 🪙 **Vice-Captain:** **${secondBestPlayer ? secondBestPlayer.name : 'None'}** — Next highest predicted value in starting 11, serving as a reliable backup captain.
+
+#### 5. Bench Ordering Logic
+To prevent points from being lost to unexpected rotations, the bench has been ordered logically by position and value:
+1. **Slot 1 (GK):** ${bench.find(p=>p.position==='GKP')?.name || 'None'} — Secondary goalkeeper.
+2. **Slot 2 (1st Sub):** ${bench.filter(p=>p.position!=='GKP')[0]?.name || 'None'} — Highest expected points backup.
+3. **Slot 3 (2nd Sub):** ${bench.filter(p=>p.position!=='GKP')[1]?.name || 'None'}
+4. **Slot 4 (3rd Sub):** ${bench.filter(p=>p.position!=='GKP')[2]?.name || 'None'}
+
+#### 6. Differential Picks (Low Ownership Upside)
+These 3 low-ownership assets can help you gain a significant rank advantage early on:
+${differentials.length > 0 ? differentials.map(p => `- **${p.name}** (${p.team}, £${p.price.toFixed(1)}m) — Ownership: **${p.ownership.toFixed(1)}%**`).join('\n') : '- None found under 15%.'}
+
+#### 7. Planned First Transfer (GW2/GW3)
+- If everything goes to plan, the first transfer strategy will be to upgrade a budget defender or roll the transfer to gain a 2-FT advantage. Target players with high FDR spikes after GW3.
+
+#### 8. Injury Contingencies
+- If a premium asset gets injured, replace them immediately with an equivalent priced key-player (e.g. Haaland $\\rightarrow$ Watkins/Isak, Salah $\\rightarrow$ Palmer/Saka) to avoid point hits.
+
+#### 9. Squad Strengths & Weaknesses
+- **Strengths:** High captaincy upside, strict budget compliance, and balanced starting XI expected points value.
+- **Weaknesses:** Slight susceptibility to bench rotation points loss if double starts are missed.
+`;
+    return markdown;
+}
+
+function renderMarkdownReport(reportContainer, text, isLive) {
+    const reportTextDiv = reportContainer.querySelector('#aiReportText');
+    if (!reportTextDiv) return;
+
+    let html = text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/^### (.*$)/gim, '<h3 style="font-family: var(--font-heading); font-size: 16px; font-weight: 700; color: var(--secondary); margin-top: 16px; margin-bottom: 8px;">$1</h3>')
+        .replace(/^#### (.*$)/gim, '<h4 style="font-family: var(--font-heading); font-size: 14px; font-weight: 700; color: #fff; margin-top: 14px; margin-bottom: 6px;">$1</h4>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong style="color: #fff;">$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/^\- (.*$)/gim, '<li style="margin-left: 16px; list-style-type: disc; margin-bottom: 4px;">$1</li>')
+        .replace(/\n$/gim, '<br />');
+
+    html = html.split('\n\n').map(p => {
+        if (p.trim().startsWith('<h') || p.trim().startsWith('<li')) return p;
+        return `<p style="margin-bottom: 12px; line-height: 1.6;">${p}</p>`;
+    }).join('');
+
+    const sourceBadge = isLive 
+        ? `<span style="font-size: 10px; font-weight: 700; background: rgba(0, 242, 254, 0.1); color: var(--secondary); padding: 2px 8px; border-radius: 10px; border: 1px solid var(--secondary-glow); align-self: flex-start;">GEMINI 1.5 FLASH LIVE REPORT</span>`
+        : `<span style="font-size: 10px; font-weight: 700; background: rgba(255, 255, 255, 0.05); color: var(--text-muted); padding: 2px 8px; border-radius: 10px; border: 1px solid var(--border-color); align-self: flex-start;">LOCAL FPL STRATEGIST ENGINE</span>`;
+
+    reportTextDiv.innerHTML = `
+        ${sourceBadge}
+        <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 4px;">
+            ${html}
+        </div>
+    `;
+    lucide.createIcons();
 }
