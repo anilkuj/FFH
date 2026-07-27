@@ -634,6 +634,24 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
         return 'rating-badge-na';
     };
 
+    const squadInfo = state.getSquadForGw(state.currentGw);
+    const squad = [...squadInfo.starters, ...squadInfo.bench];
+    const bank = squadInfo.bank;
+    
+    const comparablePlayers = PLAYERS.filter(p => 
+        p.position === player.position && 
+        p.id !== player.id &&
+        !squad.includes(p.id)
+    ).sort((a, b) => {
+        const diffA = Math.abs(a.price - player.price);
+        const diffB = Math.abs(b.price - player.price);
+        if (diffA !== diffB) return diffA - diffB;
+        
+        const ptsA = a.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0;
+        const ptsB = b.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0;
+        return ptsB - ptsA;
+    }).slice(0, 3);
+
     const modalContent = `
         <div class="modal-header-section">
             <h3>Player Profile</h3>
@@ -737,7 +755,106 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
                 <span class="detail-stat-val">${player.MPPG.toFixed(1)}</span>
                 <span class="detail-stat-lbl">Avg Min/Game</span>
             </div>
+            </div>
         </div>
+
+        <!-- Similarly Priced Alternatives -->
+        <div style="padding: 0 24px; margin-top: 16px; border-top: 1px solid var(--border-color); padding-top: 16px; text-align: left;">
+            <h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--secondary); display: flex; align-items: center; gap: 6px; margin-bottom: 12px;">
+                <i data-lucide="arrow-right-left" style="width: 14px; height: 14px;"></i> Similarly Priced Alternatives
+            </h4>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                ${comparablePlayers.map(comp => {
+                    const compPrediction = comp.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 };
+                    const compRatings = getPlayerRatings(comp, state.currentGw);
+                    
+                    // Check budget constraint
+                    const newBank = bank + player.price - comp.price;
+                    const budgetOk = newBank >= 0;
+                    
+                    // Check team count constraint
+                    const tempSquad = squad.filter(id => id !== player.id);
+                    tempSquad.push(comp.id);
+                    const teamCounts = {};
+                    let teamOk = true;
+                    for (const id of tempSquad) {
+                        const p = PLAYERS.find(pl => pl.id === id);
+                        if (p) {
+                            teamCounts[p.team] = (teamCounts[p.team] || 0) + 1;
+                            if (teamCounts[p.team] > 3) {
+                                teamOk = false;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    // Check health status
+                    const statusOk = comp.status !== 'i' && comp.status !== 's' && comp.status !== 'u';
+                    
+                    const allOk = budgetOk && teamOk && statusOk;
+                    
+                    let disabledReason = "";
+                    if (!statusOk) disabledReason = "Unavailable / Injured";
+                    else if (!budgetOk) disabledReason = "Insufficient budget";
+                    else if (!teamOk) disabledReason = "Team limit reached (max 3)";
+
+                    return `
+                        <div class="comp-player-card" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <div>
+                                    <span style="font-weight: 700; font-size: 13px; color: #fff;">${comp.name}</span>
+                                    <span style="font-size: 11px; color: var(--text-muted); margin-left: 6px;">${comp.team} • ${comp.position}</span>
+                                </div>
+                                <div style="text-align: right;">
+                                    <span style="font-weight: 800; font-size: 12px; color: var(--primary);">£${comp.price.toFixed(1)}m</span>
+                                    <span style="font-size: 10px; color: var(--text-muted); display: block;">${compPrediction.pts.toFixed(1)} XP</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Rating grades row -->
+                            <div style="display: flex; gap: 6px; justify-content: flex-start; flex-wrap: wrap;">
+                                <div style="font-size: 9px; display: flex; align-items: center; gap: 3px; background: rgba(255,255,255,0.04); padding: 2px 4px; border-radius: 4px;" title="Expected Minutes">
+                                    <span style="color: var(--text-muted);">Min:</span>
+                                    <span class="${getBadgeClass(compRatings.expectedMinutes)}" style="font-size: 9px; font-weight: 800; padding: 0 4px; border-radius: 2px;">${compRatings.expectedMinutes}</span>
+                                </div>
+                                <div style="font-size: 9px; display: flex; align-items: center; gap: 3px; background: rgba(255,255,255,0.04); padding: 2px 4px; border-radius: 4px;" title="Next 5 Fixtures">
+                                    <span style="color: var(--text-muted);">Fix:</span>
+                                    <span class="${getBadgeClass(compRatings.next5Fixtures)}" style="font-size: 9px; font-weight: 800; padding: 0 4px; border-radius: 2px;">${compRatings.next5Fixtures}</span>
+                                </div>
+                                <div style="font-size: 9px; display: flex; align-items: center; gap: 3px; background: rgba(255,255,255,0.04); padding: 2px 4px; border-radius: 4px;" title="Attacking Role">
+                                    <span style="color: var(--text-muted);">Role:</span>
+                                    <span class="${getBadgeClass(compRatings.attackingRole)}" style="font-size: 9px; font-weight: 800; padding: 0 4px; border-radius: 2px;">${compRatings.attackingRole}</span>
+                                </div>
+                                <div style="font-size: 9px; display: flex; align-items: center; gap: 3px; background: rgba(255,255,255,0.04); padding: 2px 4px; border-radius: 4px;" title="FPL Attacking Potential">
+                                    <span style="color: var(--text-muted);">Att:</span>
+                                    <span class="${getBadgeClass(compRatings.attackingPotential)}" style="font-size: 9px; font-weight: 800; padding: 0 4px; border-radius: 2px;">${compRatings.attackingPotential}</span>
+                                </div>
+                                <div style="font-size: 9px; display: flex; align-items: center; gap: 3px; background: rgba(255,255,255,0.04); padding: 2px 4px; border-radius: 4px;" title="Defcon Potential">
+                                    <span style="color: var(--text-muted);">Def:</span>
+                                    <span class="${getBadgeClass(compRatings.defconPotential)}" style="font-size: 9px; font-weight: 800; padding: 0 4px; border-radius: 2px;">${compRatings.defconPotential}</span>
+                                </div>
+                                <div style="font-size: 9px; display: flex; align-items: center; gap: 3px; background: rgba(255,255,255,0.04); padding: 2px 4px; border-radius: 4px;" title="Availability">
+                                    <span style="color: var(--text-muted);">Avail:</span>
+                                    <span class="${getBadgeClass(compRatings.availability)}" style="font-size: 9px; font-weight: 800; padding: 0 4px; border-radius: 2px;">${compRatings.availability}</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Swap button -->
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 4px;">
+                                <span style="font-size: 10px; color: #f43f5e; font-weight: 500;">${disabledReason ? `<i data-lucide="alert-circle" style="width: 10px; height: 10px; display: inline-block; vertical-align: middle; margin-right: 2px;"></i> ${disabledReason}` : ''}</span>
+                                <button class="action-main-btn btn-secondary-action direct-comp-swap-btn" 
+                                        data-comp-id="${comp.id}" 
+                                        style="font-size: 11px; padding: 4px 12px; height: 26px; margin: 0;" 
+                                        ${!allOk ? 'disabled' : ''}>
+                                    Swap Player
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        </div>
+
         <div class="player-action-section">
             <button class="action-main-btn btn-secondary-action" id="detailSwapBtn">Swap Player</button>
             ${!isCaptain ? `<button class="action-main-btn btn-secondary-action" id="detailCapBtn">Make Captain</button>` : ''}
@@ -754,6 +871,18 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
         document.getElementById('detailSwapBtn').addEventListener('click', () => {
             actions.hideModal();
             triggerSwapCallback({ id: playerId, type });
+        });
+
+        // Wire direct comparison swap buttons
+        const compBtns = document.querySelectorAll('.direct-comp-swap-btn');
+        compBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const compId = parseInt(btn.getAttribute('data-comp-id'));
+                const ok = actions.addTransfer(state.currentGw, playerId, compId);
+                if (ok) {
+                    actions.hideModal();
+                }
+            });
         });
 
         const capBtn = document.getElementById('detailCapBtn');
