@@ -1,4 +1,4 @@
-import { PLAYERS, TEAMS } from '../data.js';
+import { PLAYERS, TEAMS, getPlayerRatings, getPlayerEfficiency } from '../data.js';
 import { getFormationConstraints } from './formation.js';
 
 export function renderOptimizer(container, state, actions) {
@@ -33,10 +33,19 @@ export function renderOptimizer(container, state, actions) {
                         <label for="gwHorizon">Gameweek Horizon</label>
                         <select id="gwHorizon" class="settings-select">
                             <option value="1">1 Gameweek (Short-term)</option>
-                            <option value="3" selected>3 Gameweeks (Recommended)</option>
-                            <option value="5">5 Gameweeks (Long-term)</option>
+                            <option value="3">3 Gameweeks (Recommended)</option>
+                            <option value="5" selected>5 Gameweeks (Long-term)</option>
                         </select>
                         <span class="setting-help">Analyze fixtures and expected points over this horizon.</span>
+                    </div>
+
+                    <div class="setting-group">
+                        <label for="optimizerObjectiveSelect">Optimization Objective</label>
+                        <select id="optimizerObjectiveSelect" class="settings-select">
+                            <option value="xp" ${state.optimizerObjective === 'xp' ? 'selected' : ''}>Maximize Projected Points (XP)</option>
+                            <option value="efficiency" ${state.optimizerObjective === 'efficiency' ? 'selected' : ''}>Maximize Rating Efficiency (A-E/Price)</option>
+                        </select>
+                        <span class="setting-help">Optimize for raw expected points or value-for-money rating efficiency.</span>
                     </div>
 
                     <div class="setting-group">
@@ -184,6 +193,14 @@ export function renderOptimizer(container, state, actions) {
     if (formationSelect) {
         formationSelect.addEventListener('change', () => {
             actions.setFormation(formationSelect.value);
+        });
+    }
+
+    const objectiveSelect = container.querySelector('#optimizerObjectiveSelect');
+    if (objectiveSelect) {
+        objectiveSelect.addEventListener('change', () => {
+            state.optimizerObjective = objectiveSelect.value;
+            state.saveState();
         });
     }
 
@@ -442,6 +459,20 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
         return sum;
     };
 
+    const objective = state.optimizerObjective || 'xp';
+    const getSolverScore = (player) => {
+        if (!player) return 0;
+        // Ignore injured, suspended, or unavailable players (status 'i', 's', 'u')
+        if (player.status === 'i' || player.status === 's' || player.status === 'u') {
+            return 0;
+        }
+        if (objective === 'efficiency') {
+            return getPlayerEfficiency(player, state.currentGw) * 10;
+        } else {
+            return getExpectedPts(player);
+        }
+    };
+
     // Helper: FDR (average fixture difficulty)
     const getAvgFDR = (player) => {
         let sum = 0;
@@ -502,28 +533,25 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
 
     const renderPlayerStatsBreakdown = (player) => {
         const fdr = getAvgFDR(player);
-        const csOdds = getCleanSheetOdds(player);
-        const projRet = getProjectedReturns(player);
         const pts = getExpectedPts(player);
+        const eff = getPlayerEfficiency(player, state.currentGw);
+        const ratings = getPlayerRatings(player, state.currentGw);
+        const grades = `${ratings.expectedMinutes}${ratings.next5Fixtures}${ratings.attackingRole}${ratings.attackingPotential}${ratings.defconPotential === 'N/A' ? '-' : ratings.defconPotential}${ratings.availability}`;
 
         return `
             <div class="analysis-stats-grid">
-                <div class="stat-pill">
+                <div class="stat-pill" title="Avg FDR">
                     <span class="stat-pill-label">Avg FDR</span>
                     <span class="stat-pill-val fdr-${Math.round(parseFloat(fdr))}">${fdr}</span>
                 </div>
-                ${csOdds !== null ? `
-                    <div class="stat-pill">
-                        <span class="stat-pill-label">CS Odds</span>
-                        <span class="stat-pill-val">${csOdds}</span>
-                    </div>
-                ` : ''}
-                ${projRet !== null ? `
-                    <div class="stat-pill">
-                        <span class="stat-pill-label">Proj xGI</span>
-                        <span class="stat-pill-val">${projRet}</span>
-                    </div>
-                ` : ''}
+                <div class="stat-pill" title="Mins, Fixt, Role, AttPot, Defcon, Avail">
+                    <span class="stat-pill-label">Grades</span>
+                    <span class="stat-pill-val" style="color: var(--secondary); letter-spacing: 0.5px;">${grades}</span>
+                </div>
+                <div class="stat-pill" title="Average grade rating score divided by price">
+                    <span class="stat-pill-label">Efficiency</span>
+                    <span class="stat-pill-val" style="color: var(--primary);">${eff.toFixed(2)}</span>
+                </div>
                 <div class="stat-pill highlight">
                     <span class="stat-pill-label">XP (${horizon} GW)</span>
                     <span class="stat-pill-val">${pts.toFixed(1)}</span>
@@ -578,6 +606,13 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
         // 4. Budget
         if (outPlayer && inPlayer.price < outPlayer.price) {
             reasons.push(`<strong>Budget Enabler:</strong> Frees up £${(outPlayer.price - inPlayer.price).toFixed(1)}m in capital value.`);
+        }
+
+        // 5. Rating Efficiency
+        const outEff = outPlayer ? getPlayerEfficiency(outPlayer, state.currentGw) : 0;
+        const inEff = getPlayerEfficiency(inPlayer, state.currentGw);
+        if (inEff > outEff) {
+            reasons.push(`<strong>Higher Efficiency:</strong> Value-for-money rating efficiency improves from ${outEff.toFixed(2)} to ${inEff.toFixed(2)}.`);
         }
 
         // Fallback
@@ -785,7 +820,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                 if (currentSlot.locked) continue; // Skip locked force-included players!
 
                 const currentSlotPlayer = currentSlot.playerId !== null ? PLAYERS.find(p => p.id === currentSlot.playerId) : null;
-                const currentPts = currentSlotPlayer ? getExpectedPts(currentSlotPlayer) : 0;
+                const currentPts = currentSlotPlayer ? getSolverScore(currentSlotPlayer) : 0;
 
                 // Cost of other starting players
                 const otherStartingCost = startingIndices.reduce((sum, sIdx) => {
@@ -803,13 +838,13 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                     !usedStartingIds.includes(p.id) && 
                     p.price <= maxBudgetForSlot &&
                     !state.mustExclude.includes(p.id)
-                ).sort((a, b) => getExpectedPts(b) - getExpectedPts(a));
+                ).sort((a, b) => getSolverScore(b) - getSolverScore(a));
 
                 let bestCandidate = null;
                 let bestPts = currentPts;
 
                 for (const cand of candidates) {
-                    const candPts = getExpectedPts(cand);
+                    const candPts = getSolverScore(cand);
                     if (candPts > bestPts) {
                         // Check max 3 players per team constraint for starting 11
                         const tempStartingIds = [...usedStartingIds, cand.id];
@@ -863,7 +898,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                 if (currentSlot.locked) continue; // Skip locked force-included players!
 
                 const currentSlotPlayer = currentSlot.playerId !== null ? PLAYERS.find(p => p.id === currentSlot.playerId) : null;
-                const currentPts = currentSlotPlayer ? getExpectedPts(currentSlotPlayer) : 0;
+                const currentPts = currentSlotPlayer ? getSolverScore(currentSlotPlayer) : 0;
 
                 // Cost of other bench players
                 const otherBenchCost = benchIndices.reduce((sum, bIdx) => {
@@ -883,15 +918,15 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                     p.position === currentSlot.position && 
                     !unavailableIds.includes(p.id) && 
                     p.price <= maxBudgetForSlot &&
-                    getExpectedPts(p) >= 0.5 &&
+                    getSolverScore(p) >= 0.5 &&
                     !state.mustExclude.includes(p.id)
-                ).sort((a, b) => getExpectedPts(b) - getExpectedPts(a));
+                ).sort((a, b) => getSolverScore(b) - getSolverScore(a));
 
                 let bestCandidate = null;
                 let bestPts = currentPts;
 
                 for (const cand of candidates) {
-                    const candPts = getExpectedPts(cand);
+                    const candPts = getSolverScore(cand);
                     if (candPts > bestPts) {
                         // Check max 3 players per team constraint across entire 15-player squad
                         const tempSquadIds = [...startingIds, ...otherBenchIds, cand.id];
@@ -949,7 +984,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
 
                 const isBenchSlot = !slot.isStarting;
                 const player = slot.playerId !== null ? PLAYERS.find(p => p.id === slot.playerId) : null;
-                const playerPts = player ? getExpectedPts(player) : 0;
+                const playerPts = player ? getSolverScore(player) : 0;
                 const playerPrice = player ? player.price : 0;
 
                 let currentBenchCost = 0;
@@ -978,7 +1013,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                         }
                     }
 
-                    const candPts = getExpectedPts(cand);
+                    const candPts = getSolverScore(cand);
                     const gain = candPts - playerPts;
 
                     // Upgrade if we get more points, or if points are equal but the player is more expensive (to spend down budget)
@@ -1030,20 +1065,22 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
             const originalPlayer = originalId !== null ? PLAYERS.find(p => p.id === originalId) : null;
             const optimizedPlayer = optimizedId !== null ? PLAYERS.find(p => p.id === optimizedId) : null;
 
-            totalOriginalPts += originalPlayer ? getExpectedPts(originalPlayer) : 0;
-            totalOptimizedPts += optimizedPlayer ? getExpectedPts(optimizedPlayer) : 0;
+            totalOriginalPts += originalPlayer ? getSolverScore(originalPlayer) : 0;
+            totalOptimizedPts += optimizedPlayer ? getSolverScore(optimizedPlayer) : 0;
 
             if (originalId !== optimizedId) {
                 upgrades.push({
                     slotIndex: i,
                     out: originalPlayer,
                     in: optimizedPlayer,
-                    gain: (optimizedPlayer ? getExpectedPts(optimizedPlayer) : 0) - (originalPlayer ? getExpectedPts(originalPlayer) : 0)
+                    gain: (optimizedPlayer ? getSolverScore(optimizedPlayer) : 0) - (originalPlayer ? getSolverScore(originalPlayer) : 0)
                 });
             }
         }
 
         const overallGain = totalOptimizedPts - totalOriginalPts;
+        const gainLabel = objective === 'efficiency' ? 'Overall Efficiency' : 'Overall XP';
+        const formattedGain = objective === 'efficiency' ? `+${(overallGain / 10).toFixed(2)}` : `+${overallGain.toFixed(1)}`;
 
         resultsGrid.innerHTML = `
             <div class="optimizer-card" style="grid-column: span 2;">
@@ -1053,7 +1090,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                         <div class="rec-option-box">
                             <div class="rec-option-header" style="margin-bottom: 16px;">
                                 <span class="rec-badge" style="background: rgba(0, 255, 136, 0.1); color: var(--primary); border-color: rgba(0, 255, 136, 0.2);">UNLIMITED UPGRADES ENABLED</span>
-                                <span class="rec-pts-gain">+${overallGain.toFixed(1)} Overall XP (${horizon} GWs)</span>
+                                <span class="rec-pts-gain">${formattedGain} ${gainLabel} (${horizon} GWs)</span>
                             </div>
                             
                             <div style="display:flex; flex-direction:column; gap:20px;">
@@ -1067,7 +1104,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                                             </div>
                                             <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding-top:12px;">
                                                 <i data-lucide="chevrons-right" class="transfer-arrow-icon" style="margin: 0 0 6px 0;"></i>
-                                                <span class="pill-value" style="font-size:10px; background:rgba(0, 255, 136, 0.1); color:var(--primary);">+${up.gain.toFixed(1)} XP</span>
+                                                <span class="pill-value" style="font-size:10px; background:rgba(0, 255, 136, 0.1); color:var(--primary); padding: 2px 6px; border-radius: 4px;">+${objective === 'efficiency' ? (up.gain / 10).toFixed(2) + ' Eff' : up.gain.toFixed(1) + ' XP'}</span>
                                             </div>
                                             <div class="transfer-player-card player-card-in" style="flex:1;">
                                                 <span class="player-name-main">${up.in.name}</span>
@@ -1160,7 +1197,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
             const soldPlayer = PLAYERS.find(p => p.id === soldId);
             if (!soldPlayer) continue;
 
-            const soldPts = getExpectedPts(soldPlayer);
+            const soldPts = getSolverScore(soldPlayer);
             const sellBudget = soldPlayer.price + bank;
 
             let candidates = PLAYERS.filter(p => 
@@ -1182,7 +1219,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
             for (const boughtPlayer of candidates) {
                 if (!checkTeamConstraints(currentSquadIds, soldId, boughtPlayer.id)) continue;
 
-                const boughtPts = getExpectedPts(boughtPlayer);
+                const boughtPts = getSolverScore(boughtPlayer);
                 const gain = boughtPts - soldPts;
 
                 if (gain > maxGain1) {
@@ -1206,7 +1243,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                 const s2 = PLAYERS.find(p => p.id === currentSquadIds[j]);
                 if (!s1 || !s2) continue;
 
-                const soldPts = getExpectedPts(s1) + getExpectedPts(s2);
+                const soldPts = getSolverScore(s1) + getSolverScore(s2);
                 const sellBudget = s1.price + s2.price + bank;
 
                 let candidates1 = PLAYERS.filter(p => 
@@ -1241,7 +1278,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                         if (b1.price + b2.price > sellBudget) continue;
                         if (!checkTeamConstraintsDouble(currentSquadIds, s1.id, s2.id, b1.id, b2.id)) continue;
 
-                        const boughtPts = getExpectedPts(b1) + getExpectedPts(b2);
+                        const boughtPts = getSolverScore(b1) + getSolverScore(b2);
                         const gain = boughtPts - soldPts;
 
                         if (gain > maxGain2) {
@@ -1269,7 +1306,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                         <div class="rec-option-box">
                             <div class="rec-option-header" style="margin-bottom: 12px;">
                                 <span class="rec-badge">RECOMMENDED</span>
-                                <span class="rec-pts-gain">+${best1Tx.gain.toFixed(1)} XP (${horizon} GWs)</span>
+                                <span class="rec-pts-gain">+${objective === 'efficiency' ? (best1Tx.gain / 10).toFixed(2) + ' Efficiency' : best1Tx.gain.toFixed(1) + ' XP'} (${horizon} GWs)</span>
                             </div>
                             <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;">
                                 <div class="transfer-player-card player-card-out" style="flex:1;">
@@ -1298,11 +1335,11 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                 <div class="optimizer-card">
                     <h3><i data-lucide="layers" class="highlight-bank"></i> Best Double Transfer</h3>
                     <div class="recommendations-list" style="margin-top: 16px;">
-                        ${best2Tx && best2Tx.gain > 0.5 ? `
+                        ${best2Tx && (objective === 'efficiency' ? best2Tx.gain > 0.1 : best2Tx.gain > 0.5) ? `
                             <div class="rec-option-box">
                                 <div class="rec-option-header" style="margin-bottom: 12px;">
                                     <span class="rec-badge" style="background:rgba(0, 242, 254, 0.1); color: var(--secondary); border-color: var(--secondary-glow)">HIGH IMPACT</span>
-                                    <span class="rec-pts-gain">+${best2Tx.gain.toFixed(1)} XP (${horizon} GWs)</span>
+                                    <span class="rec-pts-gain">+${objective === 'efficiency' ? (best2Tx.gain / 10).toFixed(2) + ' Efficiency' : best2Tx.gain.toFixed(1) + ' XP'} (${horizon} GWs)</span>
                                 </div>
                                 
                                 <!-- Transfer 1 -->

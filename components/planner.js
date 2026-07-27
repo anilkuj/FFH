@@ -1,4 +1,4 @@
-import { PLAYERS, TEAMS } from '../data.js';
+import { PLAYERS, TEAMS, getPlayerRatings } from '../data.js';
 
 export function renderPlanner(container, state, actions) {
     // Determine active squad for this gameweek.
@@ -271,6 +271,51 @@ function renderFdrFixtures(player, currentGw) {
     return html;
 }
 
+function renderPlayerTooltip(player, currentGw) {
+    const ratings = getPlayerRatings(player, currentGw);
+    const getBadgeClass = (val) => {
+        if (val === 'A') return 'rating-badge-a';
+        if (val === 'B') return 'rating-badge-b';
+        if (val === 'C') return 'rating-badge-c';
+        if (val === 'D') return 'rating-badge-d';
+        if (val === 'E') return 'rating-badge-e';
+        return 'rating-badge-na';
+    };
+    
+    return `
+        <div class="player-card-tooltip">
+            <div class="tooltip-title">
+                <span>${player.name}</span>
+                <span class="tooltip-title-team">${player.team}</span>
+            </div>
+            <div class="tooltip-rating-row">
+                <span class="tooltip-rating-label">Expected Minutes:</span>
+                <span class="tooltip-rating-value ${getBadgeClass(ratings.expectedMinutes)}">${ratings.expectedMinutes}</span>
+            </div>
+            <div class="tooltip-rating-row">
+                <span class="tooltip-rating-label">Next 5 Fixtures:</span>
+                <span class="tooltip-rating-value ${getBadgeClass(ratings.next5Fixtures)}">${ratings.next5Fixtures}</span>
+            </div>
+            <div class="tooltip-rating-row">
+                <span class="tooltip-rating-label">Attacking Role:</span>
+                <span class="tooltip-rating-value ${getBadgeClass(ratings.attackingRole)}">${ratings.attackingRole}</span>
+            </div>
+            <div class="tooltip-rating-row">
+                <span class="tooltip-rating-label">FPL Attacking:</span>
+                <span class="tooltip-rating-value ${getBadgeClass(ratings.attackingPotential)}">${ratings.attackingPotential}</span>
+            </div>
+            <div class="tooltip-rating-row">
+                <span class="tooltip-rating-label">Defcon Potential:</span>
+                <span class="tooltip-rating-value ${getBadgeClass(ratings.defconPotential)}">${ratings.defconPotential}</span>
+            </div>
+            <div class="tooltip-rating-row">
+                <span class="tooltip-rating-label">Availability:</span>
+                <span class="tooltip-rating-value ${getBadgeClass(ratings.availability)}">${ratings.availability}</span>
+            </div>
+        </div>
+    `;
+}
+
 function renderPlayerRow(squadSlots, position, currentGw, captain, vice, actions) {
     const rowSlots = squadSlots.filter(s => s.position === position && s.isStarting);
 
@@ -320,6 +365,7 @@ function renderPlayerRow(squadSlots, position, currentGw, captain, vice, actions
                         <span>5-GW: ${player.xp5 !== undefined ? player.xp5.toFixed(1) : 'N/A'} XP</span>
                     </div>
                 </div>
+                ${renderPlayerTooltip(player, currentGw)}
             </div>
         `;
     }).join('');
@@ -380,6 +426,7 @@ function renderBenchRow(squadSlots, currentGw, captain, vice, actions) {
                             <span>5-GW: ${player.xp5 !== undefined ? player.xp5.toFixed(1) : 'N/A'} XP</span>
                         </div>
                     </div>
+                    ${renderPlayerTooltip(player, currentGw)}
                 </div>
             </div>
         `;
@@ -577,6 +624,16 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
     const isCaptain = state.captain === playerId;
     const isVice = state.vice === playerId;
 
+    const ratings = getPlayerRatings(player, state.currentGw);
+    const getBadgeClass = (val) => {
+        if (val === 'A') return 'rating-badge-a';
+        if (val === 'B') return 'rating-badge-b';
+        if (val === 'C') return 'rating-badge-c';
+        if (val === 'D') return 'rating-badge-d';
+        if (val === 'E') return 'rating-badge-e';
+        return 'rating-badge-na';
+    };
+
     const modalContent = `
         <div class="modal-header-section">
             <h3>Player Profile</h3>
@@ -592,7 +649,42 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
             </div>
         </div>
         ${getPlayerNewsBanner(player, prediction) ? `<div style="padding: 0 20px 10px 20px;">${getPlayerNewsBanner(player, prediction)}</div>` : ''}
-        <div class="player-detail-stats-grid">
+        
+        <!-- AI Performance Ratings Grid -->
+        <div style="padding: 0 24px; margin-top: 12px;">
+            <h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
+                <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> AI Performance Ratings (A-E Grades)
+            </h4>
+            <div class="player-detail-stats-grid" style="padding: 0; margin-bottom: 12px; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                <div class="detail-stat-box" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;">
+                    <span class="tooltip-rating-value ${getBadgeClass(ratings.expectedMinutes)}" style="font-size: 14px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">${ratings.expectedMinutes}</span>
+                    <span class="detail-stat-lbl" style="font-size: 10px; margin-top: 6px;">Expected Minutes</span>
+                </div>
+                <div class="detail-stat-box" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;">
+                    <span class="tooltip-rating-value ${getBadgeClass(ratings.next5Fixtures)}" style="font-size: 14px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">${ratings.next5Fixtures}</span>
+                    <span class="detail-stat-lbl" style="font-size: 10px; margin-top: 6px;">Next 5 Fixtures</span>
+                </div>
+                <div class="detail-stat-box" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;">
+                    <span class="tooltip-rating-value ${getBadgeClass(ratings.attackingRole)}" style="font-size: 14px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">${ratings.attackingRole}</span>
+                    <span class="detail-stat-lbl" style="font-size: 10px; margin-top: 6px;">Attacking Role</span>
+                </div>
+                <div class="detail-stat-box" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;">
+                    <span class="tooltip-rating-value ${getBadgeClass(ratings.attackingPotential)}" style="font-size: 14px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">${ratings.attackingPotential}</span>
+                    <span class="detail-stat-lbl" style="font-size: 10px; margin-top: 6px;">FPL Attacking</span>
+                </div>
+                <div class="detail-stat-box" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;">
+                    <span class="tooltip-rating-value ${getBadgeClass(ratings.defconPotential)}" style="font-size: 14px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">${ratings.defconPotential}</span>
+                    <span class="detail-stat-lbl" style="font-size: 10px; margin-top: 6px;">Defcon Potential</span>
+                </div>
+                <div class="detail-stat-box" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;">
+                    <span class="tooltip-rating-value ${getBadgeClass(ratings.availability)}" style="font-size: 14px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">${ratings.availability}</span>
+                    <span class="detail-stat-lbl" style="font-size: 10px; margin-top: 6px;">Availability</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="padding: 0 24px;"><h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; gap: 6px; margin-bottom: 8px;"><i data-lucide="bar-chart-3" style="width: 14px; height: 14px;"></i> OPTA Match Stats</h4></div>
+        <div class="player-detail-stats-grid" style="margin-top: 0; padding-top: 0;">
             <div class="detail-stat-box">
                 <span class="detail-stat-val">£${player.price.toFixed(1)}m</span>
                 <span class="detail-stat-lbl">Price</span>

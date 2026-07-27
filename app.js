@@ -93,6 +93,8 @@ class AppState {
         const savedBenchBudget = localStorage.getItem('fpl_hub_bench_budget');
         this.benchBudget = savedBenchBudget ? parseFloat(savedBenchBudget) : 17.0;
 
+        this.optimizerObjective = localStorage.getItem('fpl_hub_optimizer_objective') || 'xp';
+
         const savedProfile = localStorage.getItem('fpl_hub_user_profile');
         this.userProfile = savedProfile ? JSON.parse(savedProfile) : null;
 
@@ -149,6 +151,7 @@ class AppState {
         localStorage.setItem('fpl_hub_must_include', JSON.stringify(this.mustInclude));
         localStorage.setItem('fpl_hub_must_exclude', JSON.stringify(this.mustExclude));
         localStorage.setItem('fpl_hub_bench_budget', this.benchBudget.toString());
+        localStorage.setItem('fpl_hub_optimizer_objective', this.optimizerObjective || 'xp');
 
         // Save drafts state
         localStorage.setItem(this.getDraftsStorageKey(), JSON.stringify(this.drafts));
@@ -295,7 +298,8 @@ class AppState {
             'fpl_hub_must_exclude',
             'fpl_hub_bench_budget',
             'fpl_hub_drafts',
-            'fpl_hub_active_draft_idx'
+            'fpl_hub_active_draft_idx',
+            'fpl_hub_optimizer_objective'
         ];
         keysToRemove.forEach(k => localStorage.removeItem(k));
 
@@ -306,6 +310,7 @@ class AppState {
         this.mustInclude = [];
         this.mustExclude = [];
         this.benchBudget = 17.0;
+        this.optimizerObjective = 'xp';
         this.chips = {
             wildcard: false,
             tripleCaptain: false,

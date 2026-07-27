@@ -3098,3 +3098,117 @@ select option {
     background-color: var(--bg-panel) !important;
     color: var(--text-main) !important;
 }
+
+/* Player Card Hover Tooltip Styling */
+.player-card-tooltip {
+    display: none;
+    position: absolute;
+    bottom: 115%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(13, 20, 38, 0.98);
+    border: 1px solid var(--primary);
+    border-radius: 10px;
+    padding: 12px;
+    width: 220px;
+    z-index: 1000;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 255, 136, 0.15);
+    backdrop-filter: blur(12px);
+    pointer-events: none;
+    font-family: var(--font-main);
+    text-align: left;
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.player-pitch-card:hover .player-card-tooltip {
+    display: block;
+    opacity: 1;
+}
+
+.tooltip-title {
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 800;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 6px;
+    margin-bottom: 8px;
+    color: var(--primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tooltip-title-team {
+    font-size: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 1px 5px;
+    border-radius: 4px;
+    color: var(--text-muted);
+}
+
+.tooltip-rating-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    margin-bottom: 5px;
+}
+
+.tooltip-rating-row:last-child {
+    margin-bottom: 0;
+}
+
+.tooltip-rating-label {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.tooltip-rating-value {
+    font-weight: 800;
+    font-size: 12px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    text-align: center;
+    min-width: 20px;
+    display: inline-block;
+}
+
+/* Rating specific badges */
+.rating-badge-a {
+    background-color: rgba(2, 176, 86, 0.2) !important;
+    border: 1px solid rgba(2, 176, 86, 0.5) !important;
+    color: #00ff88 !important;
+}
+
+.rating-badge-b {
+    background-color: rgba(16, 185, 129, 0.15) !important;
+    border: 1px solid rgba(16, 185, 129, 0.4) !important;
+    color: #34d399 !important;
+}
+
+.rating-badge-c {
+    background-color: rgba(148, 163, 184, 0.15) !important;
+    border: 1px solid rgba(148, 163, 184, 0.4) !important;
+    color: #cbd5e1 !important;
+}
+
+.rating-badge-d {
+    background-color: rgba(233, 0, 82, 0.15) !important;
+    border: 1px solid rgba(233, 0, 82, 0.4) !important;
+    color: #fb7185 !important;
+}
+
+.rating-badge-e {
+    background-color: rgba(128, 0, 48, 0.25) !important;
+    border: 1px solid rgba(128, 0, 48, 0.6) !important;
+    color: #f43f5e !important;
+}
+
+.rating-badge-na {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: var(--text-muted) !important;
+}
+

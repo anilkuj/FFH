@@ -34912,3 +34912,148 @@ export const TICKER_DATA = {
         }
     ]
 };
+
+export function getPlayerRatings(player, currentGw = 1) {
+    // 1. Expected Minutes (based on MPPG - Avg Minutes/Game)
+    // A: >= 80, B: >= 60, C: >= 45, D: >= 20, E: < 20
+    const mppg = player.MPPG || 0;
+    let expectedMinutes = 'E';
+    if (mppg >= 80) expectedMinutes = 'A';
+    else if (mppg >= 60) expectedMinutes = 'B';
+    else if (mppg >= 45) expectedMinutes = 'C';
+    else if (mppg >= 20) expectedMinutes = 'D';
+
+    // 2. Next 5 Fixtures (based on average FDR of next 5 predictions starting from currentGw)
+    let avgFdr = 3.0;
+    if (player.predictions && player.predictions.length > 0) {
+        let fdrSum = 0;
+        let count = 0;
+        for (let gw = currentGw; gw < currentGw + 5; gw++) {
+            const pred = player.predictions.find(p => p.gw === gw);
+            if (pred && pred.opp !== 'BYE') {
+                fdrSum += pred.diff;
+                count++;
+            }
+        }
+        if (count > 0) {
+            avgFdr = fdrSum / count;
+        }
+    }
+    // A: <= 2.2, B: <= 2.8, C: <= 3.4, D: <= 4.0, E: > 4.0
+    let next5Fixtures = 'E';
+    if (avgFdr <= 2.2) next5Fixtures = 'A';
+    else if (avgFdr <= 2.8) next5Fixtures = 'B';
+    else if (avgFdr <= 3.4) next5Fixtures = 'C';
+    else if (avgFdr <= 4.0) next5Fixtures = 'D';
+
+    // 3. Attacking Role (based on position and xG90 + xA90)
+    const xg90 = player.xG90 || 0;
+    const xa90 = player.xA90 || 0;
+    const xgi90 = xg90 + xa90;
+    const pos = player.position;
+    
+    let attackingRole = 'E';
+    if (pos === 'FWD') {
+        if (xgi90 >= 0.35) attackingRole = 'A';
+        else if (xgi90 >= 0.20) attackingRole = 'B';
+        else if (xgi90 >= 0.05) attackingRole = 'C';
+        else attackingRole = 'D';
+    } else if (pos === 'MID') {
+        if (xgi90 >= 0.40) attackingRole = 'A';
+        else if (xgi90 >= 0.25) attackingRole = 'B';
+        else if (xgi90 >= 0.10) attackingRole = 'C';
+        else if (xgi90 >= 0.02) attackingRole = 'D';
+        else attackingRole = 'E';
+    } else if (pos === 'DEF') {
+        if (xgi90 >= 0.15) attackingRole = 'B';
+        else if (xgi90 >= 0.08) attackingRole = 'C';
+        else if (xgi90 >= 0.02) attackingRole = 'D';
+        else attackingRole = 'E';
+    } else {
+        attackingRole = 'E'; // GKP
+    }
+
+    // 4. FPL Attacking Potential (absolute potential based on xG90 + xA90)
+    let attackingPotential = 'E';
+    if (xgi90 >= 0.50) attackingPotential = 'A';
+    else if (xgi90 >= 0.35) attackingPotential = 'B';
+    else if (xgi90 >= 0.20) attackingPotential = 'C';
+    else if (xgi90 >= 0.05) attackingPotential = 'D';
+    else attackingPotential = 'E';
+
+    // 5. Defcon Potential (clean sheet potential. N/A for FWD)
+    let defconPotential = 'N/A';
+    if (pos !== 'FWD') {
+        let sumOdds = 0;
+        let count = 0;
+        if (player.predictions && player.predictions.length > 0) {
+            for (let gw = currentGw; gw < currentGw + 5; gw++) {
+                const pred = player.predictions.find(p => p.gw === gw);
+                if (pred && pred.opp !== 'BYE') {
+                    let base = 30;
+                    if (pred.diff === 2) base = 48;
+                    else if (pred.diff === 4) base = 18;
+                    else if (pred.diff === 5) base = 8;
+                    
+                    if (pred.loc === 'H') base += 5;
+                    else base -= 5;
+                    
+                    sumOdds += base;
+                    count++;
+                }
+            }
+        }
+        const avgOdds = count > 0 ? (sumOdds / count) : 25;
+        if (avgOdds >= 40) defconPotential = 'A';
+        else if (avgOdds >= 30) defconPotential = 'B';
+        else if (avgOdds >= 20) defconPotential = 'C';
+        else if (avgOdds >= 10) defconPotential = 'D';
+        else defconPotential = 'E';
+    }
+
+    // 6. Availability (based on status and chanceOfPlaying)
+    const status = player.status || 'a';
+    const chance = player.chanceOfPlaying !== undefined ? player.chanceOfPlaying : 100;
+    
+    let availability = 'E';
+    if (status === 'i' || status === 's' || status === 'u') {
+        availability = 'E';
+    } else if (status === 'a' && chance === 100) {
+        availability = 'A';
+    } else if (chance >= 75 || status === 'd') {
+        availability = 'B';
+    } else if (chance >= 50) {
+        availability = 'C';
+    } else if (chance >= 25) {
+        availability = 'D';
+    } else {
+        availability = 'E';
+    }
+
+    return {
+        expectedMinutes,
+        next5Fixtures,
+        attackingRole,
+        attackingPotential,
+        defconPotential,
+        availability
+    };
+}
+
+export function getPlayerEfficiency(player, currentGw = 1) {
+    const ratings = getPlayerRatings(player, currentGw);
+    const scoreMap = { 'A': 5, 'B': 4, 'C': 3, 'D': 2, 'E': 1, 'N/A': 0 };
+    
+    let sum = 0;
+    let count = 0;
+    for (const key in ratings) {
+        if (ratings[key] !== 'N/A') {
+            sum += scoreMap[ratings[key]];
+            count++;
+        }
+    }
+    const avgScore = count > 0 ? (sum / count) : 1;
+    // Efficiency = average rating points divided by price
+    return avgScore / player.price;
+}
+
