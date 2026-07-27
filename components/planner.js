@@ -763,7 +763,7 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
             <h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--secondary); display: flex; align-items: center; gap: 6px; margin-bottom: 12px;">
                 <i data-lucide="arrow-right-left" style="width: 14px; height: 14px;"></i> Similarly Priced Alternatives
             </h4>
-            <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
                 ${comparablePlayers.map(comp => {
                     const compPrediction = comp.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 };
                     const compRatings = getPlayerRatings(comp, state.currentGw);
@@ -794,57 +794,61 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
                     const allOk = budgetOk && teamOk && statusOk;
                     
                     let disabledReason = "";
-                    if (!statusOk) disabledReason = "Unavailable / Injured";
-                    else if (!budgetOk) disabledReason = "Insufficient budget";
-                    else if (!teamOk) disabledReason = "Team limit reached (max 3)";
+                    if (!statusOk) disabledReason = "Injured / Out";
+                    else if (!budgetOk) disabledReason = "Insufficient Bank";
+                    else if (!teamOk) disabledReason = "Team Limit (Max 3)";
 
                     return `
-                        <div class="comp-player-card" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px;">
-                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                                <div>
-                                    <span style="font-weight: 700; font-size: 13px; color: #fff;">${comp.name}</span>
-                                    <span style="font-size: 11px; color: var(--text-muted); margin-left: 6px;">${comp.team} • ${comp.position}</span>
+                        <div class="comp-player-card" style="background: rgba(255, 255, 255, 0.015); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; justify-content: space-between; gap: 8px;">
+                            <div>
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2px;">
+                                    <span style="font-weight: 700; font-size: 12px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 75px;" title="${comp.name}">${comp.name}</span>
+                                    <span style="font-weight: 800; font-size: 11px; color: var(--primary);">£${comp.price.toFixed(1)}m</span>
                                 </div>
-                                <div style="text-align: right;">
-                                    <span style="font-weight: 800; font-size: 12px; color: var(--primary);">£${comp.price.toFixed(1)}m</span>
-                                    <span style="font-size: 10px; color: var(--text-muted); display: block;">${compPrediction.pts.toFixed(1)} XP</span>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <span style="font-size: 10px; color: var(--text-muted);">${comp.team} • ${comp.position}</span>
+                                    <span style="font-size: 10px; color: var(--text-muted);">${compPrediction.pts.toFixed(1)} XP</span>
+                                </div>
+                                
+                                <!-- Rating grades grid (2 columns) -->
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 9px; margin-bottom: 6px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 1px 3px; border-radius: 3px;" title="Expected Minutes">
+                                        <span style="color: var(--text-muted);">MIN</span>
+                                        <span class="${getBadgeClass(compRatings.expectedMinutes)}" style="font-weight: 800; padding: 0 3px; border-radius: 2px;">${compRatings.expectedMinutes}</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 1px 3px; border-radius: 3px;" title="Next 5 Fixtures">
+                                        <span style="color: var(--text-muted);">FIX</span>
+                                        <span class="${getBadgeClass(compRatings.next5Fixtures)}" style="font-weight: 800; padding: 0 3px; border-radius: 2px;">${compRatings.next5Fixtures}</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 1px 3px; border-radius: 3px;" title="Attacking Role">
+                                        <span style="color: var(--text-muted);">ROLE</span>
+                                        <span class="${getBadgeClass(compRatings.attackingRole)}" style="font-weight: 800; padding: 0 3px; border-radius: 2px;">${compRatings.attackingRole}</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 1px 3px; border-radius: 3px;" title="FPL Attacking Potential">
+                                        <span style="color: var(--text-muted);">ATT</span>
+                                        <span class="${getBadgeClass(compRatings.attackingPotential)}" style="font-weight: 800; padding: 0 3px; border-radius: 2px;">${compRatings.attackingPotential}</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 1px 3px; border-radius: 3px;" title="Defcon Potential">
+                                        <span style="color: var(--text-muted);">DEF</span>
+                                        <span class="${getBadgeClass(compRatings.defconPotential)}" style="font-weight: 800; padding: 0 3px; border-radius: 2px;">${compRatings.defconPotential}</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 1px 3px; border-radius: 3px;" title="Availability">
+                                        <span style="color: var(--text-muted);">AVL</span>
+                                        <span class="${getBadgeClass(compRatings.availability)}" style="font-weight: 800; padding: 0 3px; border-radius: 2px;">${compRatings.availability}</span>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <!-- Rating grades row -->
-                            <div style="display: flex; gap: 6px; justify-content: flex-start; flex-wrap: wrap;">
-                                <div style="font-size: 9px; display: flex; align-items: center; gap: 3px; background: rgba(255,255,255,0.04); padding: 2px 4px; border-radius: 4px;" title="Expected Minutes">
-                                    <span style="color: var(--text-muted);">Min:</span>
-                                    <span class="${getBadgeClass(compRatings.expectedMinutes)}" style="font-size: 9px; font-weight: 800; padding: 0 4px; border-radius: 2px;">${compRatings.expectedMinutes}</span>
-                                </div>
-                                <div style="font-size: 9px; display: flex; align-items: center; gap: 3px; background: rgba(255,255,255,0.04); padding: 2px 4px; border-radius: 4px;" title="Next 5 Fixtures">
-                                    <span style="color: var(--text-muted);">Fix:</span>
-                                    <span class="${getBadgeClass(compRatings.next5Fixtures)}" style="font-size: 9px; font-weight: 800; padding: 0 4px; border-radius: 2px;">${compRatings.next5Fixtures}</span>
-                                </div>
-                                <div style="font-size: 9px; display: flex; align-items: center; gap: 3px; background: rgba(255,255,255,0.04); padding: 2px 4px; border-radius: 4px;" title="Attacking Role">
-                                    <span style="color: var(--text-muted);">Role:</span>
-                                    <span class="${getBadgeClass(compRatings.attackingRole)}" style="font-size: 9px; font-weight: 800; padding: 0 4px; border-radius: 2px;">${compRatings.attackingRole}</span>
-                                </div>
-                                <div style="font-size: 9px; display: flex; align-items: center; gap: 3px; background: rgba(255,255,255,0.04); padding: 2px 4px; border-radius: 4px;" title="FPL Attacking Potential">
-                                    <span style="color: var(--text-muted);">Att:</span>
-                                    <span class="${getBadgeClass(compRatings.attackingPotential)}" style="font-size: 9px; font-weight: 800; padding: 0 4px; border-radius: 2px;">${compRatings.attackingPotential}</span>
-                                </div>
-                                <div style="font-size: 9px; display: flex; align-items: center; gap: 3px; background: rgba(255,255,255,0.04); padding: 2px 4px; border-radius: 4px;" title="Defcon Potential">
-                                    <span style="color: var(--text-muted);">Def:</span>
-                                    <span class="${getBadgeClass(compRatings.defconPotential)}" style="font-size: 9px; font-weight: 800; padding: 0 4px; border-radius: 2px;">${compRatings.defconPotential}</span>
-                                </div>
-                                <div style="font-size: 9px; display: flex; align-items: center; gap: 3px; background: rgba(255,255,255,0.04); padding: 2px 4px; border-radius: 4px;" title="Availability">
-                                    <span style="color: var(--text-muted);">Avail:</span>
-                                    <span class="${getBadgeClass(compRatings.availability)}" style="font-size: 9px; font-weight: 800; padding: 0 4px; border-radius: 2px;">${compRatings.availability}</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Swap button -->
-                            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 4px;">
-                                <span style="font-size: 10px; color: #f43f5e; font-weight: 500;">${disabledReason ? `<i data-lucide="alert-circle" style="width: 10px; height: 10px; display: inline-block; vertical-align: middle; margin-right: 2px;"></i> ${disabledReason}` : ''}</span>
+                            <!-- Swap button and alert -->
+                            <div style="display: flex; flex-direction: column; gap: 4px; align-items: stretch; margin-top: auto;">
+                                ${disabledReason ? `
+                                    <span style="font-size: 8.5px; color: #f43f5e; font-weight: 600; text-align: center; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${disabledReason}">
+                                        ${disabledReason}
+                                    </span>
+                                ` : ''}
                                 <button class="action-main-btn btn-secondary-action direct-comp-swap-btn" 
                                         data-comp-id="${comp.id}" 
-                                        style="font-size: 11px; padding: 4px 12px; height: 26px; margin: 0;" 
+                                        style="font-size: 10px; padding: 4px 8px; height: 26px; margin: 0; width: 100%;" 
                                         ${!allOk ? 'disabled' : ''}>
                                     Swap Player
                                 </button>
