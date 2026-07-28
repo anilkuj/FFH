@@ -34959,8 +34959,8 @@ export function getPlayerRatings(player, currentGw = 1) {
         else if (xgi90 >= 0.05) attackingRole = 'C';
         else attackingRole = 'D';
     } else if (pos === 'MID') {
-        if (xgi90 >= 0.40) attackingRole = 'A';
-        else if (xgi90 >= 0.25) attackingRole = 'B';
+        if (xgi90 >= 0.30) attackingRole = 'A';
+        else if (xgi90 >= 0.20) attackingRole = 'B';
         else if (xgi90 >= 0.10) attackingRole = 'C';
         else if (xgi90 >= 0.02) attackingRole = 'D';
         else attackingRole = 'E';
@@ -34983,8 +34983,8 @@ export function getPlayerRatings(player, currentGw = 1) {
         else if (xgi90 >= 0.01) attackingPotential = 'D';
         else attackingPotential = 'E';
     } else if (pos === 'MID') {
-        if (xgi90 >= 0.40) attackingPotential = 'A';
-        else if (xgi90 >= 0.25) attackingPotential = 'B';
+        if (xgi90 >= 0.30) attackingPotential = 'A';
+        else if (xgi90 >= 0.20) attackingPotential = 'B';
         else if (xgi90 >= 0.10) attackingPotential = 'C';
         else if (xgi90 >= 0.02) attackingPotential = 'D';
         else attackingPotential = 'E';
