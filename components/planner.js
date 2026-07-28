@@ -1108,12 +1108,12 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
     });
 }
 
-// Renders individual player list items inside the modal
-// Renders individual player list items inside the modal
 function renderModalPlayerRows(players, bank, state) {
     if (players.length === 0) {
         return `<div class="transfer-list-empty" style="text-align: center; padding: 20px; color: var(--text-muted);">No matching players found.</div>`;
     }
+    
+    const currentGw = parseInt(state.currentGw) || 1;
     
     // Find the player with the best attacking potential (highest xG90 + xA90)
     let bestAttackingPlayerId = null;
@@ -1136,7 +1136,7 @@ function renderModalPlayerRows(players, bank, state) {
             let sumOdds = 0;
             let count = 0;
             if (p.predictions && p.predictions.length > 0) {
-                for (let gw = state.currentGw; gw < state.currentGw + 5; gw++) {
+                for (let gw = currentGw; gw < currentGw + 5; gw++) {
                     const pred = p.predictions.find(pr => pr.gw === gw);
                     if (pred && pred.opp !== 'BYE') {
                         let base = 30;
@@ -1158,31 +1158,37 @@ function renderModalPlayerRows(players, bank, state) {
         }
     });
     
+    console.log("[FPL HUB] renderModalPlayerRows computed IDs - bestAttacking:", bestAttackingPlayerId, "bestDefcon:", bestDefconPlayerId);
+    
     return players.map(player => {
         const isAffordable = player.price <= bank;
         const isBestAttacking = (player.position === 'DEF' || player.position === 'MID') && player.id === bestAttackingPlayerId;
         const isBestDefcon = (player.position === 'DEF' || player.position === 'MID') && player.id === bestDefconPlayerId;
         const isBoth = isBestAttacking && isBestDefcon;
         
+        if (isBestAttacking || isBestDefcon) {
+            console.log("[FPL HUB] Badge matched for player:", player.name, "isBestAtt:", isBestAttacking, "isBestDefcon:", isBestDefcon, "isBoth:", isBoth);
+        }
+
         let badgesHtml = '';
         if (isBoth) {
             badgesHtml = `
-                <span class="badge-best-both" style="font-size: 9px; padding: 1px 5px; border-radius: 4px; background: linear-gradient(135deg, rgba(255, 179, 0, 0.2) 0%, rgba(0, 242, 254, 0.2) 100%); color: #fff350; border: 1px dashed #ffb300; font-weight: 800; display: inline-flex; align-items: center; gap: 2px;" title="Elite Double Asset: Ranks #1 in BOTH Attacking and Defcon Potential in this list!">
-                    <i data-lucide="crown" style="width: 10px; height: 10px; color: #fff350;"></i> Elite Double Asset
+                <span class="badge-best-both" style="font-size: 9px; padding: 1px 5px; border-radius: 4px; background: linear-gradient(135deg, rgba(255, 179, 0, 0.2) 0%, rgba(0, 242, 254, 0.2) 100%); color: #ffd700; border: 1px dashed #ffd700; font-weight: 800; display: inline-flex; align-items: center; gap: 2px;" title="Elite Double Asset: Ranks #1 in BOTH Attacking and Defcon Potential in this list!">
+                    👑 Elite Double Asset
                 </span>
             `;
         } else {
             if (isBestAttacking) {
                 badgesHtml = `
                     <span class="badge-best-att" style="font-size: 9px; padding: 1px 5px; border-radius: 4px; background: rgba(255, 179, 0, 0.15); color: #ffb300; border: 1px solid rgba(255, 179, 0, 0.3); font-weight: 700; display: inline-flex; align-items: center; gap: 2px;" title="Highest Attacking Potential (xGI) in this list">
-                        <i data-lucide="zap" style="width: 10px; height: 10px;"></i> Best Attacking
+                        🔥 Best Attacking
                     </span>
                 `;
             }
             if (isBestDefcon) {
                 badgesHtml = `
                     <span class="badge-best-defcon" style="font-size: 9px; padding: 1px 5px; border-radius: 4px; background: rgba(0, 242, 254, 0.15); color: #00f2fe; border: 1px solid rgba(0, 242, 254, 0.3); font-weight: 700; display: inline-flex; align-items: center; gap: 2px;" title="Highest Defcon Potential (Clean Sheet probability) in this list">
-                        <i data-lucide="shield" style="width: 10px; height: 10px;"></i> Best Defcon
+                        🛡️ Best Defcon
                     </span>
                 `;
             }
