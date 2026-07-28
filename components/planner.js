@@ -969,7 +969,7 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
             <div style="display: flex; flex-direction: column; gap: 12px; border-bottom: 1px dashed var(--border-color); padding-bottom: 16px; margin-bottom: 4px; width: 100%;">
                 <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; width: 100%;">
                     <p style="font-size: 13px; color: var(--text-muted); margin: 0;">Max Budget: <strong class="highlight-bank" style="font-size: 14px;">£${bank.toFixed(1)}m</strong></p>
-                    <p style="font-size: 11px; color: var(--text-muted); margin: 0; opacity: 0.85;">Only showing <strong style="color: var(--primary);">${position}s</strong>. Search by name or team (e.g. "Coventry", "COV").</p>
+                    <p style="font-size: 11px; color: var(--text-muted); margin: 0; opacity: 0.85;">Only showing <strong style="color: var(--primary);">${position}s</strong> <span id="modalFilterCount" style="color: var(--secondary); font-weight: 700; margin-left: 4px;"></span>. Search by name or team.</p>
                 </div>
                 <div style="display: flex; gap: 8px; width: 100%; flex-wrap: wrap;">
                     <input type="text" class="transfer-search-field" id="modalSearchField" placeholder="Search by name or team..." style="flex: 2; min-width: 150px; font-size: 12px; padding: 8px; background: rgba(255,255,255,0.02); color:#fff; border: 1px solid var(--border-color); border-radius: 6px;" />
@@ -1067,6 +1067,13 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
                     return false;
                 });
                 
+                console.log("[FPL HUB] Filters applied. Count:", filtered.length, "Query:", query, "Price:", maxPrice, "Att:", minAttGrade, "Defcon:", minDefconGrade);
+                
+                const filterCountLabel = document.getElementById('modalFilterCount');
+                if (filterCountLabel) {
+                    filterCountLabel.textContent = `(${filtered.length} found)`;
+                }
+
                 if (listContainer) {
                     listContainer.innerHTML = renderModalPlayerRows(filtered, bank, state);
                 }
@@ -1096,6 +1103,7 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
         };
 
         wireAddButtons();
+        applyFilters(); // Trigger filters initially to count and render the list
         lucide.createIcons();
     });
 }
