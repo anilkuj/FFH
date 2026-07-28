@@ -34965,21 +34965,37 @@ export function getPlayerRatings(player, currentGw = 1) {
         else if (xgi90 >= 0.02) attackingRole = 'D';
         else attackingRole = 'E';
     } else if (pos === 'DEF') {
-        if (xgi90 >= 0.15) attackingRole = 'B';
-        else if (xgi90 >= 0.08) attackingRole = 'C';
-        else if (xgi90 >= 0.02) attackingRole = 'D';
+        if (xgi90 >= 0.12) attackingRole = 'A';
+        else if (xgi90 >= 0.08) attackingRole = 'B';
+        else if (xgi90 >= 0.04) attackingRole = 'C';
+        else if (xgi90 >= 0.01) attackingRole = 'D';
         else attackingRole = 'E';
     } else {
         attackingRole = 'E'; // GKP
     }
 
-    // 4. FPL Attacking Potential (absolute potential based on xG90 + xA90)
+    // 4. FPL Attacking Potential (absolute potential based on xG90 + xA90, adjusted for position)
     let attackingPotential = 'E';
-    if (xgi90 >= 0.50) attackingPotential = 'A';
-    else if (xgi90 >= 0.35) attackingPotential = 'B';
-    else if (xgi90 >= 0.20) attackingPotential = 'C';
-    else if (xgi90 >= 0.05) attackingPotential = 'D';
-    else attackingPotential = 'E';
+    if (pos === 'DEF') {
+        if (xgi90 >= 0.12) attackingPotential = 'A';
+        else if (xgi90 >= 0.08) attackingPotential = 'B';
+        else if (xgi90 >= 0.04) attackingPotential = 'C';
+        else if (xgi90 >= 0.01) attackingPotential = 'D';
+        else attackingPotential = 'E';
+    } else if (pos === 'MID') {
+        if (xgi90 >= 0.40) attackingPotential = 'A';
+        else if (xgi90 >= 0.25) attackingPotential = 'B';
+        else if (xgi90 >= 0.10) attackingPotential = 'C';
+        else if (xgi90 >= 0.02) attackingPotential = 'D';
+        else attackingPotential = 'E';
+    } else if (pos === 'FWD') {
+        if (xgi90 >= 0.35) attackingPotential = 'A';
+        else if (xgi90 >= 0.20) attackingPotential = 'B';
+        else if (xgi90 >= 0.05) attackingPotential = 'C';
+        else attackingPotential = 'D';
+    } else {
+        attackingPotential = 'E'; // GKP
+    }
 
     // 5. Defcon Potential (clean sheet potential. N/A for FWD)
     let defconPotential = 'N/A';
