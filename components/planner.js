@@ -1010,65 +1010,72 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
         const listContainer = document.getElementById('modalPlayerList');
 
         const applyFilters = () => {
-            const query = searchField.value.trim().toLowerCase();
-            const maxPriceStr = priceSelect.value;
-            const maxPrice = maxPriceStr ? parseFloat(maxPriceStr) : Infinity;
-            
-            const minAttGrade = attSelect.value;
-            const minDefconGrade = defconSelect.value;
-            
-            const gradeScores = { 'A': 5, 'B': 4, 'C': 3, 'D': 2, 'E': 1, 'N/A': 0 };
-
-            const filtered = buyablePlayers.filter(p => {
-                if (p.price > maxPrice) return false;
+            try {
+                const query = searchField ? searchField.value.trim().toLowerCase() : "";
+                const maxPriceStr = priceSelect ? priceSelect.value : "";
+                const maxPrice = maxPriceStr ? parseFloat(maxPriceStr) : Infinity;
                 
-                const ratings = getPlayerRatings(p, state.currentGw);
+                const minAttGrade = attSelect ? attSelect.value : "";
+                const minDefconGrade = defconSelect ? defconSelect.value : "";
                 
-                if (minAttGrade) {
-                    const score = gradeScores[ratings.attackingPotential] || 0;
-                    const reqScore = gradeScores[minAttGrade] || 0;
-                    if (score < reqScore) return false;
-                }
-                
-                if (minDefconGrade) {
-                    const score = gradeScores[ratings.defconPotential] || 0;
-                    const reqScore = gradeScores[minDefconGrade] || 0;
-                    if (score < reqScore) return false;
-                }
-
-                if (!query) return true;
-
-                // 1. Direct name match
-                if (p.name.toLowerCase().includes(query)) return true;
-
-                // 2. Direct team name match
-                const teamObj = TEAMS.find(t => t.shortName === p.team);
-                if (teamObj && (teamObj.name.toLowerCase().includes(query) || p.team.toLowerCase().includes(query))) {
-                    return true;
-                }
-
-                // 3. Edit distance match on individual words (for queries >= 3 chars)
-                if (query.length >= 3) {
-                    const queryWords = query.split(/\s+/);
-                    const nameWords = p.name.toLowerCase().split(/\s+/);
+                const gradeScores = { 'A': 5, 'B': 4, 'C': 3, 'D': 2, 'E': 1, 'N/A': 0 };
+     
+                const filtered = buyablePlayers.filter(p => {
+                    if (p.price > maxPrice) return false;
                     
-                    const allQueryWordsMatch = queryWords.every(qw => {
-                        return nameWords.some(nw => {
-                            if (nw.includes(qw)) return true;
-                            const dist = getEditDistance(nw, qw);
-                            const maxDist = qw.length > 4 ? 2 : 1;
-                            return dist <= maxDist;
+                    const ratings = getPlayerRatings(p, state.currentGw);
+                    
+                    if (minAttGrade) {
+                        const score = gradeScores[ratings.attackingPotential] || 0;
+                        const reqScore = gradeScores[minAttGrade] || 0;
+                        if (score < reqScore) return false;
+                    }
+                    
+                    if (minDefconGrade) {
+                        const score = gradeScores[ratings.defconPotential] || 0;
+                        const reqScore = gradeScores[minDefconGrade] || 0;
+                        if (score < reqScore) return false;
+                    }
+     
+                    if (!query) return true;
+     
+                    // 1. Direct name match
+                    if (p.name.toLowerCase().includes(query)) return true;
+     
+                    // 2. Direct team name match
+                    const teamObj = TEAMS.find(t => t.shortName === p.team);
+                    if (teamObj && (teamObj.name.toLowerCase().includes(query) || p.team.toLowerCase().includes(query))) {
+                        return true;
+                    }
+     
+                    // 3. Edit distance match on individual words (for queries >= 3 chars)
+                    if (query.length >= 3) {
+                        const queryWords = query.split(/\s+/);
+                        const nameWords = p.name.toLowerCase().split(/\s+/);
+                        
+                        const allQueryWordsMatch = queryWords.every(qw => {
+                            return nameWords.some(nw => {
+                                if (nw.includes(qw)) return true;
+                                const dist = getEditDistance(nw, qw);
+                                const maxDist = qw.length > 4 ? 2 : 1;
+                                return dist <= maxDist;
+                            });
                         });
-                    });
-                    if (allQueryWordsMatch) return true;
+                        if (allQueryWordsMatch) return true;
+                    }
+     
+                    return false;
+                });
+                
+                if (listContainer) {
+                    listContainer.innerHTML = renderModalPlayerRows(filtered, bank, state);
                 }
-
-                return false;
-            });
-            listContainer.innerHTML = renderModalPlayerRows(filtered, bank, state);
-            wireAddButtons();
+                wireAddButtons();
+            } catch (err) {
+                console.error("Filter error:", err);
+            }
         };
-
+ 
         if (searchField) searchField.addEventListener('input', applyFilters);
         if (priceSelect) priceSelect.addEventListener('change', applyFilters);
         if (attSelect) attSelect.addEventListener('change', applyFilters);
