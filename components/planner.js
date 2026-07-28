@@ -1055,24 +1055,82 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
 }
 
 // Renders individual player list items inside the modal
+// Renders individual player list items inside the modal
 function renderModalPlayerRows(players, bank, state) {
     if (players.length === 0) {
         return `<div class="transfer-list-empty" style="text-align: center; padding: 20px; color: var(--text-muted);">No matching players found.</div>`;
     }
     
+    // Find the player with the best attacking potential (highest xG90 + xA90)
+    let bestAttackingPlayerId = null;
+    let maxAttackingVal = -1;
+    
+    // Find the player with the best Defcon potential (highest avg clean sheet odds)
+    let bestDefconPlayerId = null;
+    let maxDefconVal = -1;
+    
+    players.forEach(p => {
+        if (p.position === 'DEF' || p.position === 'MID') {
+            // Attacking potential: xG90 + xA90
+            const attVal = (p.xG90 || 0) + (p.xA90 || 0);
+            if (attVal > maxAttackingVal && attVal > 0) {
+                maxAttackingVal = attVal;
+                bestAttackingPlayerId = p.id;
+            }
+            
+            // Defcon potential: clean sheet average odds over next 5 GWs
+            let sumOdds = 0;
+            let count = 0;
+            if (p.predictions && p.predictions.length > 0) {
+                for (let gw = state.currentGw; gw < state.currentGw + 5; gw++) {
+                    const pred = p.predictions.find(pr => pr.gw === gw);
+                    if (pred && pred.opp !== 'BYE') {
+                        let base = 30;
+                        if (pred.diff === 2) base = 48;
+                        else if (pred.diff === 4) base = 18;
+                        else if (pred.diff === 5) base = 8;
+                        if (pred.loc === 'H') base += 5;
+                        else base -= 5;
+                        sumOdds += base;
+                        count++;
+                    }
+                }
+            }
+            const avgOdds = count > 0 ? (sumOdds / count) : 25;
+            if (avgOdds > maxDefconVal) {
+                maxDefconVal = avgOdds;
+                bestDefconPlayerId = p.id;
+            }
+        }
+    });
+    
     return players.map(player => {
         const isAffordable = player.price <= bank;
+        const isBestAttacking = (player.position === 'DEF' || player.position === 'MID') && player.id === bestAttackingPlayerId;
+        const isBestDefcon = (player.position === 'DEF' || player.position === 'MID') && player.id === bestDefconPlayerId;
         
         return `
             <div class="panel-player-row ${!isAffordable ? 'disabled-row' : ''}" data-id="${player.id}" style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px; transition: all var(--transition-fast);">
-                <div class="player-info-left" style="display: flex; flex-direction: column; gap: 4px;">
-                    <span class="player-name-main" style="font-weight: 600; color: #fff; font-size: 13px;">${player.name}</span>
+                <div class="player-info-left" style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0;">
+                    <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 6px;">
+                        <span class="player-name-main" style="font-weight: 600; color: #fff; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;">${player.name}</span>
+                        ${isBestAttacking ? `
+                            <span class="badge-best-att" style="font-size: 9px; padding: 1px 5px; border-radius: 4px; background: rgba(255, 179, 0, 0.15); color: #ffb300; border: 1px solid rgba(255, 179, 0, 0.3); font-weight: 700; display: inline-flex; align-items: center; gap: 2px;" title="Highest Attacking Potential (xGI) in this list">
+                                <i data-lucide="zap" style="width: 10px; height: 10px;"></i> Best Attacking
+                            </span>
+                        ` : ''}
+                        ${isBestDefcon ? `
+                            <span class="badge-best-defcon" style="font-size: 9px; padding: 1px 5px; border-radius: 4px; background: rgba(0, 242, 254, 0.15); color: #00f2fe; border: 1px solid rgba(0, 242, 254, 0.3); font-weight: 700; display: inline-flex; align-items: center; gap: 2px;" title="Highest Defcon Potential (Clean Sheet probability) in this list">
+                                <i data-lucide="shield" style="width: 10px; height: 10px;"></i> Best Defcon
+                            </span>
+                        ` : ''}
+                    </div>
                     ${renderFdrFixtures(player, state.currentGw)}
                     <span class="player-team-sub" style="font-size: 11px; color: var(--text-muted);">${player.team} • £${player.price.toFixed(1)}m • Owned: ${player.ownership.toFixed(1)}%</span>
                     <span class="player-team-sub" style="font-size: 10px; color: var(--text-muted); opacity: 0.85;">Matches last year: ${player.GS} • Avg Min: ${player.MPPG.toFixed(0)}m</span>
                 </div>
-                <div class="player-info-right" style="display: flex; align-items: center; gap: 12px;">
-                    <span class="player-pts-val" style="font-size: 12px; font-weight: 700; color: var(--primary);">${player.xp5 !== undefined ? player.xp5.toFixed(1) : '0.0'} XP (5-GW)</span>
+                <div class="player-info-right" style="display: flex; align-items: center; gap: 12px; margin-left: 8px;">
+                    <span class="player-pts-val" style="font-size: 12px; font-weight: 700; color: var(--primary); white-space: nowrap;">${player.xp5 !== undefined ? player.xp5.toFixed(1) : '0.0'} XP (5-GW)</span>
                     ${isAffordable ? `
                         <button class="add-player-action-btn apply-rec-btn" data-id="${player.id}" style="margin: 0; padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 4px; width: auto; height: 28px; display: flex; align-items: center; justify-content: center; gap: 4px;">
                             Add
