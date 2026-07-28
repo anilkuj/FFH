@@ -971,10 +971,24 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
                     <p style="font-size: 13px; color: var(--text-muted); margin: 0;">Max Budget: <strong class="highlight-bank" style="font-size: 14px;">£${bank.toFixed(1)}m</strong></p>
                     <p style="font-size: 11px; color: var(--text-muted); margin: 0; opacity: 0.85;">Only showing <strong style="color: var(--primary);">${position}s</strong>. Search by name or team (e.g. "Coventry", "COV").</p>
                 </div>
-                <div style="display: flex; gap: 8px; width: 100%;">
-                    <input type="text" class="transfer-search-field" id="modalSearchField" placeholder="Search by name or team..." style="flex: 2; font-size: 12px; padding: 8px; background: rgba(255,255,255,0.02); color:#fff; border: 1px solid var(--border-color); border-radius: 6px;" />
-                    <select class="panel-price-select" id="modalPriceSelect" style="flex: 1; font-size: 12px; padding: 8px; background: var(--bg-panel); color:#fff; border: 1px solid var(--border-color); border-radius: 6px;">
+                <div style="display: flex; gap: 8px; width: 100%; flex-wrap: wrap;">
+                    <input type="text" class="transfer-search-field" id="modalSearchField" placeholder="Search by name or team..." style="flex: 2; min-width: 150px; font-size: 12px; padding: 8px; background: rgba(255,255,255,0.02); color:#fff; border: 1px solid var(--border-color); border-radius: 6px;" />
+                    <select class="panel-price-select" id="modalPriceSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-panel); color:#fff; border: 1px solid var(--border-color); border-radius: 6px;">
                         ${priceOptions}
+                    </select>
+                    <select class="panel-price-select" id="modalAttSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-panel); color:#fff; border: 1px solid var(--border-color); border-radius: 6px;">
+                        <option value="">Attacking (Any)</option>
+                        <option value="A">Attacking: A (Excellent)</option>
+                        <option value="B">Attacking: B+</option>
+                        <option value="C">Attacking: C+</option>
+                        <option value="D">Attacking: D+</option>
+                    </select>
+                    <select class="panel-price-select" id="modalDefconSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-panel); color:#fff; border: 1px solid var(--border-color); border-radius: 6px;">
+                        <option value="">Defcon (Any)</option>
+                        <option value="A">Defcon: A (Excellent)</option>
+                        <option value="B">Defcon: B+</option>
+                        <option value="C">Defcon: C+</option>
+                        <option value="D">Defcon: D+</option>
                     </select>
                 </div>
             </div>
@@ -991,23 +1005,46 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
 
         const searchField = document.getElementById('modalSearchField');
         const priceSelect = document.getElementById('modalPriceSelect');
+        const attSelect = document.getElementById('modalAttSelect');
+        const defconSelect = document.getElementById('modalDefconSelect');
         const listContainer = document.getElementById('modalPlayerList');
 
         const applyFilters = () => {
             const query = searchField.value.trim().toLowerCase();
             const maxPriceStr = priceSelect.value;
             const maxPrice = maxPriceStr ? parseFloat(maxPriceStr) : Infinity;
+            
+            const minAttGrade = attSelect.value;
+            const minDefconGrade = defconSelect.value;
+            
+            const gradeScores = { 'A': 5, 'B': 4, 'C': 3, 'D': 2, 'E': 1, 'N/A': 0 };
 
             const filtered = buyablePlayers.filter(p => {
-                if (!query) return p.price <= maxPrice;
+                if (p.price > maxPrice) return false;
+                
+                const ratings = getPlayerRatings(p, state.currentGw);
+                
+                if (minAttGrade) {
+                    const score = gradeScores[ratings.attackingPotential] || 0;
+                    const reqScore = gradeScores[minAttGrade] || 0;
+                    if (score < reqScore) return false;
+                }
+                
+                if (minDefconGrade) {
+                    const score = gradeScores[ratings.defconPotential] || 0;
+                    const reqScore = gradeScores[minDefconGrade] || 0;
+                    if (score < reqScore) return false;
+                }
+
+                if (!query) return true;
 
                 // 1. Direct name match
-                if (p.name.toLowerCase().includes(query)) return p.price <= maxPrice;
+                if (p.name.toLowerCase().includes(query)) return true;
 
                 // 2. Direct team name match
                 const teamObj = TEAMS.find(t => t.shortName === p.team);
                 if (teamObj && (teamObj.name.toLowerCase().includes(query) || p.team.toLowerCase().includes(query))) {
-                    return p.price <= maxPrice;
+                    return true;
                 }
 
                 // 3. Edit distance match on individual words (for queries >= 3 chars)
@@ -1023,7 +1060,7 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
                             return dist <= maxDist;
                         });
                     });
-                    if (allQueryWordsMatch) return p.price <= maxPrice;
+                    if (allQueryWordsMatch) return true;
                 }
 
                 return false;
@@ -1034,6 +1071,8 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
 
         if (searchField) searchField.addEventListener('input', applyFilters);
         if (priceSelect) priceSelect.addEventListener('change', applyFilters);
+        if (attSelect) attSelect.addEventListener('change', applyFilters);
+        if (defconSelect) defconSelect.addEventListener('change', applyFilters);
 
         const wireAddButtons = () => {
             listContainer.querySelectorAll('.add-player-action-btn').forEach(btn => {
@@ -1108,22 +1147,38 @@ function renderModalPlayerRows(players, bank, state) {
         const isAffordable = player.price <= bank;
         const isBestAttacking = (player.position === 'DEF' || player.position === 'MID') && player.id === bestAttackingPlayerId;
         const isBestDefcon = (player.position === 'DEF' || player.position === 'MID') && player.id === bestDefconPlayerId;
+        const isBoth = isBestAttacking && isBestDefcon;
+        
+        let badgesHtml = '';
+        if (isBoth) {
+            badgesHtml = `
+                <span class="badge-best-both" style="font-size: 9px; padding: 1px 5px; border-radius: 4px; background: linear-gradient(135deg, rgba(255, 179, 0, 0.2) 0%, rgba(0, 242, 254, 0.2) 100%); color: #fff350; border: 1px dashed #ffb300; font-weight: 800; display: inline-flex; align-items: center; gap: 2px;" title="Elite Double Asset: Ranks #1 in BOTH Attacking and Defcon Potential in this list!">
+                    <i data-lucide="crown" style="width: 10px; height: 10px; color: #fff350;"></i> Elite Double Asset
+                </span>
+            `;
+        } else {
+            if (isBestAttacking) {
+                badgesHtml = `
+                    <span class="badge-best-att" style="font-size: 9px; padding: 1px 5px; border-radius: 4px; background: rgba(255, 179, 0, 0.15); color: #ffb300; border: 1px solid rgba(255, 179, 0, 0.3); font-weight: 700; display: inline-flex; align-items: center; gap: 2px;" title="Highest Attacking Potential (xGI) in this list">
+                        <i data-lucide="zap" style="width: 10px; height: 10px;"></i> Best Attacking
+                    </span>
+                `;
+            }
+            if (isBestDefcon) {
+                badgesHtml = `
+                    <span class="badge-best-defcon" style="font-size: 9px; padding: 1px 5px; border-radius: 4px; background: rgba(0, 242, 254, 0.15); color: #00f2fe; border: 1px solid rgba(0, 242, 254, 0.3); font-weight: 700; display: inline-flex; align-items: center; gap: 2px;" title="Highest Defcon Potential (Clean Sheet probability) in this list">
+                        <i data-lucide="shield" style="width: 10px; height: 10px;"></i> Best Defcon
+                    </span>
+                `;
+            }
+        }
         
         return `
             <div class="panel-player-row ${!isAffordable ? 'disabled-row' : ''}" data-id="${player.id}" style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px; transition: all var(--transition-fast);">
                 <div class="player-info-left" style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0;">
                     <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 6px;">
                         <span class="player-name-main" style="font-weight: 600; color: #fff; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;">${player.name}</span>
-                        ${isBestAttacking ? `
-                            <span class="badge-best-att" style="font-size: 9px; padding: 1px 5px; border-radius: 4px; background: rgba(255, 179, 0, 0.15); color: #ffb300; border: 1px solid rgba(255, 179, 0, 0.3); font-weight: 700; display: inline-flex; align-items: center; gap: 2px;" title="Highest Attacking Potential (xGI) in this list">
-                                <i data-lucide="zap" style="width: 10px; height: 10px;"></i> Best Attacking
-                            </span>
-                        ` : ''}
-                        ${isBestDefcon ? `
-                            <span class="badge-best-defcon" style="font-size: 9px; padding: 1px 5px; border-radius: 4px; background: rgba(0, 242, 254, 0.15); color: #00f2fe; border: 1px solid rgba(0, 242, 254, 0.3); font-weight: 700; display: inline-flex; align-items: center; gap: 2px;" title="Highest Defcon Potential (Clean Sheet probability) in this list">
-                                <i data-lucide="shield" style="width: 10px; height: 10px;"></i> Best Defcon
-                            </span>
-                        ` : ''}
+                        ${badgesHtml}
                     </div>
                     ${renderFdrFixtures(player, state.currentGw)}
                     <span class="player-team-sub" style="font-size: 11px; color: var(--text-muted);">${player.team} • £${player.price.toFixed(1)}m • Owned: ${player.ownership.toFixed(1)}%</span>
