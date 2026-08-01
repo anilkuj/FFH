@@ -389,12 +389,12 @@ export function getPlayerRatings(player, currentGw = 1) {
     else if (mppg >= 45) expectedMinutes = 'C';
     else if (mppg >= 20) expectedMinutes = 'D';
 
-    // 2. Next 10 Fixtures (based on average FDR of next 10 predictions starting from currentGw)
+    // 2. Next 5 Fixtures (based on average FDR of next 5 predictions starting from currentGw)
     let avgFdr = 3.0;
     if (player.predictions && player.predictions.length > 0) {
         let fdrSum = 0;
         let count = 0;
-        for (let gw = currentGw; gw < currentGw + 10; gw++) {
+        for (let gw = currentGw; gw < currentGw + 5; gw++) {
             const pred = player.predictions.find(p => p.gw === gw);
             if (pred && pred.opp !== 'BYE') {
                 fdrSum += pred.diff;
@@ -406,11 +406,11 @@ export function getPlayerRatings(player, currentGw = 1) {
         }
     }
     // A: <= 2.2, B: <= 2.8, C: <= 3.4, D: <= 4.0, E: > 4.0
-    let next10Fixtures = 'E';
-    if (avgFdr <= 2.2) next10Fixtures = 'A';
-    else if (avgFdr <= 2.8) next10Fixtures = 'B';
-    else if (avgFdr <= 3.4) next10Fixtures = 'C';
-    else if (avgFdr <= 4.0) next10Fixtures = 'D';
+    let next5Fixtures = 'E';
+    if (avgFdr <= 2.2) next5Fixtures = 'A';
+    else if (avgFdr <= 2.8) next5Fixtures = 'B';
+    else if (avgFdr <= 3.4) next5Fixtures = 'C';
+    else if (avgFdr <= 4.0) next5Fixtures = 'D';
 
     // 3. Attacking Role (based on position and xG90 + xA90)
     const xg90 = player.xG90 || 0;
@@ -469,7 +469,7 @@ export function getPlayerRatings(player, currentGw = 1) {
         let sumOdds = 0;
         let count = 0;
         if (player.predictions && player.predictions.length > 0) {
-            for (let gw = currentGw; gw < currentGw + 10; gw++) {
+            for (let gw = currentGw; gw < currentGw + 5; gw++) {
                 const pred = player.predictions.find(p => p.gw === gw);
                 if (pred && pred.opp !== 'BYE') {
                     let base = 30;
@@ -514,7 +514,7 @@ export function getPlayerRatings(player, currentGw = 1) {
 
     return {
         expectedMinutes,
-        next10Fixtures,
+        next5Fixtures,
         attackingRole,
         attackingPotential,
         defconPotential,

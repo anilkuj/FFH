@@ -139,7 +139,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.07,
         "ictIndex": 57.5,
-        "priceChangeTarget": -25.735218846373115,
+        "priceChangeTarget": 65.71476664558045,
         "predictions": [
             {
                 "gw": 1,
@@ -245,7 +245,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 2,
-        "priceChangeTarget": 49.36262000484149,
+        "priceChangeTarget": 94.99059939187896,
         "predictions": [
             {
                 "gw": 1,
@@ -351,7 +351,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -60.839180461894024,
+        "priceChangeTarget": -93.53894835264556,
         "predictions": [
             {
                 "gw": 1,
@@ -457,7 +457,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 4.69,
         "ictIndex": 125,
-        "priceChangeTarget": -29.663018227688283,
+        "priceChangeTarget": 45.239979795555314,
         "predictions": [
             {
                 "gw": 1,
@@ -563,7 +563,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 6.24,
         "ictIndex": 125.7,
-        "priceChangeTarget": -95.52494459116359,
+        "priceChangeTarget": -29.727222735630306,
         "predictions": [
             {
                 "gw": 1,
@@ -669,7 +669,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 2.09,
         "ictIndex": 84.3,
-        "priceChangeTarget": 94.96187327870854,
+        "priceChangeTarget": 86.20262279158518,
         "predictions": [
             {
                 "gw": 1,
@@ -775,7 +775,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.3,
         "ictIndex": 17.6,
-        "priceChangeTarget": -25.26398565442925,
+        "priceChangeTarget": -40.16506716617725,
         "predictions": [
             {
                 "gw": 1,
@@ -881,7 +881,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 4.12,
         "ictIndex": 77.9,
-        "priceChangeTarget": 7.189755057253407,
+        "priceChangeTarget": 50.29247725608792,
         "predictions": [
             {
                 "gw": 1,
@@ -987,7 +987,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 2.03,
         "ictIndex": 70.9,
-        "priceChangeTarget": 99.47805794003577,
+        "priceChangeTarget": -13.192346335556778,
         "predictions": [
             {
                 "gw": 1,
@@ -1093,7 +1093,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 1.14,
         "ictIndex": 34.3,
-        "priceChangeTarget": 92.84275776645359,
+        "priceChangeTarget": 13.594013279675849,
         "predictions": [
             {
                 "gw": 1,
@@ -1199,7 +1199,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 0.73,
         "ictIndex": 32.9,
-        "priceChangeTarget": -11.046040768943953,
+        "priceChangeTarget": -75.30558389808081,
         "predictions": [
             {
                 "gw": 1,
@@ -1305,7 +1305,7 @@ export const PLAYERS = [
         "xA90": 0.29,
         "xGI": 14.73,
         "ictIndex": 230.6,
-        "priceChangeTarget": 87.48146080887227,
+        "priceChangeTarget": -61.799436985015575,
         "predictions": [
             {
                 "gw": 1,
@@ -1411,7 +1411,7 @@ export const PLAYERS = [
         "xA90": 0.21,
         "xGI": 10.47,
         "ictIndex": 215.4,
-        "priceChangeTarget": -65.05773788224414,
+        "priceChangeTarget": 36.0958219788302,
         "predictions": [
             {
                 "gw": 1,
@@ -1517,7 +1517,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 7.84,
         "ictIndex": 115.1,
-        "priceChangeTarget": -43.68880881652184,
+        "priceChangeTarget": -89.48479707915156,
         "predictions": [
             {
                 "gw": 1,
@@ -1623,7 +1623,7 @@ export const PLAYERS = [
         "xA90": 0.24,
         "xGI": 4.9,
         "ictIndex": 104.4,
-        "priceChangeTarget": 89.94254093177162,
+        "priceChangeTarget": -66.6636576943225,
         "predictions": [
             {
                 "gw": 1,
@@ -1729,7 +1729,7 @@ export const PLAYERS = [
         "xA90": 0.21,
         "xGI": 4.09,
         "ictIndex": 101.3,
-        "priceChangeTarget": -23.830369646276267,
+        "priceChangeTarget": 73.05028386152534,
         "predictions": [
             {
                 "gw": 1,
@@ -1835,7 +1835,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 4.81,
         "ictIndex": 73.6,
-        "priceChangeTarget": -17.198610712127987,
+        "priceChangeTarget": -0.36452928241554616,
         "predictions": [
             {
                 "gw": 1,
@@ -1941,7 +1941,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 5.39,
         "ictIndex": 79,
-        "priceChangeTarget": 6.049574840766098,
+        "priceChangeTarget": -15.83683996456611,
         "predictions": [
             {
                 "gw": 1,
@@ -2047,7 +2047,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 5.11,
         "ictIndex": 126.2,
-        "priceChangeTarget": 44.13164465202223,
+        "priceChangeTarget": -67.5660075903878,
         "predictions": [
             {
                 "gw": 1,
@@ -2153,7 +2153,7 @@ export const PLAYERS = [
         "xA90": 0.18,
         "xGI": 1.49,
         "ictIndex": 16.6,
-        "priceChangeTarget": -1.9622502156366721,
+        "priceChangeTarget": -67.92770817837925,
         "predictions": [
             {
                 "gw": 1,
@@ -2259,7 +2259,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.12,
         "ictIndex": 4,
-        "priceChangeTarget": 29.320749689845314,
+        "priceChangeTarget": -58.32356905229612,
         "predictions": [
             {
                 "gw": 1,
@@ -2365,7 +2365,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.31,
         "ictIndex": 5.4,
-        "priceChangeTarget": 39.54237498383401,
+        "priceChangeTarget": 58.87755966143004,
         "predictions": [
             {
                 "gw": 1,
@@ -2471,7 +2471,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 96.24733740082038,
+        "priceChangeTarget": -90.56201110918911,
         "predictions": [
             {
                 "gw": 1,
@@ -2577,7 +2577,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 0.82,
         "ictIndex": 10,
-        "priceChangeTarget": -15.273138335024797,
+        "priceChangeTarget": 43.915379000121476,
         "predictions": [
             {
                 "gw": 1,
@@ -2683,7 +2683,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 14.19,
         "ictIndex": 157.5,
-        "priceChangeTarget": 35.266953184717465,
+        "priceChangeTarget": 24.07572669468925,
         "predictions": [
             {
                 "gw": 1,
@@ -2789,7 +2789,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 3.95,
         "ictIndex": 49.9,
-        "priceChangeTarget": 88.66303415650358,
+        "priceChangeTarget": -68.74315599952769,
         "predictions": [
             {
                 "gw": 1,
@@ -2895,7 +2895,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 2.97,
         "ictIndex": 47.5,
-        "priceChangeTarget": -57.15347728164373,
+        "priceChangeTarget": 95.524961928768,
         "predictions": [
             {
                 "gw": 1,
@@ -3001,7 +3001,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 84.61111000791166,
+        "priceChangeTarget": 85.51018826699973,
         "predictions": [
             {
                 "gw": 1,
@@ -3107,7 +3107,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.08,
         "ictIndex": 79.2,
-        "priceChangeTarget": 28.221165996096488,
+        "priceChangeTarget": 72.05252154245275,
         "predictions": [
             {
                 "gw": 1,
@@ -3213,7 +3213,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 13.9,
-        "priceChangeTarget": -2.4384926356834313,
+        "priceChangeTarget": 73.3158808732421,
         "predictions": [
             {
                 "gw": 1,
@@ -3319,7 +3319,7 @@ export const PLAYERS = [
         "xA90": 0.16,
         "xGI": 3.95,
         "ictIndex": 98.5,
-        "priceChangeTarget": 20.52982474858203,
+        "priceChangeTarget": -93.50280671385663,
         "predictions": [
             {
                 "gw": 1,
@@ -3425,7 +3425,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 1.86,
         "ictIndex": 84,
-        "priceChangeTarget": -61.86960130830783,
+        "priceChangeTarget": 62.74049335898016,
         "predictions": [
             {
                 "gw": 1,
@@ -3531,7 +3531,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 4.08,
         "ictIndex": 137.5,
-        "priceChangeTarget": 12.46171346666381,
+        "priceChangeTarget": 2.2941197210891744,
         "predictions": [
             {
                 "gw": 1,
@@ -3637,7 +3637,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 1.72,
         "ictIndex": 46.8,
-        "priceChangeTarget": 45.164156607231575,
+        "priceChangeTarget": -5.284877529954329,
         "predictions": [
             {
                 "gw": 1,
@@ -3743,7 +3743,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 1.72,
         "ictIndex": 45.1,
-        "priceChangeTarget": -75.62214946077412,
+        "priceChangeTarget": -30.088695633809962,
         "predictions": [
             {
                 "gw": 1,
@@ -3849,7 +3849,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.2,
         "ictIndex": 20.6,
-        "priceChangeTarget": -76.14918421150729,
+        "priceChangeTarget": -43.431629970820104,
         "predictions": [
             {
                 "gw": 1,
@@ -3955,7 +3955,7 @@ export const PLAYERS = [
         "xA90": 0.14,
         "xGI": 3.65,
         "ictIndex": 94.3,
-        "priceChangeTarget": -64.72992481794557,
+        "priceChangeTarget": 55.65063563964631,
         "predictions": [
             {
                 "gw": 1,
@@ -4061,7 +4061,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.38,
         "ictIndex": 22.7,
-        "priceChangeTarget": -93.99542323747228,
+        "priceChangeTarget": -39.14404486175247,
         "predictions": [
             {
                 "gw": 1,
@@ -4167,7 +4167,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.01,
         "ictIndex": 2.3,
-        "priceChangeTarget": 99.00605270540959,
+        "priceChangeTarget": -80.61247895876073,
         "predictions": [
             {
                 "gw": 1,
@@ -4273,7 +4273,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -78.91121172143203,
+        "priceChangeTarget": -98.81078408210928,
         "predictions": [
             {
                 "gw": 1,
@@ -4379,7 +4379,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 5.61,
         "ictIndex": 121.4,
-        "priceChangeTarget": -14.819299308733008,
+        "priceChangeTarget": 78.93183197489415,
         "predictions": [
             {
                 "gw": 1,
@@ -4485,7 +4485,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 2.41,
         "ictIndex": 42,
-        "priceChangeTarget": 11.076974296822712,
+        "priceChangeTarget": 0.8002614178734149,
         "predictions": [
             {
                 "gw": 1,
@@ -4591,7 +4591,7 @@ export const PLAYERS = [
         "xA90": 0.29,
         "xGI": 1.96,
         "ictIndex": 30.1,
-        "priceChangeTarget": 40.0324419228439,
+        "priceChangeTarget": -46.13942792661685,
         "predictions": [
             {
                 "gw": 1,
@@ -4697,7 +4697,7 @@ export const PLAYERS = [
         "xA90": 0.17,
         "xGI": 7.11,
         "ictIndex": 137.3,
-        "priceChangeTarget": 94.79445854895869,
+        "priceChangeTarget": -70.03765369977424,
         "predictions": [
             {
                 "gw": 1,
@@ -4803,7 +4803,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 2.84,
         "ictIndex": 58.1,
-        "priceChangeTarget": -95.78530052136112,
+        "priceChangeTarget": 74.78331896264993,
         "predictions": [
             {
                 "gw": 1,
@@ -4909,7 +4909,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 1.36,
         "ictIndex": 64.2,
-        "priceChangeTarget": 99.7349742430672,
+        "priceChangeTarget": -41.51883840328436,
         "predictions": [
             {
                 "gw": 1,
@@ -5015,7 +5015,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 2.37,
         "ictIndex": 74.4,
-        "priceChangeTarget": -27.39041687566079,
+        "priceChangeTarget": 53.658254612335696,
         "predictions": [
             {
                 "gw": 1,
@@ -5121,7 +5121,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -25.112343159385333,
+        "priceChangeTarget": -20.673348383523532,
         "predictions": [
             {
                 "gw": 1,
@@ -5227,7 +5227,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -39.490096425115475,
+        "priceChangeTarget": -84.77752931823291,
         "predictions": [
             {
                 "gw": 1,
@@ -5333,7 +5333,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.05,
         "ictIndex": 0.3,
-        "priceChangeTarget": -66.84824891565553,
+        "priceChangeTarget": -15.714952620547322,
         "predictions": [
             {
                 "gw": 1,
@@ -5439,7 +5439,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 0.1,
         "ictIndex": 1.5,
-        "priceChangeTarget": 40.41542603214447,
+        "priceChangeTarget": -38.95530190874952,
         "predictions": [
             {
                 "gw": 1,
@@ -5545,7 +5545,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 27.37234186985718,
+        "priceChangeTarget": 44.913091951701176,
         "predictions": [
             {
                 "gw": 1,
@@ -5651,7 +5651,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 2.49,
         "ictIndex": 102,
-        "priceChangeTarget": -35.645216430652965,
+        "priceChangeTarget": 46.886379585336954,
         "predictions": [
             {
                 "gw": 1,
@@ -5757,7 +5757,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 16.58,
         "ictIndex": 225.2,
-        "priceChangeTarget": -12.766608689612099,
+        "priceChangeTarget": -63.48940918490285,
         "predictions": [
             {
                 "gw": 1,
@@ -5863,7 +5863,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 2.41,
         "ictIndex": 27.1,
-        "priceChangeTarget": 1.0077652278626488,
+        "priceChangeTarget": 44.57157065228296,
         "predictions": [
             {
                 "gw": 1,
@@ -5969,7 +5969,7 @@ export const PLAYERS = [
         "xA90": 0.26,
         "xGI": 7.12,
         "ictIndex": 100.5,
-        "priceChangeTarget": 86.22033602960511,
+        "priceChangeTarget": 77.96419751756659,
         "predictions": [
             {
                 "gw": 1,
@@ -6075,7 +6075,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 82.4,
-        "priceChangeTarget": -17.474293084287112,
+        "priceChangeTarget": 25.884866333089548,
         "predictions": [
             {
                 "gw": 1,
@@ -6181,7 +6181,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 70.31465452105198,
+        "priceChangeTarget": 23.101589035448427,
         "predictions": [
             {
                 "gw": 1,
@@ -6287,7 +6287,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 43.01090284106314,
+        "priceChangeTarget": 50.32091111394237,
         "predictions": [
             {
                 "gw": 1,
@@ -6393,7 +6393,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 2.04,
         "ictIndex": 86.3,
-        "priceChangeTarget": -27.295561133870947,
+        "priceChangeTarget": -78.16023174216295,
         "predictions": [
             {
                 "gw": 1,
@@ -6499,7 +6499,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 4.42,
         "ictIndex": 162.6,
-        "priceChangeTarget": 5.1183086409844805,
+        "priceChangeTarget": 13.234431615851122,
         "predictions": [
             {
                 "gw": 1,
@@ -6605,7 +6605,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.21,
         "ictIndex": 34.4,
-        "priceChangeTarget": -91.52255492683854,
+        "priceChangeTarget": -27.744606931724917,
         "predictions": [
             {
                 "gw": 1,
@@ -6711,7 +6711,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.34,
         "ictIndex": 12.2,
-        "priceChangeTarget": 70.60333099644251,
+        "priceChangeTarget": -76.21212424759733,
         "predictions": [
             {
                 "gw": 1,
@@ -6817,7 +6817,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.23,
         "ictIndex": 27.1,
-        "priceChangeTarget": -38.05888595012126,
+        "priceChangeTarget": -71.61778450462782,
         "predictions": [
             {
                 "gw": 1,
@@ -6923,7 +6923,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 78.89191682007618,
+        "priceChangeTarget": 52.57400735605421,
         "predictions": [
             {
                 "gw": 1,
@@ -7029,7 +7029,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.6,
-        "priceChangeTarget": 82.07865411208456,
+        "priceChangeTarget": 35.12619881550293,
         "predictions": [
             {
                 "gw": 1,
@@ -7135,7 +7135,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 4.51,
         "ictIndex": 75.3,
-        "priceChangeTarget": 76.17442425838334,
+        "priceChangeTarget": 7.453629953312586,
         "predictions": [
             {
                 "gw": 1,
@@ -7241,7 +7241,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 13.66,
         "ictIndex": 207.9,
-        "priceChangeTarget": -10.62463569328736,
+        "priceChangeTarget": 72.94239924579207,
         "predictions": [
             {
                 "gw": 1,
@@ -7347,7 +7347,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 6.74,
         "ictIndex": 139,
-        "priceChangeTarget": -75.29464843922278,
+        "priceChangeTarget": 38.60773795657573,
         "predictions": [
             {
                 "gw": 1,
@@ -7453,7 +7453,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 3.86,
         "ictIndex": 58.8,
-        "priceChangeTarget": -85.78990699839166,
+        "priceChangeTarget": -49.654503513658696,
         "predictions": [
             {
                 "gw": 1,
@@ -7559,7 +7559,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.59,
         "ictIndex": 40.6,
-        "priceChangeTarget": 61.48178010387352,
+        "priceChangeTarget": -66.92316873917332,
         "predictions": [
             {
                 "gw": 1,
@@ -7665,7 +7665,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 0.39,
         "ictIndex": 8.9,
-        "priceChangeTarget": -91.71200188806574,
+        "priceChangeTarget": -33.523935154700936,
         "predictions": [
             {
                 "gw": 1,
@@ -7771,7 +7771,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 1.26,
         "ictIndex": 66.3,
-        "priceChangeTarget": 25.612912036426323,
+        "priceChangeTarget": 85.29995851543694,
         "predictions": [
             {
                 "gw": 1,
@@ -7877,7 +7877,7 @@ export const PLAYERS = [
         "xA90": 0.26,
         "xGI": 9.21,
         "ictIndex": 104.1,
-        "priceChangeTarget": -36.64920374084551,
+        "priceChangeTarget": -55.78998320885591,
         "predictions": [
             {
                 "gw": 1,
@@ -7983,7 +7983,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 2.6,
         "ictIndex": 64.7,
-        "priceChangeTarget": 44.50121607235263,
+        "priceChangeTarget": -96.69292406091283,
         "predictions": [
             {
                 "gw": 1,
@@ -8089,7 +8089,7 @@ export const PLAYERS = [
         "xA90": 0.22,
         "xGI": 0.44,
         "ictIndex": 9.6,
-        "priceChangeTarget": 8.042773946319642,
+        "priceChangeTarget": 89.2791463920608,
         "predictions": [
             {
                 "gw": 1,
@@ -8195,7 +8195,7 @@ export const PLAYERS = [
         "xA90": 0.14,
         "xGI": 4.22,
         "ictIndex": 76.1,
-        "priceChangeTarget": 69.90756800152408,
+        "priceChangeTarget": -58.36523145269621,
         "predictions": [
             {
                 "gw": 1,
@@ -8301,7 +8301,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 9.82,
         "ictIndex": 139.9,
-        "priceChangeTarget": 75.89644660099259,
+        "priceChangeTarget": 78.90165186909402,
         "predictions": [
             {
                 "gw": 1,
@@ -8407,7 +8407,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 12.12,
         "ictIndex": 155.5,
-        "priceChangeTarget": 22.90064441584991,
+        "priceChangeTarget": -40.93399996116875,
         "predictions": [
             {
                 "gw": 1,
@@ -8513,7 +8513,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 2.07,
         "ictIndex": 19.1,
-        "priceChangeTarget": -26.538678775849505,
+        "priceChangeTarget": 43.60499612118201,
         "predictions": [
             {
                 "gw": 1,
@@ -8619,7 +8619,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 79.74334110257212,
+        "priceChangeTarget": -12.40364198268071,
         "predictions": [
             {
                 "gw": 1,
@@ -8725,7 +8725,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.22,
         "ictIndex": 93.8,
-        "priceChangeTarget": 3.969436605044436,
+        "priceChangeTarget": 28.61345740366528,
         "predictions": [
             {
                 "gw": 1,
@@ -8831,7 +8831,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 1.3,
-        "priceChangeTarget": 80.85068506040699,
+        "priceChangeTarget": 94.25335341185237,
         "predictions": [
             {
                 "gw": 1,
@@ -8937,7 +8937,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 3.95,
         "ictIndex": 131.9,
-        "priceChangeTarget": 47.53453421353663,
+        "priceChangeTarget": 37.480591609146444,
         "predictions": [
             {
                 "gw": 1,
@@ -9043,7 +9043,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 4.81,
         "ictIndex": 106.3,
-        "priceChangeTarget": 10.2663955189213,
+        "priceChangeTarget": -0.5150996111092212,
         "predictions": [
             {
                 "gw": 1,
@@ -9149,7 +9149,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 5.52,
         "ictIndex": 106.4,
-        "priceChangeTarget": -79.47201321565188,
+        "priceChangeTarget": -58.39736704414775,
         "predictions": [
             {
                 "gw": 1,
@@ -9255,7 +9255,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 1.42,
         "ictIndex": 62.7,
-        "priceChangeTarget": 96.66384280137461,
+        "priceChangeTarget": -86.99859728111767,
         "predictions": [
             {
                 "gw": 1,
@@ -9361,7 +9361,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 4.17,
         "ictIndex": 121.7,
-        "priceChangeTarget": 83.67204767620584,
+        "priceChangeTarget": -57.29505836005491,
         "predictions": [
             {
                 "gw": 1,
@@ -9467,7 +9467,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.72,
         "ictIndex": 26.9,
-        "priceChangeTarget": -46.19304346994107,
+        "priceChangeTarget": 72.57549715299152,
         "predictions": [
             {
                 "gw": 1,
@@ -9573,7 +9573,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.61,
         "ictIndex": 16,
-        "priceChangeTarget": 25.693203429431307,
+        "priceChangeTarget": 47.61470172018167,
         "predictions": [
             {
                 "gw": 1,
@@ -9679,7 +9679,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.07,
         "ictIndex": 12.3,
-        "priceChangeTarget": -4.91465055030784,
+        "priceChangeTarget": -4.381558815800759,
         "predictions": [
             {
                 "gw": 1,
@@ -9785,7 +9785,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -2.6601636962214457,
+        "priceChangeTarget": -59.167648587867696,
         "predictions": [
             {
                 "gw": 1,
@@ -9891,7 +9891,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 90.78922132905106,
+        "priceChangeTarget": -7.986635353372094,
         "predictions": [
             {
                 "gw": 1,
@@ -9997,7 +9997,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 14.13,
         "ictIndex": 172.8,
-        "priceChangeTarget": 48.69866883102344,
+        "priceChangeTarget": -79.8645652594644,
         "predictions": [
             {
                 "gw": 1,
@@ -10103,7 +10103,7 @@ export const PLAYERS = [
         "xA90": 0.16,
         "xGI": 12.06,
         "ictIndex": 162.8,
-        "priceChangeTarget": 15.421053195798777,
+        "priceChangeTarget": -87.11072239213675,
         "predictions": [
             {
                 "gw": 1,
@@ -10209,7 +10209,7 @@ export const PLAYERS = [
         "xA90": 0.24,
         "xGI": 8.04,
         "ictIndex": 155,
-        "priceChangeTarget": -92.47336049630054,
+        "priceChangeTarget": -18.861998768539507,
         "predictions": [
             {
                 "gw": 1,
@@ -10315,7 +10315,7 @@ export const PLAYERS = [
         "xA90": 0.24,
         "xGI": 8.27,
         "ictIndex": 126.9,
-        "priceChangeTarget": -39.87753773840361,
+        "priceChangeTarget": 1.133417230306577,
         "predictions": [
             {
                 "gw": 1,
@@ -10421,7 +10421,7 @@ export const PLAYERS = [
         "xA90": 0.14,
         "xGI": 3.09,
         "ictIndex": 79,
-        "priceChangeTarget": 20.307013081277447,
+        "priceChangeTarget": -76.04360654864067,
         "predictions": [
             {
                 "gw": 1,
@@ -10527,7 +10527,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.01,
         "ictIndex": 0.6,
-        "priceChangeTarget": 23.91482103516313,
+        "priceChangeTarget": -85.20945187492981,
         "predictions": [
             {
                 "gw": 1,
@@ -10633,7 +10633,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.73,
         "ictIndex": 8.1,
-        "priceChangeTarget": 36.6456904951859,
+        "priceChangeTarget": -46.587937315598026,
         "predictions": [
             {
                 "gw": 1,
@@ -10739,7 +10739,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 2.64,
         "ictIndex": 74.4,
-        "priceChangeTarget": -1.7997669266161154,
+        "priceChangeTarget": -96.07271368502326,
         "predictions": [
             {
                 "gw": 1,
@@ -10845,7 +10845,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 2.61,
         "ictIndex": 83.4,
-        "priceChangeTarget": 82.49235700832008,
+        "priceChangeTarget": -84.20828977306742,
         "predictions": [
             {
                 "gw": 1,
@@ -10951,7 +10951,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.08,
         "ictIndex": 1.6,
-        "priceChangeTarget": -87.53736951954929,
+        "priceChangeTarget": -16.55417718000878,
         "predictions": [
             {
                 "gw": 1,
@@ -11057,7 +11057,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -49.981268645738574,
+        "priceChangeTarget": 53.45947095938797,
         "predictions": [
             {
                 "gw": 1,
@@ -11163,7 +11163,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 22.43,
         "ictIndex": 256.9,
-        "priceChangeTarget": 79.31212582088102,
+        "priceChangeTarget": -99.13090022800797,
         "predictions": [
             {
                 "gw": 1,
@@ -11269,7 +11269,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 73.38975597625117,
+        "priceChangeTarget": 38.56218943155406,
         "predictions": [
             {
                 "gw": 1,
@@ -11375,7 +11375,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -89.22054267293369,
+        "priceChangeTarget": -94.49446878404213,
         "predictions": [
             {
                 "gw": 1,
@@ -11481,7 +11481,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.06,
         "ictIndex": 94.7,
-        "priceChangeTarget": 50.09679944623235,
+        "priceChangeTarget": 3.9722013541063177,
         "predictions": [
             {
                 "gw": 1,
@@ -11587,7 +11587,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 84.73825768046598,
+        "priceChangeTarget": 86.97887484920128,
         "predictions": [
             {
                 "gw": 1,
@@ -11685,7 +11685,7 @@ export const PLAYERS = [
         "team": "BHA",
         "position": "GKP",
         "price": 4,
-        "ownership": 4.9,
+        "ownership": 4.8,
         "points": 0,
         "xG": 0,
         "xA": 0,
@@ -11693,7 +11693,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -64.15176377253371,
+        "priceChangeTarget": 24.092720876123934,
         "predictions": [
             {
                 "gw": 1,
@@ -11799,7 +11799,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 5.37,
         "ictIndex": 123.7,
-        "priceChangeTarget": 75.0483305755534,
+        "priceChangeTarget": -45.10156588852152,
         "predictions": [
             {
                 "gw": 1,
@@ -11905,7 +11905,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.52,
         "ictIndex": 31.1,
-        "priceChangeTarget": -16.273673738030325,
+        "priceChangeTarget": 88.61725721430324,
         "predictions": [
             {
                 "gw": 1,
@@ -12011,7 +12011,7 @@ export const PLAYERS = [
         "xA90": 0.26,
         "xGI": 5.74,
         "ictIndex": 99.9,
-        "priceChangeTarget": 22.243716508161043,
+        "priceChangeTarget": -9.966140605291528,
         "predictions": [
             {
                 "gw": 1,
@@ -12117,7 +12117,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 2.39,
         "ictIndex": 98.7,
-        "priceChangeTarget": 36.1603819862699,
+        "priceChangeTarget": -18.87457617295192,
         "predictions": [
             {
                 "gw": 1,
@@ -12223,7 +12223,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.01,
         "ictIndex": 4.8,
-        "priceChangeTarget": 83.21354023161419,
+        "priceChangeTarget": 11.926021768350509,
         "predictions": [
             {
                 "gw": 1,
@@ -12329,7 +12329,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 3.6,
-        "priceChangeTarget": 58.74179750489964,
+        "priceChangeTarget": 42.0084086544679,
         "predictions": [
             {
                 "gw": 1,
@@ -12435,7 +12435,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 31.619466263116635,
+        "priceChangeTarget": 26.156058533694917,
         "predictions": [
             {
                 "gw": 1,
@@ -12541,7 +12541,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -15.364717029692642,
+        "priceChangeTarget": -25.772159198297942,
         "predictions": [
             {
                 "gw": 1,
@@ -12647,7 +12647,7 @@ export const PLAYERS = [
         "xA90": 0.14,
         "xGI": 6.78,
         "ictIndex": 112.3,
-        "priceChangeTarget": 15.986855361068734,
+        "priceChangeTarget": -72.31998768748555,
         "predictions": [
             {
                 "gw": 1,
@@ -12753,7 +12753,7 @@ export const PLAYERS = [
         "xA90": 0.19,
         "xGI": 8.87,
         "ictIndex": 180.3,
-        "priceChangeTarget": 50.899010246648345,
+        "priceChangeTarget": -25.5382505117107,
         "predictions": [
             {
                 "gw": 1,
@@ -12859,7 +12859,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 7.28,
         "ictIndex": 94.8,
-        "priceChangeTarget": 80.55104485641945,
+        "priceChangeTarget": 71.60200248735393,
         "predictions": [
             {
                 "gw": 1,
@@ -12957,7 +12957,7 @@ export const PLAYERS = [
         "team": "BHA",
         "position": "MID",
         "price": 5.5,
-        "ownership": 5.2,
+        "ownership": 5.3,
         "points": 78,
         "xG": 1.39,
         "xA": 3.95,
@@ -12965,7 +12965,7 @@ export const PLAYERS = [
         "xA90": 0.22,
         "xGI": 5.34,
         "ictIndex": 128.5,
-        "priceChangeTarget": 12.371198266091284,
+        "priceChangeTarget": -93.92362803393681,
         "predictions": [
             {
                 "gw": 1,
@@ -13071,7 +13071,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 5.8,
         "ictIndex": 113.5,
-        "priceChangeTarget": 28.891153279991357,
+        "priceChangeTarget": -69.37165303762988,
         "predictions": [
             {
                 "gw": 1,
@@ -13177,7 +13177,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 1.39,
         "ictIndex": 19.6,
-        "priceChangeTarget": 38.40354923404482,
+        "priceChangeTarget": -64.59905974209249,
         "predictions": [
             {
                 "gw": 1,
@@ -13283,7 +13283,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 7.96,
         "ictIndex": 119,
-        "priceChangeTarget": 90.3603768421329,
+        "priceChangeTarget": 20.49421224507448,
         "predictions": [
             {
                 "gw": 1,
@@ -13389,7 +13389,7 @@ export const PLAYERS = [
         "xA90": 0.31,
         "xGI": 0.34,
         "ictIndex": 7.4,
-        "priceChangeTarget": -3.4532732253553178,
+        "priceChangeTarget": 93.57567435840531,
         "predictions": [
             {
                 "gw": 1,
@@ -13495,7 +13495,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 3.85,
         "ictIndex": 84.5,
-        "priceChangeTarget": -42.98542134641503,
+        "priceChangeTarget": -14.759302055265692,
         "predictions": [
             {
                 "gw": 1,
@@ -13601,7 +13601,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 3.78,
         "ictIndex": 97.7,
-        "priceChangeTarget": 43.97665366004054,
+        "priceChangeTarget": 36.72531152811814,
         "predictions": [
             {
                 "gw": 1,
@@ -13707,7 +13707,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 1.5,
         "ictIndex": 36.8,
-        "priceChangeTarget": 66.07318071948777,
+        "priceChangeTarget": 84.59495140260444,
         "predictions": [
             {
                 "gw": 1,
@@ -13813,7 +13813,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.03,
         "ictIndex": 1.8,
-        "priceChangeTarget": -71.34888675431104,
+        "priceChangeTarget": 71.05498474519041,
         "predictions": [
             {
                 "gw": 1,
@@ -13919,7 +13919,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.07,
         "ictIndex": 1.6,
-        "priceChangeTarget": -93.12741822113763,
+        "priceChangeTarget": 93.62022294016595,
         "predictions": [
             {
                 "gw": 1,
@@ -14025,7 +14025,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 94.2123611428371,
+        "priceChangeTarget": -14.88258225530565,
         "predictions": [
             {
                 "gw": 1,
@@ -14131,7 +14131,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -2.848326041815156,
+        "priceChangeTarget": -33.70855301761384,
         "predictions": [
             {
                 "gw": 1,
@@ -14237,7 +14237,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 13.76,
         "ictIndex": 168.2,
-        "priceChangeTarget": -64.33659406201627,
+        "priceChangeTarget": -26.833262522089527,
         "predictions": [
             {
                 "gw": 1,
@@ -14343,7 +14343,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 0.55,
         "ictIndex": 17.7,
-        "priceChangeTarget": -22.75523663147561,
+        "priceChangeTarget": -30.530230552913395,
         "predictions": [
             {
                 "gw": 1,
@@ -14449,7 +14449,7 @@ export const PLAYERS = [
         "xA90": 0.14,
         "xGI": 2.66,
         "ictIndex": 52.4,
-        "priceChangeTarget": 48.12457439290577,
+        "priceChangeTarget": 12.22027641807955,
         "predictions": [
             {
                 "gw": 1,
@@ -14555,7 +14555,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 28.187429469470203,
+        "priceChangeTarget": 33.19798681830943,
         "predictions": [
             {
                 "gw": 1,
@@ -14661,7 +14661,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 3.82,
         "ictIndex": 113.1,
-        "priceChangeTarget": 89.43462185157239,
+        "priceChangeTarget": -56.17625436198202,
         "predictions": [
             {
                 "gw": 1,
@@ -14767,7 +14767,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 42.85692877271558,
+        "priceChangeTarget": 47.79510938522495,
         "predictions": [
             {
                 "gw": 1,
@@ -14873,7 +14873,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 11.16,
         "ictIndex": 232,
-        "priceChangeTarget": -23.43008158460387,
+        "priceChangeTarget": 29.6344787680149,
         "predictions": [
             {
                 "gw": 1,
@@ -14979,7 +14979,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.04,
         "ictIndex": 86.7,
-        "priceChangeTarget": -66.56723040418908,
+        "priceChangeTarget": -31.99969979123867,
         "predictions": [
             {
                 "gw": 1,
@@ -15085,7 +15085,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 7.9,
-        "priceChangeTarget": 28.5659533317926,
+        "priceChangeTarget": -25.55359176545994,
         "predictions": [
             {
                 "gw": 1,
@@ -15191,7 +15191,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 4.24,
         "ictIndex": 106.1,
-        "priceChangeTarget": 53.31929422852639,
+        "priceChangeTarget": -76.43804341495886,
         "predictions": [
             {
                 "gw": 1,
@@ -15297,7 +15297,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 2.47,
         "ictIndex": 99.1,
-        "priceChangeTarget": 67.05931923137348,
+        "priceChangeTarget": 20.523997689901492,
         "predictions": [
             {
                 "gw": 1,
@@ -15403,7 +15403,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 4.53,
         "ictIndex": 109.8,
-        "priceChangeTarget": -38.37095806055757,
+        "priceChangeTarget": -84.72000138019007,
         "predictions": [
             {
                 "gw": 1,
@@ -15509,7 +15509,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 1.32,
         "ictIndex": 60.4,
-        "priceChangeTarget": -19.072103814193554,
+        "priceChangeTarget": 97.27767606092436,
         "predictions": [
             {
                 "gw": 1,
@@ -15615,7 +15615,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.06,
         "ictIndex": 11.4,
-        "priceChangeTarget": -12.938421404153061,
+        "priceChangeTarget": -1.6481977950699331,
         "predictions": [
             {
                 "gw": 1,
@@ -15721,7 +15721,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.5,
         "ictIndex": 29.3,
-        "priceChangeTarget": -55.71560409980878,
+        "priceChangeTarget": -20.635488167157717,
         "predictions": [
             {
                 "gw": 1,
@@ -15827,7 +15827,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.91,
         "ictIndex": 38.4,
-        "priceChangeTarget": 48.19898404483473,
+        "priceChangeTarget": 85.27476688145035,
         "predictions": [
             {
                 "gw": 1,
@@ -15933,7 +15933,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.12,
         "ictIndex": 8,
-        "priceChangeTarget": -64.86285534658086,
+        "priceChangeTarget": -53.377230175145286,
         "predictions": [
             {
                 "gw": 1,
@@ -16039,7 +16039,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.35,
         "ictIndex": 1.3,
-        "priceChangeTarget": -80.56834846811509,
+        "priceChangeTarget": -35.7604141631316,
         "predictions": [
             {
                 "gw": 1,
@@ -16145,7 +16145,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.75,
         "ictIndex": 24.4,
-        "priceChangeTarget": 53.765295535853426,
+        "priceChangeTarget": 44.56414735092986,
         "predictions": [
             {
                 "gw": 1,
@@ -16251,7 +16251,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 17.72077778596541,
+        "priceChangeTarget": -54.85563697572684,
         "predictions": [
             {
                 "gw": 1,
@@ -16357,7 +16357,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 34.05194225833213,
+        "priceChangeTarget": -16.34643265789218,
         "predictions": [
             {
                 "gw": 1,
@@ -16463,7 +16463,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 13.04,
         "ictIndex": 147.7,
-        "priceChangeTarget": -91.78454356859655,
+        "priceChangeTarget": -17.614573642149708,
         "predictions": [
             {
                 "gw": 1,
@@ -16569,7 +16569,7 @@ export const PLAYERS = [
         "xA90": 0.21,
         "xGI": 18.52,
         "ictIndex": 264.6,
-        "priceChangeTarget": -3.3903156656512294,
+        "priceChangeTarget": 84.28752212958463,
         "predictions": [
             {
                 "gw": 1,
@@ -16675,7 +16675,7 @@ export const PLAYERS = [
         "xA90": 0.23,
         "xGI": 11.43,
         "ictIndex": 186.7,
-        "priceChangeTarget": 77.05906811735653,
+        "priceChangeTarget": -95.77752277818115,
         "predictions": [
             {
                 "gw": 1,
@@ -16781,7 +16781,7 @@ export const PLAYERS = [
         "xA90": 0.23,
         "xGI": 5.05,
         "ictIndex": 72.6,
-        "priceChangeTarget": -12.409713017993369,
+        "priceChangeTarget": -15.498554457072672,
         "predictions": [
             {
                 "gw": 1,
@@ -16887,7 +16887,7 @@ export const PLAYERS = [
         "xA90": 0.17,
         "xGI": 1.75,
         "ictIndex": 31.3,
-        "priceChangeTarget": -99.38393659296514,
+        "priceChangeTarget": 43.835683290250074,
         "predictions": [
             {
                 "gw": 1,
@@ -16993,7 +16993,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 3.83,
         "ictIndex": 109.2,
-        "priceChangeTarget": 76.6127961469603,
+        "priceChangeTarget": -88.62545837395837,
         "predictions": [
             {
                 "gw": 1,
@@ -17099,7 +17099,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 0.76,
         "ictIndex": 9.5,
-        "priceChangeTarget": 61.6522114912741,
+        "priceChangeTarget": 77.77014571211959,
         "predictions": [
             {
                 "gw": 1,
@@ -17205,7 +17205,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.01,
         "ictIndex": 1.6,
-        "priceChangeTarget": 29.343355582892798,
+        "priceChangeTarget": -19.601403555872295,
         "predictions": [
             {
                 "gw": 1,
@@ -17311,7 +17311,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -91.71775858965239,
+        "priceChangeTarget": -54.78170546563146,
         "predictions": [
             {
                 "gw": 1,
@@ -17417,7 +17417,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 16.87,
         "ictIndex": 212.1,
-        "priceChangeTarget": -43.381121062566905,
+        "priceChangeTarget": -48.817631737805065,
         "predictions": [
             {
                 "gw": 1,
@@ -17523,7 +17523,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 48.2616185353657,
+        "priceChangeTarget": 46.27608688090686,
         "predictions": [
             {
                 "gw": 1,
@@ -17629,7 +17629,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 4.76,
         "ictIndex": 47.3,
-        "priceChangeTarget": -29.670484388981876,
+        "priceChangeTarget": 72.8030241591718,
         "predictions": [
             {
                 "gw": 1,
@@ -17735,7 +17735,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 1.83,
         "ictIndex": 13.1,
-        "priceChangeTarget": 39.83534176314262,
+        "priceChangeTarget": 57.0863886829182,
         "predictions": [
             {
                 "gw": 1,
@@ -17841,7 +17841,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.2,
-        "priceChangeTarget": -29.481513543705162,
+        "priceChangeTarget": -45.7004232670875,
         "predictions": [
             {
                 "gw": 1,
@@ -17947,7 +17947,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 15.604769743884276,
+        "priceChangeTarget": 55.95136387730858,
         "predictions": [
             {
                 "gw": 1,
@@ -18053,7 +18053,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 3.28,
         "ictIndex": 124.3,
-        "priceChangeTarget": -88.08601437859112,
+        "priceChangeTarget": -24.495866640167492,
         "predictions": [
             {
                 "gw": 1,
@@ -18159,7 +18159,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -70.49933140945313,
+        "priceChangeTarget": 89.4483884116944,
         "predictions": [
             {
                 "gw": 1,
@@ -18265,7 +18265,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 51.882217133937075,
+        "priceChangeTarget": -73.04600026863659,
         "predictions": [
             {
                 "gw": 1,
@@ -18371,7 +18371,7 @@ export const PLAYERS = [
         "xA90": 0.37,
         "xGI": 0.36,
         "ictIndex": 4.6,
-        "priceChangeTarget": 38.89075130493879,
+        "priceChangeTarget": 49.67120731382889,
         "predictions": [
             {
                 "gw": 1,
@@ -18477,7 +18477,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 30.972142894349275,
+        "priceChangeTarget": -31.9683840495194,
         "predictions": [
             {
                 "gw": 1,
@@ -18583,7 +18583,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 62.640852323021875,
+        "priceChangeTarget": 75.70712644632215,
         "predictions": [
             {
                 "gw": 1,
@@ -18689,7 +18689,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -96.41713023996887,
+        "priceChangeTarget": 23.26610481418649,
         "predictions": [
             {
                 "gw": 1,
@@ -18795,7 +18795,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -21.57810471506376,
+        "priceChangeTarget": 14.024017455536125,
         "predictions": [
             {
                 "gw": 1,
@@ -18901,7 +18901,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -84.39928413736908,
+        "priceChangeTarget": -93.25737910480751,
         "predictions": [
             {
                 "gw": 1,
@@ -19007,7 +19007,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 32.24904228632957,
+        "priceChangeTarget": 72.49015025875272,
         "predictions": [
             {
                 "gw": 1,
@@ -19113,7 +19113,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 50.10973164935257,
+        "priceChangeTarget": 42.064771218923966,
         "predictions": [
             {
                 "gw": 1,
@@ -19219,7 +19219,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -87.75164123759535,
+        "priceChangeTarget": -93.71527721339396,
         "predictions": [
             {
                 "gw": 1,
@@ -19325,7 +19325,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 96.06931707600037,
+        "priceChangeTarget": -31.38365950116335,
         "predictions": [
             {
                 "gw": 1,
@@ -19431,7 +19431,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 70.35842382647729,
+        "priceChangeTarget": -85.7756303701671,
         "predictions": [
             {
                 "gw": 1,
@@ -19537,7 +19537,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 88.4963230923345,
+        "priceChangeTarget": 86.17524315377085,
         "predictions": [
             {
                 "gw": 1,
@@ -19643,7 +19643,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 99.13844668074006,
+        "priceChangeTarget": -40.784174976845634,
         "predictions": [
             {
                 "gw": 1,
@@ -19749,7 +19749,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 51.04457875335194,
+        "priceChangeTarget": 47.09122420780551,
         "predictions": [
             {
                 "gw": 1,
@@ -19855,7 +19855,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -12.199966626335979,
+        "priceChangeTarget": 19.21154103266987,
         "predictions": [
             {
                 "gw": 1,
@@ -19961,7 +19961,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -17.66477000497531,
+        "priceChangeTarget": 10.38448005974422,
         "predictions": [
             {
                 "gw": 1,
@@ -20067,7 +20067,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -9.301246972635482,
+        "priceChangeTarget": 94.39699473223101,
         "predictions": [
             {
                 "gw": 1,
@@ -20173,7 +20173,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 38.20723719982277,
+        "priceChangeTarget": 84.60825922179151,
         "predictions": [
             {
                 "gw": 1,
@@ -20279,7 +20279,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -1.221162587105141,
+        "priceChangeTarget": 14.562762364052958,
         "predictions": [
             {
                 "gw": 1,
@@ -20385,7 +20385,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -43.59272655727797,
+        "priceChangeTarget": 75.29391334972263,
         "predictions": [
             {
                 "gw": 1,
@@ -20491,7 +20491,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 96.50819545028239,
+        "priceChangeTarget": -17.539816622185427,
         "predictions": [
             {
                 "gw": 1,
@@ -20597,7 +20597,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 34.122449676021006,
+        "priceChangeTarget": -98.1381102367515,
         "predictions": [
             {
                 "gw": 1,
@@ -20703,7 +20703,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 66.37727067440201,
+        "priceChangeTarget": -83.2684160660504,
         "predictions": [
             {
                 "gw": 1,
@@ -20809,7 +20809,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -47.830289824389105,
+        "priceChangeTarget": 44.51758116012812,
         "predictions": [
             {
                 "gw": 1,
@@ -20915,7 +20915,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 23.284364863457682,
+        "priceChangeTarget": 4.18584726679552,
         "predictions": [
             {
                 "gw": 1,
@@ -21021,7 +21021,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 72.81746885257942,
+        "priceChangeTarget": -92.34218109146812,
         "predictions": [
             {
                 "gw": 1,
@@ -21127,7 +21127,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 90.68483607070047,
+        "priceChangeTarget": 96.98635197235683,
         "predictions": [
             {
                 "gw": 1,
@@ -21233,7 +21233,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -22.166578981274185,
+        "priceChangeTarget": 70.45412508568646,
         "predictions": [
             {
                 "gw": 1,
@@ -21339,7 +21339,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.11,
         "ictIndex": 84.7,
-        "priceChangeTarget": -37.52909076653801,
+        "priceChangeTarget": 12.101403760386887,
         "predictions": [
             {
                 "gw": 1,
@@ -21445,7 +21445,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 2.3,
-        "priceChangeTarget": -79.65888470663822,
+        "priceChangeTarget": -69.52906974344248,
         "predictions": [
             {
                 "gw": 1,
@@ -21551,7 +21551,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 6.39,
         "ictIndex": 139.5,
-        "priceChangeTarget": -79.09013487059764,
+        "priceChangeTarget": 88.81994130097891,
         "predictions": [
             {
                 "gw": 1,
@@ -21657,7 +21657,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 3.98,
         "ictIndex": 107.6,
-        "priceChangeTarget": 81.17213018000109,
+        "priceChangeTarget": -47.53085173677207,
         "predictions": [
             {
                 "gw": 1,
@@ -21763,7 +21763,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 1.81,
         "ictIndex": 48.1,
-        "priceChangeTarget": 36.56974620338269,
+        "priceChangeTarget": 31.106783941812807,
         "predictions": [
             {
                 "gw": 1,
@@ -21869,7 +21869,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 4.12,
         "ictIndex": 136,
-        "priceChangeTarget": 44.60317941807574,
+        "priceChangeTarget": 20.95898372777137,
         "predictions": [
             {
                 "gw": 1,
@@ -21975,7 +21975,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 0.11,
         "ictIndex": 4.5,
-        "priceChangeTarget": -43.089094851111696,
+        "priceChangeTarget": 83.377142970812,
         "predictions": [
             {
                 "gw": 1,
@@ -22081,7 +22081,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.46,
         "ictIndex": 18.3,
-        "priceChangeTarget": -31.552060849758035,
+        "priceChangeTarget": -74.47544776331088,
         "predictions": [
             {
                 "gw": 1,
@@ -22187,7 +22187,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 42.873207632935475,
+        "priceChangeTarget": -95.68124268347225,
         "predictions": [
             {
                 "gw": 1,
@@ -22293,7 +22293,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 12.09,
         "ictIndex": 135.1,
-        "priceChangeTarget": 72.0707711988822,
+        "priceChangeTarget": -41.988505476207,
         "predictions": [
             {
                 "gw": 1,
@@ -22399,7 +22399,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 3.76,
         "ictIndex": 75.8,
-        "priceChangeTarget": -84.23694385651474,
+        "priceChangeTarget": -70.00974624932556,
         "predictions": [
             {
                 "gw": 1,
@@ -22505,7 +22505,7 @@ export const PLAYERS = [
         "xA90": 0.26,
         "xGI": 8.98,
         "ictIndex": 139.6,
-        "priceChangeTarget": 79.37403153199358,
+        "priceChangeTarget": -96.88807876318495,
         "predictions": [
             {
                 "gw": 1,
@@ -22611,7 +22611,7 @@ export const PLAYERS = [
         "xA90": 0.27,
         "xGI": 10.65,
         "ictIndex": 141.4,
-        "priceChangeTarget": 58.241611274047756,
+        "priceChangeTarget": -8.211962795197707,
         "predictions": [
             {
                 "gw": 1,
@@ -22717,7 +22717,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 3.05,
         "ictIndex": 60.9,
-        "priceChangeTarget": 93.37257971694746,
+        "priceChangeTarget": -83.86546651586018,
         "predictions": [
             {
                 "gw": 1,
@@ -22823,7 +22823,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 3.32,
         "ictIndex": 72.5,
-        "priceChangeTarget": -17.53229307657047,
+        "priceChangeTarget": -74.68249185918971,
         "predictions": [
             {
                 "gw": 1,
@@ -22929,7 +22929,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 4.88,
         "ictIndex": 74.5,
-        "priceChangeTarget": 67.59410580203362,
+        "priceChangeTarget": -9.315937676824632,
         "predictions": [
             {
                 "gw": 1,
@@ -23035,7 +23035,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 2.77,
         "ictIndex": 38.4,
-        "priceChangeTarget": -97.69416470300465,
+        "priceChangeTarget": 89.15847897443629,
         "predictions": [
             {
                 "gw": 1,
@@ -23141,7 +23141,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 0.04,
         "ictIndex": 1.5,
-        "priceChangeTarget": -75.2370406158345,
+        "priceChangeTarget": 64.6165449848558,
         "predictions": [
             {
                 "gw": 1,
@@ -23247,7 +23247,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -58.36653336455968,
+        "priceChangeTarget": -52.987477506394875,
         "predictions": [
             {
                 "gw": 1,
@@ -23353,7 +23353,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 50.63245093590379,
+        "priceChangeTarget": 16.567670895914176,
         "predictions": [
             {
                 "gw": 1,
@@ -23459,7 +23459,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 91.5267468089261,
+        "priceChangeTarget": -24.761705720553167,
         "predictions": [
             {
                 "gw": 1,
@@ -23565,7 +23565,7 @@ export const PLAYERS = [
         "xA90": 0.16,
         "xGI": 0.18,
         "ictIndex": 4.9,
-        "priceChangeTarget": 94.21219355396107,
+        "priceChangeTarget": -61.92241257239135,
         "predictions": [
             {
                 "gw": 1,
@@ -23671,7 +23671,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.3,
-        "priceChangeTarget": 50.94031808115304,
+        "priceChangeTarget": -81.91546724754221,
         "predictions": [
             {
                 "gw": 1,
@@ -23777,7 +23777,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 6.42,
         "ictIndex": 91.5,
-        "priceChangeTarget": 50.203585054903584,
+        "priceChangeTarget": 33.462275313030176,
         "predictions": [
             {
                 "gw": 1,
@@ -23883,7 +23883,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 15.74,
         "ictIndex": 150.8,
-        "priceChangeTarget": 79.62445957745837,
+        "priceChangeTarget": 63.73535212097977,
         "predictions": [
             {
                 "gw": 1,
@@ -23989,7 +23989,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 2.23,
         "ictIndex": 37.8,
-        "priceChangeTarget": 51.08747229011087,
+        "priceChangeTarget": -0.952672443306767,
         "predictions": [
             {
                 "gw": 1,
@@ -24095,7 +24095,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.5,
         "ictIndex": 8.8,
-        "priceChangeTarget": 17.650215522935838,
+        "priceChangeTarget": -95.12506337554754,
         "predictions": [
             {
                 "gw": 1,
@@ -24201,7 +24201,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -74.71114474564386,
+        "priceChangeTarget": 57.736365600996834,
         "predictions": [
             {
                 "gw": 1,
@@ -24307,7 +24307,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.2,
         "ictIndex": 90.8,
-        "priceChangeTarget": -83.97971072376205,
+        "priceChangeTarget": -70.36454880546867,
         "predictions": [
             {
                 "gw": 1,
@@ -24413,7 +24413,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 12.528554055598605,
+        "priceChangeTarget": 86.96980507659012,
         "predictions": [
             {
                 "gw": 1,
@@ -24519,7 +24519,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -52.03729328460851,
+        "priceChangeTarget": -1.2510846504087283,
         "predictions": [
             {
                 "gw": 1,
@@ -24625,7 +24625,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 4.63,
         "ictIndex": 165.7,
-        "priceChangeTarget": 77.56536734740408,
+        "priceChangeTarget": -62.35760142056015,
         "predictions": [
             {
                 "gw": 1,
@@ -24731,7 +24731,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.45,
         "ictIndex": 29.3,
-        "priceChangeTarget": 92.5650157351563,
+        "priceChangeTarget": 19.95284182580785,
         "predictions": [
             {
                 "gw": 1,
@@ -24837,7 +24837,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 2.79,
         "ictIndex": 111.7,
-        "priceChangeTarget": -51.48589209048533,
+        "priceChangeTarget": 57.910403936985034,
         "predictions": [
             {
                 "gw": 1,
@@ -24943,7 +24943,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 2.67,
         "ictIndex": 107.5,
-        "priceChangeTarget": -70.57051828242908,
+        "priceChangeTarget": 0.14750544007307553,
         "predictions": [
             {
                 "gw": 1,
@@ -25049,7 +25049,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 2.74,
         "ictIndex": 102.3,
-        "priceChangeTarget": -33.10357797200432,
+        "priceChangeTarget": 61.91860486909667,
         "predictions": [
             {
                 "gw": 1,
@@ -25155,7 +25155,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.07,
         "ictIndex": 8.8,
-        "priceChangeTarget": -45.47481036242227,
+        "priceChangeTarget": 76.4457388463405,
         "predictions": [
             {
                 "gw": 1,
@@ -25261,7 +25261,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 99.54557260546301,
+        "priceChangeTarget": 9.347573429051309,
         "predictions": [
             {
                 "gw": 1,
@@ -25367,7 +25367,7 @@ export const PLAYERS = [
         "xA90": 0.18,
         "xGI": 9.69,
         "ictIndex": 166,
-        "priceChangeTarget": 75.22996318684878,
+        "priceChangeTarget": 0.08246695708599816,
         "predictions": [
             {
                 "gw": 1,
@@ -25473,7 +25473,7 @@ export const PLAYERS = [
         "xA90": 0.14,
         "xGI": 11.09,
         "ictIndex": 166.5,
-        "priceChangeTarget": -81.03399207810355,
+        "priceChangeTarget": 33.78652639918306,
         "predictions": [
             {
                 "gw": 1,
@@ -25579,7 +25579,7 @@ export const PLAYERS = [
         "xA90": 0.16,
         "xGI": 8.28,
         "ictIndex": 208.4,
-        "priceChangeTarget": -90.70792310767877,
+        "priceChangeTarget": 67.16294277713476,
         "predictions": [
             {
                 "gw": 1,
@@ -25685,7 +25685,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 1.25,
         "ictIndex": 45.9,
-        "priceChangeTarget": 29.50040608434864,
+        "priceChangeTarget": -4.118322911964057,
         "predictions": [
             {
                 "gw": 1,
@@ -25791,7 +25791,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 3.28,
         "ictIndex": 52.2,
-        "priceChangeTarget": -41.80124063545283,
+        "priceChangeTarget": 21.9185876905359,
         "predictions": [
             {
                 "gw": 1,
@@ -25897,7 +25897,7 @@ export const PLAYERS = [
         "xA90": 0.31,
         "xGI": 1.83,
         "ictIndex": 23.9,
-        "priceChangeTarget": 56.36473070837715,
+        "priceChangeTarget": -17.253123282435396,
         "predictions": [
             {
                 "gw": 1,
@@ -26003,7 +26003,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 1.71,
         "ictIndex": 41.8,
-        "priceChangeTarget": 75.29285866939739,
+        "priceChangeTarget": 65.52904006267093,
         "predictions": [
             {
                 "gw": 1,
@@ -26109,7 +26109,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 1.01,
         "ictIndex": 21,
-        "priceChangeTarget": -2.486149531915572,
+        "priceChangeTarget": 78.86696746338211,
         "predictions": [
             {
                 "gw": 1,
@@ -26215,7 +26215,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.34,
         "ictIndex": 13.6,
-        "priceChangeTarget": -10.422946684971762,
+        "priceChangeTarget": -51.0748139071505,
         "predictions": [
             {
                 "gw": 1,
@@ -26321,7 +26321,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 1.02,
         "ictIndex": 26.3,
-        "priceChangeTarget": 66.14787232342661,
+        "priceChangeTarget": 68.04094440128031,
         "predictions": [
             {
                 "gw": 1,
@@ -26427,7 +26427,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 92.75754249878216,
+        "priceChangeTarget": -0.3439763534120317,
         "predictions": [
             {
                 "gw": 1,
@@ -26533,7 +26533,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 9.13,
         "ictIndex": 124.5,
-        "priceChangeTarget": 26.05007917503761,
+        "priceChangeTarget": -90.51755324635427,
         "predictions": [
             {
                 "gw": 1,
@@ -26639,7 +26639,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 8.61,
         "ictIndex": 102.5,
-        "priceChangeTarget": 35.01098111249169,
+        "priceChangeTarget": -92.64043618174857,
         "predictions": [
             {
                 "gw": 1,
@@ -26745,7 +26745,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.02,
         "ictIndex": 81.5,
-        "priceChangeTarget": 92.0416586422134,
+        "priceChangeTarget": -64.14329626817721,
         "predictions": [
             {
                 "gw": 1,
@@ -26851,7 +26851,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -78.28819129682324,
+        "priceChangeTarget": -69.21160184765694,
         "predictions": [
             {
                 "gw": 1,
@@ -26957,7 +26957,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 5.4845907841648085,
+        "priceChangeTarget": 10.982406559756527,
         "predictions": [
             {
                 "gw": 1,
@@ -27063,7 +27063,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 3.26,
         "ictIndex": 107,
-        "priceChangeTarget": 76.99152215042903,
+        "priceChangeTarget": 29.68244669901526,
         "predictions": [
             {
                 "gw": 1,
@@ -27169,7 +27169,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 2.65,
         "ictIndex": 79.3,
-        "priceChangeTarget": -54.84875773445537,
+        "priceChangeTarget": -69.12290933934622,
         "predictions": [
             {
                 "gw": 1,
@@ -27275,7 +27275,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.58,
         "ictIndex": 31.2,
-        "priceChangeTarget": -30.44421521725731,
+        "priceChangeTarget": 33.34898383754876,
         "predictions": [
             {
                 "gw": 1,
@@ -27381,7 +27381,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 2.38,
         "ictIndex": 73.9,
-        "priceChangeTarget": 0.8473196436380448,
+        "priceChangeTarget": -71.52182579887435,
         "predictions": [
             {
                 "gw": 1,
@@ -27487,7 +27487,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 2.05,
         "ictIndex": 84.5,
-        "priceChangeTarget": -86.4008477460007,
+        "priceChangeTarget": 65.26552115902041,
         "predictions": [
             {
                 "gw": 1,
@@ -27593,7 +27593,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 2.97,
         "ictIndex": 86.2,
-        "priceChangeTarget": -98.4631164427372,
+        "priceChangeTarget": -17.650994791651215,
         "predictions": [
             {
                 "gw": 1,
@@ -27699,7 +27699,7 @@ export const PLAYERS = [
         "xA90": 0.17,
         "xGI": 6.61,
         "ictIndex": 159.4,
-        "priceChangeTarget": 23.345960443012203,
+        "priceChangeTarget": 31.917263774381553,
         "predictions": [
             {
                 "gw": 1,
@@ -27805,7 +27805,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 5.83,
         "ictIndex": 102.6,
-        "priceChangeTarget": 17.751956980330874,
+        "priceChangeTarget": -19.203790384351805,
         "predictions": [
             {
                 "gw": 1,
@@ -27911,7 +27911,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 2.68,
         "ictIndex": 70.4,
-        "priceChangeTarget": -58.01975141261413,
+        "priceChangeTarget": -22.3929005763126,
         "predictions": [
             {
                 "gw": 1,
@@ -28017,7 +28017,7 @@ export const PLAYERS = [
         "xA90": 0.18,
         "xGI": 3.57,
         "ictIndex": 66.4,
-        "priceChangeTarget": 49.051812086687875,
+        "priceChangeTarget": -32.401720924965076,
         "predictions": [
             {
                 "gw": 1,
@@ -28123,7 +28123,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 3.04,
         "ictIndex": 91,
-        "priceChangeTarget": -25.56043078756649,
+        "priceChangeTarget": 15.275589224362278,
         "predictions": [
             {
                 "gw": 1,
@@ -28229,7 +28229,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 2.02,
         "ictIndex": 41.4,
-        "priceChangeTarget": 45.932063021751816,
+        "priceChangeTarget": -79.26845853136378,
         "predictions": [
             {
                 "gw": 1,
@@ -28335,7 +28335,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 4.14,
         "ictIndex": 93.4,
-        "priceChangeTarget": 34.1891123215581,
+        "priceChangeTarget": 99.42020087274926,
         "predictions": [
             {
                 "gw": 1,
@@ -28441,7 +28441,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 3.13,
         "ictIndex": 73.3,
-        "priceChangeTarget": 81.436943375359,
+        "priceChangeTarget": -99.19848695367897,
         "predictions": [
             {
                 "gw": 1,
@@ -28547,7 +28547,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 3.4,
         "ictIndex": 86.7,
-        "priceChangeTarget": -0.745147749826728,
+        "priceChangeTarget": -40.94963764609727,
         "predictions": [
             {
                 "gw": 1,
@@ -28653,7 +28653,7 @@ export const PLAYERS = [
         "xA90": 0.46,
         "xGI": 0.58,
         "ictIndex": 9.7,
-        "priceChangeTarget": 75.69998426606742,
+        "priceChangeTarget": 97.57854253605356,
         "predictions": [
             {
                 "gw": 1,
@@ -28759,7 +28759,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 3.45,
         "ictIndex": 47.3,
-        "priceChangeTarget": 79.85795679019199,
+        "priceChangeTarget": -69.43915929391463,
         "predictions": [
             {
                 "gw": 1,
@@ -28865,7 +28865,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 0.07,
         "ictIndex": 2.3,
-        "priceChangeTarget": -60.9415002937693,
+        "priceChangeTarget": 97.8067672613576,
         "predictions": [
             {
                 "gw": 1,
@@ -28971,7 +28971,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 10.246690626314248,
+        "priceChangeTarget": 55.58645995679467,
         "predictions": [
             {
                 "gw": 1,
@@ -29077,7 +29077,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 0.14284223343983626,
+        "priceChangeTarget": 61.17181669509739,
         "predictions": [
             {
                 "gw": 1,
@@ -29183,7 +29183,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 95.25852099655708,
+        "priceChangeTarget": -59.77546627742765,
         "predictions": [
             {
                 "gw": 1,
@@ -29289,7 +29289,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -32.39593065509743,
+        "priceChangeTarget": 65.36837058214263,
         "predictions": [
             {
                 "gw": 1,
@@ -29395,7 +29395,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 72.46042376838909,
+        "priceChangeTarget": 37.04984930632364,
         "predictions": [
             {
                 "gw": 1,
@@ -29501,7 +29501,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -39.63547279593329,
+        "priceChangeTarget": -43.83561060372616,
         "predictions": [
             {
                 "gw": 1,
@@ -29607,7 +29607,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -69.56663811005669,
+        "priceChangeTarget": -1.8216709472034438,
         "predictions": [
             {
                 "gw": 1,
@@ -29713,7 +29713,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 64.81332120253319,
+        "priceChangeTarget": -14.505878915118188,
         "predictions": [
             {
                 "gw": 1,
@@ -29819,7 +29819,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 80.34894641992315,
+        "priceChangeTarget": 21.832717509654614,
         "predictions": [
             {
                 "gw": 1,
@@ -29925,7 +29925,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -7.0826945122348945,
+        "priceChangeTarget": 59.07013984431538,
         "predictions": [
             {
                 "gw": 1,
@@ -30031,7 +30031,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 49.7191950286591,
+        "priceChangeTarget": -34.46898427241163,
         "predictions": [
             {
                 "gw": 1,
@@ -30137,7 +30137,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 53.15168027446231,
+        "priceChangeTarget": 96.3989350105785,
         "predictions": [
             {
                 "gw": 1,
@@ -30243,7 +30243,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -61.458056141391346,
+        "priceChangeTarget": 35.16557268101039,
         "predictions": [
             {
                 "gw": 1,
@@ -30349,7 +30349,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -66.45775142143356,
+        "priceChangeTarget": 89.21352963310568,
         "predictions": [
             {
                 "gw": 1,
@@ -30455,7 +30455,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -13.85489795412684,
+        "priceChangeTarget": -64.4852054977946,
         "predictions": [
             {
                 "gw": 1,
@@ -30561,7 +30561,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -56.430972792608735,
+        "priceChangeTarget": 91.6846314559142,
         "predictions": [
             {
                 "gw": 1,
@@ -30667,7 +30667,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 88.38595530354434,
+        "priceChangeTarget": -19.03038625233664,
         "predictions": [
             {
                 "gw": 1,
@@ -30773,7 +30773,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -16.507824117375065,
+        "priceChangeTarget": -56.7379081973044,
         "predictions": [
             {
                 "gw": 1,
@@ -30879,7 +30879,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 46.167448246188314,
+        "priceChangeTarget": 3.5354096683760474,
         "predictions": [
             {
                 "gw": 1,
@@ -30985,7 +30985,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 70.18797472766744,
+        "priceChangeTarget": 71.53507251882996,
         "predictions": [
             {
                 "gw": 1,
@@ -31091,7 +31091,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 92.51893950995247,
+        "priceChangeTarget": -46.19798401433721,
         "predictions": [
             {
                 "gw": 1,
@@ -31197,7 +31197,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -72.5618589068052,
+        "priceChangeTarget": -71.15224044469224,
         "predictions": [
             {
                 "gw": 1,
@@ -31303,7 +31303,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 43.85009830105466,
+        "priceChangeTarget": 71.11813381443446,
         "predictions": [
             {
                 "gw": 1,
@@ -31409,7 +31409,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -5.92983035948194,
+        "priceChangeTarget": 1.0743020609215108,
         "predictions": [
             {
                 "gw": 1,
@@ -31515,7 +31515,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 98.9868699559357,
+        "priceChangeTarget": 85.13452323358018,
         "predictions": [
             {
                 "gw": 1,
@@ -31621,7 +31621,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -82.46742331621451,
+        "priceChangeTarget": -48.09968024841962,
         "predictions": [
             {
                 "gw": 1,
@@ -31727,7 +31727,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -0.9339908106766188,
+        "priceChangeTarget": 87.57663653781381,
         "predictions": [
             {
                 "gw": 1,
@@ -31833,7 +31833,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -99.70220542845622,
+        "priceChangeTarget": 72.39407141382972,
         "predictions": [
             {
                 "gw": 1,
@@ -31939,7 +31939,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -36.86122461329979,
+        "priceChangeTarget": -12.332478489417014,
         "predictions": [
             {
                 "gw": 1,
@@ -32045,7 +32045,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.85,
         "ictIndex": 23,
-        "priceChangeTarget": -74.57047847699113,
+        "priceChangeTarget": 79.95277147648582,
         "predictions": [
             {
                 "gw": 1,
@@ -32151,7 +32151,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 88.41015114155027,
+        "priceChangeTarget": -22.664166557244698,
         "predictions": [
             {
                 "gw": 1,
@@ -32257,7 +32257,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 86.51378742442466,
+        "priceChangeTarget": -15.75691853684458,
         "predictions": [
             {
                 "gw": 1,
@@ -32363,7 +32363,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 58.74495102595907,
+        "priceChangeTarget": -70.31869470797733,
         "predictions": [
             {
                 "gw": 1,
@@ -32469,7 +32469,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -43.890705484710836,
+        "priceChangeTarget": 67.05266497839898,
         "predictions": [
             {
                 "gw": 1,
@@ -32575,7 +32575,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 29.097966278998456,
+        "priceChangeTarget": -21.913371620308325,
         "predictions": [
             {
                 "gw": 1,
@@ -32681,7 +32681,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -48.2429593041267,
+        "priceChangeTarget": -84.883936729653,
         "predictions": [
             {
                 "gw": 1,
@@ -32787,7 +32787,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 95.65899646280047,
+        "priceChangeTarget": -34.743806423909305,
         "predictions": [
             {
                 "gw": 1,
@@ -32893,7 +32893,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 87.35175947695922,
+        "priceChangeTarget": -23.64711450448283,
         "predictions": [
             {
                 "gw": 1,
@@ -32999,7 +32999,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -11.186828830749505,
+        "priceChangeTarget": -42.28247442640629,
         "predictions": [
             {
                 "gw": 1,
@@ -33105,7 +33105,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -60.43222725675426,
+        "priceChangeTarget": -30.42687314223768,
         "predictions": [
             {
                 "gw": 1,
@@ -33211,7 +33211,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -87.06485447276756,
+        "priceChangeTarget": 66.76074914629734,
         "predictions": [
             {
                 "gw": 1,
@@ -33317,7 +33317,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 9.719602610854409,
+        "priceChangeTarget": -16.758921094252813,
         "predictions": [
             {
                 "gw": 1,
@@ -33423,7 +33423,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 9.195902127026343,
+        "priceChangeTarget": -59.120212898635735,
         "predictions": [
             {
                 "gw": 1,
@@ -33529,7 +33529,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -99.58364896089262,
+        "priceChangeTarget": -31.081771207349078,
         "predictions": [
             {
                 "gw": 1,
@@ -33635,7 +33635,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 96.95171037032168,
+        "priceChangeTarget": 29.154128693816517,
         "predictions": [
             {
                 "gw": 1,
@@ -33741,7 +33741,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 4.714929554686449,
+        "priceChangeTarget": 63.76283587730052,
         "predictions": [
             {
                 "gw": 1,
@@ -33847,7 +33847,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 90.64148795606027,
+        "priceChangeTarget": 17.516061910789006,
         "predictions": [
             {
                 "gw": 1,
@@ -33953,7 +33953,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -83.09954631392584,
+        "priceChangeTarget": -53.94157199110521,
         "predictions": [
             {
                 "gw": 1,
@@ -34059,7 +34059,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 9.381274364607165,
+        "priceChangeTarget": -19.209223676728143,
         "predictions": [
             {
                 "gw": 1,
@@ -34165,7 +34165,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -11.229379232478493,
+        "priceChangeTarget": 47.63313352674007,
         "predictions": [
             {
                 "gw": 1,
@@ -34271,7 +34271,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -95.58503702115495,
+        "priceChangeTarget": 59.888317363835,
         "predictions": [
             {
                 "gw": 1,
@@ -34377,7 +34377,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -0.7833947450812673,
+        "priceChangeTarget": 95.8787093789993,
         "predictions": [
             {
                 "gw": 1,
@@ -34483,7 +34483,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -97.78066933541447,
+        "priceChangeTarget": 35.80109139544905,
         "predictions": [
             {
                 "gw": 1,
@@ -34589,7 +34589,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 92.5367961034651,
+        "priceChangeTarget": 38.41070889048473,
         "predictions": [
             {
                 "gw": 1,
@@ -34695,7 +34695,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 67.17183900761339,
+        "priceChangeTarget": -65.7466837084815,
         "predictions": [
             {
                 "gw": 1,
@@ -34801,7 +34801,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -19.27530124252688,
+        "priceChangeTarget": 6.946493879600197,
         "predictions": [
             {
                 "gw": 1,
@@ -34907,7 +34907,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 29.225303955112253,
+        "priceChangeTarget": -65.36477660663579,
         "predictions": [
             {
                 "gw": 1,
@@ -35013,7 +35013,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -33.69303728531359,
+        "priceChangeTarget": -24.561529956371146,
         "predictions": [
             {
                 "gw": 1,
@@ -35119,7 +35119,7 @@ export const PLAYERS = [
         "xA90": 0.16,
         "xGI": 10.65,
         "ictIndex": 196.9,
-        "priceChangeTarget": -4.733859721709365,
+        "priceChangeTarget": 21.899576561832035,
         "predictions": [
             {
                 "gw": 1,
@@ -35225,7 +35225,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 32.2,
-        "priceChangeTarget": -66.8210738019344,
+        "priceChangeTarget": -6.969272012222888,
         "predictions": [
             {
                 "gw": 1,
@@ -35331,7 +35331,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 1.65,
         "ictIndex": 86,
-        "priceChangeTarget": -62.07977803377662,
+        "priceChangeTarget": -62.955790342467324,
         "predictions": [
             {
                 "gw": 1,
@@ -35437,7 +35437,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 1.96,
         "ictIndex": 109.1,
-        "priceChangeTarget": -57.936687846489754,
+        "priceChangeTarget": 50.70642462005367,
         "predictions": [
             {
                 "gw": 1,
@@ -35543,7 +35543,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 5.19,
         "ictIndex": 100.3,
-        "priceChangeTarget": -38.080637704384415,
+        "priceChangeTarget": 5.161223661917248,
         "predictions": [
             {
                 "gw": 1,
@@ -35649,7 +35649,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 3.98,
         "ictIndex": 96.4,
-        "priceChangeTarget": 3.211188180629307,
+        "priceChangeTarget": -94.11444049730096,
         "predictions": [
             {
                 "gw": 1,
@@ -35755,7 +35755,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 2.99,
         "ictIndex": 88.3,
-        "priceChangeTarget": 72.62318354653243,
+        "priceChangeTarget": -13.443185403228568,
         "predictions": [
             {
                 "gw": 1,
@@ -35861,7 +35861,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.21,
         "ictIndex": 12.2,
-        "priceChangeTarget": -27.05604976818337,
+        "priceChangeTarget": -98.01296183965862,
         "predictions": [
             {
                 "gw": 1,
@@ -35967,7 +35967,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 78.27433101911393,
+        "priceChangeTarget": -73.01713686593459,
         "predictions": [
             {
                 "gw": 1,
@@ -36073,7 +36073,7 @@ export const PLAYERS = [
         "xA90": 0.17,
         "xGI": 7.35,
         "ictIndex": 188.8,
-        "priceChangeTarget": -15.210656271230661,
+        "priceChangeTarget": 66.65952106134179,
         "predictions": [
             {
                 "gw": 1,
@@ -36179,7 +36179,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 6.57,
         "ictIndex": 115,
-        "priceChangeTarget": 31.522896972460586,
+        "priceChangeTarget": 12.334357953841902,
         "predictions": [
             {
                 "gw": 1,
@@ -36285,7 +36285,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 8.13,
         "ictIndex": 146.7,
-        "priceChangeTarget": -3.974157737882237,
+        "priceChangeTarget": 9.971781666135143,
         "predictions": [
             {
                 "gw": 1,
@@ -36391,7 +36391,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 4.67,
         "ictIndex": 114.7,
-        "priceChangeTarget": 33.75669657466253,
+        "priceChangeTarget": -62.09909435950378,
         "predictions": [
             {
                 "gw": 1,
@@ -36497,7 +36497,7 @@ export const PLAYERS = [
         "xA90": 0.17,
         "xGI": 3.1,
         "ictIndex": 81.2,
-        "priceChangeTarget": -18.33677949768426,
+        "priceChangeTarget": 90.31697063314462,
         "predictions": [
             {
                 "gw": 1,
@@ -36603,7 +36603,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 19.430025985899064,
+        "priceChangeTarget": 17.747982375851564,
         "predictions": [
             {
                 "gw": 1,
@@ -36709,7 +36709,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 1.17,
         "ictIndex": 27.5,
-        "priceChangeTarget": 85.45227322931049,
+        "priceChangeTarget": -98.66251008541226,
         "predictions": [
             {
                 "gw": 1,
@@ -36815,7 +36815,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 0.51,
         "ictIndex": 11.5,
-        "priceChangeTarget": 52.119939684517675,
+        "priceChangeTarget": 30.449275855871605,
         "predictions": [
             {
                 "gw": 1,
@@ -36921,7 +36921,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 1.62,
         "ictIndex": 33.9,
-        "priceChangeTarget": -20.371191740750177,
+        "priceChangeTarget": 27.552843470421593,
         "predictions": [
             {
                 "gw": 1,
@@ -37027,7 +37027,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 1.35,
         "ictIndex": 43.2,
-        "priceChangeTarget": 5.9868843250882975,
+        "priceChangeTarget": 83.03179591703616,
         "predictions": [
             {
                 "gw": 1,
@@ -37133,7 +37133,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 2.83,
         "ictIndex": 63.6,
-        "priceChangeTarget": -25.16558789184178,
+        "priceChangeTarget": 84.43476306890452,
         "predictions": [
             {
                 "gw": 1,
@@ -37239,7 +37239,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 16.62,
         "ictIndex": 194.7,
-        "priceChangeTarget": -12.214287348060822,
+        "priceChangeTarget": 46.932070914407035,
         "predictions": [
             {
                 "gw": 1,
@@ -37345,7 +37345,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 8.83,
         "ictIndex": 87.8,
-        "priceChangeTarget": 94.98748388188335,
+        "priceChangeTarget": -73.91265766736561,
         "predictions": [
             {
                 "gw": 1,
@@ -37451,7 +37451,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 1.03,
         "ictIndex": 16.5,
-        "priceChangeTarget": 31.244830620895613,
+        "priceChangeTarget": -18.038774503024797,
         "predictions": [
             {
                 "gw": 1,
@@ -37557,7 +37557,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -28.16834397569481,
+        "priceChangeTarget": 60.07326891764657,
         "predictions": [
             {
                 "gw": 1,
@@ -37663,7 +37663,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.03,
         "ictIndex": 47.8,
-        "priceChangeTarget": 20.560226437670124,
+        "priceChangeTarget": 42.12467837168526,
         "predictions": [
             {
                 "gw": 1,
@@ -37769,7 +37769,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 27.5,
-        "priceChangeTarget": -93.2329705880255,
+        "priceChangeTarget": -3.2744881927591223,
         "predictions": [
             {
                 "gw": 1,
@@ -37875,7 +37875,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 8.4,
-        "priceChangeTarget": 49.350170588557006,
+        "priceChangeTarget": 91.15605899498485,
         "predictions": [
             {
                 "gw": 1,
@@ -37981,7 +37981,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 25.28455479736924,
+        "priceChangeTarget": 95.1855770047346,
         "predictions": [
             {
                 "gw": 1,
@@ -38087,7 +38087,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 65.67306029378193,
+        "priceChangeTarget": 85.96119615237095,
         "predictions": [
             {
                 "gw": 1,
@@ -38193,7 +38193,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 51.01744431299096,
+        "priceChangeTarget": -67.512887877546,
         "predictions": [
             {
                 "gw": 1,
@@ -38299,7 +38299,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 5.21,
         "ictIndex": 187.6,
-        "priceChangeTarget": 16.037452386068793,
+        "priceChangeTarget": -0.918251903983915,
         "predictions": [
             {
                 "gw": 1,
@@ -38405,7 +38405,7 @@ export const PLAYERS = [
         "xA90": 0.14,
         "xGI": 2.05,
         "ictIndex": 56.5,
-        "priceChangeTarget": 16.954225346090595,
+        "priceChangeTarget": -65.48913759949605,
         "predictions": [
             {
                 "gw": 1,
@@ -38511,7 +38511,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 2.19,
         "ictIndex": 99.4,
-        "priceChangeTarget": -40.16334287446364,
+        "priceChangeTarget": 64.65021374138465,
         "predictions": [
             {
                 "gw": 1,
@@ -38617,7 +38617,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 0.92,
         "ictIndex": 23.2,
-        "priceChangeTarget": 77.13053781718588,
+        "priceChangeTarget": 33.74756182239494,
         "predictions": [
             {
                 "gw": 1,
@@ -38723,7 +38723,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 1.02,
         "ictIndex": 32.3,
-        "priceChangeTarget": 3.6741057988785712,
+        "priceChangeTarget": -32.88662023061147,
         "predictions": [
             {
                 "gw": 1,
@@ -38829,7 +38829,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 55.90011193586159,
+        "priceChangeTarget": -45.520645805520175,
         "predictions": [
             {
                 "gw": 1,
@@ -38935,7 +38935,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -11.686225030190855,
+        "priceChangeTarget": 92.95451405018989,
         "predictions": [
             {
                 "gw": 1,
@@ -39041,7 +39041,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -26.191022154643434,
+        "priceChangeTarget": 29.925920540300467,
         "predictions": [
             {
                 "gw": 1,
@@ -39147,7 +39147,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -9.032121765135528,
+        "priceChangeTarget": 98.16126051015146,
         "predictions": [
             {
                 "gw": 1,
@@ -39253,7 +39253,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 99.66790281281962,
+        "priceChangeTarget": -87.69237211254213,
         "predictions": [
             {
                 "gw": 1,
@@ -39359,7 +39359,7 @@ export const PLAYERS = [
         "xA90": 0.19,
         "xGI": 11.96,
         "ictIndex": 210,
-        "priceChangeTarget": 85.50230027843511,
+        "priceChangeTarget": 94.16270357425108,
         "predictions": [
             {
                 "gw": 1,
@@ -39465,7 +39465,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 13.02,
         "ictIndex": 208.4,
-        "priceChangeTarget": -74.95982172570979,
+        "priceChangeTarget": 57.2993097886515,
         "predictions": [
             {
                 "gw": 1,
@@ -39571,7 +39571,7 @@ export const PLAYERS = [
         "xA90": 0.19,
         "xGI": 11.59,
         "ictIndex": 260.9,
-        "priceChangeTarget": 14.148601831446143,
+        "priceChangeTarget": 40.38556836366311,
         "predictions": [
             {
                 "gw": 1,
@@ -39677,7 +39677,7 @@ export const PLAYERS = [
         "xA90": 0.33,
         "xGI": 3.35,
         "ictIndex": 60.1,
-        "priceChangeTarget": 38.90469110231143,
+        "priceChangeTarget": -41.123123305933596,
         "predictions": [
             {
                 "gw": 1,
@@ -39783,7 +39783,7 @@ export const PLAYERS = [
         "xA90": 0.17,
         "xGI": 2.06,
         "ictIndex": 34.9,
-        "priceChangeTarget": -60.48610049637182,
+        "priceChangeTarget": 19.945415986341786,
         "predictions": [
             {
                 "gw": 1,
@@ -39889,7 +39889,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 4.15,
         "ictIndex": 140.1,
-        "priceChangeTarget": -5.484128403957641,
+        "priceChangeTarget": 50.61249901325169,
         "predictions": [
             {
                 "gw": 1,
@@ -39995,7 +39995,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 5.58,
         "ictIndex": 139.9,
-        "priceChangeTarget": -87.31831663073666,
+        "priceChangeTarget": -88.3382954043997,
         "predictions": [
             {
                 "gw": 1,
@@ -40101,7 +40101,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 4.98,
         "ictIndex": 104.6,
-        "priceChangeTarget": 4.670236746868255,
+        "priceChangeTarget": -72.53837762291049,
         "predictions": [
             {
                 "gw": 1,
@@ -40207,7 +40207,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.09,
         "ictIndex": 8,
-        "priceChangeTarget": 6.476881871568565,
+        "priceChangeTarget": -26.33112785403074,
         "predictions": [
             {
                 "gw": 1,
@@ -40313,7 +40313,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 0.39,
         "ictIndex": 2.1,
-        "priceChangeTarget": 70.25403570037082,
+        "priceChangeTarget": 30.63118107103287,
         "predictions": [
             {
                 "gw": 1,
@@ -40419,7 +40419,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 65.14953400567896,
+        "priceChangeTarget": 10.712777523726189,
         "predictions": [
             {
                 "gw": 1,
@@ -40525,7 +40525,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -94.67131976453548,
+        "priceChangeTarget": 5.799738870344683,
         "predictions": [
             {
                 "gw": 1,
@@ -40631,7 +40631,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 43.97314619249798,
+        "priceChangeTarget": 65.8197610544409,
         "predictions": [
             {
                 "gw": 1,
@@ -40737,7 +40737,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 2.67,
         "ictIndex": 36.9,
-        "priceChangeTarget": 88.64887504721145,
+        "priceChangeTarget": 48.26528863781709,
         "predictions": [
             {
                 "gw": 1,
@@ -40843,7 +40843,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 12.55,
         "ictIndex": 156.2,
-        "priceChangeTarget": 58.09824957246107,
+        "priceChangeTarget": 94.46343167103808,
         "predictions": [
             {
                 "gw": 1,
@@ -40949,7 +40949,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -10.413438072917941,
+        "priceChangeTarget": -62.8626315921555,
         "predictions": [
             {
                 "gw": 1,
@@ -41055,7 +41055,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 46.15995920174433,
+        "priceChangeTarget": 18.274384738708022,
         "predictions": [
             {
                 "gw": 1,
@@ -41161,7 +41161,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 0.37,
         "ictIndex": 7.4,
-        "priceChangeTarget": -72.64573772076997,
+        "priceChangeTarget": -32.85138782881734,
         "predictions": [
             {
                 "gw": 1,
@@ -41267,7 +41267,7 @@ export const PLAYERS = [
         "xA90": 0.19,
         "xGI": 5.41,
         "ictIndex": 129.2,
-        "priceChangeTarget": 74.74134636493284,
+        "priceChangeTarget": -72.4201230469223,
         "predictions": [
             {
                 "gw": 1,
@@ -41373,7 +41373,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.13,
         "ictIndex": 68,
-        "priceChangeTarget": -43.479258852121475,
+        "priceChangeTarget": 27.726217151017195,
         "predictions": [
             {
                 "gw": 1,
@@ -41479,7 +41479,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 11.9,
-        "priceChangeTarget": 60.431298116558764,
+        "priceChangeTarget": -75.92278431336099,
         "predictions": [
             {
                 "gw": 1,
@@ -41585,7 +41585,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 22.534730458203512,
+        "priceChangeTarget": -29.056289104381207,
         "predictions": [
             {
                 "gw": 1,
@@ -41691,7 +41691,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 8.79,
         "ictIndex": 164.1,
-        "priceChangeTarget": -18.569535601630974,
+        "priceChangeTarget": -28.258177657260106,
         "predictions": [
             {
                 "gw": 1,
@@ -41797,7 +41797,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 6.42,
         "ictIndex": 160.9,
-        "priceChangeTarget": -87.95118373261366,
+        "priceChangeTarget": 4.345453212366664,
         "predictions": [
             {
                 "gw": 1,
@@ -41903,7 +41903,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 2.57,
         "ictIndex": 137.6,
-        "priceChangeTarget": -15.402459062223926,
+        "priceChangeTarget": -13.604004606205905,
         "predictions": [
             {
                 "gw": 1,
@@ -42009,7 +42009,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 1.22,
         "ictIndex": 81,
-        "priceChangeTarget": -15.145991768786686,
+        "priceChangeTarget": 30.071599538677276,
         "predictions": [
             {
                 "gw": 1,
@@ -42115,7 +42115,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 2.95,
         "ictIndex": 69.8,
-        "priceChangeTarget": -6.876219073151077,
+        "priceChangeTarget": -65.42723433402611,
         "predictions": [
             {
                 "gw": 1,
@@ -42221,7 +42221,7 @@ export const PLAYERS = [
         "xA90": 0.19,
         "xGI": 2.54,
         "ictIndex": 50.2,
-        "priceChangeTarget": -8.203186204699065,
+        "priceChangeTarget": -58.88925207455142,
         "predictions": [
             {
                 "gw": 1,
@@ -42327,7 +42327,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 1.86,
         "ictIndex": 43.9,
-        "priceChangeTarget": 29.867759762473497,
+        "priceChangeTarget": 42.91474057305257,
         "predictions": [
             {
                 "gw": 1,
@@ -42433,7 +42433,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.32,
         "ictIndex": 7.5,
-        "priceChangeTarget": 59.22332038564687,
+        "priceChangeTarget": -83.86693980160643,
         "predictions": [
             {
                 "gw": 1,
@@ -42539,7 +42539,7 @@ export const PLAYERS = [
         "xA90": 0.31,
         "xGI": 1.58,
         "ictIndex": 23.8,
-        "priceChangeTarget": -7.3199485122848955,
+        "priceChangeTarget": -16.015534681945454,
         "predictions": [
             {
                 "gw": 1,
@@ -42645,7 +42645,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 82.3309022981505,
+        "priceChangeTarget": -87.93960956038258,
         "predictions": [
             {
                 "gw": 1,
@@ -42751,7 +42751,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 14.21,
         "ictIndex": 257.7,
-        "priceChangeTarget": -29.32425088215666,
+        "priceChangeTarget": 28.19034466326474,
         "predictions": [
             {
                 "gw": 1,
@@ -42857,7 +42857,7 @@ export const PLAYERS = [
         "xA90": 0.21,
         "xGI": 10.79,
         "ictIndex": 201.9,
-        "priceChangeTarget": -79.02990190702053,
+        "priceChangeTarget": -48.665597028026575,
         "predictions": [
             {
                 "gw": 1,
@@ -42963,7 +42963,7 @@ export const PLAYERS = [
         "xA90": 0.45,
         "xGI": 13.14,
         "ictIndex": 218.1,
-        "priceChangeTarget": 85.33739276282378,
+        "priceChangeTarget": 78.55670463074571,
         "predictions": [
             {
                 "gw": 1,
@@ -43069,7 +43069,7 @@ export const PLAYERS = [
         "xA90": 0.3,
         "xGI": 8.73,
         "ictIndex": 202.5,
-        "priceChangeTarget": -95.03379001142756,
+        "priceChangeTarget": 98.11540475859852,
         "predictions": [
             {
                 "gw": 1,
@@ -43175,7 +43175,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 3.55,
         "ictIndex": 64.4,
-        "priceChangeTarget": 17.456376293705404,
+        "priceChangeTarget": 53.601810105902416,
         "predictions": [
             {
                 "gw": 1,
@@ -43281,7 +43281,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 3.6,
         "ictIndex": 90.3,
-        "priceChangeTarget": 83.37138841894185,
+        "priceChangeTarget": 58.46824532947372,
         "predictions": [
             {
                 "gw": 1,
@@ -43387,7 +43387,7 @@ export const PLAYERS = [
         "xA90": 0.18,
         "xGI": 4.09,
         "ictIndex": 65.8,
-        "priceChangeTarget": -67.48363175940867,
+        "priceChangeTarget": 57.822674912200625,
         "predictions": [
             {
                 "gw": 1,
@@ -43493,7 +43493,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 6.96,
         "ictIndex": 111.2,
-        "priceChangeTarget": 99.6865329045217,
+        "priceChangeTarget": 77.4378750281783,
         "predictions": [
             {
                 "gw": 1,
@@ -43599,7 +43599,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 1.8,
         "ictIndex": 61.5,
-        "priceChangeTarget": 99.80481060042584,
+        "priceChangeTarget": 13.522713661418393,
         "predictions": [
             {
                 "gw": 1,
@@ -43705,7 +43705,7 @@ export const PLAYERS = [
         "xA90": 0.3,
         "xGI": 0.55,
         "ictIndex": 11.5,
-        "priceChangeTarget": 9.76084583932834,
+        "priceChangeTarget": -81.89953812585395,
         "predictions": [
             {
                 "gw": 1,
@@ -43811,7 +43811,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -17.779371654497567,
+        "priceChangeTarget": 3.509926991805699,
         "predictions": [
             {
                 "gw": 1,
@@ -43917,7 +43917,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 97.66321408182483,
+        "priceChangeTarget": -48.2792659289389,
         "predictions": [
             {
                 "gw": 1,
@@ -44023,7 +44023,7 @@ export const PLAYERS = [
         "xA90": 0.76,
         "xGI": 0.21,
         "ictIndex": 3.7,
-        "priceChangeTarget": -87.71661263707378,
+        "priceChangeTarget": -59.34357770899587,
         "predictions": [
             {
                 "gw": 1,
@@ -44129,7 +44129,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 81.48670447649866,
+        "priceChangeTarget": -30.52906553872812,
         "predictions": [
             {
                 "gw": 1,
@@ -44235,7 +44235,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 28.17,
         "ictIndex": 302.3,
-        "priceChangeTarget": -16.46183607183525,
+        "priceChangeTarget": 99.83662545426876,
         "predictions": [
             {
                 "gw": 1,
@@ -44341,7 +44341,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 7.73,
         "ictIndex": 219,
-        "priceChangeTarget": -32.09014345896463,
+        "priceChangeTarget": 30.758667036242315,
         "predictions": [
             {
                 "gw": 1,
@@ -44447,7 +44447,7 @@ export const PLAYERS = [
         "xA90": 0.16,
         "xGI": 4.4,
         "ictIndex": 113.1,
-        "priceChangeTarget": 34.14648992056121,
+        "priceChangeTarget": -32.24558698252716,
         "predictions": [
             {
                 "gw": 1,
@@ -44553,7 +44553,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 2.88,
         "ictIndex": 47.5,
-        "priceChangeTarget": -84.80031656310436,
+        "priceChangeTarget": -48.957092994894545,
         "predictions": [
             {
                 "gw": 1,
@@ -44659,7 +44659,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.05,
         "ictIndex": 53.4,
-        "priceChangeTarget": -68.77485223004433,
+        "priceChangeTarget": 5.79372798313176,
         "predictions": [
             {
                 "gw": 1,
@@ -44765,7 +44765,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 63.7,
-        "priceChangeTarget": 30.714358745574856,
+        "priceChangeTarget": -6.611664433560648,
         "predictions": [
             {
                 "gw": 1,
@@ -44871,7 +44871,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.05,
         "ictIndex": 12.8,
-        "priceChangeTarget": -15.086867279129422,
+        "priceChangeTarget": -70.60912051321463,
         "predictions": [
             {
                 "gw": 1,
@@ -44977,7 +44977,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 18.129476609785897,
+        "priceChangeTarget": 55.03798913168919,
         "predictions": [
             {
                 "gw": 1,
@@ -45083,7 +45083,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 4.23,
         "ictIndex": 120.3,
-        "priceChangeTarget": 69.70026816266108,
+        "priceChangeTarget": 65.45746774845489,
         "predictions": [
             {
                 "gw": 1,
@@ -45189,7 +45189,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 2.21,
         "ictIndex": 45.7,
-        "priceChangeTarget": -32.585332515873276,
+        "priceChangeTarget": 39.62475424776375,
         "predictions": [
             {
                 "gw": 1,
@@ -45295,7 +45295,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 4.5,
         "ictIndex": 119.6,
-        "priceChangeTarget": -69.70649568983369,
+        "priceChangeTarget": 50.48739034050834,
         "predictions": [
             {
                 "gw": 1,
@@ -45401,7 +45401,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 1.62,
         "ictIndex": 63,
-        "priceChangeTarget": 87.18828252349348,
+        "priceChangeTarget": -1.0739076389040747,
         "predictions": [
             {
                 "gw": 1,
@@ -45507,7 +45507,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.75,
         "ictIndex": 42,
-        "priceChangeTarget": -15.382584457888,
+        "priceChangeTarget": 4.610210270533585,
         "predictions": [
             {
                 "gw": 1,
@@ -45613,7 +45613,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 1.93,
         "ictIndex": 53.2,
-        "priceChangeTarget": 82.59652652188737,
+        "priceChangeTarget": 65.10718241937886,
         "predictions": [
             {
                 "gw": 1,
@@ -45719,7 +45719,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.52,
         "ictIndex": 29.1,
-        "priceChangeTarget": -95.35776376461007,
+        "priceChangeTarget": -3.577323457606866,
         "predictions": [
             {
                 "gw": 1,
@@ -45825,7 +45825,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.53,
         "ictIndex": 36.8,
-        "priceChangeTarget": -86.83683904194761,
+        "priceChangeTarget": -91.40261083484901,
         "predictions": [
             {
                 "gw": 1,
@@ -45931,7 +45931,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 2.69,
         "ictIndex": 97.4,
-        "priceChangeTarget": 87.65041577613263,
+        "priceChangeTarget": 14.44568355484381,
         "predictions": [
             {
                 "gw": 1,
@@ -46037,7 +46037,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 88.10820730258277,
+        "priceChangeTarget": 36.372237647638116,
         "predictions": [
             {
                 "gw": 1,
@@ -46143,7 +46143,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.4,
-        "priceChangeTarget": -47.23936882851496,
+        "priceChangeTarget": 94.59263737370583,
         "predictions": [
             {
                 "gw": 1,
@@ -46249,7 +46249,7 @@ export const PLAYERS = [
         "xA90": 0.36,
         "xGI": 23.07,
         "ictIndex": 381.4,
-        "priceChangeTarget": -78.65525110475993,
+        "priceChangeTarget": -12.599248413891374,
         "predictions": [
             {
                 "gw": 1,
@@ -46355,7 +46355,7 @@ export const PLAYERS = [
         "xA90": 0.17,
         "xGI": 16.97,
         "ictIndex": 231.4,
-        "priceChangeTarget": -15.051097758066831,
+        "priceChangeTarget": 72.73829689431474,
         "predictions": [
             {
                 "gw": 1,
@@ -46461,7 +46461,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 10.26,
         "ictIndex": 202.5,
-        "priceChangeTarget": 33.298608422506135,
+        "priceChangeTarget": -67.45596868649028,
         "predictions": [
             {
                 "gw": 1,
@@ -46567,7 +46567,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -31.569824954170002,
+        "priceChangeTarget": -1.4490713744793169,
         "predictions": [
             {
                 "gw": 1,
@@ -46673,7 +46673,7 @@ export const PLAYERS = [
         "xA90": 0.14,
         "xGI": 3.18,
         "ictIndex": 58,
-        "priceChangeTarget": 16.023121172635285,
+        "priceChangeTarget": -7.831021914566733,
         "predictions": [
             {
                 "gw": 1,
@@ -46779,7 +46779,7 @@ export const PLAYERS = [
         "xA90": 0.18,
         "xGI": 10.2,
         "ictIndex": 163.5,
-        "priceChangeTarget": 63.017560889691225,
+        "priceChangeTarget": -42.680257325161875,
         "predictions": [
             {
                 "gw": 1,
@@ -46885,7 +46885,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 1.75,
         "ictIndex": 82.1,
-        "priceChangeTarget": -42.59712572019112,
+        "priceChangeTarget": -55.646800586395486,
         "predictions": [
             {
                 "gw": 1,
@@ -46991,7 +46991,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.88,
         "ictIndex": 29.8,
-        "priceChangeTarget": -61.590798853285975,
+        "priceChangeTarget": -38.93615606266651,
         "predictions": [
             {
                 "gw": 1,
@@ -47097,7 +47097,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.05,
         "ictIndex": 4.8,
-        "priceChangeTarget": -33.79280148699138,
+        "priceChangeTarget": 11.664437503632826,
         "predictions": [
             {
                 "gw": 1,
@@ -47203,7 +47203,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.11,
         "ictIndex": 1.7,
-        "priceChangeTarget": -16.633294603338157,
+        "priceChangeTarget": 20.12472981779962,
         "predictions": [
             {
                 "gw": 1,
@@ -47309,7 +47309,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -26.436749088146044,
+        "priceChangeTarget": -23.96706431237574,
         "predictions": [
             {
                 "gw": 1,
@@ -47415,7 +47415,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 0.01,
         "ictIndex": 1.4,
-        "priceChangeTarget": 82.22818056681723,
+        "priceChangeTarget": -84.82887931341759,
         "predictions": [
             {
                 "gw": 1,
@@ -47521,7 +47521,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.01,
         "ictIndex": 0.3,
-        "priceChangeTarget": -38.10803961781486,
+        "priceChangeTarget": 43.22401931663316,
         "predictions": [
             {
                 "gw": 1,
@@ -47627,7 +47627,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 9.48,
         "ictIndex": 143.4,
-        "priceChangeTarget": -44.425365790000335,
+        "priceChangeTarget": -65.69092655501785,
         "predictions": [
             {
                 "gw": 1,
@@ -47733,7 +47733,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 3.08,
         "ictIndex": 58.3,
-        "priceChangeTarget": -3.2658669340053024,
+        "priceChangeTarget": -0.625233546723237,
         "predictions": [
             {
                 "gw": 1,
@@ -47839,7 +47839,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -89.50850501473577,
+        "priceChangeTarget": 54.8967497997202,
         "predictions": [
             {
                 "gw": 1,
@@ -47945,7 +47945,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.16,
         "ictIndex": 70.7,
-        "priceChangeTarget": 74.16638511454227,
+        "priceChangeTarget": -74.73815445478206,
         "predictions": [
             {
                 "gw": 1,
@@ -48051,7 +48051,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -31.099521024526936,
+        "priceChangeTarget": -9.526667942051532,
         "predictions": [
             {
                 "gw": 1,
@@ -48157,7 +48157,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -13.707067754994398,
+        "priceChangeTarget": 77.89439411709319,
         "predictions": [
             {
                 "gw": 1,
@@ -48263,7 +48263,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 5.76,
         "ictIndex": 138.9,
-        "priceChangeTarget": 60.898089009501234,
+        "priceChangeTarget": 59.513291375780796,
         "predictions": [
             {
                 "gw": 1,
@@ -48369,7 +48369,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 1.57,
         "ictIndex": 46.4,
-        "priceChangeTarget": 49.853494417331376,
+        "priceChangeTarget": 91.778465628476,
         "predictions": [
             {
                 "gw": 1,
@@ -48475,7 +48475,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 2.59,
         "ictIndex": 87.4,
-        "priceChangeTarget": 63.594547226415045,
+        "priceChangeTarget": -11.96967866508625,
         "predictions": [
             {
                 "gw": 1,
@@ -48581,7 +48581,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 1.44,
         "ictIndex": 82.1,
-        "priceChangeTarget": -94.17947737014629,
+        "priceChangeTarget": -39.57255403049906,
         "predictions": [
             {
                 "gw": 1,
@@ -48687,7 +48687,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 3.79,
         "ictIndex": 118,
-        "priceChangeTarget": 35.2076406609973,
+        "priceChangeTarget": 64.66283641700869,
         "predictions": [
             {
                 "gw": 1,
@@ -48793,7 +48793,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 1.02,
         "ictIndex": 46.1,
-        "priceChangeTarget": 83.64608897350328,
+        "priceChangeTarget": 45.01116629741085,
         "predictions": [
             {
                 "gw": 1,
@@ -48899,7 +48899,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 1.3,
-        "priceChangeTarget": 46.81346397047534,
+        "priceChangeTarget": 48.02085963846386,
         "predictions": [
             {
                 "gw": 1,
@@ -49005,7 +49005,7 @@ export const PLAYERS = [
         "xA90": 0.18,
         "xGI": 10.55,
         "ictIndex": 202.9,
-        "priceChangeTarget": -41.63803809248192,
+        "priceChangeTarget": -73.22036859800399,
         "predictions": [
             {
                 "gw": 1,
@@ -49111,7 +49111,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 9.56,
         "ictIndex": 147,
-        "priceChangeTarget": -81.17163392960745,
+        "priceChangeTarget": 66.41481613728345,
         "predictions": [
             {
                 "gw": 1,
@@ -49217,7 +49217,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 3.39,
         "ictIndex": 57.8,
-        "priceChangeTarget": 63.958108745378695,
+        "priceChangeTarget": 80.33933803091517,
         "predictions": [
             {
                 "gw": 1,
@@ -49323,7 +49323,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 2.65,
         "ictIndex": 79.9,
-        "priceChangeTarget": 40.42802997699789,
+        "priceChangeTarget": -14.380064769375394,
         "predictions": [
             {
                 "gw": 1,
@@ -49429,7 +49429,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 5.73,
         "ictIndex": 106,
-        "priceChangeTarget": -88.85137027550599,
+        "priceChangeTarget": 89.07374080791303,
         "predictions": [
             {
                 "gw": 1,
@@ -49535,7 +49535,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 3.71,
         "ictIndex": 95,
-        "priceChangeTarget": -77.57411885012351,
+        "priceChangeTarget": 46.055487301566615,
         "predictions": [
             {
                 "gw": 1,
@@ -49641,7 +49641,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 3.46,
         "ictIndex": 73,
-        "priceChangeTarget": -73.19819473202853,
+        "priceChangeTarget": 19.131632200857922,
         "predictions": [
             {
                 "gw": 1,
@@ -49747,7 +49747,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 2.33,
         "ictIndex": 55.5,
-        "priceChangeTarget": 94.43025050134372,
+        "priceChangeTarget": 47.59902045019217,
         "predictions": [
             {
                 "gw": 1,
@@ -49853,7 +49853,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -63.338400005287895,
+        "priceChangeTarget": 6.441084731610573,
         "predictions": [
             {
                 "gw": 1,
@@ -49959,7 +49959,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 45.89472827974771,
+        "priceChangeTarget": -58.084010942297695,
         "predictions": [
             {
                 "gw": 1,
@@ -50065,7 +50065,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 8.12,
         "ictIndex": 117.5,
-        "priceChangeTarget": -55.44977957981641,
+        "priceChangeTarget": -12.363414679916218,
         "predictions": [
             {
                 "gw": 1,
@@ -50171,7 +50171,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 3.67,
         "ictIndex": 25.5,
-        "priceChangeTarget": -91.53636606137745,
+        "priceChangeTarget": 79.12170000397794,
         "predictions": [
             {
                 "gw": 1,
@@ -50277,7 +50277,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 4.9,
         "ictIndex": 62.2,
-        "priceChangeTarget": 58.92834595827071,
+        "priceChangeTarget": 99.56871067142643,
         "predictions": [
             {
                 "gw": 1,
@@ -50383,7 +50383,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.03,
         "ictIndex": 0.5,
-        "priceChangeTarget": 67.81494835923371,
+        "priceChangeTarget": 52.78565526421772,
         "predictions": [
             {
                 "gw": 1,
@@ -50489,7 +50489,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -27.075594573429782,
+        "priceChangeTarget": -24.81569378938444,
         "predictions": [
             {
                 "gw": 1,
@@ -50595,7 +50595,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.06,
         "ictIndex": 74,
-        "priceChangeTarget": 49.395876063515374,
+        "priceChangeTarget": -33.79387938673068,
         "predictions": [
             {
                 "gw": 1,
@@ -50701,7 +50701,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 5.7,
-        "priceChangeTarget": 70.09194454662907,
+        "priceChangeTarget": -69.62489910537622,
         "predictions": [
             {
                 "gw": 1,
@@ -50807,7 +50807,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 5.98,
         "ictIndex": 175.6,
-        "priceChangeTarget": 88.18201034554284,
+        "priceChangeTarget": 21.689675153276127,
         "predictions": [
             {
                 "gw": 1,
@@ -50913,7 +50913,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 1.47,
         "ictIndex": 50.5,
-        "priceChangeTarget": 95.23593937564732,
+        "priceChangeTarget": -42.85066239354669,
         "predictions": [
             {
                 "gw": 1,
@@ -51019,7 +51019,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 1.51,
         "ictIndex": 86.9,
-        "priceChangeTarget": -1.8561731418873677,
+        "priceChangeTarget": 72.31788769886018,
         "predictions": [
             {
                 "gw": 1,
@@ -51125,7 +51125,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 1.2,
         "ictIndex": 74,
-        "priceChangeTarget": -33.43081909259129,
+        "priceChangeTarget": 83.57695334621823,
         "predictions": [
             {
                 "gw": 1,
@@ -51231,7 +51231,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 1.25,
         "ictIndex": 50.5,
-        "priceChangeTarget": 81.83750514078915,
+        "priceChangeTarget": 64.08817510934475,
         "predictions": [
             {
                 "gw": 1,
@@ -51337,7 +51337,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.33,
         "ictIndex": 14.2,
-        "priceChangeTarget": 1.3982113682069865,
+        "priceChangeTarget": 2.5652106598870006,
         "predictions": [
             {
                 "gw": 1,
@@ -51443,7 +51443,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 1.79,
         "ictIndex": 43.5,
-        "priceChangeTarget": 70.55486918178278,
+        "priceChangeTarget": 34.45506071254238,
         "predictions": [
             {
                 "gw": 1,
@@ -51549,7 +51549,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 14.283294398486348,
+        "priceChangeTarget": -99.50780421933514,
         "predictions": [
             {
                 "gw": 1,
@@ -51655,7 +51655,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.01,
         "ictIndex": 3.2,
-        "priceChangeTarget": -31.206773218131985,
+        "priceChangeTarget": 2.1565957437042584,
         "predictions": [
             {
                 "gw": 1,
@@ -51761,7 +51761,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 0.41,
         "ictIndex": 10.4,
-        "priceChangeTarget": -51.01018054886393,
+        "priceChangeTarget": 95.6994168567432,
         "predictions": [
             {
                 "gw": 1,
@@ -51867,7 +51867,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -51.206842734825166,
+        "priceChangeTarget": -51.627844074826235,
         "predictions": [
             {
                 "gw": 1,
@@ -51973,7 +51973,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 13.72,
         "ictIndex": 242.5,
-        "priceChangeTarget": -17.74701089276236,
+        "priceChangeTarget": -27.40131360729019,
         "predictions": [
             {
                 "gw": 1,
@@ -52079,7 +52079,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 5.79,
         "ictIndex": 130.6,
-        "priceChangeTarget": -83.46380571943345,
+        "priceChangeTarget": 41.50232859865142,
         "predictions": [
             {
                 "gw": 1,
@@ -52185,7 +52185,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 2.56,
         "ictIndex": 56.6,
-        "priceChangeTarget": -68.44162158411282,
+        "priceChangeTarget": -74.45009264406815,
         "predictions": [
             {
                 "gw": 1,
@@ -52291,7 +52291,7 @@ export const PLAYERS = [
         "xA90": 0.21,
         "xGI": 5.88,
         "ictIndex": 121.6,
-        "priceChangeTarget": -27.488460985815877,
+        "priceChangeTarget": 38.55090485425973,
         "predictions": [
             {
                 "gw": 1,
@@ -52397,7 +52397,7 @@ export const PLAYERS = [
         "xA90": 0.17,
         "xGI": 1.55,
         "ictIndex": 35.6,
-        "priceChangeTarget": 41.852253782973946,
+        "priceChangeTarget": -41.15009654786561,
         "predictions": [
             {
                 "gw": 1,
@@ -52503,7 +52503,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 0.55,
         "ictIndex": 17.3,
-        "priceChangeTarget": -92.10310249131619,
+        "priceChangeTarget": -90.18898098545233,
         "predictions": [
             {
                 "gw": 1,
@@ -52609,7 +52609,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 2.24,
         "ictIndex": 59.7,
-        "priceChangeTarget": 6.041484344476004,
+        "priceChangeTarget": -98.92045792778785,
         "predictions": [
             {
                 "gw": 1,
@@ -52715,7 +52715,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 2.96,
         "ictIndex": 76.8,
-        "priceChangeTarget": 92.57425031354342,
+        "priceChangeTarget": 52.282829490806705,
         "predictions": [
             {
                 "gw": 1,
@@ -52821,7 +52821,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 0.86,
         "ictIndex": 27.2,
-        "priceChangeTarget": 57.66193196596868,
+        "priceChangeTarget": -83.12704953523951,
         "predictions": [
             {
                 "gw": 1,
@@ -52927,7 +52927,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 4.61,
         "ictIndex": 48,
-        "priceChangeTarget": -17.566076833465516,
+        "priceChangeTarget": 58.470585722232755,
         "predictions": [
             {
                 "gw": 1,
@@ -53033,7 +53033,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 7.74,
         "ictIndex": 136.4,
-        "priceChangeTarget": 22.465377724619756,
+        "priceChangeTarget": 33.69220387517785,
         "predictions": [
             {
                 "gw": 1,
@@ -53139,7 +53139,7 @@ export const PLAYERS = [
         "xA90": 0.14,
         "xGI": 4.45,
         "ictIndex": 48.4,
-        "priceChangeTarget": -36.32880111791352,
+        "priceChangeTarget": 43.144436814429355,
         "predictions": [
             {
                 "gw": 1,
@@ -53245,7 +53245,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.46,
         "ictIndex": 6.3,
-        "priceChangeTarget": -37.88729885136066,
+        "priceChangeTarget": 20.687354205813918,
         "predictions": [
             {
                 "gw": 1,
@@ -53351,7 +53351,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -77.31537781962297,
+        "priceChangeTarget": -49.31851796714428,
         "predictions": [
             {
                 "gw": 1,
@@ -53457,7 +53457,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 4.87,
         "ictIndex": 152,
-        "priceChangeTarget": -47.3637325835961,
+        "priceChangeTarget": 13.384802221878545,
         "predictions": [
             {
                 "gw": 1,
@@ -53563,7 +53563,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 4.62,
         "ictIndex": 113.4,
-        "priceChangeTarget": -67.99012509353597,
+        "priceChangeTarget": 86.8670045217597,
         "predictions": [
             {
                 "gw": 1,
@@ -53669,7 +53669,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.04,
         "ictIndex": 72.2,
-        "priceChangeTarget": -63.60887836646383,
+        "priceChangeTarget": 23.53713216211885,
         "predictions": [
             {
                 "gw": 1,
@@ -53775,7 +53775,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 1.580536776487392,
+        "priceChangeTarget": 15.504142901199927,
         "predictions": [
             {
                 "gw": 1,
@@ -53881,7 +53881,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 10.3,
-        "priceChangeTarget": -4.73220745324987,
+        "priceChangeTarget": 91.31605560931914,
         "predictions": [
             {
                 "gw": 1,
@@ -53987,7 +53987,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.04,
         "ictIndex": 97.9,
-        "priceChangeTarget": -91.83724061366456,
+        "priceChangeTarget": 48.71244070825489,
         "predictions": [
             {
                 "gw": 1,
@@ -54093,7 +54093,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 6.25,
         "ictIndex": 168.6,
-        "priceChangeTarget": 57.86310970550085,
+        "priceChangeTarget": -45.72207780964679,
         "predictions": [
             {
                 "gw": 1,
@@ -54199,7 +54199,7 @@ export const PLAYERS = [
         "xA90": 0.14,
         "xGI": 5.42,
         "ictIndex": 177.5,
-        "priceChangeTarget": 4.76148784875663,
+        "priceChangeTarget": -11.449681736287374,
         "predictions": [
             {
                 "gw": 1,
@@ -54305,7 +54305,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 2.64,
         "ictIndex": 93.2,
-        "priceChangeTarget": -5.5236528720119935,
+        "priceChangeTarget": 93.4005442703075,
         "predictions": [
             {
                 "gw": 1,
@@ -54411,7 +54411,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.9,
         "ictIndex": 55.5,
-        "priceChangeTarget": 98.93566347371245,
+        "priceChangeTarget": 98.71510734246314,
         "predictions": [
             {
                 "gw": 1,
@@ -54517,7 +54517,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 2.49,
         "ictIndex": 68.2,
-        "priceChangeTarget": -8.726747568487923,
+        "priceChangeTarget": -38.735392151318806,
         "predictions": [
             {
                 "gw": 1,
@@ -54623,7 +54623,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 3.2,
         "ictIndex": 99.6,
-        "priceChangeTarget": -68.1610909552834,
+        "priceChangeTarget": -12.6492530112627,
         "predictions": [
             {
                 "gw": 1,
@@ -54729,7 +54729,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 2.67,
         "ictIndex": 70.5,
-        "priceChangeTarget": 53.74216072906276,
+        "priceChangeTarget": 99.68745394061926,
         "predictions": [
             {
                 "gw": 1,
@@ -54835,7 +54835,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.9,
         "ictIndex": 49.8,
-        "priceChangeTarget": -76.45092139201262,
+        "priceChangeTarget": -64.099604110701,
         "predictions": [
             {
                 "gw": 1,
@@ -54941,7 +54941,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -84.42881619538952,
+        "priceChangeTarget": -46.35296848095318,
         "predictions": [
             {
                 "gw": 1,
@@ -55047,7 +55047,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.56,
         "ictIndex": 14.2,
-        "priceChangeTarget": 37.039247401051256,
+        "priceChangeTarget": -49.53443615217634,
         "predictions": [
             {
                 "gw": 1,
@@ -55153,7 +55153,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.1,
-        "priceChangeTarget": 30.02124083372243,
+        "priceChangeTarget": 12.684740504133686,
         "predictions": [
             {
                 "gw": 1,
@@ -55259,7 +55259,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 86.913440211933,
+        "priceChangeTarget": -97.02275214513824,
         "predictions": [
             {
                 "gw": 1,
@@ -55365,7 +55365,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.05,
         "ictIndex": 6.2,
-        "priceChangeTarget": -18.378874550695684,
+        "priceChangeTarget": 95.3271249278709,
         "predictions": [
             {
                 "gw": 1,
@@ -55471,7 +55471,7 @@ export const PLAYERS = [
         "xA90": 0.14,
         "xGI": 4.33,
         "ictIndex": 104.7,
-        "priceChangeTarget": -74.02015570295437,
+        "priceChangeTarget": 51.08399918830153,
         "predictions": [
             {
                 "gw": 1,
@@ -55577,7 +55577,7 @@ export const PLAYERS = [
         "xA90": 0.2,
         "xGI": 6.91,
         "ictIndex": 113.9,
-        "priceChangeTarget": 64.2632390814195,
+        "priceChangeTarget": 90.39160691478213,
         "predictions": [
             {
                 "gw": 1,
@@ -55683,7 +55683,7 @@ export const PLAYERS = [
         "xA90": 0.16,
         "xGI": 4.89,
         "ictIndex": 107.6,
-        "priceChangeTarget": -40.672141971252906,
+        "priceChangeTarget": -89.05558019653654,
         "predictions": [
             {
                 "gw": 1,
@@ -55789,7 +55789,7 @@ export const PLAYERS = [
         "xA90": 0.16,
         "xGI": 0.27,
         "ictIndex": 2.8,
-        "priceChangeTarget": 34.46341060843977,
+        "priceChangeTarget": -6.698786200538876,
         "predictions": [
             {
                 "gw": 1,
@@ -55895,7 +55895,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 1.56,
         "ictIndex": 67.4,
-        "priceChangeTarget": 69.95990857265144,
+        "priceChangeTarget": -63.37732453319318,
         "predictions": [
             {
                 "gw": 1,
@@ -56001,7 +56001,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 3.13,
         "ictIndex": 67.6,
-        "priceChangeTarget": -2.808975245268684,
+        "priceChangeTarget": 82.12002968113848,
         "predictions": [
             {
                 "gw": 1,
@@ -56107,7 +56107,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 2.74,
         "ictIndex": 68.2,
-        "priceChangeTarget": 21.07983222844463,
+        "priceChangeTarget": -28.656539630851526,
         "predictions": [
             {
                 "gw": 1,
@@ -56213,7 +56213,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 1.93,
         "ictIndex": 55.1,
-        "priceChangeTarget": 54.54485745205949,
+        "priceChangeTarget": 46.334267501625646,
         "predictions": [
             {
                 "gw": 1,
@@ -56319,7 +56319,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 1.66,
         "ictIndex": 41.5,
-        "priceChangeTarget": 88.28896713988962,
+        "priceChangeTarget": -94.99733685799076,
         "predictions": [
             {
                 "gw": 1,
@@ -56425,7 +56425,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 59.03103345648145,
+        "priceChangeTarget": 83.70297756410125,
         "predictions": [
             {
                 "gw": 1,
@@ -56531,7 +56531,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 2.79,
         "ictIndex": 55.5,
-        "priceChangeTarget": 33.56250677900471,
+        "priceChangeTarget": -74.18048863457844,
         "predictions": [
             {
                 "gw": 1,
@@ -56637,7 +56637,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -23.885083189844238,
+        "priceChangeTarget": 86.89208376160079,
         "predictions": [
             {
                 "gw": 1,
@@ -56743,7 +56743,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 0.01,
         "ictIndex": 0.2,
-        "priceChangeTarget": -86.1668145123371,
+        "priceChangeTarget": -75.03397895452606,
         "predictions": [
             {
                 "gw": 1,
@@ -56849,7 +56849,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 4.95,
         "ictIndex": 146.3,
-        "priceChangeTarget": -55.151765631155605,
+        "priceChangeTarget": -3.9496769904238107,
         "predictions": [
             {
                 "gw": 1,
@@ -56955,7 +56955,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 3.3,
         "ictIndex": 62.7,
-        "priceChangeTarget": -5.734316959598289,
+        "priceChangeTarget": 48.185869367673604,
         "predictions": [
             {
                 "gw": 1,
@@ -57061,7 +57061,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 10.1,
         "ictIndex": 165.2,
-        "priceChangeTarget": 22.967263745859782,
+        "priceChangeTarget": 81.1053306376229,
         "predictions": [
             {
                 "gw": 1,
@@ -57167,7 +57167,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 0.01,
         "ictIndex": 0.7,
-        "priceChangeTarget": 64.61463491197847,
+        "priceChangeTarget": -51.203861456914645,
         "predictions": [
             {
                 "gw": 1,
@@ -57273,7 +57273,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.1,
         "ictIndex": 93.1,
-        "priceChangeTarget": 22.887011114925812,
+        "priceChangeTarget": 18.47565900658705,
         "predictions": [
             {
                 "gw": 1,
@@ -57379,7 +57379,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 93.58238505311274,
+        "priceChangeTarget": -58.59452214337235,
         "predictions": [
             {
                 "gw": 1,
@@ -57485,7 +57485,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.02,
         "ictIndex": 7.4,
-        "priceChangeTarget": 63.517874089010974,
+        "priceChangeTarget": -83.20353718948837,
         "predictions": [
             {
                 "gw": 1,
@@ -57591,7 +57591,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 3.09,
         "ictIndex": 121.5,
-        "priceChangeTarget": 83.75496395760095,
+        "priceChangeTarget": 40.98950829030019,
         "predictions": [
             {
                 "gw": 1,
@@ -57697,7 +57697,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 4.27,
         "ictIndex": 132.9,
-        "priceChangeTarget": 49.18078226429668,
+        "priceChangeTarget": -8.359483977165965,
         "predictions": [
             {
                 "gw": 1,
@@ -57803,7 +57803,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 4.32,
         "ictIndex": 120.9,
-        "priceChangeTarget": -49.45599832964766,
+        "priceChangeTarget": 99.01950950930495,
         "predictions": [
             {
                 "gw": 1,
@@ -57909,7 +57909,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 2.52,
         "ictIndex": 117,
-        "priceChangeTarget": 99.73299521122962,
+        "priceChangeTarget": -25.421218152118684,
         "predictions": [
             {
                 "gw": 1,
@@ -58015,7 +58015,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.75,
         "ictIndex": 54.7,
-        "priceChangeTarget": -84.79712787695526,
+        "priceChangeTarget": 51.51601733954848,
         "predictions": [
             {
                 "gw": 1,
@@ -58121,7 +58121,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.01,
         "ictIndex": 3.6,
-        "priceChangeTarget": 80.94904527542204,
+        "priceChangeTarget": 5.429055585244896,
         "predictions": [
             {
                 "gw": 1,
@@ -58227,7 +58227,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 70.57819801835501,
+        "priceChangeTarget": 86.49450928955389,
         "predictions": [
             {
                 "gw": 1,
@@ -58333,7 +58333,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.28,
         "ictIndex": 17.1,
-        "priceChangeTarget": -47.58921872140378,
+        "priceChangeTarget": 67.17092373832827,
         "predictions": [
             {
                 "gw": 1,
@@ -58439,7 +58439,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 0.15,
         "ictIndex": 4.9,
-        "priceChangeTarget": -42.53025494507811,
+        "priceChangeTarget": 23.08110359854105,
         "predictions": [
             {
                 "gw": 1,
@@ -58545,7 +58545,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -7.244980694788737,
+        "priceChangeTarget": -4.849834578891034,
         "predictions": [
             {
                 "gw": 1,
@@ -58651,7 +58651,7 @@ export const PLAYERS = [
         "xA90": 0.18,
         "xGI": 11.17,
         "ictIndex": 186.9,
-        "priceChangeTarget": -11.812202647288572,
+        "priceChangeTarget": 73.27237665028773,
         "predictions": [
             {
                 "gw": 1,
@@ -58757,7 +58757,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 4.12,
         "ictIndex": 53.9,
-        "priceChangeTarget": -91.42417790036845,
+        "priceChangeTarget": 38.962342390854644,
         "predictions": [
             {
                 "gw": 1,
@@ -58863,7 +58863,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 4.74,
         "ictIndex": 138.1,
-        "priceChangeTarget": -96.07075461064277,
+        "priceChangeTarget": 89.38826606472963,
         "predictions": [
             {
                 "gw": 1,
@@ -58969,7 +58969,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 2.89,
         "ictIndex": 84.6,
-        "priceChangeTarget": -89.30482842944356,
+        "priceChangeTarget": -37.89045696985496,
         "predictions": [
             {
                 "gw": 1,
@@ -59075,7 +59075,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 0.97,
         "ictIndex": 27,
-        "priceChangeTarget": 28.671805189597364,
+        "priceChangeTarget": -68.00190013607775,
         "predictions": [
             {
                 "gw": 1,
@@ -59181,7 +59181,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 1.35,
         "ictIndex": 12.7,
-        "priceChangeTarget": -2.73600020570035,
+        "priceChangeTarget": -43.11170134307238,
         "predictions": [
             {
                 "gw": 1,
@@ -59287,7 +59287,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 1.79,
         "ictIndex": 36,
-        "priceChangeTarget": -41.12294730115924,
+        "priceChangeTarget": 86.29676236942373,
         "predictions": [
             {
                 "gw": 1,
@@ -59393,7 +59393,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 3.3,
         "ictIndex": 69.1,
-        "priceChangeTarget": 51.08210949735633,
+        "priceChangeTarget": -54.154071580693056,
         "predictions": [
             {
                 "gw": 1,
@@ -59499,7 +59499,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 0.04,
         "ictIndex": 1,
-        "priceChangeTarget": -75.8258680989843,
+        "priceChangeTarget": -91.02216068176294,
         "predictions": [
             {
                 "gw": 1,
@@ -59605,7 +59605,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.89,
         "ictIndex": 17.8,
-        "priceChangeTarget": -60.50265011221141,
+        "priceChangeTarget": -42.910350044197386,
         "predictions": [
             {
                 "gw": 1,
@@ -59711,7 +59711,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 6.69,
         "ictIndex": 106.7,
-        "priceChangeTarget": 12.484637230951307,
+        "priceChangeTarget": 17.621799267578453,
         "predictions": [
             {
                 "gw": 1,
@@ -59817,7 +59817,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 5.08,
         "ictIndex": 71.5,
-        "priceChangeTarget": 91.13865586569514,
+        "priceChangeTarget": 49.28468172751144,
         "predictions": [
             {
                 "gw": 1,
@@ -61269,12 +61269,12 @@ export function getPlayerRatings(player, currentGw = 1) {
     else if (mppg >= 45) expectedMinutes = 'C';
     else if (mppg >= 20) expectedMinutes = 'D';
 
-    // 2. Next 10 Fixtures (based on average FDR of next 10 predictions starting from currentGw)
+    // 2. Next 5 Fixtures (based on average FDR of next 5 predictions starting from currentGw)
     let avgFdr = 3.0;
     if (player.predictions && player.predictions.length > 0) {
         let fdrSum = 0;
         let count = 0;
-        for (let gw = currentGw; gw < currentGw + 10; gw++) {
+        for (let gw = currentGw; gw < currentGw + 5; gw++) {
             const pred = player.predictions.find(p => p.gw === gw);
             if (pred && pred.opp !== 'BYE') {
                 fdrSum += pred.diff;
@@ -61286,11 +61286,11 @@ export function getPlayerRatings(player, currentGw = 1) {
         }
     }
     // A: <= 2.2, B: <= 2.8, C: <= 3.4, D: <= 4.0, E: > 4.0
-    let next10Fixtures = 'E';
-    if (avgFdr <= 2.2) next10Fixtures = 'A';
-    else if (avgFdr <= 2.8) next10Fixtures = 'B';
-    else if (avgFdr <= 3.4) next10Fixtures = 'C';
-    else if (avgFdr <= 4.0) next10Fixtures = 'D';
+    let next5Fixtures = 'E';
+    if (avgFdr <= 2.2) next5Fixtures = 'A';
+    else if (avgFdr <= 2.8) next5Fixtures = 'B';
+    else if (avgFdr <= 3.4) next5Fixtures = 'C';
+    else if (avgFdr <= 4.0) next5Fixtures = 'D';
 
     // 3. Attacking Role (based on position and xG90 + xA90)
     const xg90 = player.xG90 || 0;
@@ -61349,7 +61349,7 @@ export function getPlayerRatings(player, currentGw = 1) {
         let sumOdds = 0;
         let count = 0;
         if (player.predictions && player.predictions.length > 0) {
-            for (let gw = currentGw; gw < currentGw + 10; gw++) {
+            for (let gw = currentGw; gw < currentGw + 5; gw++) {
                 const pred = player.predictions.find(p => p.gw === gw);
                 if (pred && pred.opp !== 'BYE') {
                     let base = 30;
@@ -61394,7 +61394,7 @@ export function getPlayerRatings(player, currentGw = 1) {
 
     return {
         expectedMinutes,
-        next10Fixtures,
+        next5Fixtures,
         attackingRole,
         attackingPotential,
         defconPotential,
