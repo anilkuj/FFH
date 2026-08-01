@@ -191,9 +191,19 @@ function getFdrColor(diff) {
     }
 }
 
+function get5GwXp(player, currentGw) {
+    if (!player.predictions) return 0;
+    let sum = 0;
+    for (let gw = currentGw; gw < currentGw + 5; gw++) {
+        const pred = player.predictions.find(p => p.gw === gw);
+        if (pred) sum += pred.pts;
+    }
+    return sum;
+}
+
 function renderFdrDots(player, currentGw) {
     let html = '<div class="fdr-dots-container" style="display: inline-flex; gap: 3px; align-items: center; justify-content: center; vertical-align: middle;">';
-    for (let gw = currentGw; gw < currentGw + 10; gw++) {
+    for (let gw = currentGw; gw < currentGw + 5; gw++) {
         const pr = player.predictions.find(p => p.gw === gw);
         if (pr) {
             const oppText = pr.opp !== 'BYE' ? `${pr.opp} (${pr.loc})` : 'BYE';
@@ -209,7 +219,7 @@ function renderFdrDots(player, currentGw) {
 
 function renderFdrFixtures(player, currentGw) {
     let html = '<div class="fdr-fixtures-container" style="display: flex; gap: 4px; align-items: center; flex-wrap: wrap; margin: 2px 0;">';
-    for (let gw = currentGw; gw < currentGw + 10; gw++) {
+    for (let gw = currentGw; gw < currentGw + 5; gw++) {
         const pr = player.predictions.find(p => p.gw === gw);
         if (pr) {
             const oppText = pr.opp !== 'BYE' ? `${pr.opp} (${pr.loc})` : 'BYE';
@@ -350,7 +360,7 @@ function renderPlayerRow(squadSlots, position, currentGw, captain, vice, actions
                     <div class="player-pitch-points-sub" style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 2px;">
                         ${renderFdrDots(player, currentGw)}
                         <span style="opacity: 0.6;">•</span>
-                        <span>10-GW: ${player.xp10 !== undefined ? player.xp10.toFixed(1) : 'N/A'} XP</span>
+                        <span>5-GW: ${get5GwXp(player, currentGw).toFixed(1)} XP</span>
                     </div>
                 </div>
                 ${renderPlayerTooltip(player, currentGw)}
@@ -417,7 +427,7 @@ function renderBenchRow(squadSlots, currentGw, captain, vice, actions) {
                         <div class="player-pitch-points-sub" style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 2px;">
                             ${renderFdrDots(player, currentGw)}
                             <span style="opacity: 0.6;">•</span>
-                            <span>10-GW: ${player.xp10 !== undefined ? player.xp10.toFixed(1) : 'N/A'} XP</span>
+                            <span>5-GW: ${get5GwXp(player, currentGw).toFixed(1)} XP</span>
                         </div>
                     </div>
                     ${renderPlayerTooltip(player, currentGw)}
@@ -870,8 +880,8 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
                 <span class="detail-stat-lbl">GW${state.currentGw} Exp Pts</span>
             </div>
             <div class="detail-stat-box">
-                <span class="detail-stat-val">${player.xp10 !== undefined ? player.xp10.toFixed(1) : 'N/A'}</span>
-                <span class="detail-stat-lbl">10-GW Exp Pts (XP)</span>
+                <span class="detail-stat-val">${get5GwXp(player, state.currentGw).toFixed(1)}</span>
+                <span class="detail-stat-lbl">5-GW Exp Pts (XP)</span>
             </div>
             <div class="detail-stat-box">
                 <span class="detail-stat-val">${player.xG.toFixed(1)}</span>
@@ -1099,7 +1109,7 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
     const buyablePlayers = PLAYERS.filter(p => 
         p.position === position && 
         !allSquadIds.includes(p.id)
-    ).sort((a, b) => (b.xp10 || 0) - (a.xp10 || 0));
+    ).sort((a, b) => get5GwXp(b, state.currentGw) - get5GwXp(a, state.currentGw));
 
     // Generate Price Options in 0.5m increments
     let priceOptions = '<option value="">Any Price</option>';
@@ -1350,7 +1360,7 @@ function renderModalPlayerRows(players, bank, state) {
                     <span class="player-team-sub" style="font-size: 10px; color: var(--text-muted); opacity: 0.85;">Matches last year: ${player.GS} • Avg Min: ${player.MPPG.toFixed(0)}m</span>
                 </div>
                 <div class="player-info-right" style="display: flex; align-items: center; gap: 12px; margin-left: 8px;">
-                    <span class="player-pts-val" style="font-size: 12px; font-weight: 700; color: var(--primary); white-space: nowrap;">${player.xp10 !== undefined ? player.xp10.toFixed(1) : '0.0'} XP (10-GW)</span>
+                    <span class="player-pts-val" style="font-size: 12px; font-weight: 700; color: var(--primary); white-space: nowrap;">${get5GwXp(player, state.currentGw).toFixed(1)} XP (5-GW)</span>
                     ${isAffordable ? `
                         <button class="add-player-action-btn apply-rec-btn" data-id="${player.id}" style="margin: 0; padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 4px; width: auto; height: 28px; display: flex; align-items: center; justify-content: center; gap: 4px;">
                             Add
