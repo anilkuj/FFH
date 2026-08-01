@@ -552,6 +552,28 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
         }
     };
 
+    const getSlotWeight = (slot, index) => {
+        if (!slot) return 1.0;
+        if (slot.isStarting) {
+            const isCaptain = slot.playerId === state.captain;
+            if (isCaptain) {
+                return state.chips.tripleCaptain ? 3.0 : 2.0;
+            }
+            return 1.0;
+        }
+        if (state.chips.benchBoost) {
+            return 1.0;
+        }
+        // Bench players get a 0.10 weight to prioritize starting XI points
+        return 0.10;
+    };
+
+    const getWeightedScore = (player, slot, index) => {
+        const rawScore = getSolverScore(player);
+        const weight = getSlotWeight(slot, index);
+        return rawScore * weight;
+    };
+
     // Helper: FDR (average fixture difficulty)
     const getAvgFDR = (player) => {
         let sum = 0;
@@ -910,8 +932,8 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                 if (currentSlot.locked) continue; // Skip locked force-included players!
 
                 const currentSlotPlayer = currentSlot.playerId !== null ? PLAYERS.find(p => p.id === currentSlot.playerId) : null;
-                const currentPts = currentSlotPlayer ? getSolverScore(currentSlotPlayer) : 0;
-
+                const currentPts = currentSlotPlayer ? getWeightedScore(currentSlotPlayer, currentSlot, idx) : 0;
+                
                 // Cost of other starting players
                 const otherStartingCost = startingIndices.reduce((sum, sIdx) => {
                     if (sIdx === idx) return sum;
@@ -934,13 +956,13 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                 if (guaranteedCandidates.length > 0) {
                     candidates = guaranteedCandidates;
                 }
-                candidates.sort((a, b) => getSolverScore(b) - getSolverScore(a));
+                candidates.sort((a, b) => getWeightedScore(b, currentSlot, idx) - getWeightedScore(a, currentSlot, idx));
 
                 let bestCandidate = null;
                 let bestPts = currentPts;
 
                 for (const cand of candidates) {
-                    const candPts = getSolverScore(cand);
+                    const candPts = getWeightedScore(cand, currentSlot, idx);
                     if (candPts > bestPts) {
                         // Check max 3 players per team constraint for starting 11
                         const tempStartingIds = [...usedStartingIds, cand.id];
@@ -994,7 +1016,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                 if (currentSlot.locked) continue; // Skip locked force-included players!
 
                 const currentSlotPlayer = currentSlot.playerId !== null ? PLAYERS.find(p => p.id === currentSlot.playerId) : null;
-                const currentPts = currentSlotPlayer ? getSolverScore(currentSlotPlayer) : 0;
+                const currentPts = currentSlotPlayer ? getWeightedScore(currentSlotPlayer, currentSlot, idx) : 0;
 
                 // Cost of other bench players
                 const otherBenchCost = benchIndices.reduce((sum, bIdx) => {
@@ -1022,13 +1044,13 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                 if (guaranteedCandidates.length > 0) {
                     candidates = guaranteedCandidates;
                 }
-                candidates.sort((a, b) => getSolverScore(b) - getSolverScore(a));
+                candidates.sort((a, b) => getWeightedScore(b, currentSlot, idx) - getWeightedScore(a, currentSlot, idx));
 
                 let bestCandidate = null;
                 let bestPts = currentPts;
 
                 for (const cand of candidates) {
-                    const candPts = getSolverScore(cand);
+                    const candPts = getWeightedScore(cand, currentSlot, idx);
                     if (candPts > bestPts) {
                         // Check max 3 players per team constraint across entire 15-player squad
                         const tempSquadIds = [...startingIds, ...otherBenchIds, cand.id];
@@ -1086,7 +1108,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
 
                 const isBenchSlot = !slot.isStarting;
                 const player = slot.playerId !== null ? PLAYERS.find(p => p.id === slot.playerId) : null;
-                const playerPts = player ? getSolverScore(player) : 0;
+                const playerPts = player ? getWeightedScore(player, slot, i) : 0;
                 const playerPrice = player ? player.price : 0;
 
                 let currentBenchCost = 0;
@@ -1122,7 +1144,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                         }
                     }
 
-                    const candPts = getSolverScore(cand);
+                    const candPts = getWeightedScore(cand, slot, i);
                     const gain = candPts - playerPts;
 
                     // Upgrade if we get more points, or if points are equal but the player is more expensive (to spend down budget)
@@ -1174,15 +1196,15 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
             const originalPlayer = originalId !== null ? PLAYERS.find(p => p.id === originalId) : null;
             const optimizedPlayer = optimizedId !== null ? PLAYERS.find(p => p.id === optimizedId) : null;
 
-            totalOriginalPts += originalPlayer ? getSolverScore(originalPlayer) : 0;
-            totalOptimizedPts += optimizedPlayer ? getSolverScore(optimizedPlayer) : 0;
+            totalOriginalPts += originalPlayer ? getWeightedScore(originalPlayer, state.squadSlots[i], i) : 0;
+            totalOptimizedPts += optimizedPlayer ? getWeightedScore(optimizedPlayer, optimizedSquadSlots[i], i) : 0;
 
             if (originalId !== optimizedId) {
                 upgrades.push({
                     slotIndex: i,
                     out: originalPlayer,
                     in: optimizedPlayer,
-                    gain: (optimizedPlayer ? getSolverScore(optimizedPlayer) : 0) - (originalPlayer ? getSolverScore(originalPlayer) : 0)
+                    gain: (optimizedPlayer ? getWeightedScore(optimizedPlayer, optimizedSquadSlots[i], i) : 0) - (originalPlayer ? getWeightedScore(originalPlayer, state.squadSlots[i], i) : 0)
                 });
             }
         }
@@ -1306,7 +1328,9 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
             const soldPlayer = PLAYERS.find(p => p.id === soldId);
             if (!soldPlayer) continue;
 
-            const soldPts = getSolverScore(soldPlayer);
+            const slot = state.squadSlots.find(s => s.playerId === soldId);
+            const slotIdx = state.squadSlots.findIndex(s => s.playerId === soldId);
+            const soldPts = getWeightedScore(soldPlayer, slot, slotIdx);
             const sellBudget = soldPlayer.price + bank;
 
             let candidates = PLAYERS.filter(p => 
@@ -1333,7 +1357,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
             for (const boughtPlayer of candidates) {
                 if (!checkTeamConstraints(currentSquadIds, soldId, boughtPlayer.id)) continue;
 
-                const boughtPts = getSolverScore(boughtPlayer);
+                const boughtPts = getWeightedScore(boughtPlayer, slot, slotIdx);
                 const gain = boughtPts - soldPts;
 
                 if (gain > maxGain1) {
@@ -1357,7 +1381,12 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                 const s2 = PLAYERS.find(p => p.id === currentSquadIds[j]);
                 if (!s1 || !s2) continue;
 
-                const soldPts = getSolverScore(s1) + getSolverScore(s2);
+                const slot1 = state.squadSlots.find(s => s.playerId === s1.id);
+                const slotIdx1 = state.squadSlots.findIndex(s => s.playerId === s1.id);
+                const slot2 = state.squadSlots.find(s => s.playerId === s2.id);
+                const slotIdx2 = state.squadSlots.findIndex(s => s.playerId === s2.id);
+
+                const soldPts = getWeightedScore(s1, slot1, slotIdx1) + getWeightedScore(s2, slot2, slotIdx2);
                 const sellBudget = s1.price + s2.price + bank;
 
                 let candidates1 = PLAYERS.filter(p => 
@@ -1398,7 +1427,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                         if (b1.price + b2.price > sellBudget) continue;
                         if (!checkTeamConstraintsDouble(currentSquadIds, s1.id, s2.id, b1.id, b2.id)) continue;
 
-                        const boughtPts = getSolverScore(b1) + getSolverScore(b2);
+                        const boughtPts = getWeightedScore(b1, slot1, slotIdx1) + getWeightedScore(b2, slot2, slotIdx2);
                         const gain = boughtPts - soldPts;
 
                         if (gain > maxGain2) {
