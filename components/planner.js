@@ -824,6 +824,9 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
             <div class="detail-player-info">
                 <h4>${player.name}</h4>
                 <p>${player.position} • ${player.team} ${player.transferredThisSeason ? `<span class="transfer-badge" style="margin-left: 8px;" title="Transferred from ${player.oldTeam}">⇆ ex-${player.oldTeam}</span>` : ''}</p>
+                <div style="margin-top: 6px;">
+                    ${renderFdrFixtures(player, state.currentGw)}
+                </div>
             </div>
         </div>
         ${getPlayerNewsBanner(player, prediction) ? `<div style="padding: 0 20px 10px 20px;">${getPlayerNewsBanner(player, prediction)}</div>` : ''}
