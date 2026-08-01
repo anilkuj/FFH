@@ -357,7 +357,7 @@ function renderPlayerRow(squadSlots, position, currentGw, captain, vice, actions
                             `${prediction.pts.toFixed(1)} XP`
                         }
                     </div>
-                    <div class="player-pitch-points-sub" style="display: flex; align-items: center; justify-content: flex-start; gap: 6px; margin-top: 2px;">
+                    <div class="player-pitch-points-sub" style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 2px;">
                         ${renderFdrDots(player, currentGw)}
                         <span style="opacity: 0.6;">•</span>
                         <span>5-GW: ${get5GwXp(player, currentGw).toFixed(1)} XP</span>
@@ -424,7 +424,7 @@ function renderBenchRow(squadSlots, currentGw, captain, vice, actions) {
                                 `${prediction.pts.toFixed(1)} XP`
                             }
                         </div>
-                        <div class="player-pitch-points-sub" style="display: flex; align-items: center; justify-content: flex-start; gap: 6px; margin-top: 2px;">
+                        <div class="player-pitch-points-sub" style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 2px;">
                             ${renderFdrDots(player, currentGw)}
                             <span style="opacity: 0.6;">•</span>
                             <span>5-GW: ${get5GwXp(player, currentGw).toFixed(1)} XP</span>
@@ -817,216 +817,185 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
             <h3>Player Profile</h3>
             <button class="close-modal-btn" id="closeDetailModalBtn"><i data-lucide="x"></i></button>
         </div>
-        <div class="player-detail-profile">
-            <div class="profile-avatar-shirt">
-                ${getShirtSVG(teamObj ? teamObj.color : "#ffffff", player.team)}
-            </div>
-            <div class="detail-player-info">
-                <h4>${player.name}</h4>
-                <p>${player.position} • ${player.team} ${player.transferredThisSeason ? `<span class="transfer-badge" style="margin-left: 8px;" title="Transferred from ${player.oldTeam}">⇆ ex-${player.oldTeam}</span>` : ''}</p>
-                <div style="margin-top: 6px;">
-                    ${renderFdrFixtures(player, state.currentGw)}
-                </div>
-            </div>
-        </div>
-        ${getPlayerNewsBanner(player, prediction) ? `<div style="padding: 0 20px 10px 20px;">${getPlayerNewsBanner(player, prediction)}</div>` : ''}
-        
-        <!-- AI Performance Ratings Grid -->
-        <div style="padding: 0 20px; margin-top: 12px;">
-            <h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
-                <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> AI Performance Ratings (A-E Grades)
-            </h4>
-            <div class="player-detail-stats-grid" style="padding: 0; margin-bottom: 12px; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-                <div class="detail-stat-box" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;">
-                    <span class="tooltip-rating-value ${getBadgeClass(ratings.expectedMinutes)}" style="font-size: 14px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">${ratings.expectedMinutes}</span>
-                    <span class="detail-stat-lbl" style="font-size: 10px; margin-top: 6px;">Expected Minutes</span>
-                </div>
-                <div class="detail-stat-box" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;">
-                    <span class="tooltip-rating-value ${getBadgeClass(ratings.next5Fixtures)}" style="font-size: 14px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">${ratings.next5Fixtures}</span>
-                    <span class="detail-stat-lbl" style="font-size: 10px; margin-top: 6px;">Next 5 Fixtures</span>
-                </div>
-                <div class="detail-stat-box" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;">
-                    <span class="tooltip-rating-value ${getBadgeClass(ratings.attackingRole)}" style="font-size: 14px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">${ratings.attackingRole}</span>
-                    <span class="detail-stat-lbl" style="font-size: 10px; margin-top: 6px;">Attacking Role</span>
-                </div>
-                <div class="detail-stat-box" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;">
-                    <span class="tooltip-rating-value ${getBadgeClass(ratings.attackingPotential)}" style="font-size: 14px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">${ratings.attackingPotential}</span>
-                    <span class="detail-stat-lbl" style="font-size: 10px; margin-top: 6px;">FPL Attacking</span>
-                </div>
-                <div class="detail-stat-box" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;">
-                    <span class="tooltip-rating-value ${getBadgeClass(ratings.defconPotential)}" style="font-size: 14px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">${ratings.defconPotential}</span>
-                    <span class="detail-stat-lbl" style="font-size: 10px; margin-top: 6px;">Defcon Potential</span>
-                </div>
-                <div class="detail-stat-box" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;">
-                    <span class="tooltip-rating-value ${getBadgeClass(ratings.availability)}" style="font-size: 14px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">${ratings.availability}</span>
-                    <span class="detail-stat-lbl" style="font-size: 10px; margin-top: 6px;">Availability</span>
-                </div>
-            </div>
-        </div>
-
-        <div style="padding: 0 20px;"><h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; gap: 6px; margin-bottom: 8px;"><i data-lucide="bar-chart-3" style="width: 14px; height: 14px;"></i> OPTA Match Stats</h4></div>
-        <div class="player-detail-stats-grid" style="margin-top: 0; padding-top: 0;">
-            <div class="detail-stat-box">
-                <span class="detail-stat-val">£${player.price.toFixed(1)}m</span>
-                <span class="detail-stat-lbl">Price</span>
-            </div>
-            <div class="detail-stat-box">
-                <span class="detail-stat-val">${player.ownership.toFixed(1)}%</span>
-                <span class="detail-stat-lbl">Ownership</span>
-            </div>
-            <div class="detail-stat-box">
-                <span class="detail-stat-val">${player.points}</span>
-                <span class="detail-stat-lbl">Total Points</span>
-            </div>
-            <div class="detail-stat-box">
-                <span class="detail-stat-val">${prediction.pts.toFixed(1)}</span>
-                <span class="detail-stat-lbl">GW${state.currentGw} Exp Pts</span>
-            </div>
-            <div class="detail-stat-box">
-                <span class="detail-stat-val">${get5GwXp(player, state.currentGw).toFixed(1)}</span>
-                <span class="detail-stat-lbl">5-GW Exp Pts (XP)</span>
-            </div>
-            <div class="detail-stat-box">
-                <span class="detail-stat-val">${player.xG.toFixed(1)}</span>
-                <span class="detail-stat-lbl">Expected Goals</span>
-            </div>
-            <div class="detail-stat-box">
-                <span class="detail-stat-val">${player.xA.toFixed(1)}</span>
-                <span class="detail-stat-lbl">Expected Assists</span>
-            </div>
-            <div class="detail-stat-box">
-                <span class="detail-stat-val">${player.ictIndex.toFixed(1)}</span>
-                <span class="detail-stat-lbl">ICT Index</span>
-            </div>
-            <div class="detail-stat-box">
-                <span class="detail-stat-val">${player.shots}</span>
-                <span class="detail-stat-lbl">Shots</span>
-            </div>
-            <div class="detail-stat-box">
-                <span class="detail-stat-val">${player.xG90.toFixed(2)}</span>
-                <span class="detail-stat-lbl">xG per 90</span>
-            </div>
-            <div class="detail-stat-box">
-                <span class="detail-stat-val">${player.xA90.toFixed(2)}</span>
-                <span class="detail-stat-lbl">xA per 90</span>
-            </div>
-            <div class="detail-stat-box">
-                <span class="detail-stat-val">${player.GS}</span>
-                <span class="detail-stat-lbl">Games Started</span>
-            </div>
-            <div class="detail-stat-box">
-                <span class="detail-stat-val">${player.MPPG.toFixed(1)}</span>
-                <span class="detail-stat-lbl">Avg Min/Game</span>
-            </div>
-            </div>
-        </div>
-
-        <!-- Similarly Priced Alternatives -->
-        <div style="padding: 0 20px; margin-top: 12px; border-top: 1px solid var(--border-color); padding-top: 12px; text-align: left;">
-            <h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--secondary); display: flex; align-items: center; gap: 6px; margin-bottom: 12px;">
-                <i data-lucide="arrow-right-left" style="width: 14px; height: 14px;"></i> Similarly Priced Alternatives
-            </h4>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-                ${comparablePlayers.map(comp => {
-                    const compPrediction = comp.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 };
-                    const compRatings = getPlayerRatings(comp, state.currentGw);
-                    
-                    // Check budget constraint
-                    const newBank = bank + player.price - comp.price;
-                    const budgetOk = newBank >= 0;
-                    
-                    // Check team count constraint
-                    const tempSquad = squad.filter(id => id !== player.id);
-                    tempSquad.push(comp.id);
-                    const teamCounts = {};
-                    let teamOk = true;
-                    for (const id of tempSquad) {
-                        const p = PLAYERS.find(pl => pl.id === id);
-                        if (p) {
-                            teamCounts[p.team] = (teamCounts[p.team] || 0) + 1;
-                            if (teamCounts[p.team] > 3) {
-                                teamOk = false;
-                                break;
-                            }
-                        }
-                    }
-                    
-                    // Check health status
-                    const statusOk = comp.status !== 'i' && comp.status !== 's' && comp.status !== 'u';
-                    
-                    const allOk = budgetOk && teamOk && statusOk;
-                    
-                    let disabledReason = "";
-                    if (!statusOk) disabledReason = "Injured / Out";
-                    else if (!budgetOk) disabledReason = "Insufficient Bank";
-                    else if (!teamOk) disabledReason = "Team Limit (Max 3)";
-
-                    return `
-                        <div class="comp-player-card" style="background: rgba(255, 255, 255, 0.015); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; justify-content: space-between; gap: 8px;">
-                            <div>
-                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2px;">
-                                    <span style="font-weight: 700; font-size: 12px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 75px;" title="${comp.name}">${comp.name}</span>
-                                    <span style="font-weight: 800; font-size: 11px; color: var(--primary);">£${comp.price.toFixed(1)}m</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                    <span style="font-size: 10px; color: var(--text-muted);">${comp.team} • ${comp.position}</span>
-                                    <span style="font-size: 10px; color: var(--text-muted);">${compPrediction.pts.toFixed(1)} XP</span>
-                                </div>
-                                
-                                <!-- Rating grades grid (2 columns) -->
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 9px; margin-bottom: 6px;">
-                                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 1px 3px; border-radius: 3px;" title="Expected Minutes">
-                                        <span style="color: var(--text-muted);">MIN</span>
-                                        <span class="${getBadgeClass(compRatings.expectedMinutes)}" style="font-weight: 800; padding: 0 3px; border-radius: 2px;">${compRatings.expectedMinutes}</span>
-                                    </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 1px 3px; border-radius: 3px;" title="Next 5 Fixtures">
-                                        <span style="color: var(--text-muted);">FIX</span>
-                                        <span class="${getBadgeClass(compRatings.next5Fixtures)}" style="font-weight: 800; padding: 0 3px; border-radius: 2px;">${compRatings.next5Fixtures}</span>
-                                    </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 1px 3px; border-radius: 3px;" title="Attacking Role">
-                                        <span style="color: var(--text-muted);">ROLE</span>
-                                        <span class="${getBadgeClass(compRatings.attackingRole)}" style="font-weight: 800; padding: 0 3px; border-radius: 2px;">${compRatings.attackingRole}</span>
-                                    </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 1px 3px; border-radius: 3px;" title="FPL Attacking Potential">
-                                        <span style="color: var(--text-muted);">ATT</span>
-                                        <span class="${getBadgeClass(compRatings.attackingPotential)}" style="font-weight: 800; padding: 0 3px; border-radius: 2px;">${compRatings.attackingPotential}</span>
-                                    </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 1px 3px; border-radius: 3px;" title="Defcon Potential">
-                                        <span style="color: var(--text-muted);">DEF</span>
-                                        <span class="${getBadgeClass(compRatings.defconPotential)}" style="font-weight: 800; padding: 0 3px; border-radius: 2px;">${compRatings.defconPotential}</span>
-                                    </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 1px 3px; border-radius: 3px;" title="Availability">
-                                        <span style="color: var(--text-muted);">AVL</span>
-                                        <span class="${getBadgeClass(compRatings.availability)}" style="font-weight: 800; padding: 0 3px; border-radius: 2px;">${compRatings.availability}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Swap button and alert -->
-                            <div style="display: flex; flex-direction: column; gap: 4px; align-items: stretch; margin-top: auto;">
-                                ${disabledReason ? `
-                                    <span style="font-size: 8.5px; color: #f43f5e; font-weight: 600; text-align: center; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${disabledReason}">
-                                        ${disabledReason}
-                                    </span>
-                                ` : ''}
-                                <button class="action-main-btn btn-secondary-action direct-comp-swap-btn" 
-                                        data-comp-id="${comp.id}" 
-                                        style="font-size: 10px; padding: 4px 8px; height: 26px; margin: 0; width: 100%;" 
-                                        ${!allOk ? 'disabled' : ''}>
-                                    Swap Player
-                                </button>
-                            </div>
+        <div class="player-detail-horizontal-layout" style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 20px; padding: 20px; text-align: left;">
+            <!-- Left Column: Profile, Ratings & Actions -->
+            <div class="detail-left-column" style="display: flex; flex-direction: column; gap: 16px; min-width: 0;">
+                <div class="player-detail-profile" style="padding: 0; display: flex; align-items: center; gap: 16px;">
+                    <div class="profile-avatar-shirt" style="width: 64px; height: 64px; flex-shrink: 0;">
+                        ${getShirtSVG(teamObj ? teamObj.color : "#ffffff", player.team)}
+                    </div>
+                    <div class="detail-player-info">
+                        <h4 style="margin: 0 0 4px 0; font-size: 18px; font-weight: 700; color: #fff;">${player.name}</h4>
+                        <p style="margin: 0; font-size: 13px; color: var(--text-muted);">${player.position} • ${player.team} ${player.transferredThisSeason ? `<span class="transfer-badge" style="margin-left: 8px;" title="Transferred from ${player.oldTeam}">⇆ ex-${player.oldTeam}</span>` : ''}</p>
+                        <div style="margin-top: 8px;">
+                            ${renderFdrFixtures(player, state.currentGw)}
                         </div>
-                    `;
-                }).join('')}
-            </div>
-        </div>
+                    </div>
+                </div>
 
-        <div class="player-action-section">
-            <button class="action-main-btn btn-secondary-action" id="detailSwapBtn">Swap Player</button>
-            ${!isCaptain ? `<button class="action-main-btn btn-secondary-action" id="detailCapBtn">Make Captain</button>` : ''}
-            ${!isVice ? `<button class="action-main-btn btn-secondary-action" id="detailViceBtn">Make Vice-Cap</button>` : ''}
-            <button class="action-main-btn btn-transfer-out" id="detailSellBtn">Remove Player</button>
+                ${getPlayerNewsBanner(player, prediction) ? `<div>${getPlayerNewsBanner(player, prediction)}</div>` : ''}
+
+                <!-- AI Performance Ratings Grid -->
+                <div>
+                    <h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 6px; margin: 0 0 10px 0;">
+                        <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> AI Performance Ratings (A-E Grades)
+                    </h4>
+                    <div class="player-detail-stats-grid" style="padding: 0; margin-bottom: 0; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%;">
+                        <div class="detail-stat-box" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;">
+                            <span class="tooltip-rating-value ${getBadgeClass(ratings.expectedMinutes)}" style="font-size: 14px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">${ratings.expectedMinutes}</span>
+                            <span class="detail-stat-lbl" style="font-size: 10px; margin-top: 6px;">Expected Minutes</span>
+                        </div>
+                        <div class="detail-stat-box" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;">
+                            <span class="tooltip-rating-value ${getBadgeClass(ratings.next5Fixtures)}" style="font-size: 14px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">${ratings.next5Fixtures}</span>
+                            <span class="detail-stat-lbl" style="font-size: 10px; margin-top: 6px;">Next 5 Fixtures</span>
+                        </div>
+                        <div class="detail-stat-box" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;">
+                            <span class="tooltip-rating-value ${getBadgeClass(ratings.attackingRole)}" style="font-size: 14px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">${ratings.attackingRole}</span>
+                            <span class="detail-stat-lbl" style="font-size: 10px; margin-top: 6px;">Attacking Role</span>
+                        </div>
+                        <div class="detail-stat-box" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;">
+                            <span class="tooltip-rating-value ${getBadgeClass(ratings.attackingPotential)}" style="font-size: 14px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">${ratings.attackingPotential}</span>
+                            <span class="detail-stat-lbl" style="font-size: 10px; margin-top: 6px;">FPL Attacking</span>
+                        </div>
+                        <div class="detail-stat-box" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;">
+                            <span class="tooltip-rating-value ${getBadgeClass(ratings.defconPotential)}" style="font-size: 14px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">${ratings.defconPotential}</span>
+                            <span class="detail-stat-lbl" style="font-size: 10px; margin-top: 6px;">Defcon Potential</span>
+                        </div>
+                        <div class="detail-stat-box" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;">
+                            <span class="tooltip-rating-value ${getBadgeClass(ratings.availability)}" style="font-size: 14px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">${ratings.availability}</span>
+                            <span class="detail-stat-lbl" style="font-size: 10px; margin-top: 6px;">Availability</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="player-action-section" style="padding: 0; margin-top: auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%;">
+                    <button class="action-main-btn btn-secondary-action" id="detailSwapBtn" style="margin: 0; width: 100%;">Swap Player</button>
+                    ${!isCaptain ? `<button class="action-main-btn btn-secondary-action" id="detailCapBtn" style="margin: 0; width: 100%;">Make Captain</button>` : ''}
+                    ${!isVice ? `<button class="action-main-btn btn-secondary-action" id="detailViceBtn" style="margin: 0; width: 100%;">Make Vice-Cap</button>` : ''}
+                    <button class="action-main-btn btn-transfer-out" id="detailSellBtn" style="margin: 0; width: 100%; grid-column: span ${(!isCaptain && !isVice) ? '1' : '2'};">Remove Player</button>
+                </div>
+            </div>
+
+            <!-- Right Column: OPTA Stats & Alternatives -->
+            <div class="detail-right-column" style="display: flex; flex-direction: column; gap: 16px; min-width: 0; border-left: 1px solid var(--border-color); padding-left: 20px;">
+                <!-- OPTA Match Stats -->
+                <div>
+                    <h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; gap: 6px; margin: 0 0 10px 0;">
+                        <i data-lucide="bar-chart-3" style="width: 14px; height: 14px;"></i> OPTA Match Stats
+                    </h4>
+                    <div class="player-detail-stats-grid" style="margin: 0; padding: 0; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                        <div class="detail-stat-box" style="padding: 8px;">
+                            <span class="detail-stat-val" style="font-size: 13px;">£${player.price.toFixed(1)}m</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px;">Price</span>
+                        </div>
+                        <div class="detail-stat-box" style="padding: 8px;">
+                            <span class="detail-stat-val" style="font-size: 13px;">${player.ownership.toFixed(1)}%</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px;">Ownership</span>
+                        </div>
+                        <div class="detail-stat-box" style="padding: 8px;">
+                            <span class="detail-stat-val" style="font-size: 13px;">${player.points}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px;">Total Points</span>
+                        </div>
+                        <div class="detail-stat-box" style="padding: 8px;">
+                            <span class="detail-stat-val" style="font-size: 13px;">${prediction.pts.toFixed(1)}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px;">GW${state.currentGw} Exp Pts</span>
+                        </div>
+                        <div class="detail-stat-box" style="padding: 8px;">
+                            <span class="detail-stat-val" style="font-size: 13px;">${get5GwXp(player, state.currentGw).toFixed(1)}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px;">5-GW Exp Pts</span>
+                        </div>
+                        <div class="detail-stat-box" style="padding: 8px;">
+                            <span class="detail-stat-val" style="font-size: 13px;">${player.xG.toFixed(1)}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px;">Expected Goals</span>
+                        </div>
+                        <div class="detail-stat-box" style="padding: 8px;">
+                            <span class="detail-stat-val" style="font-size: 13px;">${player.xA.toFixed(1)}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px;">Expected Assists</span>
+                        </div>
+                        <div class="detail-stat-box" style="padding: 8px;">
+                            <span class="detail-stat-val" style="font-size: 13px;">${player.ictIndex.toFixed(1)}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px;">ICT Index</span>
+                        </div>
+                        <div class="detail-stat-box" style="padding: 8px;">
+                            <span class="detail-stat-val" style="font-size: 13px;">${player.shots}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px;">Shots</span>
+                        </div>
+                        <div class="detail-stat-box" style="padding: 8px;">
+                            <span class="detail-stat-val" style="font-size: 13px;">${player.xG90.toFixed(2)}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px;">xG per 90</span>
+                        </div>
+                        <div class="detail-stat-box" style="padding: 8px;">
+                            <span class="detail-stat-val" style="font-size: 13px;">${player.xA90.toFixed(2)}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px;">xA per 90</span>
+                        </div>
+                        <div class="detail-stat-box" style="padding: 8px;">
+                            <span class="detail-stat-val" style="font-size: 13px;">${player.GS}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px;">Games Started</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Similarly Priced Alternatives -->
+                <div style="border-top: 1px solid var(--border-color); padding-top: 12px;">
+                    <h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--secondary); display: flex; align-items: center; gap: 6px; margin: 0 0 10px 0;">
+                        <i data-lucide="arrow-right-left" style="width: 14px; height: 14px;"></i> Similarly Priced Alternatives
+                    </h4>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                        ${comparablePlayers.map(comp => {
+                            const compPrediction = comp.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 };
+                            
+                            const newBank = bank + player.price - comp.price;
+                            const budgetOk = newBank >= 0;
+                            
+                            const tempSquad = squad.filter(id => id !== player.id);
+                            tempSquad.push(comp.id);
+                            const teamCounts = {};
+                            let teamOk = true;
+                            for (const id of tempSquad) {
+                                const p = PLAYERS.find(pl => pl.id === id);
+                                if (p) {
+                                    teamCounts[p.team] = (teamCounts[p.team] || 0) + 1;
+                                    if (teamCounts[p.team] > 3) {
+                                        teamOk = false;
+                                        break;
+                                    }
+                                }
+                            }
+                            
+                            const statusOk = comp.status !== 'i' && comp.status !== 's' && comp.status !== 'u';
+                            const allOk = budgetOk && teamOk && statusOk;
+                            
+                            let disabledReason = "";
+                            if (!statusOk) disabledReason = "Injured";
+                            else if (!budgetOk) disabledReason = "Over budget";
+                            else if (!teamOk) disabledReason = "3/team max";
+                            
+                            return `
+                                <div class="compare-alternative-card" style="display: flex; flex-direction: column; padding: 10px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px; font-size: 11px;">
+                                    <div style="font-weight:700; color:#fff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${comp.name}">${actions.getWebName(comp.name)}</div>
+                                    <div style="color:var(--text-muted); font-size: 10px; margin-top:2px;">£${comp.price.toFixed(1)}m • ${compPrediction.pts.toFixed(1)} XP</div>
+                                    
+                                    <!-- Swap button and alert -->
+                                    <div style="display: flex; flex-direction: column; gap: 4px; align-items: stretch; margin-top: 10px;">
+                                        ${disabledReason ? `
+                                            <span style="font-size: 8.5px; color: #f43f5e; font-weight: 600; text-align: center; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${disabledReason}">
+                                                ${disabledReason}
+                                            </span>
+                                        ` : ''}
+                                        <button class="action-main-btn btn-secondary-action direct-comp-swap-btn" 
+                                                data-comp-id="${comp.id}" 
+                                                style="font-size: 10px; padding: 4px 8px; height: 24px; margin: 0; width: 100%;" 
+                                                ${!allOk ? 'disabled' : ''}>
+                                            Swap
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            </div>
         </div>
     `;
 

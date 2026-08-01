@@ -693,54 +693,41 @@ body {
 }
 
 /* Pitch Card (Player slot on pitch) */
-/* Pitch Card (Player slot on pitch) */
 .player-pitch-card {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    gap: 10px;
-    width: 19%;
-    min-width: 135px;
+    width: 18%;
     cursor: pointer;
-    transition: transform var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+    transition: transform var(--transition-fast);
     position: relative;
-    background: rgba(15, 23, 42, 0.45);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 8px;
-    padding: 6px 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 }
 
 .player-pitch-card:hover {
-    transform: translateY(-4px) scale(1.03);
-    background: rgba(15, 23, 42, 0.65);
-    border-color: var(--primary);
-    box-shadow: 0 6px 16px rgba(0, 255, 136, 0.2);
+    transform: translateY(-4px) scale(1.05);
 }
 
 .shirt-icon-wrapper {
     position: relative;
-    width: 38px;
-    height: 38px;
-    flex-shrink: 0;
+    width: 58px;
+    height: 58px;
+    margin-bottom: 6px;
 }
 
 .shirt-svg {
     width: 100%;
     height: 100%;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
 }
 
 .badge-captain, .badge-vice {
     position: absolute;
-    bottom: -2px;
-    right: -2px;
-    width: 14px;
-    height: 14px;
+    bottom: -4px;
+    right: -4px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
-    font-size: 8px;
+    font-size: 10px;
     font-weight: 800;
     display: flex;
     align-items: center;
@@ -758,25 +745,21 @@ body {
 }
 
 .player-card-info {
-    background: transparent;
-    border: none;
-    border-radius: 0;
+    background: var(--card-info-bg);
+    border: 1px solid var(--card-info-border);
+    border-radius: 6px;
     width: 100%;
-    text-align: left;
-    padding: 0;
-    box-shadow: none;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
-    backdrop-filter: none;
-    transition: none;
+    text-align: center;
+    padding: 6px 8px;
+    backdrop-filter: blur(8px);
+    box-shadow: var(--card-info-shadow);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
 }
 
 .player-pitch-card:hover .player-card-info {
-    border-color: transparent;
-    box-shadow: none;
-    transform: none;
+    border-color: var(--primary);
+    box-shadow: var(--card-info-hover-shadow);
+    transform: translateY(-2px);
 }
 
 .player-pitch-name {
@@ -2535,42 +2518,26 @@ body {
     }
 
     .player-pitch-card {
-        width: 19% !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        min-width: 0 !important;
-        background: transparent !important;
-        border: none !important;
-        padding: 0 !important;
-        box-shadow: none !important;
-        backdrop-filter: none !important;
+        width: 19%;
     }
 
     .shirt-icon-wrapper {
-        width: 36px !important;
-        height: 36px !important;
-        margin-bottom: 4px !important;
-        flex-shrink: 0;
+        width: 36px;
+        height: 36px;
+        margin-bottom: 4px;
     }
 
     .badge-captain, .badge-vice {
-        width: 13px !important;
-        height: 13px !important;
-        font-size: 8px !important;
-        right: -2px !important;
-        bottom: -2px !important;
+        width: 13px;
+        height: 13px;
+        font-size: 8px;
+        right: -2px;
+        bottom: -2px;
     }
 
     .player-card-info {
-        background: var(--card-info-bg) !important;
-        border: 1px solid var(--card-info-border) !important;
-        border-radius: 4px !important;
-        padding: 4px 2px !important;
-        text-align: center !important;
-        box-shadow: var(--card-info-shadow) !important;
-        width: 100% !important;
-        display: flex !important;
-        flex-direction: column !important;
+        padding: 4px 2px;
+        border-radius: 4px;
     }
 
     .player-pitch-name {
@@ -3245,5 +3212,34 @@ select option {
     background-color: rgba(255, 255, 255, 0.05) !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
     color: var(--text-muted) !important;
+}
+
+/* Wide layout for Player Detail popups */
+.modal-content:has(.player-detail-horizontal-layout) {
+    max-width: 900px;
+}
+
+/* Compare alternative card style */
+.compare-alternative-card {
+    transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+.compare-alternative-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--secondary) !important;
+}
+
+@media (max-width: 768px) {
+    .player-detail-horizontal-layout {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+        padding: 15px !important;
+    }
+    .detail-right-column {
+        border-left: none !important;
+        padding-left: 0 !important;
+        border-top: 1px solid var(--border-color);
+        padding-top: 15px;
+    }
 }
 
