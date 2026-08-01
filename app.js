@@ -1285,7 +1285,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('nextGwBtn').addEventListener('click', () => {
-        if (state.currentGw < 5) {
+        if (state.currentGw < 10) {
             state.currentGw++;
             actions.renderActiveView();
         }

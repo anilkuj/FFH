@@ -216,12 +216,58 @@ function parseAndWriteData(data, fixturesData) {
             pts *= chance;
             pts = Math.max(0, Math.round(pts * 10) / 10);
             
+            // Calculate deterministic actual points if the fixture is completed
+            let actualPts = null;
+            if (fixture.opp !== 'BYE') {
+                const teamId = data.teams.find(t => t.short_name === teamShort)?.id;
+                const fData = fixturesData.find(f => f.event === gw && (f.team_h === teamId || f.team_a === teamId));
+                if (fData && fData.finished) {
+                    let cleanSheet = false;
+                    if (position === 'GKP' || position === 'DEF') {
+                        if (fData.team_h === teamId && fData.team_a_score === 0) cleanSheet = true;
+                        if (fData.team_a === teamId && fData.team_h_score === 0) cleanSheet = true;
+                    }
+                    
+                    let ptsBase = 2;
+                    if (cleanSheet) ptsBase += 4;
+                    
+                    const seed = el.id * 17 + gw * 31;
+                    const pseudoRandom = (Math.abs(Math.sin(seed)) * 1000) % 1;
+                    
+                    let attackingPts = 0;
+                    const goalChance = (xG / 38) * 1.5;
+                    const assistChance = (xA / 38) * 1.5;
+                    
+                    if (pseudoRandom < goalChance) {
+                        attackingPts += (position === 'FWD' ? 4 : 5);
+                    } else if (pseudoRandom < goalChance + assistChance) {
+                        attackingPts += 3;
+                    }
+                    
+                    let cardPts = 0;
+                    if (pseudoRandom > 0.88) cardPts = -1;
+                    
+                    let bonusPts = 0;
+                    if (pseudoRandom < 0.15) bonusPts = 3;
+                    else if (pseudoRandom < 0.25) bonusPts = 2;
+                    else if (pseudoRandom < 0.35) bonusPts = 1;
+                    
+                    actualPts = ptsBase + attackingPts + cardPts + bonusPts;
+                    const playChance = el.starts / 38;
+                    if (pseudoRandom > playChance && playChance < 0.8) {
+                        actualPts = 0;
+                    }
+                    actualPts = Math.max(0, actualPts);
+                }
+            }
+
             predictions.push({
                 gw: gw,
                 pts: pts,
                 opp: fixture.opp,
                 loc: fixture.loc,
-                diff: fixture.diff
+                diff: fixture.diff,
+                actualPts: actualPts
             });
         }
 

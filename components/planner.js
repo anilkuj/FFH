@@ -340,7 +340,13 @@ function renderPlayerRow(squadSlots, position, currentGw, captain, vice, actions
                 </div>
                 <div class="player-card-info">
                     <div class="player-pitch-name">${actions.getWebName(player.name)}</div>
-                    <div class="player-pitch-points">£${player.price.toFixed(1)}m • ${prediction.pts.toFixed(1)} XP</div>
+                    <div class="player-pitch-points">
+                        £${player.price.toFixed(1)}m • 
+                        ${prediction.actualPts !== undefined && prediction.actualPts !== null ? 
+                            `<strong style="color: var(--primary);">${prediction.actualPts} pts</strong> <span style="font-size: 9.5px; opacity: 0.7;">(${prediction.pts.toFixed(1)} XP)</span>` : 
+                            `${prediction.pts.toFixed(1)} XP`
+                        }
+                    </div>
                     <div class="player-pitch-points-sub" style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 2px;">
                         ${renderFdrDots(player, currentGw)}
                         <span style="opacity: 0.6;">•</span>
@@ -401,7 +407,13 @@ function renderBenchRow(squadSlots, currentGw, captain, vice, actions) {
                     </div>
                     <div class="player-card-info">
                         <div class="player-pitch-name">${actions.getWebName(player.name)}</div>
-                        <div class="player-pitch-points">£${player.price.toFixed(1)}m • ${prediction.pts.toFixed(1)} XP</div>
+                        <div class="player-pitch-points">
+                            £${player.price.toFixed(1)}m • 
+                            ${prediction.actualPts !== undefined && prediction.actualPts !== null ? 
+                                `<strong style="color: var(--primary);">${prediction.actualPts} pts</strong> <span style="font-size: 9.5px; opacity: 0.7;">(${prediction.pts.toFixed(1)} XP)</span>` : 
+                                `${prediction.pts.toFixed(1)} XP`
+                            }
+                        </div>
                         <div class="player-pitch-points-sub" style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 2px;">
                             ${renderFdrDots(player, currentGw)}
                             <span style="opacity: 0.6;">•</span>
