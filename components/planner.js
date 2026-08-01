@@ -357,7 +357,7 @@ function renderPlayerRow(squadSlots, position, currentGw, captain, vice, actions
                             `${prediction.pts.toFixed(1)} XP`
                         }
                     </div>
-                    <div class="player-pitch-points-sub" style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 2px;">
+                    <div class="player-pitch-points-sub" style="display: flex; align-items: center; justify-content: flex-start; gap: 6px; margin-top: 2px;">
                         ${renderFdrDots(player, currentGw)}
                         <span style="opacity: 0.6;">•</span>
                         <span>5-GW: ${get5GwXp(player, currentGw).toFixed(1)} XP</span>
@@ -424,7 +424,7 @@ function renderBenchRow(squadSlots, currentGw, captain, vice, actions) {
                                 `${prediction.pts.toFixed(1)} XP`
                             }
                         </div>
-                        <div class="player-pitch-points-sub" style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 2px;">
+                        <div class="player-pitch-points-sub" style="display: flex; align-items: center; justify-content: flex-start; gap: 6px; margin-top: 2px;">
                             ${renderFdrDots(player, currentGw)}
                             <span style="opacity: 0.6;">•</span>
                             <span>5-GW: ${get5GwXp(player, currentGw).toFixed(1)} XP</span>

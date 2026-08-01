@@ -198,7 +198,7 @@
                         £${r.price.toFixed(1)}m • 
                         ${d.actualPts!==void 0&&d.actualPts!==null?`<strong style="color: var(--primary);">${d.actualPts} pts</strong> <span style="font-size: 9.5px; opacity: 0.7;">(${d.pts.toFixed(1)} XP)</span>`:`${d.pts.toFixed(1)} XP`}
                     </div>
-                    <div class="player-pitch-points-sub" style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 2px;">
+                    <div class="player-pitch-points-sub" style="display: flex; align-items: center; justify-content: flex-start; gap: 6px; margin-top: 2px;">
                         ${Xt(r,a)}
                         <span style="opacity: 0.6;">•</span>
                         <span>5-GW: ${ht(r,a).toFixed(1)} XP</span>
@@ -235,7 +235,7 @@
                             £${f.price.toFixed(1)}m • 
                             ${g.actualPts!==void 0&&g.actualPts!==null?`<strong style="color: var(--primary);">${g.actualPts} pts</strong> <span style="font-size: 9.5px; opacity: 0.7;">(${g.pts.toFixed(1)} XP)</span>`:`${g.pts.toFixed(1)} XP`}
                         </div>
-                        <div class="player-pitch-points-sub" style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 2px;">
+                        <div class="player-pitch-points-sub" style="display: flex; align-items: center; justify-content: flex-start; gap: 6px; margin-top: 2px;">
                             ${Xt(f,t)}
                             <span style="opacity: 0.6;">•</span>
                             <span>5-GW: ${ht(f,t).toFixed(1)} XP</span>
