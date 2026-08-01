@@ -275,8 +275,8 @@ function renderPlayerTooltip(player, currentGw) {
                 <span class="tooltip-rating-value ${getBadgeClass(ratings.expectedMinutes)}">${ratings.expectedMinutes}</span>
             </div>
             <div class="tooltip-rating-row">
-                <span class="tooltip-rating-label">Next 5 Fixtures:</span>
-                <span class="tooltip-rating-value ${getBadgeClass(ratings.next5Fixtures)}">${ratings.next5Fixtures}</span>
+                <span class="tooltip-rating-label">Next 10 Fixtures:</span>
+                <span class="tooltip-rating-value ${getBadgeClass(ratings.next10Fixtures)}">${ratings.next10Fixtures}</span>
             </div>
             <div class="tooltip-rating-row">
                 <span class="tooltip-rating-label">Attacking Role:</span>
@@ -829,8 +829,8 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
                     <span class="detail-stat-lbl" style="font-size: 10px; margin-top: 6px;">Expected Minutes</span>
                 </div>
                 <div class="detail-stat-box" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;">
-                    <span class="tooltip-rating-value ${getBadgeClass(ratings.next5Fixtures)}" style="font-size: 14px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">${ratings.next5Fixtures}</span>
-                    <span class="detail-stat-lbl" style="font-size: 10px; margin-top: 6px;">Next 5 Fixtures</span>
+                    <span class="tooltip-rating-value ${getBadgeClass(ratings.next10Fixtures)}" style="font-size: 14px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">${ratings.next10Fixtures}</span>
+                    <span class="detail-stat-lbl" style="font-size: 10px; margin-top: 6px;">Next 10 Fixtures</span>
                 </div>
                 <div class="detail-stat-box" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;">
                     <span class="tooltip-rating-value ${getBadgeClass(ratings.attackingRole)}" style="font-size: 14px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">${ratings.attackingRole}</span>
@@ -966,9 +966,9 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
                                         <span style="color: var(--text-muted);">MIN</span>
                                         <span class="${getBadgeClass(compRatings.expectedMinutes)}" style="font-weight: 800; padding: 0 3px; border-radius: 2px;">${compRatings.expectedMinutes}</span>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 1px 3px; border-radius: 3px;" title="Next 5 Fixtures">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 1px 3px; border-radius: 3px;" title="Next 10 Fixtures">
                                         <span style="color: var(--text-muted);">FIX</span>
-                                        <span class="${getBadgeClass(compRatings.next5Fixtures)}" style="font-weight: 800; padding: 0 3px; border-radius: 2px;">${compRatings.next5Fixtures}</span>
+                                        <span class="${getBadgeClass(compRatings.next10Fixtures)}" style="font-weight: 800; padding: 0 3px; border-radius: 2px;">${compRatings.next10Fixtures}</span>
                                     </div>
                                     <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 1px 3px; border-radius: 3px;" title="Attacking Role">
                                         <span style="color: var(--text-muted);">ROLE</span>

@@ -406,11 +406,11 @@ export function getPlayerRatings(player, currentGw = 1) {
         }
     }
     // A: <= 2.2, B: <= 2.8, C: <= 3.4, D: <= 4.0, E: > 4.0
-    let next5Fixtures = 'E';
-    if (avgFdr <= 2.2) next5Fixtures = 'A';
-    else if (avgFdr <= 2.8) next5Fixtures = 'B';
-    else if (avgFdr <= 3.4) next5Fixtures = 'C';
-    else if (avgFdr <= 4.0) next5Fixtures = 'D';
+    let next10Fixtures = 'E';
+    if (avgFdr <= 2.2) next10Fixtures = 'A';
+    else if (avgFdr <= 2.8) next10Fixtures = 'B';
+    else if (avgFdr <= 3.4) next10Fixtures = 'C';
+    else if (avgFdr <= 4.0) next10Fixtures = 'D';
 
     // 3. Attacking Role (based on position and xG90 + xA90)
     const xg90 = player.xG90 || 0;
@@ -514,7 +514,7 @@ export function getPlayerRatings(player, currentGw = 1) {
 
     return {
         expectedMinutes,
-        next5Fixtures,
+        next10Fixtures,
         attackingRole,
         attackingPotential,
         defconPotential,
