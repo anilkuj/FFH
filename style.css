@@ -63,12 +63,12 @@ html.light-theme {
     --secondary-glow: rgba(15, 118, 110, 0.08);
     --accent-purple: #7c3aed; /* Violet */
     
-    /* Warm Soft UI FDR difficulty indicators */
-    --fpl-green-5: #dcfce7; /* Soft easy green */
-    --fpl-green-4: #86efac; 
-    --fpl-grey: #f3f4f6;    /* Neutral gray */
-    --fpl-red-4: #fee2e2;   /* Soft hard red */
-    --fpl-red-5: #fca5a5;
+    /* Clear & Distinct UI FDR difficulty indicators */
+    --fpl-green-5: #15803d; /* FDR 1 (Dark Green) */
+    --fpl-green-4: #22c55e; /* FDR 2 (Light Green) */
+    --fpl-grey: #94a3b8;    /* FDR 3 (Neutral Grey) */
+    --fpl-red-4: #f43f5e;   /* FDR 4 (Bright Red) */
+    --fpl-red-5: #991b1b;   /* FDR 5 (Dark Crimson) */
     
     --text-main: #1f2937; /* Dark Slate charcoal */
     --text-muted: #4b5563; /* Cool gray */
@@ -1507,14 +1507,19 @@ body {
     transform: scale(1.08);
 }
 
-.diff-1, .diff-2 {
+.diff-1 {
+    background-color: var(--fpl-green-5);
+    color: #fff;
+}
+
+.diff-2 {
     background-color: var(--fpl-green-4);
     color: #fff;
 }
 
 .diff-3 {
-    background-color: var(--text-muted);
-    color: var(--bg-dark);
+    background-color: var(--fpl-grey);
+    color: #fff;
 }
 
 .diff-4 {
