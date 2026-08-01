@@ -50,46 +50,46 @@
 }
 
 html.light-theme {
-    --bg-dark: #f8fafc;
+    --bg-dark: #fbfbf9; /* warm soft alabaster */
     --bg-card: #ffffff;
     --bg-panel: #ffffff;
-    --border-color: #e2e8f0;
-    --border-hover: #cbd5e1;
+    --border-color: #e5e7eb; /* clean desaturated gray */
+    --border-hover: #d1d5db;
     
-    /* AI Assistant Branding Colors */
-    --primary: #4f46e5; /* Indigo AI Primary */
-    --primary-glow: rgba(79, 70, 229, 0.08);
-    --secondary: #0ea5e9; /* Sky Blue Secondary */
-    --secondary-glow: rgba(14, 165, 233, 0.08);
-    --accent-purple: #8b5cf6; /* Violet */
+    /* Natural Branding Colors (Sage/Forest & Deep Teal) */
+    --primary: #15803d; /* Rich Forest Green */
+    --primary-glow: rgba(21, 128, 61, 0.08);
+    --secondary: #0f766e; /* Deep Teal */
+    --secondary-glow: rgba(15, 118, 110, 0.08);
+    --accent-purple: #7c3aed; /* Violet */
     
-    /* Clean UI FDR Difficulty Indication for light theme */
-    --fpl-green-5: #d1fae5; /* Easy */
-    --fpl-green-4: #a7f3d0; 
-    --fpl-grey: #f1f5f9;    /* Neutral */
-    --fpl-red-4: #ffe4e6;   /* Hard */
-    --fpl-red-5: #fecdd3;
+    /* Warm Soft UI FDR difficulty indicators */
+    --fpl-green-5: #dcfce7; /* Soft easy green */
+    --fpl-green-4: #86efac; 
+    --fpl-grey: #f3f4f6;    /* Neutral gray */
+    --fpl-red-4: #fee2e2;   /* Soft hard red */
+    --fpl-red-5: #fca5a5;
     
-    --text-main: #0f172a;
-    --text-muted: #64748b;
-    --text-dark: #0f172a;
+    --text-main: #1f2937; /* Dark Slate charcoal */
+    --text-muted: #4b5563; /* Cool gray */
+    --text-dark: #111827;
     
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.02);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.03);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04);
 
-    /* Clean AI Soccer Pitch Canvas */
-    --pitch-bg: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
-    --pitch-border: rgba(79, 70, 229, 0.15);
-    --pitch-shadow: inset 0 0 40px rgba(79, 70, 229, 0.03), 0 4px 20px rgba(0, 0, 0, 0.03);
-    --pitch-markings: rgba(79, 70, 229, 0.08);
+    /* Natural grass-inspired conceptual pitch */
+    --pitch-bg: linear-gradient(135deg, #f4f6f4 0%, #e8ede9 100%); /* Desaturated light sage field */
+    --pitch-border: rgba(21, 128, 61, 0.15);
+    --pitch-shadow: inset 0 0 30px rgba(21, 128, 61, 0.04), 0 4px 15px rgba(0, 0, 0, 0.02);
+    --pitch-markings: rgba(21, 128, 61, 0.1);
     
     --card-info-bg: #ffffff;
-    --card-info-border: #e2e8f0;
-    --card-info-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    --card-info-text: #0f172a;
-    --card-info-subtext: #64748b;
-    --card-info-hover-shadow: 0 4px 12px rgba(79, 70, 229, 0.12);
+    --card-info-border: #e5e7eb;
+    --card-info-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    --card-info-text: #1f2937;
+    --card-info-subtext: #4b5563;
+    --card-info-hover-shadow: 0 4px 12px rgba(21, 128, 61, 0.1);
 }
 
 /* Global Reset & Base Styles */
