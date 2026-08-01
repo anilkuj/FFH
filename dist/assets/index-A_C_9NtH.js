@@ -280,7 +280,7 @@ Enter target draft slot number (1-10):`,y=prompt(H);if(y===null)return;const p=p
                                     <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
                                         <div>
                                             <span style="font-size: 10px; font-weight: 800; color: #fbbf24; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 2px;">${Y}</span>
-                                            <h4 style="font-family: var(--font-heading); font-size: 15px; font-weight: 700; color: #fff; margin: 0; display: flex; align-items: center; gap: 8px;">
+                                            <h4 style="font-family: var(--font-heading); font-size: 15px; font-weight: 700; color: var(--text-main); margin: 0; display: flex; align-items: center; gap: 8px;">
                                                 ${v.name}
                                                 ${R?'<span style="font-size: 9px; padding: 1px 6px; background: rgba(0,255,136,0.1); color: var(--primary); border: 1px solid var(--primary-glow); border-radius: 10px; font-weight: 700;">CURRENT CAPTAIN</span>':""}
                                             </h4>
@@ -318,7 +318,7 @@ Enter target draft slot number (1-10):`,y=prompt(H);if(y===null)return;const p=p
                         ${Pt(r?r.color:"#ffffff",n.team)}
                     </div>
                     <div class="detail-player-info">
-                        <h4 style="margin: 0 0 4px 0; font-size: 18px; font-weight: 700; color: #fff;">${n.name}</h4>
+                        <h4 style="margin: 0 0 4px 0; font-size: 18px; font-weight: 700; color: var(--text-main);">${n.name}</h4>
                         <p style="margin: 0; font-size: 13px; color: var(--text-muted);">${n.position} • ${n.team} ${n.transferredThisSeason?`<span class="transfer-badge" style="margin-left: 8px;" title="Transferred from ${n.oldTeam}">⇆ ex-${n.oldTeam}</span>`:""}</p>
                         <div style="margin-top: 8px;">
                             ${Zt(n,o.currentGw)}
@@ -437,7 +437,7 @@ Enter target draft slot number (1-10):`,y=prompt(H);if(y===null)return;const p=p
                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
                         ${H.map(p=>{const A=p.predictions.find(D=>D.gw===o.currentGw)||{pts:0},S=h+n.price-p.price>=0,G=e.filter(D=>D!==n.id);G.push(p.id);const m={};let v=!0;for(const D of G){const N=E.find(k=>k.id===D);if(N&&(m[N.team]=(m[N.team]||0)+1,m[N.team]>3)){v=!1;break}}const V=p.status!=="i"&&p.status!=="s"&&p.status!=="u",R=S&&v&&V;let Y="";return V?S?v||(Y="3/team max"):Y="Over budget":Y="Injured",`
                                 <div class="compare-alternative-card" style="display: flex; flex-direction: column; padding: 10px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px; font-size: 11px;">
-                                    <div style="font-weight:700; color:#fff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${p.name}">${i.getWebName(p.name)}</div>
+                                    <div style="font-weight:700; color:var(--text-main); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${p.name}">${i.getWebName(p.name)}</div>
                                     <div style="color:var(--text-muted); font-size: 10px; margin-top:2px;">£${p.price.toFixed(1)}m • ${A.pts.toFixed(1)} XP</div>
                                     
                                     <!-- Swap button and alert -->
@@ -475,32 +475,32 @@ Enter target draft slot number (1-10):`,y=prompt(H);if(y===null)return;const p=p
                     <p style="font-size: 11px; color: var(--text-muted); margin: 0; opacity: 0.85;">Only showing <strong style="color: var(--primary);">${o}s</strong> <span id="modalFilterCount" style="color: var(--secondary); font-weight: 700; margin-left: 4px;"></span>. Search by name or team.</p>
                 </div>
                 <div style="display: flex; gap: 8px; width: 100%; flex-wrap: wrap;">
-                    <input type="text" class="transfer-search-field" id="modalSearchField" placeholder="Search by name or team..." style="flex: 2; min-width: 150px; font-size: 12px; padding: 8px; background: rgba(255,255,255,0.02); color:#fff; border: 1px solid var(--border-color); border-radius: 6px;" />
-                    <select class="panel-price-select" id="modalPriceSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-panel); color:#fff; border: 1px solid var(--border-color); border-radius: 6px;">
+                    <input type="text" class="transfer-search-field" id="modalSearchField" placeholder="Search by name or team..." style="flex: 2; min-width: 150px; font-size: 12px; padding: 8px; background: var(--bg-card); color:var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;" />
+                    <select class="panel-price-select" id="modalPriceSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-card); color:var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
                         ${r}
                     </select>
-                    <select class="panel-price-select" id="modalAttSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-panel); color:#fff; border: 1px solid var(--border-color); border-radius: 6px;">
+                    <select class="panel-price-select" id="modalAttSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-card); color:var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
                         <option value="">Attacking (Any)</option>
                         <option value="A">Attacking: A (Excellent)</option>
                         <option value="B">Attacking: B+</option>
                         <option value="C">Attacking: C+</option>
                         <option value="D">Attacking: D+</option>
                     </select>
-                    <select class="panel-price-select" id="modalDefconSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-panel); color:#fff; border: 1px solid var(--border-color); border-radius: 6px;">
+                    <select class="panel-price-select" id="modalDefconSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-card); color:var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
                         <option value="">Defcon (Any)</option>
                         <option value="A">Defcon: A (Excellent)</option>
                         <option value="B">Defcon: B+</option>
                         <option value="C">Defcon: C+</option>
                         <option value="D">Defcon: D+</option>
                     </select>
-                    <select class="panel-price-select" id="modalMppgSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-panel); color:#fff; border: 1px solid var(--border-color); border-radius: 6px;">
+                    <select class="panel-price-select" id="modalMppgSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-card); color:var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
                         <option value="">Avg Mins (Any)</option>
                         <option value="60">60+ mins/game</option>
                         <option value="45">45+ mins/game</option>
                         <option value="30">30+ mins/game</option>
                         <option value="15">15+ mins/game</option>
                     </select>
-                    <select class="panel-price-select" id="modalGsSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-panel); color:#fff; border: 1px solid var(--border-color); border-radius: 6px;">
+                    <select class="panel-price-select" id="modalGsSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-card); color:var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
                         <option value="">Starts (Any)</option>
                         <option value="30">30+ starts</option>
                         <option value="20">20+ starts</option>
@@ -531,7 +531,7 @@ Enter target draft slot number (1-10):`,y=prompt(H);if(y===null)return;const p=p
             <div class="panel-player-row ${i?"":"disabled-row"}" data-id="${o.id}" style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px; transition: all var(--transition-fast);">
                 <div class="player-info-left" style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0;">
                     <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 6px;">
-                        <span class="player-name-main" style="font-weight: 600; color: #fff; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;">${o.name}</span>
+                        <span class="player-name-main" style="font-weight: 600; color: var(--text-main); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;">${o.name}</span>
                         ${g}
                     </div>
                     ${Zt(o,a.currentGw)}
@@ -947,14 +947,14 @@ Enter target draft slot number (1-10):`,b=prompt(L);if(b===null)return;const U=p
             <div id="aiStrategistReportContainer" style="grid-column: span 2; margin-top: 24px;"></div>
         `;const V=l.querySelector("#aiStrategistReportContainer");if(V){const D=JSON.parse(JSON.stringify(t.squadSlots));if(S&&S.gain>.1){const N=D.find(k=>k.playerId===S.out.id);N&&(N.playerId=S.in.id)}jt(V,t,a,D,x,s)}const R=l.querySelector("#applySingleBtn");R&&R.addEventListener("click",()=>{a.addTransfer(t.currentGw,S.out.id,S.in.id)&&(a.showToast("AI single transfer applied successfully!","success"),a.switchTab("planner"))});const Y=l.querySelector("#applyDoubleBtn");Y&&Y.addEventListener("click",()=>{a.addTransfer(t.currentGw,m.out1.id,m.in1.id)?a.addTransfer(t.currentGw,m.out2.id,m.in2.id)?(a.showToast("AI double transfer applied successfully!","success"),a.switchTab("planner")):(t.transfers[t.currentGw].pop(),t.saveState(),a.showToast("Could not apply second transfer due to budget/constraints.","error")):a.showToast("Could not apply transfers due to constraints.","error")})}}function jt(l,t,a,s,o,i){l.innerHTML=`
         <div class="optimizer-card" style="padding: 24px; position: relative; overflow: hidden; background: linear-gradient(135deg, var(--bg-card), rgba(0, 242, 254, 0.05)); border: 1px solid rgba(0, 242, 254, 0.25);">
-            <h3 style="font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px;">
+            <h3 style="font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px;">
                 <i data-lucide="brain" style="color: var(--secondary); width: 20px; height: 20px;"></i>
                 Elite FPL AI Strategist Report
             </h3>
             <div id="aiReportText" style="font-size: 13px; line-height: 1.6; color: var(--text-muted); display: flex; flex-direction: column; gap: 16px;">
                 <div style="display: flex; align-items: center; gap: 8px; justify-content: center; padding: 24px 0;">
                     <i data-lucide="loader" class="animate-spin" style="color: var(--secondary); width: 24px; height: 24px;"></i>
-                    <span style="font-weight: 600; color: #fff;">Analyzing optimized squad and generating strategist report...</span>
+                    <span style="font-weight: 600; color: var(--text-main);">Analyzing optimized squad and generating strategist report...</span>
                 </div>
             </div>
         </div>
@@ -1071,7 +1071,7 @@ ${n.length>0?n.map(e=>`- **${e.name}** (${e.team}, £${e.price.toFixed(1)}m) —
 #### 9. Squad Strengths & Weaknesses
 - **Strengths:** High captaincy upside, strict budget compliance, and balanced starting XI expected points value.
 - **Weaknesses:** Slight susceptibility to bench rotation points loss if double starts are missed.
-`,r}function Et(l,t,a){const s=l.querySelector("#aiReportText");if(!s)return;let o=t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/^### (.*$)/gim,'<h3 style="font-family: var(--font-heading); font-size: 16px; font-weight: 700; color: var(--secondary); margin-top: 16px; margin-bottom: 8px;">$1</h3>').replace(/^#### (.*$)/gim,'<h4 style="font-family: var(--font-heading); font-size: 14px; font-weight: 700; color: #fff; margin-top: 14px; margin-bottom: 6px;">$1</h4>').replace(/\*\*(.*?)\*\*/g,'<strong style="color: #fff;">$1</strong>').replace(/\*(.*?)\*/g,"<em>$1</em>").replace(/^\- (.*$)/gim,'<li style="margin-left: 16px; list-style-type: disc; margin-bottom: 4px;">$1</li>').replace(/\n$/gim,"<br />");o=o.split(`
+`,r}function Et(l,t,a){const s=l.querySelector("#aiReportText");if(!s)return;let o=t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/^### (.*$)/gim,'<h3 style="font-family: var(--font-heading); font-size: 16px; font-weight: 700; color: var(--secondary); margin-top: 16px; margin-bottom: 8px;">$1</h3>').replace(/^#### (.*$)/gim,'<h4 style="font-family: var(--font-heading); font-size: 14px; font-weight: 700; color: var(--text-main); margin-top: 14px; margin-bottom: 6px;">$1</h4>').replace(/\*\*(.*?)\*\*/g,'<strong style="color: var(--text-main);">$1</strong>').replace(/\*(.*?)\*/g,"<em>$1</em>").replace(/^\- (.*$)/gim,'<li style="margin-left: 16px; list-style-type: disc; margin-bottom: 4px;">$1</li>').replace(/\n$/gim,"<br />");o=o.split(`
 
 `).map(d=>d.trim().startsWith("<h")||d.trim().startsWith("<li")?d:`<p style="margin-bottom: 12px; line-height: 1.6;">${d}</p>`).join("");const i=a?'<span style="font-size: 10px; font-weight: 700; background: rgba(0, 242, 254, 0.1); color: var(--secondary); padding: 2px 8px; border-radius: 10px; border: 1px solid var(--secondary-glow); align-self: flex-start;">GEMINI 1.5 FLASH LIVE REPORT</span>':'<span style="font-size: 10px; font-weight: 700; background: rgba(255, 255, 255, 0.05); color: var(--text-muted); padding: 2px 8px; border-radius: 10px; border: 1px solid var(--border-color); align-self: flex-start;">LOCAL FPL STRATEGIST ENGINE</span>';s.innerHTML=`
         ${i}
@@ -1503,7 +1503,7 @@ ${n.length>0?n.map(e=>`- **${e.name}** (${e.team}, £${e.price.toFixed(1)}m) —
                     <div style="display: flex; align-items: center; gap: 12px;">
                         <div style="width: 8px; height: 36px; background: ${e?"var(--primary)":"var(--border-color)"}; border-radius: 4px;"></div>
                         <div>
-                            <h4 style="font-family: var(--font-heading); font-size: 15px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px;">
+                            <h4 style="font-family: var(--font-heading); font-size: 15px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
                                 ${f.name}
                                 ${e?'<span class="pill-value" style="font-size: 9px; padding: 2px 6px; background: rgba(0,255,136,0.1); color: var(--primary); border: 1px solid var(--primary-glow); border-radius: 10px;">ACTIVE CAPTAIN</span>':""}
                             </h4>
@@ -1720,7 +1720,7 @@ ${n.length>0?n.map(e=>`- **${e.name}** (${e.team}, £${e.price.toFixed(1)}m) —
                                 <label style="display: flex; align-items: flex-start; gap: 12px; padding: 12px; border: 1px solid var(--border-color); background: ${e?"rgba(255, 255, 255, 0.02)":"transparent"}; border-radius: 8px; cursor: pointer; transition: all var(--transition-fast);">
                                     <input type="checkbox" class="event-checkbox" data-id="${P.id}" ${e?"checked":""} style="margin-top: 4px; cursor: pointer;">
                                     <div style="flex: 1;">
-                                        <div style="display: flex; justify-content: space-between; font-weight: 600; font-size: 13px; color: #fff;">
+                                        <div style="display: flex; justify-content: space-between; font-weight: 600; font-size: 13px; color: var(--text-main);">
                                             <span>${P.label}</span>
                                             <span style="color: ${P.pts>=0?"var(--primary)":"#ef4444"}; font-family: var(--font-heading); font-weight: 800;">
                                                 ${P.pts>=0?"+":""}${P.pts} pts
@@ -1798,7 +1798,7 @@ ${n.length>0?n.map(e=>`- **${e.name}** (${e.team}, £${e.price.toFixed(1)}m) —
                                     <i data-lucide="${o.avatar}" style="width: 16px; height: 16px; color: var(--secondary);"></i>
                                 </div>
                                 <div>
-                                    <h4 style="font-family: var(--font-heading); font-size: 14px; font-weight: 700; color: #fff;">${o.expert}</h4>
+                                    <h4 style="font-family: var(--font-heading); font-size: 14px; font-weight: 700; color: var(--text-main);">${o.expert}</h4>
                                     <p style="font-size: 11px; color: var(--text-muted);">${o.source}</p>
                                 </div>
                             </div>
@@ -1818,7 +1818,7 @@ ${n.length>0?n.map(e=>`- **${e.name}** (${e.team}, £${e.price.toFixed(1)}m) —
                             <div style="flex: 1; min-width: 150px; display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(239, 68, 68, 0.03); border: 1px solid rgba(239, 68, 68, 0.1); border-radius: 8px;">
                                 <div style="color: #ef4444; font-family: var(--font-heading); font-size: 11px; font-weight: 800; text-transform: uppercase;">OUT</div>
                                 <div>
-                                    <h5 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: #fff;">${i.name}</h5>
+                                    <h5 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--text-main);">${i.name}</h5>
                                     <p style="font-size: 11px; color: var(--text-muted);">${i.team} • ${i.position} • £${i.price.toFixed(1)}m</p>
                                 </div>
                             </div>
@@ -1833,7 +1833,7 @@ ${n.length>0?n.map(e=>`- **${e.name}** (${e.team}, £${e.price.toFixed(1)}m) —
                             <div style="flex: 1; min-width: 150px; display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(0, 255, 136, 0.03); border: 1px solid rgba(0, 255, 136, 0.1); border-radius: 8px;">
                                 <div style="color: var(--primary); font-family: var(--font-heading); font-size: 11px; font-weight: 800; text-transform: uppercase;">IN</div>
                                 <div>
-                                    <h5 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: #fff;">${d.name}</h5>
+                                    <h5 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--text-main);">${d.name}</h5>
                                     <p style="font-size: 11px; color: var(--text-muted);">${d.team} • ${d.position} • £${d.price.toFixed(1)}m</p>
                                 </div>
                             </div>

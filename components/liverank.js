@@ -140,7 +140,7 @@ export function renderLiveRank(container, state, actions) {
                                 <label style="display: flex; align-items: flex-start; gap: 12px; padding: 12px; border: 1px solid var(--border-color); background: ${isChecked ? 'rgba(255, 255, 255, 0.02)' : 'transparent'}; border-radius: 8px; cursor: pointer; transition: all var(--transition-fast);">
                                     <input type="checkbox" class="event-checkbox" data-id="${ev.id}" ${isChecked ? 'checked' : ''} style="margin-top: 4px; cursor: pointer;">
                                     <div style="flex: 1;">
-                                        <div style="display: flex; justify-content: space-between; font-weight: 600; font-size: 13px; color: #fff;">
+                                        <div style="display: flex; justify-content: space-between; font-weight: 600; font-size: 13px; color: var(--text-main);">
                                             <span>${ev.label}</span>
                                             <span style="color: ${ev.pts >= 0 ? 'var(--primary)' : '#ef4444'}; font-family: var(--font-heading); font-weight: 800;">
                                                 ${ev.pts >= 0 ? '+' : ''}${ev.pts} pts

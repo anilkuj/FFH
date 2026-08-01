@@ -61,7 +61,7 @@ export function renderCaptain(container, state, actions) {
                     <div style="display: flex; align-items: center; gap: 12px;">
                         <div style="width: 8px; height: 36px; background: ${isCurrentCaptain ? 'var(--primary)' : 'var(--border-color)'}; border-radius: 4px;"></div>
                         <div>
-                            <h4 style="font-family: var(--font-heading); font-size: 15px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px;">
+                            <h4 style="font-family: var(--font-heading); font-size: 15px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
                                 ${player.name}
                                 ${isCurrentCaptain ? `<span class="pill-value" style="font-size: 9px; padding: 2px 6px; background: rgba(0,255,136,0.1); color: var(--primary); border: 1px solid var(--primary-glow); border-radius: 10px;">ACTIVE CAPTAIN</span>` : ''}
                             </h4>

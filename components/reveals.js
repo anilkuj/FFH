@@ -178,7 +178,7 @@ function renderTransferPlansView(container, state, actions) {
                                     <i data-lucide="${plan.avatar}" style="width: 16px; height: 16px; color: var(--secondary);"></i>
                                 </div>
                                 <div>
-                                    <h4 style="font-family: var(--font-heading); font-size: 14px; font-weight: 700; color: #fff;">${plan.expert}</h4>
+                                    <h4 style="font-family: var(--font-heading); font-size: 14px; font-weight: 700; color: var(--text-main);">${plan.expert}</h4>
                                     <p style="font-size: 11px; color: var(--text-muted);">${plan.source}</p>
                                 </div>
                             </div>
@@ -198,7 +198,7 @@ function renderTransferPlansView(container, state, actions) {
                             <div style="flex: 1; min-width: 150px; display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(239, 68, 68, 0.03); border: 1px solid rgba(239, 68, 68, 0.1); border-radius: 8px;">
                                 <div style="color: #ef4444; font-family: var(--font-heading); font-size: 11px; font-weight: 800; text-transform: uppercase;">OUT</div>
                                 <div>
-                                    <h5 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: #fff;">${pOut.name}</h5>
+                                    <h5 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--text-main);">${pOut.name}</h5>
                                     <p style="font-size: 11px; color: var(--text-muted);">${pOut.team} • ${pOut.position} • £${pOut.price.toFixed(1)}m</p>
                                 </div>
                             </div>
@@ -213,7 +213,7 @@ function renderTransferPlansView(container, state, actions) {
                             <div style="flex: 1; min-width: 150px; display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(0, 255, 136, 0.03); border: 1px solid rgba(0, 255, 136, 0.1); border-radius: 8px;">
                                 <div style="color: var(--primary); font-family: var(--font-heading); font-size: 11px; font-weight: 800; text-transform: uppercase;">IN</div>
                                 <div>
-                                    <h5 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: #fff;">${pIn.name}</h5>
+                                    <h5 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--text-main);">${pIn.name}</h5>
                                     <p style="font-size: 11px; color: var(--text-muted);">${pIn.team} • ${pIn.position} • £${pIn.price.toFixed(1)}m</p>
                                 </div>
                             </div>

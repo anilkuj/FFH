@@ -1554,14 +1554,14 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
 function generateAIStrategistReport(reportContainer, state, actions, squadSlots, bank, horizon) {
     reportContainer.innerHTML = `
         <div class="optimizer-card" style="padding: 24px; position: relative; overflow: hidden; background: linear-gradient(135deg, var(--bg-card), rgba(0, 242, 254, 0.05)); border: 1px solid rgba(0, 242, 254, 0.25);">
-            <h3 style="font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px;">
+            <h3 style="font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px;">
                 <i data-lucide="brain" style="color: var(--secondary); width: 20px; height: 20px;"></i>
                 Elite FPL AI Strategist Report
             </h3>
             <div id="aiReportText" style="font-size: 13px; line-height: 1.6; color: var(--text-muted); display: flex; flex-direction: column; gap: 16px;">
                 <div style="display: flex; align-items: center; gap: 8px; justify-content: center; padding: 24px 0;">
                     <i data-lucide="loader" class="animate-spin" style="color: var(--secondary); width: 24px; height: 24px;"></i>
-                    <span style="font-weight: 600; color: #fff;">Analyzing optimized squad and generating strategist report...</span>
+                    <span style="font-weight: 600; color: var(--text-main);">Analyzing optimized squad and generating strategist report...</span>
                 </div>
             </div>
         </div>
@@ -1766,8 +1766,8 @@ function renderMarkdownReport(reportContainer, text, isLive) {
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/^### (.*$)/gim, '<h3 style="font-family: var(--font-heading); font-size: 16px; font-weight: 700; color: var(--secondary); margin-top: 16px; margin-bottom: 8px;">$1</h3>')
-        .replace(/^#### (.*$)/gim, '<h4 style="font-family: var(--font-heading); font-size: 14px; font-weight: 700; color: #fff; margin-top: 14px; margin-bottom: 6px;">$1</h4>')
-        .replace(/\*\*(.*?)\*\*/g, '<strong style="color: #fff;">$1</strong>')
+        .replace(/^#### (.*$)/gim, '<h4 style="font-family: var(--font-heading); font-size: 14px; font-weight: 700; color: var(--text-main); margin-top: 14px; margin-bottom: 6px;">$1</h4>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong style="color: var(--text-main);">$1</strong>')
         .replace(/\*(.*?)\*/g, '<em>$1</em>')
         .replace(/^\- (.*$)/gim, '<li style="margin-left: 16px; list-style-type: disc; margin-bottom: 4px;">$1</li>')
         .replace(/\n$/gim, '<br />');

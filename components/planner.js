@@ -720,7 +720,7 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
                                     <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
                                         <div>
                                             <span style="font-size: 10px; font-weight: 800; color: #fbbf24; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 2px;">${rankLabel}</span>
-                                            <h4 style="font-family: var(--font-heading); font-size: 15px; font-weight: 700; color: #fff; margin: 0; display: flex; align-items: center; gap: 8px;">
+                                            <h4 style="font-family: var(--font-heading); font-size: 15px; font-weight: 700; color: var(--text-main); margin: 0; display: flex; align-items: center; gap: 8px;">
                                                 ${player.name}
                                                 ${isCurrentCap ? `<span style="font-size: 9px; padding: 1px 6px; background: rgba(0,255,136,0.1); color: var(--primary); border: 1px solid var(--primary-glow); border-radius: 10px; font-weight: 700;">CURRENT CAPTAIN</span>` : ''}
                                             </h4>
@@ -825,7 +825,7 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
                         ${getShirtSVG(teamObj ? teamObj.color : "#ffffff", player.team)}
                     </div>
                     <div class="detail-player-info">
-                        <h4 style="margin: 0 0 4px 0; font-size: 18px; font-weight: 700; color: #fff;">${player.name}</h4>
+                        <h4 style="margin: 0 0 4px 0; font-size: 18px; font-weight: 700; color: var(--text-main);">${player.name}</h4>
                         <p style="margin: 0; font-size: 13px; color: var(--text-muted);">${player.position} • ${player.team} ${player.transferredThisSeason ? `<span class="transfer-badge" style="margin-left: 8px;" title="Transferred from ${player.oldTeam}">⇆ ex-${player.oldTeam}</span>` : ''}</p>
                         <div style="margin-top: 8px;">
                             ${renderFdrFixtures(player, state.currentGw)}
@@ -973,7 +973,7 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
                             
                             return `
                                 <div class="compare-alternative-card" style="display: flex; flex-direction: column; padding: 10px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px; font-size: 11px;">
-                                    <div style="font-weight:700; color:#fff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${comp.name}">${actions.getWebName(comp.name)}</div>
+                                    <div style="font-weight:700; color:var(--text-main); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${comp.name}">${actions.getWebName(comp.name)}</div>
                                     <div style="color:var(--text-muted); font-size: 10px; margin-top:2px;">£${comp.price.toFixed(1)}m • ${compPrediction.pts.toFixed(1)} XP</div>
                                     
                                     <!-- Swap button and alert -->
@@ -1104,32 +1104,32 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
                     <p style="font-size: 11px; color: var(--text-muted); margin: 0; opacity: 0.85;">Only showing <strong style="color: var(--primary);">${position}s</strong> <span id="modalFilterCount" style="color: var(--secondary); font-weight: 700; margin-left: 4px;"></span>. Search by name or team.</p>
                 </div>
                 <div style="display: flex; gap: 8px; width: 100%; flex-wrap: wrap;">
-                    <input type="text" class="transfer-search-field" id="modalSearchField" placeholder="Search by name or team..." style="flex: 2; min-width: 150px; font-size: 12px; padding: 8px; background: rgba(255,255,255,0.02); color:#fff; border: 1px solid var(--border-color); border-radius: 6px;" />
-                    <select class="panel-price-select" id="modalPriceSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-panel); color:#fff; border: 1px solid var(--border-color); border-radius: 6px;">
+                    <input type="text" class="transfer-search-field" id="modalSearchField" placeholder="Search by name or team..." style="flex: 2; min-width: 150px; font-size: 12px; padding: 8px; background: var(--bg-card); color:var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;" />
+                    <select class="panel-price-select" id="modalPriceSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-card); color:var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
                         ${priceOptions}
                     </select>
-                    <select class="panel-price-select" id="modalAttSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-panel); color:#fff; border: 1px solid var(--border-color); border-radius: 6px;">
+                    <select class="panel-price-select" id="modalAttSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-card); color:var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
                         <option value="">Attacking (Any)</option>
                         <option value="A">Attacking: A (Excellent)</option>
                         <option value="B">Attacking: B+</option>
                         <option value="C">Attacking: C+</option>
                         <option value="D">Attacking: D+</option>
                     </select>
-                    <select class="panel-price-select" id="modalDefconSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-panel); color:#fff; border: 1px solid var(--border-color); border-radius: 6px;">
+                    <select class="panel-price-select" id="modalDefconSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-card); color:var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
                         <option value="">Defcon (Any)</option>
                         <option value="A">Defcon: A (Excellent)</option>
                         <option value="B">Defcon: B+</option>
                         <option value="C">Defcon: C+</option>
                         <option value="D">Defcon: D+</option>
                     </select>
-                    <select class="panel-price-select" id="modalMppgSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-panel); color:#fff; border: 1px solid var(--border-color); border-radius: 6px;">
+                    <select class="panel-price-select" id="modalMppgSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-card); color:var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
                         <option value="">Avg Mins (Any)</option>
                         <option value="60">60+ mins/game</option>
                         <option value="45">45+ mins/game</option>
                         <option value="30">30+ mins/game</option>
                         <option value="15">15+ mins/game</option>
                     </select>
-                    <select class="panel-price-select" id="modalGsSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-panel); color:#fff; border: 1px solid var(--border-color); border-radius: 6px;">
+                    <select class="panel-price-select" id="modalGsSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-card); color:var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
                         <option value="">Starts (Any)</option>
                         <option value="30">30+ starts</option>
                         <option value="20">20+ starts</option>
@@ -1324,7 +1324,7 @@ function renderModalPlayerRows(players, bank, state) {
             <div class="panel-player-row ${!isAffordable ? 'disabled-row' : ''}" data-id="${player.id}" style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px; transition: all var(--transition-fast);">
                 <div class="player-info-left" style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0;">
                     <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 6px;">
-                        <span class="player-name-main" style="font-weight: 600; color: #fff; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;">${player.name}</span>
+                        <span class="player-name-main" style="font-weight: 600; color: var(--text-main); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;">${player.name}</span>
                         ${badgesHtml}
                     </div>
                     ${renderFdrFixtures(player, state.currentGw)}
