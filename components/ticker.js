@@ -48,20 +48,34 @@ const PROJ_GOALS_LOOKUP = {
     TOT: [1.06, 1.34, 1.43, 1.67, 1.43]
 };
 
-function getCleanSheetOdds(teamShort, opponentShort, loc, gw) {
+function getCleanSheetOdds(teamShort, opponentShort, loc, gw, diff = 3) {
     const list = CS_ODDS_LOOKUP[teamShort];
     if (list && list[gw - 1] !== undefined) {
         return list[gw - 1];
     }
-    return 25; // fallback
+    // Dynamic formula for GW6-10
+    let odds = 30;
+    if (diff === 2) odds = 48;
+    else if (diff === 4) odds = 18;
+    else if (diff === 5) odds = 8;
+    if (loc === 'H') odds += 5;
+    else odds -= 5;
+    return Math.max(5, Math.min(65, odds));
 }
 
-function getProjectedGoals(teamShort, opponentShort, loc, gw) {
+function getProjectedGoals(teamShort, opponentShort, loc, gw, diff = 3) {
     const list = PROJ_GOALS_LOOKUP[teamShort];
     if (list && list[gw - 1] !== undefined) {
         return list[gw - 1];
     }
-    return 1.25; // fallback
+    // Dynamic formula for GW6-10
+    let goals = 1.4;
+    if (diff === 2) goals = 2.2;
+    else if (diff === 4) goals = 1.0;
+    else if (diff === 5) goals = 0.6;
+    if (loc === 'H') goals += 0.25;
+    else goals -= 0.25;
+    return Math.max(0.4, Math.min(3.5, parseFloat(goals.toFixed(2))));
 }
 
 export function renderTicker(container, state, actions) {
@@ -78,7 +92,7 @@ export function renderTicker(container, state, actions) {
 
             if (mode === 'cleansheet') {
                 adjustedFixtures = fixtures.map(f => {
-                    const odds = getCleanSheetOdds(team.shortName, f.opp, f.loc, f.gw);
+                    const odds = getCleanSheetOdds(team.shortName, f.opp, f.loc, f.gw, f.diff);
                     let diffClass = 'diff-3';
                     if (odds >= 38) diffClass = 'diff-2';
                     else if (odds >= 28) diffClass = 'diff-3';
@@ -89,7 +103,7 @@ export function renderTicker(container, state, actions) {
                 avg = adjustedFixtures.reduce((sum, f) => sum + f.numeric, 0) / adjustedFixtures.length;
             } else if (mode === 'goals') {
                 adjustedFixtures = fixtures.map(f => {
-                    const goals = getProjectedGoals(team.shortName, f.opp, f.loc, f.gw);
+                    const goals = getProjectedGoals(team.shortName, f.opp, f.loc, f.gw, f.diff);
                     let diffClass = 'diff-3';
                     if (goals >= 1.8) diffClass = 'diff-2';
                     else if (goals >= 1.3) diffClass = 'diff-3';
@@ -147,7 +161,7 @@ export function renderTicker(container, state, actions) {
                             <span class="team-name-ticker">${team.name}</span>
                         </div>
                     </td>
-                    ${[1, 2, 3, 4, 5].map(gw => {
+                    ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(gw => {
                         const f = team.fixtures.find(fi => fi.gw === gw) || { opp: 'BYE', loc: 'H', val: 'BYE', diffClass: 'diff-3' };
                         return `
                             <td>
@@ -196,6 +210,11 @@ export function renderTicker(container, state, actions) {
                             <th data-col="GW3" style="cursor: pointer;">GW3 ${getHeaderArrow('GW3')}</th>
                             <th data-col="GW4" style="cursor: pointer;">GW4 ${getHeaderArrow('GW4')}</th>
                             <th data-col="GW5" style="cursor: pointer;">GW5 ${getHeaderArrow('GW5')}</th>
+                            <th data-col="GW6" style="cursor: pointer;">GW6 ${getHeaderArrow('GW6')}</th>
+                            <th data-col="GW7" style="cursor: pointer;">GW7 ${getHeaderArrow('GW7')}</th>
+                            <th data-col="GW8" style="cursor: pointer;">GW8 ${getHeaderArrow('GW8')}</th>
+                            <th data-col="GW9" style="cursor: pointer;">GW9 ${getHeaderArrow('GW9')}</th>
+                            <th data-col="GW10" style="cursor: pointer;">GW10 ${getHeaderArrow('GW10')}</th>
                             <th data-col="avg" style="cursor: pointer;">${avgColName} ${getHeaderArrow('avg')}</th>
                         </tr>
                     </thead>

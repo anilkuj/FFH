@@ -193,7 +193,7 @@ function getFdrColor(diff) {
 
 function renderFdrDots(player, currentGw) {
     let html = '<div class="fdr-dots-container" style="display: inline-flex; gap: 3px; align-items: center; justify-content: center; vertical-align: middle;">';
-    for (let gw = currentGw; gw < currentGw + 5; gw++) {
+    for (let gw = currentGw; gw < currentGw + 10; gw++) {
         const pr = player.predictions.find(p => p.gw === gw);
         if (pr) {
             const oppText = pr.opp !== 'BYE' ? `${pr.opp} (${pr.loc})` : 'BYE';
@@ -209,7 +209,7 @@ function renderFdrDots(player, currentGw) {
 
 function renderFdrFixtures(player, currentGw) {
     let html = '<div class="fdr-fixtures-container" style="display: flex; gap: 4px; align-items: center; flex-wrap: wrap; margin: 2px 0;">';
-    for (let gw = currentGw; gw < currentGw + 5; gw++) {
+    for (let gw = currentGw; gw < currentGw + 10; gw++) {
         const pr = player.predictions.find(p => p.gw === gw);
         if (pr) {
             const oppText = pr.opp !== 'BYE' ? `${pr.opp} (${pr.loc})` : 'BYE';
