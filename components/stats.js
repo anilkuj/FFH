@@ -10,8 +10,16 @@ export function renderStats(container, state, actions) {
     let positionFilter = container.dataset.posFilter || 'ALL';
     let teamFilter = container.dataset.teamFilter || 'ALL';
     let searchQuery = container.dataset.searchQuery || '';
+    let minPriceFilter = container.dataset.minPrice ? parseFloat(container.dataset.minPrice) : 4.0;
+    let maxPriceFilter = container.dataset.maxPrice ? parseFloat(container.dataset.maxPrice) : 16.0;
+    let startFilter = container.dataset.startFilter || 'ALL';
     let sortColumn = container.dataset.sortCol || 'points';
     let sortAsc = container.dataset.sortAsc === 'true'; // string parsing
+
+    const priceOptions = [];
+    for (let p = 4.0; p <= 16.0; p += 0.5) {
+        priceOptions.push(p);
+    }
 
     const renderTable = () => {
         // Filter players
@@ -19,7 +27,10 @@ export function renderStats(container, state, actions) {
             const matchesPos = positionFilter === 'ALL' || player.position === positionFilter;
             const matchesTeam = teamFilter === 'ALL' || player.team === teamFilter;
             const matchesSearch = player.name.toLowerCase().includes(searchQuery.toLowerCase());
-            return matchesPos && matchesTeam && matchesSearch;
+            const matchesPrice = player.price >= minPriceFilter && player.price <= maxPriceFilter;
+            const chance = player.chanceOfPlaying !== null ? player.chanceOfPlaying : 100;
+            const matchesStart = startFilter === 'ALL' || chance >= parseFloat(startFilter);
+            return matchesPos && matchesTeam && matchesSearch && matchesPrice && matchesStart;
         });
 
         // Sort players
@@ -34,6 +45,9 @@ export function renderStats(container, state, actions) {
                 // Predicted points for current gameweek
                 valA = (a.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 }).pts;
                 valB = (b.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 }).pts;
+            } else if (sortColumn === 'chanceOfPlaying') {
+                valA = a.chanceOfPlaying !== null ? a.chanceOfPlaying : 100;
+                valB = b.chanceOfPlaying !== null ? b.chanceOfPlaying : 100;
             } else {
                 valA = a[sortColumn];
                 valB = b[sortColumn];
@@ -66,6 +80,7 @@ export function renderStats(container, state, actions) {
                     <td class="${sortColumn === 'ictIndex' ? 'highlight-column' : ''}">${player.ictIndex.toFixed(1)}</td>
                     <td class="${sortColumn === 'GS' ? 'highlight-column' : ''}">${player.GS}</td>
                     <td class="${sortColumn === 'MPPG' ? 'highlight-column' : ''}">${player.MPPG.toFixed(1)}</td>
+                    <td class="${sortColumn === 'chanceOfPlaying' ? 'highlight-column' : ''}">${player.chanceOfPlaying !== null ? player.chanceOfPlaying : 100}%</td>
                     <td class="${sortColumn === 'gwPred' ? 'highlight-column' : ''}">${currentGwPred.toFixed(1)}</td>
                     <td class="${sortColumn === 'xp5' ? 'highlight-column' : ''}">${player.xp5.toFixed(1)}</td>
                 </tr>
@@ -94,6 +109,28 @@ export function renderStats(container, state, actions) {
                         <option value="ALL" ${teamFilter === 'ALL' ? 'selected' : ''}>All Teams</option>
                         ${TEAMS.map(team => `<option value="${team.shortName}" ${teamFilter === team.shortName ? 'selected' : ''}>${team.name}</option>`).join('')}
                     </select>
+
+                    <select class="filter-select" id="minPriceSelect">
+                        <option value="4.0" ${minPriceFilter === 4.0 ? 'selected' : ''}>Min Price: Any</option>
+                        ${priceOptions.filter(p => p > 4.0).map(p => `
+                            <option value="${p.toFixed(1)}" ${minPriceFilter === p ? 'selected' : ''}>Min: £${p.toFixed(1)}m</option>
+                        `).join('')}
+                    </select>
+
+                    <select class="filter-select" id="maxPriceSelect">
+                        <option value="16.0" ${maxPriceFilter === 16.0 ? 'selected' : ''}>Max Price: Any</option>
+                        ${priceOptions.filter(p => p < 16.0).map(p => `
+                            <option value="${p.toFixed(1)}" ${maxPriceFilter === p ? 'selected' : ''}>Max: £${p.toFixed(1)}m</option>
+                        `).join('')}
+                    </select>
+
+                    <select class="filter-select" id="startFilterSelect">
+                        <option value="ALL" ${startFilter === 'ALL' ? 'selected' : ''}>Start Chance: Any</option>
+                        <option value="100" ${startFilter === '100' ? 'selected' : ''}>100% (Guaranteed)</option>
+                        <option value="75" ${startFilter === '75' ? 'selected' : ''}>75% or higher</option>
+                        <option value="50" ${startFilter === '50' ? 'selected' : ''}>50% or higher</option>
+                        <option value="25" ${startFilter === '25' ? 'selected' : ''}>25% or higher</option>
+                    </select>
                 </div>
             </div>
 
@@ -115,6 +152,7 @@ export function renderStats(container, state, actions) {
                             <th data-col="ictIndex">ICT ${getSortArrow('ictIndex', sortColumn, sortAsc)}</th>
                             <th data-col="GS">GS ${getSortArrow('GS', sortColumn, sortAsc)}</th>
                             <th data-col="MPPG">MPPG ${getSortArrow('MPPG', sortColumn, sortAsc)}</th>
+                            <th data-col="chanceOfPlaying">Start % ${getSortArrow('chanceOfPlaying', sortColumn, sortAsc)}</th>
                             <th data-col="gwPred">GW${state.currentGw} XP ${getSortArrow('gwPred', sortColumn, sortAsc)}</th>
                             <th data-col="xp5">5-GW XP ${getSortArrow('xp5', sortColumn, sortAsc)}</th>
                         </tr>
@@ -149,6 +187,39 @@ export function renderStats(container, state, actions) {
     teamSelect.addEventListener('change', e => {
         teamFilter = e.target.value;
         container.dataset.teamFilter = teamFilter;
+        renderTable();
+    });
+
+    const minPriceSelect = container.querySelector('#minPriceSelect');
+    minPriceSelect.addEventListener('change', e => {
+        minPriceFilter = parseFloat(e.target.value);
+        container.dataset.minPrice = minPriceFilter;
+        if (minPriceFilter > maxPriceFilter) {
+            maxPriceFilter = minPriceFilter;
+            container.dataset.maxPrice = maxPriceFilter;
+            const maxPriceSelectEl = container.querySelector('#maxPriceSelect');
+            if (maxPriceSelectEl) maxPriceSelectEl.value = maxPriceFilter.toFixed(1);
+        }
+        renderTable();
+    });
+
+    const maxPriceSelect = container.querySelector('#maxPriceSelect');
+    maxPriceSelect.addEventListener('change', e => {
+        maxPriceFilter = parseFloat(e.target.value);
+        container.dataset.maxPrice = maxPriceFilter;
+        if (maxPriceFilter < minPriceFilter) {
+            minPriceFilter = maxPriceFilter;
+            container.dataset.minPrice = minPriceFilter;
+            const minPriceSelectEl = container.querySelector('#minPriceSelect');
+            if (minPriceSelectEl) minPriceSelectEl.value = minPriceFilter.toFixed(1);
+        }
+        renderTable();
+    });
+
+    const startSelect = container.querySelector('#startFilterSelect');
+    startSelect.addEventListener('change', e => {
+        startFilter = e.target.value;
+        container.dataset.startFilter = startFilter;
         renderTable();
     });
 

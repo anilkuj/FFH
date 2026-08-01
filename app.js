@@ -93,6 +93,9 @@ class AppState {
         const savedBenchBudget = localStorage.getItem('fpl_hub_bench_budget');
         this.benchBudget = savedBenchBudget ? parseFloat(savedBenchBudget) : 17.0;
 
+        const savedGuaranteedStart = localStorage.getItem('fpl_hub_guaranteed_start');
+        this.guaranteedStart = savedGuaranteedStart ? parseInt(savedGuaranteedStart) : 60;
+
         this.optimizerObjective = localStorage.getItem('fpl_hub_optimizer_objective') || 'xp';
 
         const savedProfile = localStorage.getItem('fpl_hub_user_profile');
@@ -151,6 +154,7 @@ class AppState {
         localStorage.setItem('fpl_hub_must_include', JSON.stringify(this.mustInclude));
         localStorage.setItem('fpl_hub_must_exclude', JSON.stringify(this.mustExclude));
         localStorage.setItem('fpl_hub_bench_budget', this.benchBudget.toString());
+        localStorage.setItem('fpl_hub_guaranteed_start', this.guaranteedStart.toString());
         localStorage.setItem('fpl_hub_optimizer_objective', this.optimizerObjective || 'xp');
 
         // Save drafts state
@@ -297,6 +301,7 @@ class AppState {
             'fpl_hub_must_include',
             'fpl_hub_must_exclude',
             'fpl_hub_bench_budget',
+            'fpl_hub_guaranteed_start',
             'fpl_hub_drafts',
             'fpl_hub_active_draft_idx',
             'fpl_hub_optimizer_objective'

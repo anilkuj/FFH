@@ -84,6 +84,9 @@ export function renderOptimizer(container, state, actions) {
                             <button id="renameOptDraftBtn" class="pitch-btn" title="Rename Selected Draft" style="padding: 10px 14px; border-radius: 8px; height: 38px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.02);">
                                 <i data-lucide="edit-3" style="width: 14px; height: 14px;"></i>
                             </button>
+                            <button id="cloneOptDraftBtn" class="pitch-btn" title="Clone Selected Draft" style="padding: 10px 14px; border-radius: 8px; height: 38px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.02); margin-left: 4px;">
+                                <i data-lucide="copy" style="width: 14px; height: 14px;"></i>
+                            </button>
                         </div>
                         <span class="setting-help">Select which draft the optimizer will read from and save recommendations into.</span>
                     </div>
@@ -97,6 +100,18 @@ export function renderOptimizer(container, state, actions) {
                         </div>
                         <span class="setting-help">Reserves a portion of your total squad budget (£${squadValue.toFixed(1)}m) for the 4 bench slots.</span>
                     </div>
+
+                    <div class="setting-group" id="guaranteedStartGroup">
+                        <label for="guaranteedStartRange">Guaranteed Start: <span id="guaranteedStartValue" style="color: var(--primary); font-weight: 800;">${state.guaranteedStart}m</span></label>
+                        <div style="display: flex; align-items: center; gap: 12px; margin-top: 8px; height: 38px;">
+                            <span style="font-size: 11px; color: var(--text-muted);">0m</span>
+                            <input type="range" id="guaranteedStartRange" min="0" max="90" step="5" value="${state.guaranteedStart}" style="flex: 1; accent-color: var(--primary); cursor: pointer; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.1); outline: none;">
+                            <span style="font-size: 11px; color: var(--text-muted);">90m</span>
+                        </div>
+                        <span class="setting-help">Filter candidates by minimum average minutes per appearance to guarantee playing starters.</span>
+                    </div>
+                </div>
+
                 </div>
 
                 <div class="optimizer-rules-container" style="margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 20px;">
@@ -189,6 +204,18 @@ export function renderOptimizer(container, state, actions) {
         });
     }
 
+    // Wire guaranteed start slider listeners
+    const startSlider = container.querySelector('#guaranteedStartRange');
+    const startValueDisplay = container.querySelector('#guaranteedStartValue');
+    if (startSlider && startValueDisplay) {
+        startSlider.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value);
+            startValueDisplay.textContent = `${val}m`;
+            state.guaranteedStart = val;
+            state.saveState();
+        });
+    }
+
     const formationSelect = container.querySelector('#optimizerFormationSelect');
     if (formationSelect) {
         formationSelect.addEventListener('change', () => {
@@ -253,6 +280,44 @@ export function renderOptimizer(container, state, actions) {
                 renderOptimizer(container, state, actions);
                 actions.showToast(`Draft renamed to "${newName.trim()}"`, 'success');
             }
+        });
+    }
+
+    // Clone draft listener
+    const cloneDraftBtn = container.querySelector('#cloneOptDraftBtn');
+    if (cloneDraftBtn) {
+        cloneDraftBtn.addEventListener('click', () => {
+            const currentDraft = state.drafts[state.activeDraftIndex];
+            const promptMsg = `Clone current draft "${currentDraft.name}" into another draft slot.\n\nEnter target draft slot number (1-10):`;
+            const targetInput = prompt(promptMsg);
+            if (targetInput === null) return; // cancelled
+            
+            const targetNum = parseInt(targetInput.trim());
+            if (isNaN(targetNum) || targetNum < 1 || targetNum > 10) {
+                actions.showToast("Invalid draft number. Please enter a number between 1 and 10.", "error");
+                return;
+            }
+            
+            const targetIndex = targetNum - 1;
+            if (targetIndex === state.activeDraftIndex) {
+                actions.showToast("Cannot clone a draft into itself.", "error");
+                return;
+            }
+            
+            const targetDraft = state.drafts[targetIndex];
+            const confirmOverwrite = confirm(`Are you sure you want to overwrite draft "${targetDraft.name}" with the contents of "${currentDraft.name}"?`);
+            if (!confirmOverwrite) return;
+            
+            // Perform clone
+            targetDraft.squadSlots = JSON.parse(JSON.stringify(state.squadSlots));
+            targetDraft.captain = state.captain;
+            targetDraft.vice = state.vice;
+            targetDraft.formation = state.formation;
+            targetDraft.name = `Copy of ${currentDraft.name}`;
+            
+            state.saveState();
+            renderOptimizer(container, state, actions);
+            actions.showToast(`Successfully cloned into slot ${targetNum} ("${targetDraft.name}")`, "success");
         });
     }
 
@@ -458,6 +523,20 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
         }
         return sum;
     };
+
+    // Helper: guaranteed start filter
+    const isGuaranteedStart = (player) => {
+        if (state.mustInclude && state.mustInclude.includes(player.id)) return true;
+        const minMins = state.guaranteedStart || 0;
+        if (minMins === 0) return true;
+        const mppg = player.MPPG || 0;
+        if (mppg >= minMins) return true;
+        // Exception: new or highly priced signings with 0 mins might still be starting players (e.g. price >= 5.0m)
+        if (mppg === 0 && player.price >= 5.0) return true;
+        return false;
+    };
+
+
 
     const objective = state.optimizerObjective || 'xp';
     const getSolverScore = (player) => {
@@ -727,32 +806,43 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
         const cheapestMIDs = PLAYERS.filter(p => p.position === 'MID' && !state.mustExclude.includes(p.id)).sort((a, b) => a.price - b.price);
         const cheapestFWDs = PLAYERS.filter(p => p.position === 'FWD' && !state.mustExclude.includes(p.id)).sort((a, b) => a.price - b.price);
 
-        const getCheapestPlayersList = (pos, count, usedIds) => {
+        const getCheapestPlayersList = (pos, count, usedIds, forceGuaranteed = false) => {
             const list = pos === 'GKP' ? cheapestGKPs : (pos === 'DEF' ? cheapestDEFs : (pos === 'MID' ? cheapestMIDs : cheapestFWDs));
             const result = [];
             for (const p of list) {
                 if (!usedIds.includes(p.id)) {
+                    if (forceGuaranteed && !isGuaranteedStart(p)) continue;
                     result.push(p);
                     usedIds.push(p.id);
                     if (result.length === count) break;
                 }
             }
+            // Fallback: if we didn't find enough players matching the guaranteed start criteria, grab from the list without checking it
+            if (result.length < count) {
+                for (const p of list) {
+                    if (!usedIds.includes(p.id)) {
+                        result.push(p);
+                        usedIds.push(p.id);
+                        if (result.length === count) break;
+                    }
+                }
+            }
             return result;
         };
 
-        // Initialize starting slots first (with cheapest) if they are not locked
+        // Initialize starting slots first (with cheapest playing) if they are not locked
         for (const idx of startingIndices) {
             const slot = optimizedSquadSlots[idx];
             if (!slot.locked) {
-                const cheapest = getCheapestPlayersList(slot.position, 1, initUsedIds)[0];
+                const cheapest = getCheapestPlayersList(slot.position, 1, initUsedIds, true)[0];
                 slot.playerId = cheapest ? cheapest.id : null;
             }
         }
-        // Initialize bench slots (with cheapest) if they are not locked
+        // Initialize bench slots (with cheapest, trying to respect guaranteed start if possible) if they are not locked
         for (const idx of benchIndices) {
             const slot = optimizedSquadSlots[idx];
             if (!slot.locked) {
-                const cheapest = getCheapestPlayersList(slot.position, 1, initUsedIds)[0];
+                const cheapest = getCheapestPlayersList(slot.position, 1, initUsedIds, true)[0];
                 slot.playerId = cheapest ? cheapest.id : null;
             }
         }
@@ -833,12 +923,18 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                 const maxBudgetForSlot = maxStartingBudget - otherStartingCost;
                 const usedStartingIds = startingIndices.filter(sIdx => sIdx !== idx).map(sIdx => optimizedSquadSlots[sIdx].playerId).filter(id => id !== null);
                 
-                const candidates = PLAYERS.filter(p => 
+                let candidates = PLAYERS.filter(p => 
                     p.position === currentSlot.position && 
                     !usedStartingIds.includes(p.id) && 
                     p.price <= maxBudgetForSlot &&
                     !state.mustExclude.includes(p.id)
-                ).sort((a, b) => getSolverScore(b) - getSolverScore(a));
+                );
+
+                const guaranteedCandidates = candidates.filter(isGuaranteedStart);
+                if (guaranteedCandidates.length > 0) {
+                    candidates = guaranteedCandidates;
+                }
+                candidates.sort((a, b) => getSolverScore(b) - getSolverScore(a));
 
                 let bestCandidate = null;
                 let bestPts = currentPts;
@@ -914,13 +1010,19 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                 const otherBenchIds = benchIndices.filter(bIdx => bIdx !== idx).map(bIdx => optimizedSquadSlots[bIdx].playerId).filter(id => id !== null);
                 const unavailableIds = [...startingIds, ...otherBenchIds];
 
-                const candidates = PLAYERS.filter(p => 
+                let candidates = PLAYERS.filter(p => 
                     p.position === currentSlot.position && 
                     !unavailableIds.includes(p.id) && 
                     p.price <= maxBudgetForSlot &&
                     getSolverScore(p) >= 0.5 &&
                     !state.mustExclude.includes(p.id)
-                ).sort((a, b) => getSolverScore(b) - getSolverScore(a));
+                );
+
+                const guaranteedCandidates = candidates.filter(isGuaranteedStart);
+                if (guaranteedCandidates.length > 0) {
+                    candidates = guaranteedCandidates;
+                }
+                candidates.sort((a, b) => getSolverScore(b) - getSolverScore(a));
 
                 let bestCandidate = null;
                 let bestPts = currentPts;
@@ -998,12 +1100,19 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
 
                 const maxPrice = playerPrice + currentBank;
 
-                const candidates = PLAYERS.filter(p => 
+                let candidates = PLAYERS.filter(p => 
                     p.position === slot.position && 
                     !currentSquadIds.includes(p.id) && 
                     p.price <= maxPrice &&
                     !state.mustExclude.includes(p.id)
                 );
+
+                const guaranteedCandidates = candidates.filter(isGuaranteedStart);
+                if (guaranteedCandidates.length > 0) {
+                    candidates = guaranteedCandidates;
+                } else if (!isBenchSlot) {
+                    candidates = [];
+                }
 
                 for (const cand of candidates) {
                     if (isBenchSlot) {
@@ -1207,6 +1316,11 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                 !state.mustExclude.includes(p.id)
             );
 
+            const guaranteedCandidates = candidates.filter(isGuaranteedStart);
+            if (guaranteedCandidates.length > 0) {
+                candidates = guaranteedCandidates;
+            }
+
             // If there are must-include players not in the squad for this position, restrict candidates to only those!
             const mustIncludeNotInSquad = state.mustInclude.filter(id => 
                 !currentSquadIds.includes(id) && 
@@ -1251,6 +1365,9 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                     !currentSquadIds.includes(p.id) &&
                     !state.mustExclude.includes(p.id)
                 );
+                const g1 = candidates1.filter(isGuaranteedStart);
+                if (g1.length > 0) candidates1 = g1;
+
                 const mustIncludeNotInSquad1 = state.mustInclude.filter(id => 
                     !currentSquadIds.includes(id) && 
                     PLAYERS.find(pl => pl.id === id)?.position === s1.position
@@ -1264,6 +1381,9 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                     !currentSquadIds.includes(p.id) &&
                     !state.mustExclude.includes(p.id)
                 );
+                const g2 = candidates2.filter(isGuaranteedStart);
+                if (g2.length > 0) candidates2 = g2;
+
                 const mustIncludeNotInSquad2 = state.mustInclude.filter(id => 
                     !currentSquadIds.includes(id) && 
                     PLAYERS.find(pl => pl.id === id)?.position === s2.position

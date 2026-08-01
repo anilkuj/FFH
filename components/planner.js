@@ -59,14 +59,30 @@ export function renderPlanner(container, state, actions) {
     const ratingScore = Math.min(100, Math.round((expectedPoints / 11) * 15));
 
     container.innerHTML = `
-        <div class="planner-grid">
+        <div class="planner-grid" style="grid-template-columns: 1fr; height: auto; overflow: visible;">
             <!-- Left Column: The Football Pitch -->
-            <div class="pitch-container">
-                <div class="pitch-header">
-                    <div class="pitch-title-area">
-                        <h2>Squad Selection</h2>
+            <div class="pitch-container" style="height: auto; overflow: visible;">
+                <div class="pitch-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                    <div class="pitch-title-area" style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+                        <h2 style="margin: 0;">Squad Selection</h2>
+                        <div class="header-rating-badge" style="display: flex; align-items: center; gap: 12px; background: rgba(0, 255, 136, 0.05); border: 1px solid var(--primary-glow); padding: 4px 12px; border-radius: 20px; flex-wrap: wrap;">
+                            <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">AI Squad Rating:</span>
+                            <strong class="highlight-transfers" style="font-size: 14px; font-weight: 800;">${ratingScore}/100</strong>
+                            <span style="height: 12px; width: 1px; background: rgba(255,255,255,0.1);"></span>
+                            <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">GW${state.currentGw} Expected Points:</span>
+                            <strong class="highlight-bank" style="font-size: 14px; font-weight: 800;">${expectedPoints.toFixed(1)}</strong>
+                        </div>
                     </div>
-                    <div class="pitch-actions">
+                    <div class="pitch-actions" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end;">
+                        <button class="pitch-btn" id="renameDraftBtn" title="Rename Current Draft" style="flex: 0 0 auto; padding: 6px; border-radius: 6px; background: rgba(255, 255, 255, 0.02); display: flex; align-items: center; justify-content: center; height: 32px; width: 32px;">
+                            <i data-lucide="edit-3" style="width: 14px; height: 14px;"></i>
+                        </button>
+                        <button class="pitch-btn" id="cloneDraftBtn" title="Clone Current Draft" style="flex: 0 0 auto; padding: 6px; border-radius: 6px; background: rgba(255, 255, 255, 0.02); display: flex; align-items: center; justify-content: center; height: 32px; width: 32px;">
+                            <i data-lucide="copy" style="width: 14px; height: 14px;"></i>
+                        </button>
+                        <button class="pitch-btn" id="captainAnalyzerBtn" title="Captaincy Analyzer" style="flex: 0 0 auto; padding: 6px; border-radius: 6px; background: rgba(255, 255, 255, 0.02); display: flex; align-items: center; justify-content: center; height: 32px; width: 32px; margin-right: 4px;">
+                            <i data-lucide="award" style="width: 14px; height: 14px; color: #fbbf24;"></i>
+                        </button>
                         ${chipsHtml}
                         <select id="formationSelect" class="formation-select" style="margin-left: 12px;">
                             <option value="4-3-3" ${state.formation === '4-3-3' ? 'selected' : ''}>4-3-3</option>
@@ -92,13 +108,10 @@ export function renderPlanner(container, state, actions) {
                             <span>${draft.name}</span>
                         </button>
                     `).join('')}
-                    <button class="pitch-btn" id="renameDraftBtn" title="Rename Current Draft" style="flex: 0 0 auto; padding: 6px; border-radius: 6px; background: rgba(255, 255, 255, 0.02); display: flex; align-items: center; justify-content: center; height: 32px; width: 32px;">
-                        <i data-lucide="edit-3" style="width: 14px; height: 14px;"></i>
-                    </button>
                 </div>
 
                 <!-- Football Pitch -->
-                <div class="football-pitch" id="pitchBoard">
+                <div class="football-pitch" id="pitchBoard" style="height: 580px; flex: none;">
                     <!-- Top Box (Away GK Box) -->
                     <div class="pitch-box-top"></div>
                     <div class="pitch-half-line"></div>
@@ -136,58 +149,27 @@ export function renderPlanner(container, state, actions) {
                 </div>
             </div>
 
-            <!-- Right Column: AI Rating & Transfers List -->
-            <div class="planner-side-panel">
-                <!-- AI Team Rating -->
-                <div class="ai-rating-card">
-                    <div class="rating-ring-container">
-                        <svg class="rating-svg">
-                            <defs>
-                                <linearGradient id="rating-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#00f2fe" />
-                                    <stop offset="100%" stop-color="#00ff88" />
-                                </linearGradient>
-                            </defs>
-                            <circle class="rating-bg-circle" cx="70" cy="70" r="60"></circle>
-                            <circle class="rating-progress-circle" cx="70" cy="70" r="60" id="ratingIndicatorCircle"></circle>
-                        </svg>
-                        <div class="rating-text">
-                            <span class="rating-num">${ratingScore}</span>
-                            <span class="rating-max">/ 100</span>
-                        </div>
-                    </div>
-                    <div class="rating-meta">
-                        <h3>AI Squad Rating</h3>
-                        <p>Expected GW Points: <strong class="highlight-bank">${expectedPoints.toFixed(1)}</strong></p>
-                    </div>
-                </div>
-
-                <!-- Gameweek Transfers planned -->
-                <div class="gw-transfers-card">
-                    <h3>
-                        <span>GW${state.currentGw} Planned Transfers</span>
-                        <span class="pill-value highlight-transfers">${state.currentGw === 1 ? 'Unlimited' : freeTransfers + ' FT'}</span>
-                    </h3>
-                    <div class="transfer-list" id="plannedTransfersList">
-                        ${renderTransfersList(state, actions)}
-                    </div>
+            <!-- Gameweek Transfers planned (GW2+) -->
+            ${state.currentGw > 1 ? `
+            <div class="gw-transfers-card" style="margin-top: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px;">
+                <h3 style="font-family: var(--font-heading); font-size: 16px; font-weight: 700; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+                    <span>GW${state.currentGw} Planned Transfers</span>
+                    <span class="pill-value highlight-transfers">${freeTransfers} FT</span>
+                </h3>
+                <div class="transfer-list" id="plannedTransfersList">
+                    ${renderTransfersList(state, actions)}
                 </div>
             </div>
+            ` : ''}
         </div>
     `;
 
     // Trigger Lucide icons
     lucide.createIcons();
 
-    // Trigger circular rating animation
-    setTimeout(() => {
-        const circle = document.getElementById('ratingIndicatorCircle');
-        if (circle) {
-            const circumference = 2 * Math.PI * 60; // ~377
-            const offset = circumference - (ratingScore / 100) * circumference;
-            circle.style.strokeDashoffset = offset;
-        }
-    }, 100);
+    // Scroll active draft into view
+    const activeTab = document.querySelector('.draft-tab-btn.active-chip');
+    if (activeTab) activeTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
 
     // Event listeners
     setupPlannerListeners(container, state, actions, starters, bench);
@@ -533,6 +515,44 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
         });
     }
 
+    // Draft cloning
+    const cloneDraftBtn = container.querySelector('#cloneDraftBtn');
+    if (cloneDraftBtn) {
+        cloneDraftBtn.addEventListener('click', () => {
+            const currentDraft = state.drafts[state.activeDraftIndex];
+            const promptMsg = `Clone current draft "${currentDraft.name}" into another draft slot.\n\nEnter target draft slot number (1-10):`;
+            const targetInput = prompt(promptMsg);
+            if (targetInput === null) return; // cancelled
+            
+            const targetNum = parseInt(targetInput.trim());
+            if (isNaN(targetNum) || targetNum < 1 || targetNum > 10) {
+                actions.showToast("Invalid draft number. Please enter a number between 1 and 10.", "error");
+                return;
+            }
+            
+            const targetIndex = targetNum - 1;
+            if (targetIndex === state.activeDraftIndex) {
+                actions.showToast("Cannot clone a draft into itself.", "error");
+                return;
+            }
+            
+            const targetDraft = state.drafts[targetIndex];
+            const confirmOverwrite = confirm(`Are you sure you want to overwrite draft "${targetDraft.name}" with the contents of "${currentDraft.name}"?`);
+            if (!confirmOverwrite) return;
+            
+            // Perform clone
+            targetDraft.squadSlots = JSON.parse(JSON.stringify(state.squadSlots));
+            targetDraft.captain = state.captain;
+            targetDraft.vice = state.vice;
+            targetDraft.formation = state.formation;
+            targetDraft.name = `Copy of ${currentDraft.name}`;
+            
+            state.saveState();
+            actions.renderActiveView();
+            actions.showToast(`Successfully cloned into slot ${targetNum} ("${targetDraft.name}")`, "success");
+        });
+    }
+
     // Track if a player is selected to swap
     let selectedForSwap = null;
 
@@ -610,6 +630,124 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
         formationSelect.addEventListener('change', () => {
             actions.setFormation(formationSelect.value);
         });
+    }
+
+    // Captaincy Analyzer click listener
+    const captainAnalyzerBtn = container.querySelector('#captainAnalyzerBtn');
+    if (captainAnalyzerBtn) {
+        captainAnalyzerBtn.addEventListener('click', () => {
+            const currentGw = state.currentGw;
+            const squadIds = state.squadSlots.map(s => s.playerId).filter(id => id !== null);
+            const squadPlayers = squadIds.map(id => PLAYERS.find(p => p.id === id)).filter(p => p !== undefined);
+
+            const getGwPrediction = (player, gw) => {
+                return player.predictions.find(pr => pr.gw === gw) || { pts: 0, opp: 'BYE', loc: '', diff: 3 };
+            };
+
+            const getFdrBadge = (diff) => {
+                let cls = 'diff-3';
+                if (diff <= 2) cls = 'diff-2';
+                else if (diff === 4) cls = 'diff-4';
+                else if (diff >= 5) cls = 'diff-5';
+                return `<span class="difficulty-cell ${cls}" style="padding: 2px 8px; border-radius: 4px; font-size: 10px; display: inline-block; min-height: auto;">FDR ${diff}</span>`;
+            };
+
+            // Get top 3 options from squad
+            const options = [...squadPlayers]
+                .map(p => {
+                    const pred = getGwPrediction(p, currentGw);
+                    return { player: p, pred };
+                })
+                .sort((a, b) => b.pred.pts - a.pred.pts)
+                .slice(0, 3);
+
+            if (options.length === 0) {
+                actions.showToast("Your squad is empty. Please add players first.", "error");
+                return;
+            }
+
+            const modalHTML = `
+                <div class="modal-header-section">
+                    <h3 style="display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="award" style="color: #fbbf24; width: 18px; height: 18px;"></i>
+                        AI Captaincy Analyzer (GW${currentGw})
+                    </h3>
+                    <button class="close-modal-btn" id="closeCaptainModalBtn"><i data-lucide="x"></i></button>
+                </div>
+                <div class="checkout-modal-body" style="padding: 20px; display: flex; flex-direction: column; gap: 16px; max-height: 80vh; overflow-y: auto; text-align: left; align-items: stretch;">
+                    <p style="font-size: 13px; color: var(--text-muted); margin: 0 0 8px 0; line-height: 1.5;">
+                        We analyzed your active squad for GW${currentGw} using fixture difficulty, historical conversion rates, and expected points. Here are the top 3 recommended captains:
+                    </p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 14px;">
+                        ${options.map((item, index) => {
+                            const { player, pred } = item;
+                            const isCurrentCap = state.captain === player.id;
+                            const rankLabel = index === 0 ? "🥇 Primary Pick" : (index === 1 ? "🥈 Secondary Pick" : "🥉 Alternative Pick");
+                            const xGI = player.xGI !== undefined ? player.xGI.toFixed(2) : '0.00';
+                            
+                            let rationale = '';
+                            if (player.position === 'FWD' || player.position === 'MID') {
+                                rationale = `Highly efficient midfielder/forward with ${xGI} xGI this season. Leeds/their team facing ${pred.opp} (${pred.loc === 'H' ? 'Home' : 'Away'}) represents a high-probability attacking ceiling of ${pred.pts.toFixed(1)} predicted points.`;
+                            } else {
+                                rationale = `Solid defensive/goalkeeping asset. Projected at ${pred.pts.toFixed(1)} expected points due to a high clean sheet probability against ${pred.opp}.`;
+                            }
+
+                            return `
+                                <div style="border: 1px solid var(--border-color); background: rgba(255,255,255,0.02); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 10px;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                                        <div>
+                                            <span style="font-size: 10px; font-weight: 800; color: #fbbf24; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 2px;">${rankLabel}</span>
+                                            <h4 style="font-family: var(--font-heading); font-size: 15px; font-weight: 700; color: #fff; margin: 0; display: flex; align-items: center; gap: 8px;">
+                                                ${player.name}
+                                                ${isCurrentCap ? `<span style="font-size: 9px; padding: 1px 6px; background: rgba(0,255,136,0.1); color: var(--primary); border: 1px solid var(--primary-glow); border-radius: 10px; font-weight: 700;">CURRENT CAPTAIN</span>` : ''}
+                                            </h4>
+                                            <span style="font-size: 11px; color: var(--text-muted);">${player.position} • ${player.team} • £${player.price.toFixed(1)}m</span>
+                                        </div>
+                                        <div style="text-align: right;">
+                                            <span style="font-family: var(--font-heading); font-size: 16px; font-weight: 800; color: var(--secondary);">${pred.pts.toFixed(1)} XP</span>
+                                            <div style="margin-top: 2px;">
+                                                ${getFdrBadge(pred.diff)}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="font-size: 12px; color: var(--text-muted); line-height: 1.5; padding: 8px 12px; background: rgba(255, 255, 255, 0.01); border-left: 3px solid var(--accent-purple); border-radius: 4px;">
+                                        <strong>AI Rationale:</strong> ${rationale}
+                                    </div>
+                                    ${!isCurrentCap ? `
+                                        <button class="apply-rec-btn make-captain-btn" data-id="${player.id}" style="padding: 6px 12px; font-size: 11px; width: auto; height: 30px; border-radius: 6px; margin: 4px 0 0 0; align-self: flex-start;">
+                                            Set as Captain
+                                        </button>
+                                    ` : ''}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+
+            actions.showModal(modalHTML, () => {
+                const closeBtn = document.getElementById('closeCaptainModalBtn');
+                if (closeBtn) closeBtn.addEventListener('click', actions.hideModal);
+
+                document.querySelectorAll('.make-captain-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const id = parseInt(btn.getAttribute('data-id'));
+                        actions.setCaptain(id);
+                        actions.hideModal();
+                        actions.renderActiveView();
+                        actions.showToast("Captain choice updated!", "success");
+                    });
+                });
+                lucide.createIcons();
+            });
+        });
+    }
+
+    // Scroll active draft tab into view
+    const activeTab = container.querySelector('.draft-tab-btn.active-chip');
+    if (activeTab) {
+        activeTab.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'nearest' });
     }
 }
 
@@ -990,6 +1128,21 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
                         <option value="C">Defcon: C+</option>
                         <option value="D">Defcon: D+</option>
                     </select>
+                    <select class="panel-price-select" id="modalMppgSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-panel); color:#fff; border: 1px solid var(--border-color); border-radius: 6px;">
+                        <option value="">Avg Mins (Any)</option>
+                        <option value="60">60+ mins/game</option>
+                        <option value="45">45+ mins/game</option>
+                        <option value="30">30+ mins/game</option>
+                        <option value="15">15+ mins/game</option>
+                    </select>
+                    <select class="panel-price-select" id="modalGsSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-panel); color:#fff; border: 1px solid var(--border-color); border-radius: 6px;">
+                        <option value="">Starts (Any)</option>
+                        <option value="30">30+ starts</option>
+                        <option value="20">20+ starts</option>
+                        <option value="10">10+ starts</option>
+                        <option value="5">5+ starts</option>
+                        <option value="1">1+ starts</option>
+                    </select>
                 </div>
             </div>
 
@@ -1007,6 +1160,8 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
         const priceSelect = document.getElementById('modalPriceSelect');
         const attSelect = document.getElementById('modalAttSelect');
         const defconSelect = document.getElementById('modalDefconSelect');
+        const mppgSelect = document.getElementById('modalMppgSelect');
+        const gsSelect = document.getElementById('modalGsSelect');
         const listContainer = document.getElementById('modalPlayerList');
 
         const applyFilters = () => {
@@ -1018,10 +1173,18 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
                 const minAttGrade = attSelect ? attSelect.value : "";
                 const minDefconGrade = defconSelect ? defconSelect.value : "";
                 
+                const minMinsStr = mppgSelect ? mppgSelect.value : "";
+                const minMins = minMinsStr ? parseFloat(minMinsStr) : 0;
+                
+                const minGsStr = gsSelect ? gsSelect.value : "";
+                const minGs = minGsStr ? parseInt(minGsStr) : 0;
+                
                 const gradeScores = { 'A': 5, 'B': 4, 'C': 3, 'D': 2, 'E': 1, 'N/A': 0 };
      
                 const filtered = buyablePlayers.filter(p => {
                     if (p.price > maxPrice) return false;
+                    if (minMins > 0 && (p.MPPG || 0) < minMins) return false;
+                    if (minGs > 0 && (p.GS || 0) < minGs) return false;
                     
                     const ratings = getPlayerRatings(p, state.currentGw);
                     
@@ -1087,6 +1250,8 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
         if (priceSelect) priceSelect.addEventListener('change', applyFilters);
         if (attSelect) attSelect.addEventListener('change', applyFilters);
         if (defconSelect) defconSelect.addEventListener('change', applyFilters);
+        if (mppgSelect) mppgSelect.addEventListener('change', applyFilters);
+        if (gsSelect) gsSelect.addEventListener('change', applyFilters);
 
         const wireAddButtons = () => {
             listContainer.querySelectorAll('.add-player-action-btn').forEach(btn => {
