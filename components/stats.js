@@ -82,7 +82,7 @@ export function renderStats(container, state, actions) {
                     <td class="${sortColumn === 'MPPG' ? 'highlight-column' : ''}">${player.MPPG.toFixed(1)}</td>
                     <td class="${sortColumn === 'chanceOfPlaying' ? 'highlight-column' : ''}">${player.chanceOfPlaying !== null ? player.chanceOfPlaying : 100}%</td>
                     <td class="${sortColumn === 'gwPred' ? 'highlight-column' : ''}">${currentGwPred.toFixed(1)}</td>
-                    <td class="${sortColumn === 'xp5' ? 'highlight-column' : ''}">${player.xp5.toFixed(1)}</td>
+                    <td class="${sortColumn === 'xp10' ? 'highlight-column' : ''}">${player.xp10.toFixed(1)}</td>
                 </tr>
             `;
         }).join('');
@@ -154,7 +154,7 @@ export function renderStats(container, state, actions) {
                             <th data-col="MPPG">MPPG ${getSortArrow('MPPG', sortColumn, sortAsc)}</th>
                             <th data-col="chanceOfPlaying">Start % ${getSortArrow('chanceOfPlaying', sortColumn, sortAsc)}</th>
                             <th data-col="gwPred">GW${state.currentGw} XP ${getSortArrow('gwPred', sortColumn, sortAsc)}</th>
-                            <th data-col="xp5">5-GW XP ${getSortArrow('xp5', sortColumn, sortAsc)}</th>
+                            <th data-col="xp10">10-GW XP ${getSortArrow('xp10', sortColumn, sortAsc)}</th>
                         </tr>
                     </thead>
                     <tbody id="statsTableBody">

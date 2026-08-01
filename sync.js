@@ -75,7 +75,7 @@ function parseAndWriteData(data, fixturesData) {
 
     fixturesData.forEach(f => {
         const gw = f.event;
-        if (gw >= 1 && gw <= 5) {
+        if (gw >= 1 && gw <= 10) {
             const homeTeam = teamMap[f.team_h];
             const awayTeam = teamMap[f.team_a];
             
@@ -186,7 +186,7 @@ function parseAndWriteData(data, fixturesData) {
         const predictions = [];
         const fixtures = fixturesSchedule[teamShort] || [];
         
-        for (let gw = 1; gw <= 5; gw++) {
+        for (let gw = 1; gw <= 10; gw++) {
             const fixture = fixtures.find(f => f.gw === gw) || { opp: 'BYE', loc: 'H', diff: 3 };
             let pts = basePPG;
             
@@ -225,8 +225,8 @@ function parseAndWriteData(data, fixturesData) {
             });
         }
 
-        const totalXp5 = predictions.reduce((sum, pr) => sum + pr.pts, 0);
-
+        const totalXp10 = predictions.reduce((sum, pr) => sum + pr.pts, 0);
+ 
         return {
             id: el.id,
             name: `${el.first_name} ${el.second_name}`,
@@ -250,7 +250,7 @@ function parseAndWriteData(data, fixturesData) {
             news: el.news || "",
             status: el.status || "a",
             chanceOfPlaying: el.chance_of_playing_next_round !== null ? el.chance_of_playing_next_round : 100,
-            xp5: parseFloat(totalXp5.toFixed(1))
+            xp10: parseFloat(totalXp10.toFixed(1))
         };
     });
 
@@ -343,12 +343,12 @@ export function getPlayerRatings(player, currentGw = 1) {
     else if (mppg >= 45) expectedMinutes = 'C';
     else if (mppg >= 20) expectedMinutes = 'D';
 
-    // 2. Next 5 Fixtures (based on average FDR of next 5 predictions starting from currentGw)
+    // 2. Next 10 Fixtures (based on average FDR of next 10 predictions starting from currentGw)
     let avgFdr = 3.0;
     if (player.predictions && player.predictions.length > 0) {
         let fdrSum = 0;
         let count = 0;
-        for (let gw = currentGw; gw < currentGw + 5; gw++) {
+        for (let gw = currentGw; gw < currentGw + 10; gw++) {
             const pred = player.predictions.find(p => p.gw === gw);
             if (pred && pred.opp !== 'BYE') {
                 fdrSum += pred.diff;
@@ -423,7 +423,7 @@ export function getPlayerRatings(player, currentGw = 1) {
         let sumOdds = 0;
         let count = 0;
         if (player.predictions && player.predictions.length > 0) {
-            for (let gw = currentGw; gw < currentGw + 5; gw++) {
+            for (let gw = currentGw; gw < currentGw + 10; gw++) {
                 const pred = player.predictions.find(p => p.gw === gw);
                 if (pred && pred.opp !== 'BYE') {
                     let base = 30;

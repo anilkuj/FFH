@@ -95,9 +95,9 @@ export function renderCompare(container, state, actions) {
                                 <td>${pred2.toFixed(1)}</td>
                             </tr>
                             <tr>
-                                <td>5-GW Expected Points (5-GW XP)</td>
-                                <td>${player1.xp5.toFixed(1)}</td>
-                                <td>${player2.xp5.toFixed(1)}</td>
+                                <td>10-GW Expected Points (10-GW XP)</td>
+                                <td>${player1.xp10.toFixed(1)}</td>
+                                <td>${player2.xp10.toFixed(1)}</td>
                             </tr>
                             <tr>
                                 <td>Expected Goals (xG)</td>
