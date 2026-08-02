@@ -216,12 +216,12 @@ export function renderDifferentials(container, state, actions) {
 
                                             <div class="quick-swap-container" style="border-top:1px dashed var(--border-color); padding-top:12px; display:flex; flex-direction:column; gap:8px; margin-top:auto;">
                                                 <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Quick Swap Roster Option:</label>
-                                                <div style="display:flex; gap:8px; align-items:center;">
-                                                    <select class="settings-select swap-out-select" data-in-id="${player.id}" style="flex:1; padding:8px; font-size:12px;">
+                                                <div style="display:flex; flex-direction:column; gap:8px;">
+                                                    <select class="settings-select swap-out-select" data-in-id="${player.id}" style="width:100%; padding:8px; font-size:12px; border-radius:8px;">
                                                         ${squadPosPlayers.map(sp => `<option value="${sp.id}">Swap out: ${sp.name} (£${sp.price.toFixed(1)}m)</option>`).join('')}
                                                     </select>
-                                                    <button class="apply-rec-btn swap-action-btn" data-in-id="${player.id}" style="padding:8px 16px; font-size:12px; font-weight:700; width:auto; border-radius:8px;">
-                                                        Swap
+                                                    <button class="apply-rec-btn swap-action-btn" data-in-id="${player.id}" style="padding:8px 16px; font-size:12px; font-weight:700; width:100%; border-radius:8px;">
+                                                        Swap Player
                                                     </button>
                                                 </div>
                                             </div>
