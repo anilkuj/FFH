@@ -10,6 +10,7 @@ import { renderCaptain } from './components/captain.js';
 import { renderLeague } from './components/league.js';
 import { renderLiveRank } from './components/liverank.js';
 import { renderReveals } from './components/reveals.js';
+import { renderTransferPlanner } from './components/transferplanner.js';
 
 // Application State class
 class AppState {
@@ -550,6 +551,9 @@ const actions = {
                 break;
             case 'differentials':
                 renderDifferentials(container, state, actions);
+                break;
+            case 'transferplanner':
+                renderTransferPlanner(container, state, actions);
                 break;
             case 'captain':
                 renderCaptain(container, state, actions);
