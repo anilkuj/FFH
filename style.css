@@ -3662,3 +3662,15 @@ html.light-theme .rating-badge-na {
     }
 }
 
+/* Transfer Planner Step Layout Responsive Grid */
+@media (max-width: 767px) {
+    .tp-step-layout {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+    .tp-step-layout .transfer-arrow-icon {
+        transform: rotate(90deg);
+        margin: 8px 0;
+    }
+}
+

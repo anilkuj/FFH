@@ -373,15 +373,47 @@ export function renderTransferPlanner(container, state, actions) {
 
         modalDiv.querySelector('#applyCompareModalBtn').addEventListener('click', () => {
             closeModal();
-            const slotIdx = tx.slotIdx;
-            const targetSlot = state.squadSlots[slotIdx];
+            const targetSlot = state.squadSlots.find(s => s.playerId === p1.id) || state.squadSlots[tx.slotIdx];
             if (targetSlot) {
                 targetSlot.playerId = p2.id;
                 state.optimizeCaptaincy();
                 state.saveState();
                 actions.syncTopBar();
                 actions.showToast(`Applied transfer: ${p2.name} in for ${p1.name}`, 'success');
-                actions.switchTab('planner');
+                
+                // Keep screen active and update preview
+                updateSquadPreview();
+
+                // Mark as applied in results list
+                const stepIdx = tx.step - 1;
+                const stepCard = container.querySelector(`[data-step-card-idx="${stepIdx}"]`);
+                if (stepCard) {
+                    stepCard.querySelectorAll('.apply-option-btn').forEach(btn => {
+                        btn.disabled = true;
+                        btn.style.opacity = '0.5';
+                        btn.style.cursor = 'default';
+                    });
+                    
+                    const appliedBtn = stepCard.querySelector(`.apply-option-btn[data-opt-id="${p2.id}"]`);
+                    if (appliedBtn) {
+                        appliedBtn.disabled = true;
+                        appliedBtn.style.opacity = '1';
+                        appliedBtn.style.background = 'var(--primary)';
+                        appliedBtn.style.color = '#000';
+                        appliedBtn.style.borderColor = 'var(--primary)';
+                        appliedBtn.innerHTML = `<i data-lucide="check-circle" style="width:12px; height:12px;"></i> Applied`;
+                    }
+
+                    const header = stepCard.querySelector('h4');
+                    if (header && !header.querySelector('.applied-badge-label')) {
+                        const badge = document.createElement('span');
+                        badge.className = 'applied-badge-label';
+                        badge.style.cssText = 'font-size:11px; background:rgba(0, 255, 136, 0.15); padding:2px 8px; border-radius:4px; color:var(--primary); text-transform:none; margin-left:12px; font-weight:700;';
+                        badge.innerHTML = `Applied: ${p2.name}`;
+                        header.appendChild(badge);
+                    }
+                    lucide.createIcons();
+                }
             }
         });
     };
@@ -714,47 +746,73 @@ export function renderTransferPlanner(container, state, actions) {
 
             let cardsHtml = result.sequence.map((tx, idx) => {
                 const teamOut = TEAMS.find(t => t.shortName === tx.out.team) || { color: '#fff' };
-                const teamIn = TEAMS.find(t => t.shortName === tx.in.team) || { color: '#fff' };
                 
+                let optionsHtml = '';
+                if (tx.options && tx.options.length > 0) {
+                    optionsHtml = tx.options.map((opt, optIdx) => {
+                        const pOpt = opt.player;
+                        const gainText = opt.gain >= 0 ? `+${opt.gain.toFixed(1)}` : opt.gain.toFixed(1);
+                        
+                        return `
+                            <div class="buy-option-row" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px; padding:10px; display:flex; flex-direction:column; gap:8px;">
+                                <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                                    <div style="display:flex; align-items:center; gap:6px; min-width:0;">
+                                        <span style="font-size:10px; font-weight:800; background:var(--primary); color:#000; padding:1px 5px; border-radius:4px; flex-shrink:0;">#${optIdx + 1}</span>
+                                        <span style="font-weight:700; color:var(--text-main); font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${pOpt.name}</span>
+                                        <span style="color:var(--text-muted); font-size:11px; flex-shrink:0;">${pOpt.team} • £${pOpt.price.toFixed(1)}m</span>
+                                    </div>
+                                    <span style="font-size:11px; font-weight:800; color:${opt.gain >= 0 ? 'var(--primary)' : '#f43f5e'}; flex-shrink:0;">${gainText} XP</span>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+                                    <div style="display:flex; flex-direction:column; gap:2px; min-width: 0; flex: 1;">
+                                        <span style="font-size:9.5px; color:var(--text-muted);">Avg Mins: <strong>${pOpt.MPPG ? pOpt.MPPG.toFixed(0) : 0}m</strong> • Starts: <strong>${pOpt.GS || 0}</strong></span>
+                                        ${renderFdrFixtures(pOpt)}
+                                    </div>
+                                    <div style="display:flex; gap:6px;">
+                                        <button class="action-main-btn compare-option-btn" data-step-idx="${idx}" data-opt-idx="${optIdx}" style="margin:0; padding:4px 8px; font-size:10px; height:28px; background:rgba(255,255,255,0.02); border-color:var(--border-color); color:var(--text-main); border-radius:4px; cursor:pointer; width:auto; display:flex; align-items:center; gap:4px;">
+                                            <i data-lucide="git-compare" style="width:10px; height:10px;"></i> Compare
+                                        </button>
+                                        <button class="action-main-btn apply-option-btn" data-step-idx="${idx}" data-opt-idx="${optIdx}" data-opt-id="${pOpt.id}" style="margin:0; padding:4px 8px; font-size:10px; height:28px; border-radius:4px; cursor:pointer; width:auto; display:flex; align-items:center; gap:4px;">
+                                            <i data-lucide="check" style="width:10px; height:10px;"></i> Apply
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    optionsHtml = `<p style="font-size:11px; color:#f43f5e; margin:0;">No eligible buy options found.</p>`;
+                }
+
                 return `
-                    <div class="optimizer-card" style="margin-bottom: 16px; border-left: 4px solid var(--primary);">
-                        <h4 style="font-size: 13px; font-weight:800; color:var(--primary); margin:0 0 12px 0; text-transform:uppercase; letter-spacing:0.5px; display:flex; align-items:center; justify-content:space-between;">
+                    <div class="optimizer-card" data-step-card-idx="${idx}" style="margin-bottom: 16px; border-left: 4px solid var(--primary); padding:16px;">
+                        <h4 style="font-size: 13px; font-weight:800; color:var(--primary); margin:0 0 16px 0; text-transform:uppercase; letter-spacing:0.5px; display:flex; align-items:center; justify-content:space-between;">
                             <span>Step ${idx + 1}: Suggestion</span>
-                            <span style="font-size:11px; background:rgba(0, 255, 136, 0.1); padding:2px 8px; border-radius:4px; color:var(--primary); text-transform:none;">
-                                +${tx.gain.toFixed(1)} XP Gain
-                            </span>
                         </h4>
                         
-                        <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;">
+                        <div class="tp-step-layout" style="display: grid; grid-template-columns: 1fr 40px 1.4fr; gap: 12px; align-items: start;">
                             <!-- Sell Player -->
-                            <div class="transfer-player-card player-card-out" style="flex:1;">
-                                <span class="player-name-main">${tx.out.name}</span>
-                                <span class="player-team-sub">${tx.out.team} • £${tx.out.price.toFixed(1)}m</span>
-                                ${renderPlayerStats(tx.out)}
-                                ${renderFdrFixtures(tx.out)}
+                            <div class="transfer-player-card player-card-out" style="margin:0; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+                                <div>
+                                    <span class="player-name-main" style="font-size:14px; font-weight:700;">${tx.out.name}</span>
+                                    <span class="player-team-sub">${tx.out.team} • £${tx.out.price.toFixed(1)}m</span>
+                                    ${renderPlayerStats(tx.out)}
+                                </div>
+                                <div style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 6px;">
+                                    <span style="font-size: 9.5px; color: var(--text-muted); display: block; margin-bottom: 4px;">Fixture FDR:</span>
+                                    ${renderFdrFixtures(tx.out)}
+                                </div>
                             </div>
                             
-                            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; align-self:center;">
-                                <i data-lucide="chevrons-right" class="transfer-arrow-icon" style="margin:0;"></i>
+                            <!-- Arrow icon centered -->
+                            <div style="display:flex; align-items:center; justify-content:center; height:100%; min-height:100px;">
+                                <i data-lucide="chevrons-right" class="transfer-arrow-icon" style="margin:0; font-size: 20px; color: var(--text-muted);"></i>
                             </div>
 
-                            <!-- Buy Player -->
-                            <div class="transfer-player-card player-card-in" style="flex:1;">
-                                <span class="player-name-main">${tx.in.name}</span>
-                                <span class="player-team-sub">${tx.in.team} • £${tx.in.price.toFixed(1)}m</span>
-                                ${renderPlayerStats(tx.in)}
-                                ${renderFdrFixtures(tx.in)}
+                            <!-- Buy Options (Top 3) -->
+                            <div style="display:flex; flex-direction:column; gap:8px;">
+                                ${optionsHtml}
                             </div>
-                        </div>
-
-                        <!-- Card Action Buttons -->
-                        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:12px; border-top:1px dashed var(--border-color); padding-top:12px;">
-                            <button class="action-main-btn compare-tx-btn" data-step-idx="${idx}" style="margin:0; padding:6px 12px; font-size:11px; height:32px; background:rgba(255,255,255,0.02); border-color:var(--border-color); color:var(--text-main); display:flex; align-items:center; gap:4px; width:auto; border-radius:6px; cursor:pointer;">
-                                <i data-lucide="git-compare" style="width:12px; height:12px;"></i> Compare Players
-                            </button>
-                            <button class="action-main-btn apply-tx-step-btn" data-step-idx="${idx}" style="margin:0; padding:6px 12px; font-size:11px; height:32px; display:flex; align-items:center; gap:4px; width:auto; border-radius:6px; cursor:pointer;">
-                                <i data-lucide="check" style="width:12px; height:12px;"></i> Apply Transfer
-                            </button>
                         </div>
                     </div>
                 `;
@@ -798,30 +856,74 @@ export function renderTransferPlanner(container, state, actions) {
                 });
             }
 
-            // Wire individual action buttons
-            resultsContainer.querySelectorAll('.compare-tx-btn').forEach(btn => {
+            // Wire compare option buttons
+            resultsContainer.querySelectorAll('.compare-option-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const stepIdx = parseInt(btn.getAttribute('data-step-idx'));
+                    const optIdx = parseInt(btn.getAttribute('data-opt-idx'));
                     const tx = result.sequence[stepIdx];
-                    if (tx) {
-                        showCompareModal(tx);
+                    if (tx && tx.options && tx.options[optIdx]) {
+                        const opt = tx.options[optIdx];
+                        showCompareModal({
+                            step: tx.step,
+                            slotIdx: tx.slotIdx,
+                            out: tx.out,
+                            in: opt.player,
+                            gain: opt.gain
+                        });
                     }
                 });
             });
 
-            resultsContainer.querySelectorAll('.apply-tx-step-btn').forEach(btn => {
+            // Wire apply option buttons
+            resultsContainer.querySelectorAll('.apply-option-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const stepIdx = parseInt(btn.getAttribute('data-step-idx'));
+                    const optIdx = parseInt(btn.getAttribute('data-opt-idx'));
                     const tx = result.sequence[stepIdx];
-                    if (tx) {
-                        const targetSlot = state.squadSlots[tx.slotIdx];
+                    if (tx && tx.options && tx.options[optIdx]) {
+                        const opt = tx.options[optIdx];
+                        const pIn = opt.player;
+                        
+                        const targetSlot = state.squadSlots.find(s => s.playerId === tx.out.id) || state.squadSlots[tx.slotIdx];
                         if (targetSlot) {
-                            targetSlot.playerId = tx.in.id;
+                            targetSlot.playerId = pIn.id;
                             state.optimizeCaptaincy();
                             state.saveState();
                             actions.syncTopBar();
-                            actions.showToast(`Applied transfer: ${tx.in.name} in for ${tx.out.name}`, 'success');
-                            actions.switchTab('planner');
+                            actions.showToast(`Applied transfer: ${pIn.name} in for ${tx.out.name}`, 'success');
+                            
+                            // Keep user on same screen and update preview
+                            updateSquadPreview();
+
+                            // Disable all option buttons in this step card
+                            const stepCard = resultsContainer.querySelector(`[data-step-card-idx="${stepIdx}"]`);
+                            if (stepCard) {
+                                stepCard.querySelectorAll('.apply-option-btn').forEach(b => {
+                                    b.disabled = true;
+                                    b.style.opacity = '0.5';
+                                    b.style.cursor = 'default';
+                                });
+                                
+                                // Highlight the applied one
+                                btn.disabled = true;
+                                btn.style.opacity = '1';
+                                btn.style.background = 'var(--primary)';
+                                btn.style.color = '#000';
+                                btn.style.borderColor = 'var(--primary)';
+                                btn.innerHTML = `<i data-lucide="check-circle" style="width:12px; height:12px;"></i> Applied`;
+
+                                // Add indicator badge in header
+                                const header = stepCard.querySelector('h4');
+                                if (header && !header.querySelector('.applied-badge-label')) {
+                                    const badge = document.createElement('span');
+                                    badge.className = 'applied-badge-label';
+                                    badge.style.cssText = 'font-size:11px; background:rgba(0, 255, 136, 0.15); padding:2px 8px; border-radius:4px; color:var(--primary); text-transform:none; margin-left:12px; font-weight:700;';
+                                    badge.innerHTML = `Applied: ${pIn.name}`;
+                                    header.appendChild(badge);
+                                }
+                                lucide.createIcons();
+                            }
                         }
                     }
                 });
@@ -917,6 +1019,41 @@ export function renderTransferPlanner(container, state, actions) {
             }
 
             if (bestTx) {
+                // Find all valid candidates specifically for this sold player
+                const soldPlayer = bestTx.out;
+                const sellBudget = soldPlayer.price + bank;
+                const candidates = PLAYERS.filter(p => 
+                    p.position === soldPlayer.position && 
+                    !currentSquadIds.includes(p.id) &&
+                    p.price <= sellBudget &&
+                    !state.mustExclude.includes(p.id)
+                );
+
+                const optionsList = [];
+                for (const boughtPlayer of candidates) {
+                    if (!checkTeamConstraints(currentSquadSlots, soldPlayer.id, boughtPlayer.id)) continue;
+
+                    const tempSlots = JSON.parse(JSON.stringify(currentSquadSlots));
+                    const targetSlot = tempSlots.find(s => s.playerId === soldPlayer.id);
+                    if (targetSlot) targetSlot.playerId = boughtPlayer.id;
+
+                    const gain = getSquadExpectedPts(tempSlots) - getSquadExpectedPts(currentSquadSlots);
+                    optionsList.push({
+                        player: boughtPlayer,
+                        gain: gain
+                    });
+                }
+
+                // Sort options by gain descending
+                optionsList.sort((a, b) => b.gain - a.gain);
+
+                // Take top 3
+                bestTx.options = optionsList.slice(0, 3);
+                if (bestTx.options.length > 0) {
+                    bestTx.in = bestTx.options[0].player;
+                    bestTx.gain = bestTx.options[0].gain;
+                }
+
                 sequence.push(bestTx);
                 totalGain += bestTx.gain;
                 currentSquadSlots[bestTx.slotIdx].playerId = bestTx.in.id;
