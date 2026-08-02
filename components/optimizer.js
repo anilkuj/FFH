@@ -1358,13 +1358,37 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                                     }
                                     const canApply = budgetOk && teamOk;
                                     const isDowngrade = up.gain < -0.01;
-                                    const badgeBg = isDowngrade ? 'rgba(239, 68, 68, 0.08)' : 'rgba(0, 255, 136, 0.1)';
-                                    const badgeColor = isDowngrade ? '#ef4444' : 'var(--primary)';
-                                    const badgeBorder = isDowngrade ? 'rgba(239, 68, 68, 0.2)' : 'rgba(0, 255, 136, 0.2)';
-                                    const badgeLabel = isDowngrade ? 'BUDGET DOWNGRADED' : 'POINTS UPGRADED';
-                                    const cardBg = isDowngrade ? 'rgba(239, 68, 68, 0.02)' : 'rgba(0, 255, 136, 0.01)';
-                                    const cardBorder = isDowngrade ? 'rgba(239, 68, 68, 0.15)' : 'rgba(0, 255, 136, 0.15)';
-                                    const cardLeftBorder = isDowngrade ? '#ef4444' : 'var(--primary)';
+                                    const isNextDowngrade = up.gain1Gw < -0.01;
+
+                                    let badgeBg, badgeBorder, badgeColor, badgeLabel;
+                                    let cardBg, cardBorder, cardLeftBorder;
+
+                                    if (isDowngrade && isNextDowngrade) {
+                                        badgeBg = 'rgba(239, 68, 68, 0.08)';
+                                        badgeBorder = 'rgba(239, 68, 68, 0.2)';
+                                        badgeColor = '#ef4444';
+                                        badgeLabel = 'BUDGET DOWNGRADED';
+                                        cardBg = 'rgba(239, 68, 68, 0.02)';
+                                        cardBorder = 'rgba(239, 68, 68, 0.15)';
+                                        cardLeftBorder = '#ef4444';
+                                    } else if (!isDowngrade && !isNextDowngrade) {
+                                        badgeBg = 'rgba(0, 255, 136, 0.1)';
+                                        badgeBorder = 'rgba(0, 255, 136, 0.2)';
+                                        badgeColor = 'var(--primary)';
+                                        badgeLabel = 'POINTS UPGRADED';
+                                        cardBg = 'rgba(0, 255, 136, 0.01)';
+                                        cardBorder = 'rgba(0, 255, 136, 0.15)';
+                                        cardLeftBorder = 'var(--primary)';
+                                    } else {
+                                        badgeBg = 'rgba(245, 158, 11, 0.08)';
+                                        badgeBorder = 'rgba(245, 158, 11, 0.2)';
+                                        badgeColor = '#f59e0b';
+                                        badgeLabel = isDowngrade ? 'BUDGET RELEASE' : 'POINTS UPGRADE (NEXT DROP)';
+                                        cardBg = 'rgba(245, 158, 11, 0.02)';
+                                        cardBorder = 'rgba(245, 158, 11, 0.15)';
+                                        cardLeftBorder = '#f59e0b';
+                                    }
+
                                     const cardStyle = `background: ${cardBg}; border: 1px solid ${cardBorder}; border-left: 4px solid ${cardLeftBorder}; border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px;`;
 
                                     return `
@@ -1378,10 +1402,16 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                                                 </div>
                                                 <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding-top:12px;">
                                                     <i data-lucide="chevrons-right" class="transfer-arrow-icon" style="margin: 0 0 6px 0;"></i>
-                                                    <span class="pill-value" style="font-size:10px; background:${badgeBg}; color:${badgeColor}; border: 1px solid ${badgeBorder}; padding: 2px 6px; border-radius: 4px; white-space: nowrap;">
-                                                        ${up.gain >= 0 ? '+' : ''}${up.gain.toFixed(1)} (${horizon}G) • ${up.gain1Gw >= 0 ? '+' : ''}${up.gain1Gw.toFixed(1)} (Next)
+                                                    <span class="pill-value" style="font-size:10px; background:${badgeBg}; border: 1px solid ${badgeBorder}; padding: 4px 8px; border-radius: 4px; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px;">
+                                                        <span style="color: ${isDowngrade ? '#ef4444' : 'var(--primary)'}; font-weight: 800;">
+                                                            ${up.gain >= 0 ? '+' : ''}${up.gain.toFixed(1)} (${horizon}G)
+                                                        </span>
+                                                        <span style="color: var(--text-muted);">•</span>
+                                                        <span style="color: ${isNextDowngrade ? '#ef4444' : 'var(--primary)'}; font-weight: 800;">
+                                                            ${up.gain1Gw >= 0 ? '+' : ''}${up.gain1Gw.toFixed(1)} (Next)
+                                                        </span>
                                                     </span>
-                                                    <span style="font-size: 8px; font-weight: 800; color: ${badgeColor}; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px;">${badgeLabel}</span>
+                                                    <span style="font-size: 8px; font-weight: 800; color: ${badgeColor}; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center;">${badgeLabel}</span>
                                                 </div>
                                                 <div class="transfer-player-card player-card-in" style="flex:1;">
                                                     <span class="player-name-main">${up.in.name}</span>
@@ -1670,7 +1700,15 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                         <div class="rec-option-box">
                             <div class="rec-option-header" style="margin-bottom: 12px;">
                                 <span class="rec-badge">RECOMMENDED</span>
-                                <span class="rec-pts-gain">+${best1Tx.gain.toFixed(1)} XP (${horizon}-GW) • +${best1Tx1GwGain.toFixed(1)} XP (Next GW)</span>
+                                <span class="rec-pts-gain" style="display: inline-flex; align-items: center; gap: 4px;">
+                                    <span style="color: ${best1Tx.gain >= 0 ? 'var(--primary)' : '#ef4444'}; font-weight: 800;">
+                                        +${best1Tx.gain.toFixed(1)} XP (${horizon}-GW)
+                                    </span>
+                                    <span style="color: var(--text-muted);">•</span>
+                                    <span style="color: ${best1Tx1GwGain >= 0 ? 'var(--primary)' : '#ef4444'}; font-weight: 800;">
+                                        ${best1Tx1GwGain >= 0 ? '+' : ''}${best1Tx1GwGain.toFixed(1)} XP (Next GW)
+                                    </span>
+                                </span>
                             </div>
                             <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;">
                                 <div class="transfer-player-card player-card-out" style="flex:1;">
@@ -1709,7 +1747,15 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                             <div class="rec-option-box">
                                 <div class="rec-option-header" style="margin-bottom: 12px;">
                                     <span class="rec-badge" style="background:rgba(0, 242, 254, 0.1); color: var(--secondary); border-color: var(--secondary-glow)">HIGH IMPACT</span>
-                                    <span class="rec-pts-gain">+${best2Tx.gain.toFixed(1)} XP (${horizon}-GW) • +${best2Tx1GwGain.toFixed(1)} XP (Next GW)</span>
+                                    <span class="rec-pts-gain" style="display: inline-flex; align-items: center; gap: 4px;">
+                                        <span style="color: ${best2Tx.gain >= 0 ? 'var(--primary)' : '#ef4444'}; font-weight: 800;">
+                                            +${best2Tx.gain.toFixed(1)} XP (${horizon}-GW)
+                                        </span>
+                                        <span style="color: var(--text-muted);">•</span>
+                                        <span style="color: ${best2Tx1GwGain >= 0 ? 'var(--primary)' : '#ef4444'}; font-weight: 800;">
+                                            ${best2Tx1GwGain >= 0 ? '+' : ''}${best2Tx1GwGain.toFixed(1)} XP (Next GW)
+                                        </span>
+                                    </span>
                                 </div>
                                 
                                 <!-- Transfer 1 -->
