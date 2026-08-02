@@ -157,14 +157,14 @@ export function renderTransferPlanner(container, state, actions) {
         modalDiv.innerHTML = `
             <div class="player-detail-modal-card" style="width: 100%; max-width: 650px; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 20px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); overflow: hidden;">
                 <div class="modal-header-section" style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
-                    <h3 style="font-family: var(--font-heading); margin: 0; font-weight: 800; font-size: 16px; display: flex; align-items: center; gap: 8px;">
+                    <h3 style="font-family: var(--font-heading); margin: 0; font-weight: 800; font-size: 16px; display: flex; align-items: center; gap: 8px; color: var(--text-main);">
                         <i data-lucide="git-compare" style="color: var(--primary);"></i> Player Stats Comparison
                     </h3>
                     <button class="close-modal-btn" id="closeCompareModalBtn" style="background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 4px; border-radius: 50%;"><i data-lucide="x" style="width: 20px; height: 20px;"></i></button>
                 </div>
 
-                <div style="overflow: hidden; width: 100%;">
-                    <table class="ticker-table" style="width: 100%; border-collapse: collapse; font-size: 12.5px; text-align: left; table-layout: fixed;">
+                <div style="width: 100%; overflow: hidden;">
+                    <table style="width: 100%; min-width: 0 !important; border-collapse: collapse; font-size: 12.5px; text-align: left; table-layout: fixed;">
                         <thead>
                             <tr style="border-bottom: 2px solid var(--border-color);">
                                 <th style="padding: 8px 6px; color: var(--text-muted); font-weight: 700; width: 34%;">Metric</th>
@@ -173,60 +173,60 @@ export function renderTransferPlanner(container, state, actions) {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 8px 6px; font-weight: 600; color: var(--text-muted);">Team</td>
-                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.team || 'N/A'}</td>
-                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.team || 'N/A'}</td>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                                <td style="padding: 8px 6px; font-weight: 600; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Team</td>
+                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p1.team || 'N/A'}</td>
+                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p2.team || 'N/A'}</td>
                             </tr>
-                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 8px 6px; font-weight: 600; color: var(--text-muted);">Price</td>
-                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700;">£${formatVal(p1.price, 1)}m</td>
-                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700;">£${formatVal(p2.price, 1)}m</td>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                                <td style="padding: 8px 6px; font-weight: 600; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Price</td>
+                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">£${formatVal(p1.price, 1)}m</td>
+                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">£${formatVal(p2.price, 1)}m</td>
                             </tr>
-                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 8px 6px; font-weight: 600; color: var(--text-muted);">Ownership</td>
-                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700;">${formatVal(p1.ownership, 1)}%</td>
-                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700;">${formatVal(p2.ownership, 1)}%</td>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                                <td style="padding: 8px 6px; font-weight: 600; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Ownership</td>
+                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${formatVal(p1.ownership, 1)}%</td>
+                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${formatVal(p2.ownership, 1)}%</td>
                             </tr>
-                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 8px 6px; font-weight: 600; color: var(--text-muted);">Total Points</td>
-                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.points !== undefined ? p1.points : 0}</td>
-                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.points !== undefined ? p2.points : 0}</td>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                                <td style="padding: 8px 6px; font-weight: 600; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Total Points</td>
+                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p1.points !== undefined ? p1.points : 0}</td>
+                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p2.points !== undefined ? p2.points : 0}</td>
                             </tr>
-                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 8px 6px; font-weight: 600; color: var(--text-muted);">Starts</td>
-                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.GS !== undefined ? p1.GS : 0}</td>
-                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.GS !== undefined ? p2.GS : 0}</td>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                                <td style="padding: 8px 6px; font-weight: 600; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Starts</td>
+                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p1.GS !== undefined ? p1.GS : 0}</td>
+                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p2.GS !== undefined ? p2.GS : 0}</td>
                             </tr>
-                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 8px 6px; font-weight: 600; color: var(--text-muted);">Avg Minutes</td>
-                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700;">${formatVal(p1.MPPG, 0)}m</td>
-                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700;">${formatVal(p2.MPPG, 0)}m</td>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                                <td style="padding: 8px 6px; font-weight: 600; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Avg Minutes</td>
+                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${formatVal(p1.MPPG, 0)}m</td>
+                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${formatVal(p2.MPPG, 0)}m</td>
                             </tr>
-                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 8px 6px; font-weight: 600; color: var(--text-muted);">Expected Goals (xG)</td>
-                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700;">${formatVal(p1.xG, 1)}</td>
-                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700;">${formatVal(p2.xG, 1)}</td>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                                <td style="padding: 8px 6px; font-weight: 600; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Expected Goals (xG)</td>
+                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${formatVal(p1.xG, 1)}</td>
+                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${formatVal(p2.xG, 1)}</td>
                             </tr>
-                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 8px 6px; font-weight: 600; color: var(--text-muted);">Expected Assists (xA)</td>
-                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700;">${formatVal(p1.xA, 1)}</td>
-                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700;">${formatVal(p2.xA, 1)}</td>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                                <td style="padding: 8px 6px; font-weight: 600; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Expected Assists (xA)</td>
+                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${formatVal(p1.xA, 1)}</td>
+                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${formatVal(p2.xA, 1)}</td>
                             </tr>
-                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 8px 6px; font-weight: 600; color: var(--text-muted);">xG per 90</td>
-                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700;">${formatVal(p1.xG90, 2)}</td>
-                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700;">${formatVal(p2.xG90, 2)}</td>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                                <td style="padding: 8px 6px; font-weight: 600; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">xG per 90</td>
+                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${formatVal(p1.xG90, 2)}</td>
+                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${formatVal(p2.xG90, 2)}</td>
                             </tr>
-                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 8px 6px; font-weight: 600; color: var(--text-muted);">xA per 90</td>
-                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700;">${formatVal(p1.xA90, 2)}</td>
-                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700;">${formatVal(p2.xA90, 2)}</td>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                                <td style="padding: 8px 6px; font-weight: 600; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">xA per 90</td>
+                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${formatVal(p1.xA90, 2)}</td>
+                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${formatVal(p2.xA90, 2)}</td>
                             </tr>
-                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 8px 6px; font-weight: 600; color: var(--text-muted);">ICT Index</td>
-                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700;">${formatVal(p1.ictIndex, 1)}</td>
-                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700;">${formatVal(p2.ictIndex, 1)}</td>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                                <td style="padding: 8px 6px; font-weight: 600; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">ICT Index</td>
+                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${formatVal(p1.ictIndex, 1)}</td>
+                                <td style="padding: 8px 6px; text-align: right; color: var(--text-main); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${formatVal(p2.ictIndex, 1)}</td>
                             </tr>
                         </tbody>
                     </table>
