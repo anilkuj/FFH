@@ -2450,6 +2450,20 @@ body {
         font-size: 13px;
     }
 
+    .pitch-container {
+        padding: 10px !important;
+        gap: 10px !important;
+    }
+
+    .football-pitch {
+        height: 380px !important;
+    }
+
+    .shirt-icon-wrapper {
+        width: 42px !important;
+        height: 42px !important;
+    }
+
     .sidebar {
         position: fixed;
         left: 0;
@@ -2532,10 +2546,15 @@ body {
         padding: 12px;
     }
 
+    .pitch-container {
+        padding: 8px !important;
+        gap: 8px !important;
+    }
+
     /* Mobile scaling of the football pitch slots to fit 100% width cleanly */
     .football-pitch {
-        padding: 6px 0;
-        height: 480px !important; /* Stable fixed height on mobiles so layout does not squish or overflow */
+        padding: 4px 0;
+        height: 320px !important; /* Stable fixed height on mobiles so layout does not squish or overflow */
         max-height: none !important;
         min-height: auto !important;
         flex: none !important;
@@ -2546,31 +2565,31 @@ body {
     }
 
     .shirt-icon-wrapper {
-        width: 36px;
-        height: 36px;
-        margin-bottom: 4px;
+        width: 32px !important;
+        height: 32px !important;
+        margin-bottom: 2px !important;
     }
 
     .badge-captain, .badge-vice {
-        width: 13px;
-        height: 13px;
-        font-size: 8px;
-        right: -2px;
-        bottom: -2px;
+        width: 12px !important;
+        height: 12px !important;
+        font-size: 7px !important;
+        right: -2px !important;
+        bottom: -2px !important;
     }
 
     .player-card-info {
-        padding: 4px 2px;
-        border-radius: 4px;
+        padding: 3px 1px !important;
+        border-radius: 4px !important;
     }
 
     .player-pitch-name {
-        font-size: 8.5px;
+        font-size: 8px !important;
     }
 
     .player-pitch-points {
-        font-size: 7.5px;
-        margin-top: 1px;
+        font-size: 7.5px !important;
+        margin-top: 1px !important;
     }
 
     /* Hide sub stats like FDR dots and 5-GW XP on extra-small screens to avoid overlay clutter */
@@ -2580,7 +2599,8 @@ body {
 
     /* Resizing bench items for narrow screens */
     .bench-container {
-        padding: 12px;
+        padding: 8px !important;
+        gap: 6px !important;
     }
     
     .bench-row {
@@ -2592,8 +2612,8 @@ body {
     }
 
     .bench-slot-label {
-        font-size: 8px;
-        margin-bottom: 4px;
+        font-size: 7.5px !important;
+        margin-bottom: 2px !important;
     }
 
     /* Always show delete buttons on touch screens with appropriate mobile size */
