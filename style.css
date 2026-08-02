@@ -816,6 +816,13 @@ body {
     gap: 8px;
 }
 
+.bench-slot-wrapper {
+    width: 22%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 /* Side Planner Panel */
 .planner-side-panel {
     display: flex;
@@ -2596,9 +2603,21 @@ body {
         font-size: 8px;
     }
 
-    /* Always show delete buttons on touch screens */
+    /* Hide delete buttons on touch screens by default, show on click */
     .pitch-sell-btn {
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
+
+    .player-pitch-card.active-mobile-card .pitch-sell-btn {
         opacity: 1 !important;
+        pointer-events: auto !important;
+    }
+
+    .player-pitch-card.active-mobile-card {
+        outline: 1.5px dashed var(--primary) !important;
+        outline-offset: 2px !important;
+        border-radius: 6px !important;
     }
 }
 
@@ -2660,16 +2679,22 @@ body {
 
     /* Resizing bench items for narrow screens */
     .bench-container {
-        padding: 8px !important;
-        gap: 6px !important;
+        padding: 6px !important;
+        gap: 4px !important;
     }
     
     .bench-row {
-        gap: 6px;
+        gap: 4px !important;
+        justify-content: space-between !important;
     }
 
     .bench-slot-wrapper {
-        width: 23% !important;
+        flex: 1 1 0% !important;
+        min-width: 0 !important;
+        width: auto !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     .bench-slot-label {
@@ -2677,14 +2702,15 @@ body {
         margin-bottom: 2px !important;
     }
 
-    /* Always show delete buttons on touch screens with appropriate mobile size */
+    /* Hide delete buttons on touch screens with appropriate mobile size */
     .pitch-sell-btn {
         width: 14px;
         height: 14px;
         font-size: 11px;
         top: -3px;
         right: 2px;
-        opacity: 1 !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
     }
 
     /* Make modals and dialogs mobile friendly */

@@ -376,7 +376,7 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions) {
         
         if (slot.playerId === null) {
             return `
-                <div class="bench-slot-wrapper" style="width: 22%; display: flex; flex-direction: column; align-items: center;">
+                <div class="bench-slot-wrapper">
                     <span class="bench-slot-label">${label}</span>
                     <div class="player-pitch-card empty-slot" data-slot-index="${slotIndex}" data-position="${slot.position}" data-type="bench" style="width: 100%;">
                         <div class="shirt-icon-wrapper">
@@ -404,7 +404,7 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions) {
         }
 
         return `
-            <div class="bench-slot-wrapper" style="width: 22%; display: flex; flex-direction: column; align-items: center;">
+            <div class="bench-slot-wrapper">
                 <span class="bench-slot-label">${label}</span>
                 <div class="player-pitch-card" data-id="${player.id}" data-type="bench" data-index="${index}" style="width: 100%;">
                     <button class="pitch-sell-btn" data-id="${player.id}" title="Remove Player">&times;</button>
@@ -466,6 +466,17 @@ function renderTransfersList(state, actions) {
 }
 
 function setupPlannerListeners(container, state, actions, starters, bench) {
+    // Clear active mobile cards when clicking outside (using global reference to prevent duplicates)
+    if (window._mobileClearListener) {
+        document.removeEventListener('click', window._mobileClearListener);
+    }
+    window._mobileClearListener = (e) => {
+        if (!e.target.closest('.player-pitch-card')) {
+            container.querySelectorAll('.player-pitch-card').forEach(c => c.classList.remove('active-mobile-card'));
+        }
+    };
+    document.addEventListener('click', window._mobileClearListener);
+
     // Sell/Remove button direct trigger
     container.querySelectorAll('.pitch-sell-btn').forEach(btn => {
         btn.addEventListener('click', e => {
@@ -581,11 +592,27 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
             const playerId = parseInt(card.getAttribute('data-id'));
             const type = card.getAttribute('data-type');
             
+            // Check if mobile (width <= 768px)
+            const isMobile = window.innerWidth <= 768;
+            if (isMobile) {
+                // If this card is not active, focus it first and hide others
+                if (!card.classList.contains('active-mobile-card')) {
+                    e.stopPropagation(); // prevent modal trigger
+                    container.querySelectorAll('.player-pitch-card').forEach(c => c.classList.remove('active-mobile-card'));
+                    card.classList.add('active-mobile-card');
+                    return; // exit early
+                }
+            }
+
+            // Normal flow (desktop hover or second mobile click)
             if (selectedForSwap) {
                 const swapId = selectedForSwap.id;
                 const swapType = selectedForSwap.type;
 
-                container.querySelectorAll('.player-pitch-card').forEach(c => c.style.border = 'none');
+                container.querySelectorAll('.player-pitch-card').forEach(c => {
+                    c.style.border = 'none';
+                    c.classList.remove('active-mobile-card');
+                });
 
                 if (swapId === playerId) {
                     selectedForSwap = null;
