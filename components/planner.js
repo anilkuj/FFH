@@ -592,19 +592,6 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
             const playerId = parseInt(card.getAttribute('data-id'));
             const type = card.getAttribute('data-type');
             
-            // Check if mobile (width <= 768px)
-            const isMobile = window.innerWidth <= 768;
-            if (isMobile) {
-                // If this card is not active, focus it first and hide others
-                if (!card.classList.contains('active-mobile-card')) {
-                    e.stopPropagation(); // prevent modal trigger
-                    container.querySelectorAll('.player-pitch-card').forEach(c => c.classList.remove('active-mobile-card'));
-                    card.classList.add('active-mobile-card');
-                    return; // exit early
-                }
-            }
-
-            // Normal flow (desktop hover or second mobile click)
             if (selectedForSwap) {
                 const swapId = selectedForSwap.id;
                 const swapType = selectedForSwap.type;

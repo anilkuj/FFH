@@ -2603,21 +2603,29 @@ body {
         font-size: 8px;
     }
 
-    /* Hide delete buttons on touch screens by default, show on click */
+    /* Hide delete buttons on touch screens on the pitch map */
     .pitch-sell-btn {
-        opacity: 0 !important;
-        pointer-events: none !important;
+        display: none !important;
     }
 
-    .player-pitch-card.active-mobile-card .pitch-sell-btn {
-        opacity: 1 !important;
-        pointer-events: auto !important;
+    /* Resize bench container and elements under 768px */
+    .bench-container {
+        padding: 8px !important;
+        gap: 6px !important;
     }
 
-    .player-pitch-card.active-mobile-card {
-        outline: 1.5px dashed var(--primary) !important;
-        outline-offset: 2px !important;
-        border-radius: 6px !important;
+    .bench-row {
+        gap: 6px !important;
+        justify-content: space-between !important;
+    }
+
+    .bench-slot-wrapper {
+        flex: 1 1 0% !important;
+        min-width: 0 !important;
+        width: auto !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 }
 
@@ -2704,13 +2712,7 @@ body {
 
     /* Hide delete buttons on touch screens with appropriate mobile size */
     .pitch-sell-btn {
-        width: 14px;
-        height: 14px;
-        font-size: 11px;
-        top: -3px;
-        right: 2px;
-        opacity: 0 !important;
-        pointer-events: none !important;
+        display: none !important;
     }
 
     /* Make modals and dialogs mobile friendly */
