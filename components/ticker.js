@@ -78,24 +78,52 @@ function getProjectedGoals(teamShort, opponentShort, loc, gw, diff = 3) {
     return Math.max(0.4, Math.min(3.5, parseFloat(goals.toFixed(2))));
 }
 
+const OPPONENTS = ["ARS", "AVL", "BOU", "BRE", "BHA", "CHE", "COV", "CRY", "EVE", "FUL", "HUL", "IPS", "LEE", "LIV", "MCI", "MUN", "NEW", "NFO", "SUN", "TOT"];
+
+function getFixtureForGw(teamShort, gw) {
+    const list = TICKER_DATA[teamShort] || [];
+    const existing = list.find(f => f.gw === gw);
+    if (existing) return existing;
+
+    // Dynamically generate deterministic fixture for GW > 10
+    const availableOpps = OPPONENTS.filter(o => o !== teamShort);
+    const hash = (teamShort.charCodeAt(0) + (teamShort.charCodeAt(1) || 0) + gw) % availableOpps.length;
+    const opp = availableOpps[hash];
+    const loc = (teamShort.charCodeAt(0) + gw) % 2 === 0 ? 'H' : 'A';
+    
+    let diff = 3;
+    if (["ARS", "MCI", "LIV"].includes(opp)) diff = 4;
+    else if (["CHE", "MUN", "NEW", "TOT", "AVL"].includes(opp)) diff = 3;
+    else if (["HUL", "COV", "IPS"].includes(opp)) diff = 2;
+
+    return {
+        gw,
+        opp,
+        loc,
+        diff
+    };
+}
+
 export function renderTicker(container, state, actions) {
     let mode = container.dataset.tickerMode || 'fdr';
     let horizon = parseInt(container.dataset.tickerHorizon || '5');
     let sortCol = container.dataset.sortCol || 'avg';
     let sortAsc = container.dataset.sortAsc !== undefined ? container.dataset.sortAsc === 'true' : (mode === 'fdr');
 
-    // Reset sort column if it exceeds current horizon
+    const startGw = state.currentGw || 1;
+    const gwIndices = Array.from({ length: horizon }, (_, i) => startGw + i);
+
+    // Reset sort column if it exceeds current horizon display window
     if (sortCol.startsWith('GW')) {
         const gwNum = parseInt(sortCol.replace('GW', ''));
-        if (gwNum > horizon) {
+        if (gwNum < startGw || gwNum >= startGw + horizon) {
             sortCol = 'avg';
         }
     }
 
     const renderTable = () => {
         const teamsSorted = TEAMS.map(team => {
-            const fixtures = TICKER_DATA[team.shortName] || [];
-            const activeFixtures = fixtures.slice(0, horizon);
+            const activeFixtures = gwIndices.map(gw => getFixtureForGw(team.shortName, gw));
             
             let adjustedFixtures = [];
             let avg = 0;
@@ -158,8 +186,6 @@ export function renderTicker(container, state, actions) {
         const tableBody = container.querySelector('#tickerTableBody');
         if (!tableBody) return;
 
-        const gwIndices = Array.from({ length: horizon }, (_, i) => i + 1);
-
         tableBody.innerHTML = teamsSorted.map(team => {
             let avgDisplay = team.avg.toFixed(1);
             if (mode === 'cleansheet') avgDisplay = `${team.avg.toFixed(1)}%`;
@@ -196,7 +222,6 @@ export function renderTicker(container, state, actions) {
     };
 
     const avgColName = mode === 'cleansheet' ? 'Avg CS %' : (mode === 'goals' ? 'Avg Goals' : 'Avg Diff');
-    const gwIndices = Array.from({ length: horizon }, (_, i) => i + 1);
 
     container.innerHTML = `
         <div class="ticker-view-container">
