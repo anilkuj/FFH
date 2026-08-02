@@ -352,7 +352,7 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
                     <div class="player-pitch-points">
                         £${player.price.toFixed(1)}m • 
                         ${prediction.actualPts !== undefined && prediction.actualPts !== null ? 
-                            `<strong style="color: var(--primary);">${prediction.actualPts} pts</strong> <span style="font-size: 9.5px; opacity: 0.7;">(${prediction.pts.toFixed(1)} XP)</span>` : 
+                            `<strong style="color: var(--primary);">${prediction.actualPts} pts</strong> <span class="player-xp-subtext">(${prediction.pts.toFixed(1)} XP)</span>` : 
                             `${prediction.pts.toFixed(1)} XP`
                         }
                     </div>
@@ -418,7 +418,7 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions) {
                         <div class="player-pitch-points">
                             £${player.price.toFixed(1)}m • 
                             ${prediction.actualPts !== undefined && prediction.actualPts !== null ? 
-                                `<strong style="color: var(--primary);">${prediction.actualPts} pts</strong> <span style="font-size: 9.5px; opacity: 0.7;">(${prediction.pts.toFixed(1)} XP)</span>` : 
+                                `<strong style="color: var(--primary);">${prediction.actualPts} pts</strong> <span class="player-xp-subtext">(${prediction.pts.toFixed(1)} XP)</span>` : 
                                 `${prediction.pts.toFixed(1)} XP`
                             }
                         </div>
