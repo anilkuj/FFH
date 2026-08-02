@@ -432,7 +432,7 @@ Enter target draft slot number (1-10):`,U=prompt(E);if(U===null)return;const A=p
                     <h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--secondary); display: flex; align-items: center; gap: 6px; margin: 0 0 10px 0;">
                         <i data-lucide="arrow-right-left" style="width: 14px; height: 14px;"></i> Similarly Priced Alternatives
                     </h4>
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                    <div class="alternatives-scroll-container">
                         ${E.map(w=>{const W=w.predictions.find(K=>K.gw===s.currentGw)||{pts:0},P=m+n.price-w.price>=0,y=f.filter(K=>K!==n.id);y.push(w.id);const F={};let C=!0;for(const K of y){const M=I.find(h=>h.id===K);if(M&&(F[M.team]=(F[M.team]||0)+1,F[M.team]>3)){C=!1;break}}const Y=w.status!=="i"&&w.status!=="s"&&w.status!=="u",O=P&&C&&Y;let _="";return Y?P?C||(_="3/team max"):_="Over budget":_="Injured",`
                                 <div class="compare-alternative-card" style="display: flex; flex-direction: column; padding: 10px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px; font-size: 11px;">
                                     <div style="font-weight:700; color:var(--text-main); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${w.name}">${i.getWebName(w.name)}</div>

@@ -956,7 +956,7 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
                     <h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--secondary); display: flex; align-items: center; gap: 6px; margin: 0 0 10px 0;">
                         <i data-lucide="arrow-right-left" style="width: 14px; height: 14px;"></i> Similarly Priced Alternatives
                     </h4>
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                    <div class="alternatives-scroll-container">
                         ${comparablePlayers.map(comp => {
                             const compPrediction = comp.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 };
                             
