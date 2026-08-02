@@ -373,14 +373,8 @@ export function renderTransferPlanner(container, state, actions) {
 
         modalDiv.querySelector('#applyCompareModalBtn').addEventListener('click', () => {
             closeModal();
-            const targetSlot = state.squadSlots.find(s => s.playerId === p1.id) || state.squadSlots[tx.slotIdx];
-            if (targetSlot) {
-                targetSlot.playerId = p2.id;
-                state.optimizeCaptaincy();
-                state.saveState();
-                actions.syncTopBar();
-                actions.showToast(`Applied transfer: ${p2.name} in for ${p1.name}`, 'success');
-                
+            const ok = actions.addTransfer(state.currentGw, p1.id, p2.id, false);
+            if (ok) {
                 // Keep screen active and update preview
                 updateSquadPreview();
 
@@ -885,14 +879,8 @@ export function renderTransferPlanner(container, state, actions) {
                         const opt = tx.options[optIdx];
                         const pIn = opt.player;
                         
-                        const targetSlot = state.squadSlots.find(s => s.playerId === tx.out.id) || state.squadSlots[tx.slotIdx];
-                        if (targetSlot) {
-                            targetSlot.playerId = pIn.id;
-                            state.optimizeCaptaincy();
-                            state.saveState();
-                            actions.syncTopBar();
-                            actions.showToast(`Applied transfer: ${pIn.name} in for ${tx.out.name}`, 'success');
-                            
+                        const ok = actions.addTransfer(state.currentGw, tx.out.id, pIn.id, false);
+                        if (ok) {
                             // Keep user on same screen and update preview
                             updateSquadPreview();
 

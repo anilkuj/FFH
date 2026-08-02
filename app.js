@@ -1190,7 +1190,7 @@ const actions = {
         actions.showToast('Squad cleared completely.', 'success');
     },
 
-    addTransfer(gw, outId, inId) {
+    addTransfer(gw, outId, inId, shouldRender = true) {
         const squadInfo = state.getSquadForGw(gw);
         const { squad, bank } = squadInfo;
 
@@ -1233,7 +1233,11 @@ const actions = {
 
         state.optimizeCaptaincy();
         state.saveState();
-        actions.renderActiveView();
+        if (shouldRender) {
+            actions.renderActiveView();
+        } else {
+            actions.syncTopBar();
+        }
         actions.showToast(`Transferred in ${pIn.name} for ${pOut.name}!`, 'success');
         return true;
     },
