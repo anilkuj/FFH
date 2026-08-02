@@ -8,6 +8,12 @@ export function renderTransferPlanner(container, state, actions) {
     let numTransfers = parseInt(localStorage.getItem('fpl_hub_tp_num_transfers')) || 2;
     let horizon = parseInt(localStorage.getItem('fpl_hub_tp_horizon')) || 5;
 
+    // Temporary variables for imported team
+    let tempSourceSlots = null;
+    let tempCaptain = null;
+    let tempVice = null;
+    let tempBank = 0;
+
     // Helper functions for rendering
     const getAvgFDR = (player) => {
         let sum = 0;
@@ -77,6 +83,50 @@ export function renderTransferPlanner(container, state, actions) {
         `;
     };
 
+    const mapFplPicksToSquadSlots = (picks) => {
+        const slots = [];
+        const pickPlayers = picks.map(pick => {
+            const p = PLAYERS.find(pl => pl.id === pick.element);
+            return {
+                id: pick.element,
+                position: p ? p.position : 'MID',
+                isStarting: pick.multiplier > 0
+            };
+        });
+
+        const gkps = pickPlayers.filter(p => p.position === 'GKP');
+        const defs = pickPlayers.filter(p => p.position === 'DEF');
+        const mids = pickPlayers.filter(p => p.position === 'MID');
+        const fwds = pickPlayers.filter(p => p.position === 'FWD');
+
+        const addSlotsForPosition = (posName, posPlayers, totalCount) => {
+            let players = [...posPlayers];
+            while (players.length < totalCount) {
+                players.push({ id: null, position: posName, isStarting: false });
+            }
+            players.forEach((p, idx) => {
+                let isStarting = false;
+                if (posName === 'GKP' && idx === 0) isStarting = true;
+                if (posName === 'DEF' && idx < 3) isStarting = true;
+                if (posName === 'MID' && idx < 4) isStarting = true;
+                if (posName === 'FWD' && idx < 3) isStarting = true;
+
+                slots.push({
+                    position: posName,
+                    playerId: p.id,
+                    isStarting
+                });
+            });
+        };
+
+        addSlotsForPosition('GKP', gkps, 2);
+        addSlotsForPosition('DEF', defs, 5);
+        addSlotsForPosition('MID', mids, 5);
+        addSlotsForPosition('FWD', fwds, 3);
+
+        return slots;
+    };
+
     container.innerHTML = `
         <div class="optimizer-view-container" style="display:flex; flex-direction:column; gap:20px; height:100%; overflow-y:auto; padding-right:8px;">
             <div class="optimizer-intro" style="margin-bottom: 8px;">
@@ -92,6 +142,22 @@ export function renderTransferPlanner(container, state, actions) {
                     <i data-lucide="settings" class="highlight-transfers"></i> Setup Roadmap Configurations
                 </h3>
                 <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:16px; align-items: flex-end;">
+                    <!-- Source Selection -->
+                    <div style="display:flex; flex-direction:column; gap:6px; grid-column: span 2;">
+                        <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Source Squad / Team Selection</label>
+                        <div style="display:flex; gap:8px; align-items:center; flex-wrap: wrap;">
+                            <select id="tpSourceSquad" class="settings-select" style="flex:1; min-width:180px;">
+                                <option value="active">Active Squad Roster</option>
+                                ${state.drafts.map((d, idx) => `
+                                    <option value="draft_${idx}">Draft ${idx + 1}: ${d.name}</option>
+                                `).join('')}
+                                <option value="import">Import from FPL Team ID...</option>
+                            </select>
+                            <input type="text" id="tpFplTeamId" class="settings-select" placeholder="FPL Team ID" style="display:none; width:110px; font-size:12px; padding:8px;" />
+                            <button class="action-main-btn" id="tpImportBtn" style="display:none; margin:0; padding:8px 16px; font-size:12px; height:38px;">Import</button>
+                        </div>
+                    </div>
+
                     <div style="display:flex; flex-direction:column; gap:6px;">
                         <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Number of Transfers (1-5)</label>
                         <select id="tpNumTransfers" class="settings-select" style="width:100%;">
@@ -105,6 +171,10 @@ export function renderTransferPlanner(container, state, actions) {
                     <div style="display:flex; flex-direction:column; gap:6px;">
                         <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Projection Horizon Weeks</label>
                         <select id="tpHorizon" class="settings-select" style="width:100%;">
+                            <option value="1" ${horizon === 1 ? 'selected' : ''}>Next 1 Gameweek</option>
+                            <option value="2" ${horizon === 2 ? 'selected' : ''}>Next 2 Gameweeks</option>
+                            <option value="3" ${horizon === 3 ? 'selected' : ''}>Next 3 Gameweeks</option>
+                            <option value="4" ${horizon === 4 ? 'selected' : ''}>Next 4 Gameweeks</option>
                             <option value="5" ${horizon === 5 ? 'selected' : ''}>Next 5 Gameweeks</option>
                             <option value="10" ${horizon === 10 ? 'selected' : ''}>Next 10 Gameweeks</option>
                             <option value="15" ${horizon === 15 ? 'selected' : ''}>Next 15 Gameweeks</option>
@@ -130,6 +200,56 @@ export function renderTransferPlanner(container, state, actions) {
     const tpNumTransfers = container.querySelector('#tpNumTransfers');
     const tpHorizon = container.querySelector('#tpHorizon');
     const tpResultsGrid = container.querySelector('#tpResultsGrid');
+    const tpSourceSquad = container.querySelector('#tpSourceSquad');
+    const tpFplTeamId = container.querySelector('#tpFplTeamId');
+    const tpImportBtn = container.querySelector('#tpImportBtn');
+
+    tpSourceSquad.addEventListener('change', () => {
+        if (tpSourceSquad.value === 'import') {
+            tpFplTeamId.style.display = 'inline-block';
+            tpImportBtn.style.display = 'inline-block';
+        } else {
+            tpFplTeamId.style.display = 'none';
+            tpImportBtn.style.display = 'none';
+        }
+    });
+
+    tpImportBtn.addEventListener('click', async () => {
+        const teamId = tpFplTeamId.value.trim();
+        if (!teamId) {
+            actions.showToast("Please enter a valid FPL Team ID.", "error");
+            return;
+        }
+
+        tpImportBtn.innerText = "Loading...";
+        tpImportBtn.disabled = true;
+
+        try {
+            const url = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(`https://fantasy.premierleague.com/api/entry/${teamId}/event/${state.currentGw}/picks/`);
+            const response = await fetch(url);
+            if (!response.ok) throw new Error("Network response error");
+            const data = await response.json();
+            if (data && data.picks) {
+                const importedSlots = mapFplPicksToSquadSlots(data.picks);
+                const bankVal = (data.entry_history ? data.entry_history.bank : 0) / 10;
+                
+                tempSourceSlots = importedSlots;
+                tempCaptain = data.picks.find(p => p.is_captain)?.element || null;
+                tempVice = data.picks.find(p => p.is_vice_captain)?.element || null;
+                tempBank = bankVal;
+
+                actions.showToast(`Imported Team ID ${teamId} successfully! Bank: £${bankVal.toFixed(1)}m.`, "success");
+            } else {
+                throw new Error("Invalid picks data");
+            }
+        } catch (err) {
+            console.error(err);
+            actions.showToast("Failed to fetch FPL picks. Verify ID is active.", "error");
+        } finally {
+            tpImportBtn.innerText = "Import";
+            tpImportBtn.disabled = false;
+        }
+    });
 
     runTpBtn.addEventListener('click', () => {
         numTransfers = parseInt(tpNumTransfers.value);
@@ -151,11 +271,55 @@ export function renderTransferPlanner(container, state, actions) {
         `;
 
         setTimeout(() => {
-            const result = solveOptimalTransferSequence(state, numTransfers, horizon);
+            // Resolve source squad configurations
+            let sourceSlots = null;
+            let activeCap = state.captain;
+            let activeVice = state.vice;
+            let activeBank = bank;
+
+            const sourceVal = tpSourceSquad.value;
+            if (sourceVal === 'active') {
+                sourceSlots = state.squadSlots;
+            } else if (sourceVal.startsWith('draft_')) {
+                const draftIdx = parseInt(sourceVal.split('_')[1]);
+                const d = state.drafts[draftIdx];
+                if (!d.squadSlots) {
+                    d.squadSlots = JSON.parse(JSON.stringify(state.squadSlots));
+                    d.captain = state.captain;
+                    d.vice = state.vice;
+                    d.formation = state.formation;
+                }
+                sourceSlots = d.squadSlots;
+                activeCap = d.captain || state.captain;
+                activeVice = d.vice || state.vice;
+                
+                const spent = d.squadSlots.reduce((sum, slot) => {
+                    if (slot.playerId === null) return sum;
+                    const p = PLAYERS.find(pl => pl.id === slot.playerId);
+                    return sum + (p ? p.price : 0);
+                }, 0);
+                activeBank = Math.max(0, 100 - spent);
+            } else if (sourceVal === 'import') {
+                if (!tempSourceSlots) {
+                    resultsContainer.innerHTML = `
+                        <div class="transfer-list-empty" style="padding:40px; text-align:center; color:#ef4444; border:1px dashed rgba(239, 68, 68, 0.2); border-radius:12px; background:rgba(239, 68, 68, 0.02);">
+                            Please enter a valid FPL Team ID and click "Import" before running the optimization.
+                        </div>
+                    `;
+                    actions.showToast("Source squad not imported yet!", "error");
+                    return;
+                }
+                sourceSlots = tempSourceSlots;
+                activeCap = tempCaptain || state.captain;
+                activeVice = tempVice || state.vice;
+                activeBank = tempBank;
+            }
+
+            const result = solveOptimalTransferSequence(sourceSlots, activeCap, activeVice, activeBank, numTransfers, horizon);
             if (result.sequence.length === 0) {
                 resultsContainer.innerHTML = `
                     <div class="transfer-list-empty" style="padding:40px; text-align:center; color:var(--text-muted); border:1px dashed var(--border-color); border-radius:12px;">
-                        No beneficial transfers found for the current squad. Your squad is fully optimized for this horizon window!
+                        No beneficial transfers found for the selected squad. Roster is fully optimized for this horizon window!
                     </div>
                 `;
                 return;
@@ -240,9 +404,9 @@ export function renderTransferPlanner(container, state, actions) {
         }, 400);
     }
 
-    function solveOptimalTransferSequence(state, numTransfers, horizon) {
-        let currentSquadSlots = JSON.parse(JSON.stringify(state.squadSlots));
-        let bank = state.getSquadForGw(state.currentGw).bank;
+    function solveOptimalTransferSequence(sourceSlots, activeCap, activeVice, activeBank, numTransfers, horizon) {
+        let currentSquadSlots = JSON.parse(JSON.stringify(sourceSlots));
+        let bank = activeBank;
         let sequence = [];
         let totalGain = 0;
 
@@ -268,7 +432,7 @@ export function renderTransferPlanner(container, state, actions) {
                 const player = PLAYERS.find(p => p.id === id);
                 if (player) {
                     let multiplier = 1;
-                    if (id === state.captain) {
+                    if (id === activeCap) {
                         multiplier = state.chips.tripleCaptain ? 3 : 2;
                     }
                     expectedPoints += getExpectedPts(player, horizon) * multiplier;
