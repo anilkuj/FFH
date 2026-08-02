@@ -514,6 +514,22 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
     const { starters, bench, bank } = squadInfo;
     const currentSquadIds = [...starters, ...bench];
 
+    // Resolve current active squad slots for the active gameweek (applying prior transfers)
+    const activeSquadSlots = (() => {
+        let slots = JSON.parse(JSON.stringify(state.squadSlots));
+        for (let gw = 1; gw <= state.currentGw; gw++) {
+            const weeklyTransfers = state.transfers[gw] || [];
+            weeklyTransfers.forEach(tx => {
+                slots.forEach(slot => {
+                    if (slot.playerId === tx.out) {
+                        slot.playerId = tx.in;
+                    }
+                });
+            });
+        }
+        return slots;
+    })();
+
     // Helper: expected points over horizon
     const getExpectedPts = (player) => {
         let sum = 0;
@@ -733,7 +749,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
 
     if (mode === 'preseason') {
         // --- PRESEASON SOLVER: UNLIMITED TRANSFERS ---
-        let optimizedSquadSlots = JSON.parse(JSON.stringify(state.squadSlots)); // deep clone
+        let optimizedSquadSlots = JSON.parse(JSON.stringify(activeSquadSlots)); // deep clone
         let currentSquadVal = optimizedSquadSlots.reduce((sum, slot) => {
             if (slot.playerId === null) return sum;
             const p = PLAYERS.find(pl => pl.id === slot.playerId);
@@ -1189,14 +1205,14 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
         let totalOriginalPts = 0;
         let totalOptimizedPts = 0;
 
-        for (let i = 0; i < state.squadSlots.length; i++) {
-            const originalId = state.squadSlots[i].playerId;
+        for (let i = 0; i < activeSquadSlots.length; i++) {
+            const originalId = activeSquadSlots[i].playerId;
             const optimizedId = optimizedSquadSlots[i].playerId;
             
             const originalPlayer = originalId !== null ? PLAYERS.find(p => p.id === originalId) : null;
             const optimizedPlayer = optimizedId !== null ? PLAYERS.find(p => p.id === optimizedId) : null;
 
-            totalOriginalPts += originalPlayer ? getWeightedScore(originalPlayer, state.squadSlots[i], i) : 0;
+            totalOriginalPts += originalPlayer ? getWeightedScore(originalPlayer, activeSquadSlots[i], i) : 0;
             totalOptimizedPts += optimizedPlayer ? getWeightedScore(optimizedPlayer, optimizedSquadSlots[i], i) : 0;
 
             if (originalId !== optimizedId) {
@@ -1204,7 +1220,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                     slotIndex: i,
                     out: originalPlayer,
                     in: optimizedPlayer,
-                    gain: (optimizedPlayer ? getWeightedScore(optimizedPlayer, optimizedSquadSlots[i], i) : 0) - (originalPlayer ? getWeightedScore(originalPlayer, state.squadSlots[i], i) : 0)
+                    gain: (optimizedPlayer ? getWeightedScore(optimizedPlayer, optimizedSquadSlots[i], i) : 0) - (originalPlayer ? getWeightedScore(originalPlayer, activeSquadSlots[i], i) : 0)
                 });
             }
         }
@@ -1328,8 +1344,8 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
             const soldPlayer = PLAYERS.find(p => p.id === soldId);
             if (!soldPlayer) continue;
 
-            const slot = state.squadSlots.find(s => s.playerId === soldId);
-            const slotIdx = state.squadSlots.findIndex(s => s.playerId === soldId);
+            const slot = activeSquadSlots.find(s => s.playerId === soldId);
+            const slotIdx = activeSquadSlots.findIndex(s => s.playerId === soldId);
             const soldPts = getWeightedScore(soldPlayer, slot, slotIdx);
             const sellBudget = soldPlayer.price + bank;
 
@@ -1381,10 +1397,10 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                 const s2 = PLAYERS.find(p => p.id === currentSquadIds[j]);
                 if (!s1 || !s2) continue;
 
-                const slot1 = state.squadSlots.find(s => s.playerId === s1.id);
-                const slotIdx1 = state.squadSlots.findIndex(s => s.playerId === s1.id);
-                const slot2 = state.squadSlots.find(s => s.playerId === s2.id);
-                const slotIdx2 = state.squadSlots.findIndex(s => s.playerId === s2.id);
+                const slot1 = activeSquadSlots.find(s => s.playerId === s1.id);
+                const slotIdx1 = activeSquadSlots.findIndex(s => s.playerId === s1.id);
+                const slot2 = activeSquadSlots.find(s => s.playerId === s2.id);
+                const slotIdx2 = activeSquadSlots.findIndex(s => s.playerId === s2.id);
 
                 const soldPts = getWeightedScore(s1, slot1, slotIdx1) + getWeightedScore(s2, slot2, slotIdx2);
                 const sellBudget = s1.price + s2.price + bank;
@@ -1537,7 +1553,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
 
         const reportContainer = resultsGrid.querySelector('#aiStrategistReportContainer');
         if (reportContainer) {
-            const optimizedSquadSlots = JSON.parse(JSON.stringify(state.squadSlots));
+            const optimizedSquadSlots = JSON.parse(JSON.stringify(activeSquadSlots));
             // Apply recommended single transfer as default optimization squad report
             if (best1Tx && best1Tx.gain > 0.1) {
                 const slotOut = optimizedSquadSlots.find(s => s.playerId === best1Tx.out.id);
