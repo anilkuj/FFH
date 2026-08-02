@@ -162,6 +162,28 @@ class AppState {
         localStorage.setItem(this.getActiveDraftIdxStorageKey(), this.activeDraftIndex.toString());
     }
 
+    optimizeCaptaincy() {
+        const starters = this.starters;
+        if (starters.length === 0) return;
+
+        const starterPts = starters.map(id => {
+            const p = PLAYERS.find(pl => pl.id === id);
+            let pts = 0;
+            if (p) {
+                const pred = p.predictions.find(pr => pr.gw === this.currentGw);
+                if (pred) pts = pred.pts;
+            }
+            return { id, pts };
+        });
+
+        starterPts.sort((a, b) => b.pts - a.pts);
+
+        this.captain = starterPts[0].id;
+        if (starterPts.length > 1) {
+            this.vice = starterPts[1].id;
+        }
+    }
+
     // Resolves squad, bench, bank, and free transfers specifically for a given gameweek
     getSquadForGw(targetGw) {
         // Clone baseline arrays
@@ -963,16 +985,7 @@ const actions = {
         if (slot) {
             slot.playerId = null;
             
-            // Clear captain/vice-captain if they were sold/removed
-            if (state.captain === playerId) {
-                const anotherStarter = state.squadSlots.find(s => s.isStarting && s.playerId !== null);
-                state.captain = anotherStarter ? anotherStarter.playerId : null;
-            }
-            if (state.vice === playerId) {
-                const anotherStarter = state.squadSlots.find(s => s.isStarting && s.playerId !== null && s.playerId !== state.captain);
-                state.vice = anotherStarter ? anotherStarter.playerId : null;
-            }
-            
+            state.optimizeCaptaincy();
             state.saveState();
             actions.renderActiveView();
             actions.showToast('Player removed completely.', 'success');
@@ -1013,6 +1026,7 @@ const actions = {
             state.squadSlots[slotIndex].playerId = inId;
         }
 
+        state.optimizeCaptaincy();
         state.saveState();
         actions.renderActiveView();
         actions.showToast(`Added ${pIn.name} to the team!`, 'success');
@@ -1134,10 +1148,7 @@ const actions = {
             state.transfers[gw].push({ out: outId, in: inId });
         }
 
-        // Swap captain / vice-captain if they were sold
-        if (state.captain === outId) state.captain = inId;
-        if (state.vice === outId) state.vice = inId;
-
+        state.optimizeCaptaincy();
         state.saveState();
         actions.renderActiveView();
         actions.showToast(`Transferred in ${pIn.name} for ${pOut.name}!`, 'success');
@@ -1147,6 +1158,7 @@ const actions = {
     removeTransfer(gw, index) {
         if (state.transfers[gw]) {
             state.transfers[gw].splice(index, 1);
+            state.optimizeCaptaincy();
             state.saveState();
             actions.renderActiveView();
             actions.showToast('Planned transfer removed.', 'success');
