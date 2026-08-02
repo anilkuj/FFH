@@ -1362,9 +1362,13 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                                     const badgeColor = isDowngrade ? '#ef4444' : 'var(--primary)';
                                     const badgeBorder = isDowngrade ? 'rgba(239, 68, 68, 0.2)' : 'rgba(0, 255, 136, 0.2)';
                                     const badgeLabel = isDowngrade ? 'BUDGET DOWNGRADED' : 'POINTS UPGRADED';
+                                    const cardBg = isDowngrade ? 'rgba(239, 68, 68, 0.02)' : 'rgba(0, 255, 136, 0.01)';
+                                    const cardBorder = isDowngrade ? 'rgba(239, 68, 68, 0.15)' : 'rgba(0, 255, 136, 0.15)';
+                                    const cardLeftBorder = isDowngrade ? '#ef4444' : 'var(--primary)';
+                                    const cardStyle = `background: ${cardBg}; border: 1px solid ${cardBorder}; border-left: 4px solid ${cardLeftBorder}; border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px;`;
 
                                     return `
-                                        <div class="rec-row-preseason">
+                                        <div class="rec-row-preseason" style="${cardStyle}">
                                             <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px;">
                                                 <div class="transfer-player-card player-card-out" style="flex:1;">
                                                     <span class="player-name-main">${up.out ? up.out.name : 'Empty Slot'}</span>
