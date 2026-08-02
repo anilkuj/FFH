@@ -235,6 +235,14 @@ function renderRadarChart(p1, p2) {
         Math.min(100, (p2.ictIndex / 310) * 100)
     ];
 
+    const isLight = document.documentElement.classList.contains('light-theme');
+    const color1 = isLight ? '#15803d' : '#00ff88';
+    const bg1 = isLight ? 'rgba(21, 128, 61, 0.12)' : 'rgba(0, 255, 136, 0.15)';
+    const color2 = isLight ? '#0f766e' : '#00f2fe';
+    const bg2 = isLight ? 'rgba(15, 118, 110, 0.12)' : 'rgba(0, 242, 254, 0.15)';
+    const gridColor = isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.08)';
+    const labelColor = isLight ? '#4b5563' : '#94a3b8';
+
     comparisonChartInstance = new Chart(ctx, {
         type: 'radar',
         data: {
@@ -243,22 +251,22 @@ function renderRadarChart(p1, p2) {
                 {
                     label: p1.name,
                     data: normP1,
-                    backgroundColor: 'rgba(0, 255, 136, 0.15)',
-                    borderColor: '#00ff88',
-                    pointBackgroundColor: '#00ff88',
-                    pointBorderColor: '#00ff88',
+                    backgroundColor: bg1,
+                    borderColor: color1,
+                    pointBackgroundColor: color1,
+                    pointBorderColor: color1,
                     pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: '#00ff88'
+                    pointHoverBorderColor: color1
                 },
                 {
                     label: p2.name,
                     data: normP2,
-                    backgroundColor: 'rgba(0, 242, 254, 0.15)',
-                    borderColor: '#00f2fe',
-                    pointBackgroundColor: '#00f2fe',
-                    pointBorderColor: '#00f2fe',
+                    backgroundColor: bg2,
+                    borderColor: color2,
+                    pointBackgroundColor: color2,
+                    pointBorderColor: color2,
                     pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: '#00f2fe'
+                    pointHoverBorderColor: color2
                 }
             ]
         },
@@ -268,13 +276,13 @@ function renderRadarChart(p1, p2) {
             scales: {
                 r: {
                     angleLines: {
-                        color: 'rgba(255, 255, 255, 0.08)'
+                        color: gridColor
                     },
                     grid: {
-                        color: 'rgba(255, 255, 255, 0.08)'
+                        color: gridColor
                     },
                     pointLabels: {
-                        color: '#94a3b8',
+                        color: labelColor,
                         font: {
                             family: 'Inter',
                             size: 11,

@@ -20,6 +20,12 @@
     --fpl-red-4: #e90052;   /* Hard (4-5) */
     --fpl-red-5: #800030;
     
+    --diff-1-text: #ffffff;
+    --diff-2-text: #ffffff;
+    --diff-3-text: #0f172a;
+    --diff-4-text: #ffffff;
+    --diff-5-text: #ffffff;
+    
     --text-main: #f8fafc;
     --text-muted: #94a3b8;
     --text-dark: #0f172a;
@@ -65,10 +71,16 @@ html.light-theme {
     
     /* Clear & Distinct UI FDR difficulty indicators */
     --fpl-green-5: #15803d; /* FDR 1 (Dark Green) */
-    --fpl-green-4: #22c55e; /* FDR 2 (Light Green) */
-    --fpl-grey: #94a3b8;    /* FDR 3 (Neutral Grey) */
-    --fpl-red-4: #f43f5e;   /* FDR 4 (Bright Red) */
+    --fpl-green-4: #86efac; /* FDR 2 (Soft Easy Green) */
+    --fpl-grey: #cbd5e1;    /* FDR 3 (Neutral Grey) */
+    --fpl-red-4: #fb7185;   /* FDR 4 (Soft Red/Pink) */
     --fpl-red-5: #991b1b;   /* FDR 5 (Dark Crimson) */
+    
+    --diff-1-text: #ffffff;
+    --diff-2-text: #1f2937;
+    --diff-3-text: #1f2937;
+    --diff-4-text: #1f2937;
+    --diff-5-text: #ffffff;
     
     --text-main: #1f2937; /* Dark Slate charcoal */
     --text-muted: #4b5563; /* Cool gray */
@@ -229,14 +241,14 @@ body {
 }
 
 .nav-item.active {
-    color: #fff;
+    color: var(--bg-dark);
     background: linear-gradient(90deg, var(--primary), var(--secondary));
     font-weight: 600;
     box-shadow: 0 4px 12px var(--primary-glow);
 }
 
 .nav-item.active i {
-    color: #fff;
+    color: var(--bg-dark);
 }
 
 .premium-tag {
@@ -1435,14 +1447,15 @@ body {
 }
 
 .ticker-tab-btn:hover {
-    color: #fff;
-    background: rgba(255,255,255,0.03);
+    color: var(--text-main);
+    background: var(--primary-glow);
+    border-color: var(--border-hover);
 }
 
 .ticker-tab-btn.active {
-    background: rgba(255,255,255,0.05);
-    border-color: var(--text-main);
-    color: #fff;
+    background: var(--primary-glow);
+    border-color: var(--primary);
+    color: var(--primary);
 }
 
 .ticker-grid-wrapper {
@@ -1509,27 +1522,27 @@ body {
 
 .diff-1 {
     background-color: var(--fpl-green-5);
-    color: #fff;
+    color: var(--diff-1-text);
 }
 
 .diff-2 {
     background-color: var(--fpl-green-4);
-    color: #fff;
+    color: var(--diff-2-text);
 }
 
 .diff-3 {
     background-color: var(--fpl-grey);
-    color: #fff;
+    color: var(--diff-3-text);
 }
 
 .diff-4 {
     background-color: var(--fpl-red-4);
-    color: #fff;
+    color: var(--diff-4-text);
 }
 
 .diff-5 {
     background-color: var(--fpl-red-5);
-    color: #fff;
+    color: var(--diff-5-text);
 }
 
 .fixture-opp-lbl {
@@ -2132,7 +2145,7 @@ body {
 }
 
 .btn-secondary-action:hover {
-    color: #fff;
+    color: var(--text-main);
     border-color: var(--text-muted);
 }
 
@@ -3217,6 +3230,43 @@ select option {
     background-color: rgba(255, 255, 255, 0.05) !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
     color: var(--text-muted) !important;
+}
+
+/* Light Theme Rating Badges Overrides */
+html.light-theme .rating-badge-a {
+    background-color: rgba(21, 128, 61, 0.1) !important;
+    border-color: rgba(21, 128, 61, 0.3) !important;
+    color: #15803d !important;
+}
+
+html.light-theme .rating-badge-b {
+    background-color: rgba(22, 163, 74, 0.08) !important;
+    border-color: rgba(22, 163, 74, 0.25) !important;
+    color: #16a34a !important;
+}
+
+html.light-theme .rating-badge-c {
+    background-color: rgba(71, 85, 105, 0.08) !important;
+    border-color: rgba(71, 85, 105, 0.25) !important;
+    color: #475569 !important;
+}
+
+html.light-theme .rating-badge-d {
+    background-color: rgba(220, 38, 38, 0.08) !important;
+    border-color: rgba(220, 38, 38, 0.25) !important;
+    color: #dc2626 !important;
+}
+
+html.light-theme .rating-badge-e {
+    background-color: rgba(153, 27, 27, 0.1) !important;
+    border-color: rgba(153, 27, 27, 0.3) !important;
+    color: #991b1b !important;
+}
+
+html.light-theme .rating-badge-na {
+    background-color: #f3f4f6 !important;
+    border-color: #d1d5db !important;
+    color: #6b7280 !important;
 }
 
 /* Wide layout for Player Detail popups */

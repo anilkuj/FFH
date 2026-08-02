@@ -178,14 +178,15 @@ export function renderPlanner(container, state, actions) {
 function getFdrColor(diff) {
     switch (diff) {
         case 1:
+            return 'var(--fpl-green-5)';
         case 2:
-            return '#02b056'; // Green
+            return 'var(--fpl-green-4)';
         case 3:
-            return '#94a3b8'; // Grey / Neutral
+            return 'var(--fpl-grey)';
         case 4:
-            return '#e90052'; // Light Red / Pink
+            return 'var(--fpl-red-4)';
         case 5:
-            return '#800030'; // Dark Red
+            return 'var(--fpl-red-5)';
         default:
             return '#334155'; // Dark Grey for BYE
     }
@@ -225,11 +226,9 @@ function renderFdrFixtures(player, currentGw) {
             const oppText = pr.opp !== 'BYE' ? `${pr.opp} (${pr.loc})` : 'BYE';
             const fdrColor = getFdrColor(pr.diff);
             html += `
-                <span class="fdr-fixture-badge" title="GW${gw}: ${oppText} (FDR ${pr.diff})" style="
+                <span class="fdr-fixture-badge diff-${pr.diff}" title="GW${gw}: ${oppText} (FDR ${pr.diff})" style="
                     font-size: 8.5px;
                     font-weight: 800;
-                    color: #fff;
-                    background-color: ${fdrColor};
                     padding: 2px 4px;
                     border-radius: 4px;
                     text-transform: uppercase;
