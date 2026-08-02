@@ -1,4 +1,5 @@
 import { PLAYERS, TEAMS } from '../data.js';
+import { getShirtSVG } from './planner.js';
 
 export function renderTransferPlanner(container, state, actions) {
     const squadInfo = state.getSquadForGw(state.currentGw);
@@ -140,62 +141,82 @@ export function renderTransferPlanner(container, state, actions) {
         return slots;
     };
 
-    const renderCurrentSquadList = (slots, capId, viceId, bankVal) => {
-        const gkps = slots.filter(s => s.position === 'GKP');
-        const defs = slots.filter(s => s.position === 'DEF');
-        const mids = slots.filter(s => s.position === 'MID');
-        const fwds = slots.filter(s => s.position === 'FWD');
+    const renderCurrentSquadPitch = (slots, capId, viceId, bankVal) => {
+        const gkps = slots.filter(s => s.position === 'GKP' && s.isStarting);
+        const defs = slots.filter(s => s.position === 'DEF' && s.isStarting);
+        const mids = slots.filter(s => s.position === 'MID' && s.isStarting);
+        const fwds = slots.filter(s => s.position === 'FWD' && s.isStarting);
+        const bench = slots.filter(s => !s.isStarting);
 
-        const renderPlayerRow = (slot) => {
+        const renderMiniCard = (slot) => {
             if (slot.playerId === null) {
                 return `
-                    <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.02); color:var(--text-muted); font-size:11px;">
-                        <span>Empty Slot (${slot.position})</span>
-                        <span>£0.0m</span>
+                    <div class="player-pitch-card empty-slot" style="width: 50px; padding: 4px 2px; height: auto; cursor: default;">
+                        <div style="width: 22px; height: 22px; margin: 0 auto; background: rgba(255,255,255,0.05); border-radius: 50%;"></div>
+                        <div class="player-pitch-name" style="font-size: 8px; margin-top: 2px;">Empty</div>
+                        <div class="player-pitch-points" style="font-size: 7px;">£0.0m</div>
                     </div>
                 `;
             }
             const p = PLAYERS.find(pl => pl.id === slot.playerId);
             if (!p) return '';
+            const teamObj = TEAMS.find(t => t.shortName === p.team) || { color: '#ffffff' };
             const isCap = slot.playerId === capId;
             const isVice = slot.playerId === viceId;
-            const roleBadge = isCap ? ' <span style="color:var(--primary); font-weight:900; font-size:9px; background:rgba(0,255,136,0.1); padding:1px 4px; border-radius:3px; margin-left:4px;">C</span>' : 
-                              (isVice ? ' <span style="color:var(--secondary); font-weight:900; font-size:9px; background:rgba(234,179,8,0.1); padding:1px 4px; border-radius:3px; margin-left:4px;">V</span>' : '');
+            const roleBadge = isCap ? ' (C)' : (isVice ? ' (V)' : '');
             
             return `
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.02); font-size:11.5px;">
-                    <div style="display:flex; flex-direction:column;">
-                        <span style="font-weight:700; color:var(--text-main);">${p.name}${roleBadge}</span>
-                        <span style="font-size:10px; color:var(--text-muted);">${p.team} • ${slot.isStarting ? 'Starter' : 'Bench'}</span>
+                <div class="player-pitch-card" style="width: 54px; padding: 4px 2px; height: auto; cursor: default; position: relative;">
+                    <div class="profile-avatar-shirt" style="width: 22px; height: 22px; margin: 0 auto;">
+                        ${getShirtSVG(teamObj.color, p.team)}
                     </div>
-                    <span style="font-weight:700; color:var(--text-muted);">£${p.price.toFixed(1)}m</span>
+                    <div class="player-pitch-name" style="font-size: 8px; font-weight: 800; margin-top: 2px; max-width: 52px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${p.name}">
+                        ${p.name.split(' ').pop()}${roleBadge}
+                    </div>
+                    <div class="player-pitch-points" style="font-size: 7.5px; font-weight: 700; color: rgba(255,255,255,0.7);">
+                        £${p.price.toFixed(1)}m
+                    </div>
                 </div>
             `;
         };
 
         return `
-            <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:12px; padding:16px; display:flex; flex-direction:column; gap:12px;">
-                <h3 style="font-family:var(--font-heading); margin:0; font-size:13px; font-weight:800; border-bottom:1px solid var(--border-color); padding-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+            <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:10px; box-shadow: var(--shadow-sm);">
+                <h3 style="font-family:var(--font-heading); margin:0; font-size:12.5px; font-weight:800; border-bottom:1px solid var(--border-color); padding-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
                     <span>Squad Preview</span>
                     <span style="font-size:11px; color:var(--primary);">Bank: £${bankVal.toFixed(1)}m</span>
                 </h3>
-                
-                <div style="display:flex; flex-direction:column; gap:10px; max-height:480px; overflow-y:auto; padding-right:4px;">
-                    <div>
-                        <h4 style="font-size:10px; text-transform:uppercase; color:var(--text-muted); margin:0 0 4px 0; font-weight:700; border-left:2px solid var(--primary); padding-left:6px;">Goalkeepers</h4>
-                        ${gkps.map(renderPlayerRow).join('')}
+
+                <!-- Mini Football Pitch -->
+                <div class="football-pitch" style="height: 300px; padding: 6px 0; justify-content: space-between; border-radius: 8px; position: relative; overflow: hidden; max-height: none; min-height: 0;">
+                    <div class="pitch-box-top" style="border-color: rgba(255,255,255,0.08);"></div>
+                    <div class="pitch-half-line" style="background: rgba(255,255,255,0.08); top: 50%;"></div>
+                    <div class="pitch-center-circle" style="border-color: rgba(255,255,255,0.08); top: 50%;"></div>
+                    <div class="pitch-box-bottom" style="border-color: rgba(255,255,255,0.08);"></div>
+
+                    <!-- Goalkeeper Row -->
+                    <div class="pitch-row" style="display: flex; justify-content: center; gap: 8px; margin: 0;">
+                        ${gkps.map(renderMiniCard).join('')}
                     </div>
-                    <div>
-                        <h4 style="font-size:10px; text-transform:uppercase; color:var(--text-muted); margin:8px 0 4px 0; font-weight:700; border-left:2px solid var(--primary); padding-left:6px;">Defenders</h4>
-                        ${defs.map(renderPlayerRow).join('')}
+                    <!-- Defender Row -->
+                    <div class="pitch-row" style="display: flex; justify-content: center; gap: 6px; margin: 0;">
+                        ${defs.map(renderMiniCard).join('')}
                     </div>
-                    <div>
-                        <h4 style="font-size:10px; text-transform:uppercase; color:var(--text-muted); margin:8px 0 4px 0; font-weight:700; border-left:2px solid var(--primary); padding-left:6px;">Midfielders</h4>
-                        ${mids.map(renderPlayerRow).join('')}
+                    <!-- Midfielder Row -->
+                    <div class="pitch-row" style="display: flex; justify-content: center; gap: 6px; margin: 0;">
+                        ${mids.map(renderMiniCard).join('')}
                     </div>
-                    <div>
-                        <h4 style="font-size:10px; text-transform:uppercase; color:var(--text-muted); margin:8px 0 4px 0; font-weight:700; border-left:2px solid var(--primary); padding-left:6px;">Forwards</h4>
-                        ${fwds.map(renderPlayerRow).join('')}
+                    <!-- Forward Row -->
+                    <div class="pitch-row" style="display: flex; justify-content: center; gap: 6px; margin: 0;">
+                        ${fwds.map(renderMiniCard).join('')}
+                    </div>
+                </div>
+
+                <!-- Bench Row -->
+                <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 8px; padding: 8px;">
+                    <h4 style="font-size:9px; text-transform:uppercase; color:var(--text-muted); margin:0 0 6px 0; text-align:center; font-weight:700;">Substitutes</h4>
+                    <div style="display:flex; justify-content:space-around; gap:4px;">
+                        ${bench.map(renderMiniCard).join('')}
                     </div>
                 </div>
             </div>
@@ -211,86 +232,71 @@ export function renderTransferPlanner(container, state, actions) {
         const p2 = tx.in;
 
         modalDiv.innerHTML = `
-            <div class="player-detail-modal-card" style="width: 100%; max-width: 600px; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 20px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);">
-                <div class="modal-header-section" style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
-                    <h3 style="font-family: var(--font-heading); margin: 0; font-weight: 800; font-size: 16px; display: flex; align-items: center; gap: 8px;">
+            <div class="player-detail-modal-card" style="width: 100%; max-width: 500px; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);">
+                <div class="modal-header-section" style="border-bottom: 1px solid var(--border-color); padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="font-family: var(--font-heading); margin: 0; font-weight: 800; font-size: 15px; display: flex; align-items: center; gap: 8px;">
                         <i data-lucide="git-compare" style="color: var(--primary);"></i> Player Stats Comparison
                     </h3>
-                    <button class="close-modal-btn" id="closeCompareModalBtn" style="background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 4px; border-radius: 50%;"><i data-lucide="x" style="width: 20px; height: 20px;"></i></button>
+                    <button class="close-modal-btn" id="closeCompareModalBtn" style="background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 4px; border-radius: 50%;"><i data-lucide="x" style="width: 18px; height: 18px;"></i></button>
                 </div>
 
-                <div style="overflow-x: auto; max-height: 400px;">
-                    <table class="ticker-table" style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: left;">
+                <div style="overflow-x: auto; width: 100%;">
+                    <table class="ticker-table" style="width: 100%; border-collapse: collapse; font-size: 11.5px; text-align: left;">
                         <thead>
                             <tr style="border-bottom: 2px solid var(--border-color);">
-                                <th style="padding: 8px 4px; color: var(--text-muted); font-weight: 700;">Metric</th>
-                                <th style="padding: 8px 4px; color: #ef4444; font-weight: 700; text-align: right;">OUT: ${p1.name}</th>
-                                <th style="padding: 8px 4px; color: #00ff88; font-weight: 700; text-align: right;">IN: ${p2.name}</th>
+                                <th style="padding: 6px 4px; color: var(--text-muted); font-weight: 700;">Metric</th>
+                                <th style="padding: 6px 4px; color: #ef4444; font-weight: 700; text-align: right;">OUT: ${p1.name}</th>
+                                <th style="padding: 6px 4px; color: #00ff88; font-weight: 700; text-align: right;">IN: ${p2.name}</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 8px 4px; font-weight: 600; color: var(--text-muted);">Team</td>
-                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.team}</td>
-                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.team}</td>
+                                <td style="padding: 6px 4px; font-weight: 600; color: var(--text-muted);">Team</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.team}</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.team}</td>
                             </tr>
                             <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 8px 4px; font-weight: 600; color: var(--text-muted);">Price</td>
-                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">£${p1.price.toFixed(1)}m</td>
-                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">£${p2.price.toFixed(1)}m</td>
+                                <td style="padding: 6px 4px; font-weight: 600; color: var(--text-muted);">Price</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">£${p1.price.toFixed(1)}m</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">£${p2.price.toFixed(1)}m</td>
                             </tr>
                             <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 8px 4px; font-weight: 600; color: var(--text-muted);">Ownership</td>
-                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.ownership.toFixed(1)}%</td>
-                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.ownership.toFixed(1)}%</td>
+                                <td style="padding: 6px 4px; font-weight: 600; color: var(--text-muted);">Ownership</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.ownership.toFixed(1)}%</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.ownership.toFixed(1)}%</td>
                             </tr>
                             <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 8px 4px; font-weight: 600; color: var(--text-muted);">Total Points</td>
-                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.points}</td>
-                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.points}</td>
+                                <td style="padding: 6px 4px; font-weight: 600; color: var(--text-muted);">GW${state.currentGw} Exp Pts</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${getExpectedPts(p1, 1).toFixed(1)}</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${getExpectedPts(p2, 1).toFixed(1)}</td>
                             </tr>
                             <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 8px 4px; font-weight: 600; color: var(--text-muted);">Starts</td>
-                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.GS}</td>
-                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.GS}</td>
+                                <td style="padding: 6px 4px; font-weight: 600; color: var(--text-muted);">${horizon}-GW Exp Pts</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${getExpectedPts(p1, horizon).toFixed(1)}</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${getExpectedPts(p2, horizon).toFixed(1)}</td>
                             </tr>
                             <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 8px 4px; font-weight: 600; color: var(--text-muted);">Avg Minutes</td>
-                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.MPPG.toFixed(0)}m</td>
-                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.MPPG.toFixed(0)}m</td>
+                                <td style="padding: 6px 4px; font-weight: 600; color: var(--text-muted);">Starts</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.GS}</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.GS}</td>
                             </tr>
                             <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 8px 4px; font-weight: 600; color: var(--text-muted);">Expected Goals (xG)</td>
-                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.xG.toFixed(1)}</td>
-                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.xG.toFixed(1)}</td>
+                                <td style="padding: 6px 4px; font-weight: 600; color: var(--text-muted);">Avg Minutes</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.MPPG.toFixed(0)}m</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.MPPG.toFixed(0)}m</td>
                             </tr>
                             <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 8px 4px; font-weight: 600; color: var(--text-muted);">Expected Assists (xA)</td>
-                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.xA.toFixed(1)}</td>
-                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.xA.toFixed(1)}</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 8px 4px; font-weight: 600; color: var(--text-muted);">xG per 90</td>
-                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.xG90.toFixed(2)}</td>
-                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.xG90.toFixed(2)}</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 8px 4px; font-weight: 600; color: var(--text-muted);">xA per 90</td>
-                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.xA90.toFixed(2)}</td>
-                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.xA90.toFixed(2)}</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 8px 4px; font-weight: 600; color: var(--text-muted);">ICT Index</td>
-                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.ictIndex.toFixed(1)}</td>
-                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.ictIndex.toFixed(1)}</td>
+                                <td style="padding: 6px 4px; font-weight: 600; color: var(--text-muted);">Total Points</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.points}</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.points}</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
 
-                <div class="player-action-section" style="padding: 0; display: flex; justify-content: flex-end; gap: 10px; width: 100%; border-top: 1px solid var(--border-color); padding-top: 16px;">
-                    <button class="action-main-btn btn-secondary-action" id="cancelCompareModalBtn" style="margin: 0; width: auto; padding: 10px 20px;">Close</button>
-                    <button class="action-main-btn" id="applyCompareModalBtn" style="margin: 0; width: auto; padding: 10px 20px;">Apply Transfer</button>
+                <div class="player-action-section" style="padding: 0; display: flex; justify-content: flex-end; gap: 8px; width: 100%; border-top: 1px solid var(--border-color); padding-top: 12px;">
+                    <button class="action-main-btn btn-secondary-action" id="cancelCompareModalBtn" style="margin: 0; width: auto; padding: 8px 16px; font-size: 11px;">Close</button>
+                    <button class="action-main-btn" id="applyCompareModalBtn" style="margin: 0; width: auto; padding: 8px 16px; font-size: 11px;">Apply Transfer</button>
                 </div>
             </div>
         `;
@@ -330,7 +336,7 @@ export function renderTransferPlanner(container, state, actions) {
             </div>
 
             <div class="tp-main-layout" style="display:flex; gap:20px; flex-wrap:wrap; align-items: flex-start; width: 100%;">
-                <!-- Left Sidebar: Squad Preview -->
+                <!-- Left Sidebar: Squad Preview Pitch -->
                 <div id="tpSquadPreviewContainer" style="flex: 1 1 260px; max-width: 320px; width: 100%;"></div>
                 
                 <!-- Right Side: Configurations & Results -->
@@ -450,7 +456,7 @@ export function renderTransferPlanner(container, state, actions) {
         }
 
         if (previewSlots) {
-            tpSquadPreviewContainer.innerHTML = renderCurrentSquadList(previewSlots, previewCap, previewVice, previewBank);
+            tpSquadPreviewContainer.innerHTML = renderCurrentSquadPitch(previewSlots, previewCap, previewVice, previewBank);
         }
     };
 
