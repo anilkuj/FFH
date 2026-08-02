@@ -697,7 +697,7 @@ const actions = {
         if (!btnContainer && !modalBtnContainer) return;
 
         // Use custom client ID if saved, otherwise fallback to placeholder
-        const customClientId = localStorage.getItem('fpl_hub_google_client_id') || '485458293751-placeholder.apps.googleusercontent.com';
+        const customClientId = localStorage.getItem('fpl_hub_google_client_id') || '119489651282-bfu1jpk2gkeqqvsj5majkgle5ochl1it.apps.googleusercontent.com';
 
         try {
             google.accounts.id.initialize({
@@ -777,7 +777,7 @@ const actions = {
     },
 
     showLoginModal() {
-        const customClientId = localStorage.getItem('fpl_hub_google_client_id') || '485458293751-placeholder.apps.googleusercontent.com';
+        const customClientId = localStorage.getItem('fpl_hub_google_client_id') || '119489651282-bfu1jpk2gkeqqvsj5majkgle5ochl1it.apps.googleusercontent.com';
         const contentHTML = `
             <div class="modal-header-section">
                 <h3 style="display: flex; align-items: center; gap: 8px;"><i data-lucide="lock" class="highlight-transfers" style="width: 18px; height: 18px;"></i> Sign In to FPL Hub</h3>
