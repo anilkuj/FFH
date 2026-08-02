@@ -8,11 +8,24 @@ export function renderTransferPlanner(container, state, actions) {
     let numTransfers = parseInt(localStorage.getItem('fpl_hub_tp_num_transfers')) || 2;
     let horizon = parseInt(localStorage.getItem('fpl_hub_tp_horizon')) || 5;
 
-    // Temporary variables for imported team
+    // Temporary variables for imported team (initialized from localStorage cache if available)
     let tempSourceSlots = null;
     let tempCaptain = null;
     let tempVice = null;
     let tempBank = 0;
+
+    const lastImportedId = localStorage.getItem('fpl_hub_last_imported_team_id') || '';
+    const cachedSlotsStr = localStorage.getItem('fpl_hub_last_imported_squad_slots');
+    if (cachedSlotsStr) {
+        try {
+            tempSourceSlots = JSON.parse(cachedSlotsStr);
+            tempCaptain = parseInt(localStorage.getItem('fpl_hub_last_imported_captain')) || null;
+            tempVice = parseInt(localStorage.getItem('fpl_hub_last_imported_vice')) || null;
+            tempBank = parseFloat(localStorage.getItem('fpl_hub_last_imported_bank')) || 0;
+        } catch (e) {
+            console.error("Error parsing cached FPL squad slots:", e);
+        }
+    }
 
     // Helper functions for rendering
     const getAvgFDR = (player) => {
@@ -127,8 +140,69 @@ export function renderTransferPlanner(container, state, actions) {
         return slots;
     };
 
+    const renderCurrentSquadList = (slots, capId, viceId, bankVal) => {
+        const gkps = slots.filter(s => s.position === 'GKP');
+        const defs = slots.filter(s => s.position === 'DEF');
+        const mids = slots.filter(s => s.position === 'MID');
+        const fwds = slots.filter(s => s.position === 'FWD');
+
+        const renderPlayerRow = (slot) => {
+            if (slot.playerId === null) {
+                return `
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.02); color:var(--text-muted); font-size:11px;">
+                        <span>Empty Slot (${slot.position})</span>
+                        <span>£0.0m</span>
+                    </div>
+                `;
+            }
+            const p = PLAYERS.find(pl => pl.id === slot.playerId);
+            if (!p) return '';
+            const isCap = slot.playerId === capId;
+            const isVice = slot.playerId === viceId;
+            const roleBadge = isCap ? ' <span style="color:var(--primary); font-weight:900; font-size:9px; background:rgba(0,255,136,0.1); padding:1px 4px; border-radius:3px; margin-left:4px;">C</span>' : 
+                              (isVice ? ' <span style="color:var(--secondary); font-weight:900; font-size:9px; background:rgba(234,179,8,0.1); padding:1px 4px; border-radius:3px; margin-left:4px;">V</span>' : '');
+            
+            return `
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.02); font-size:11.5px;">
+                    <div style="display:flex; flex-direction:column;">
+                        <span style="font-weight:700; color:var(--text-main);">${p.name}${roleBadge}</span>
+                        <span style="font-size:10px; color:var(--text-muted);">${p.team} • ${slot.isStarting ? 'Starter' : 'Bench'}</span>
+                    </div>
+                    <span style="font-weight:700; color:var(--text-muted);">£${p.price.toFixed(1)}m</span>
+                </div>
+            `;
+        };
+
+        return `
+            <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:12px; padding:16px; display:flex; flex-direction:column; gap:12px;">
+                <h3 style="font-family:var(--font-heading); margin:0; font-size:13px; font-weight:800; border-bottom:1px solid var(--border-color); padding-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                    <span>Squad Preview</span>
+                    <span style="font-size:11px; color:var(--primary);">Bank: £${bankVal.toFixed(1)}m</span>
+                </h3>
+                
+                <div style="display:flex; flex-direction:column; gap:10px; max-height:480px; overflow-y:auto; padding-right:4px;">
+                    <div>
+                        <h4 style="font-size:10px; text-transform:uppercase; color:var(--text-muted); margin:0 0 4px 0; font-weight:700; border-left:2px solid var(--primary); padding-left:6px;">Goalkeepers</h4>
+                        ${gkps.map(renderPlayerRow).join('')}
+                    </div>
+                    <div>
+                        <h4 style="font-size:10px; text-transform:uppercase; color:var(--text-muted); margin:8px 0 4px 0; font-weight:700; border-left:2px solid var(--primary); padding-left:6px;">Defenders</h4>
+                        ${defs.map(renderPlayerRow).join('')}
+                    </div>
+                    <div>
+                        <h4 style="font-size:10px; text-transform:uppercase; color:var(--text-muted); margin:8px 0 4px 0; font-weight:700; border-left:2px solid var(--primary); padding-left:6px;">Midfielders</h4>
+                        ${mids.map(renderPlayerRow).join('')}
+                    </div>
+                    <div>
+                        <h4 style="font-size:10px; text-transform:uppercase; color:var(--text-muted); margin:8px 0 4px 0; font-weight:700; border-left:2px solid var(--primary); padding-left:6px;">Forwards</h4>
+                        ${fwds.map(renderPlayerRow).join('')}
+                    </div>
+                </div>
+            </div>
+        `;
+    };
+
     const showCompareModal = (tx) => {
-        // Create modal container
         const modalDiv = document.createElement('div');
         modalDiv.className = 'player-detail-modal-overlay';
         modalDiv.style.cssText = 'position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.75); z-index:99999; display:flex; align-items:center; justify-content:center; padding:20px;';
@@ -224,7 +298,6 @@ export function renderTransferPlanner(container, state, actions) {
         document.body.appendChild(modalDiv);
         lucide.createIcons();
 
-        // Close functions
         const closeModal = () => {
             document.body.removeChild(modalDiv);
         };
@@ -232,7 +305,6 @@ export function renderTransferPlanner(container, state, actions) {
         modalDiv.querySelector('#closeCompareModalBtn').addEventListener('click', closeModal);
         modalDiv.querySelector('#cancelCompareModalBtn').addEventListener('click', closeModal);
 
-        // Apply Transfer
         modalDiv.querySelector('#applyCompareModalBtn').addEventListener('click', () => {
             closeModal();
             const slotIdx = tx.slotIdx;
@@ -257,60 +329,68 @@ export function renderTransferPlanner(container, state, actions) {
                 </div>
             </div>
 
-            <!-- Configuration Card -->
-            <div class="optimizer-settings-card" style="padding:16px;">
-                <h3 style="font-family: var(--font-heading); margin-bottom:16px; font-weight:700; display:flex; align-items:center; gap:8px;">
-                    <i data-lucide="settings" class="highlight-transfers"></i> Setup Roadmap Configurations
-                </h3>
-                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:16px; align-items: flex-end;">
-                    <!-- Source Selection -->
-                    <div style="display:flex; flex-direction:column; gap:6px; grid-column: span 2;">
-                        <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Source Squad / Team Selection</label>
-                        <div style="display:flex; gap:8px; align-items:center; flex-wrap: wrap;">
-                            <select id="tpSourceSquad" class="settings-select" style="flex:1; min-width:180px;">
-                                <option value="import" selected>Import from FPL Team ID...</option>
-                                <option value="active">Active Squad Roster</option>
-                                ${state.drafts.map((d, idx) => `
-                                    <option value="draft_${idx}">Draft ${idx + 1}: ${d.name}</option>
-                                `).join('')}
-                            </select>
-                            <input type="text" id="tpFplTeamId" class="settings-select" placeholder="FPL Team ID" style="display:inline-block; width:110px; font-size:12px; padding:8px;" />
-                            <button class="action-main-btn" id="tpImportBtn" style="display:inline-block; margin:0; padding:8px 16px; font-size:12px; height:38px;">Import</button>
+            <div class="tp-main-layout" style="display:flex; gap:20px; flex-wrap:wrap; align-items: flex-start; width: 100%;">
+                <!-- Left Sidebar: Squad Preview -->
+                <div id="tpSquadPreviewContainer" style="flex: 1 1 260px; max-width: 320px; width: 100%;"></div>
+                
+                <!-- Right Side: Configurations & Results -->
+                <div style="flex: 2 2 400px; display:flex; flex-direction:column; gap:20px; width:100%;">
+                    <!-- Configuration Card -->
+                    <div class="optimizer-settings-card" style="padding:16px; margin:0;">
+                        <h3 style="font-family: var(--font-heading); margin-bottom:16px; font-weight:700; display:flex; align-items:center; gap:8px;">
+                            <i data-lucide="settings" class="highlight-transfers"></i> Setup Roadmap Configurations
+                        </h3>
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:16px; align-items: flex-end;">
+                            <!-- Source Selection -->
+                            <div style="display:flex; flex-direction:column; gap:6px; grid-column: span 2;">
+                                <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Source Squad / Team Selection</label>
+                                <div style="display:flex; gap:8px; align-items:center; flex-wrap: wrap;">
+                                    <select id="tpSourceSquad" class="settings-select" style="flex:1; min-width:180px;">
+                                        <option value="active" selected>Active Squad Roster</option>
+                                        <option value="import">Import from FPL Team ID...</option>
+                                        ${state.drafts.map((d, idx) => `
+                                            <option value="draft_${idx}">Draft ${idx + 1}: ${d.name}</option>
+                                        `).join('')}
+                                    </select>
+                                    <input type="text" id="tpFplTeamId" class="settings-select" placeholder="FPL Team ID" style="display:none; width:110px; font-size:12px; padding:8px;" value="${lastImportedId}" />
+                                    <button class="action-main-btn" id="tpImportBtn" style="display:none; margin:0; padding:8px 16px; font-size:12px; height:38px;">Import</button>
+                                </div>
+                            </div>
+
+                            <div style="display:flex; flex-direction:column; gap:6px;">
+                                <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Number of Transfers (1-5)</label>
+                                <select id="tpNumTransfers" class="settings-select" style="width:100%;">
+                                    <option value="1" ${numTransfers === 1 ? 'selected' : ''}>1 Transfer</option>
+                                    <option value="2" ${numTransfers === 2 ? 'selected' : ''}>2 Transfers</option>
+                                    <option value="3" ${numTransfers === 3 ? 'selected' : ''}>3 Transfers</option>
+                                    <option value="4" ${numTransfers === 4 ? 'selected' : ''}>4 Transfers</option>
+                                    <option value="5" ${numTransfers === 5 ? 'selected' : ''}>5 Transfers</option>
+                                </select>
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:6px;">
+                                <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Projection Horizon Weeks</label>
+                                <select id="tpHorizon" class="settings-select" style="width:100%;">
+                                    <option value="1" ${horizon === 1 ? 'selected' : ''}>Next 1 Gameweek</option>
+                                    <option value="2" ${horizon === 2 ? 'selected' : ''}>Next 2 Gameweeks</option>
+                                    <option value="3" ${horizon === 3 ? 'selected' : ''}>Next 3 Gameweeks</option>
+                                    <option value="4" ${horizon === 4 ? 'selected' : ''}>Next 4 Gameweeks</option>
+                                    <option value="5" ${horizon === 5 ? 'selected' : ''}>Next 5 Gameweeks</option>
+                                    <option value="10" ${horizon === 10 ? 'selected' : ''}>Next 10 Gameweeks</option>
+                                    <option value="15" ${horizon === 15 ? 'selected' : ''}>Next 15 Gameweeks</option>
+                                    <option value="20" ${horizon === 20 ? 'selected' : ''}>Next 20 Gameweeks</option>
+                                    <option value="25" ${horizon === 25 ? 'selected' : ''}>Next 25 Gameweeks</option>
+                                </select>
+                            </div>
+                            <button class="action-main-btn" id="runTpBtn" style="margin:0; height:38px; display:flex; align-items:center; justify-content:center; gap:8px;">
+                                <i data-lucide="play" style="width:16px; height:16px;"></i> Calculate Roadmap
+                            </button>
                         </div>
                     </div>
 
-                    <div style="display:flex; flex-direction:column; gap:6px;">
-                        <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Number of Transfers (1-5)</label>
-                        <select id="tpNumTransfers" class="settings-select" style="width:100%;">
-                            <option value="1" ${numTransfers === 1 ? 'selected' : ''}>1 Transfer</option>
-                            <option value="2" ${numTransfers === 2 ? 'selected' : ''}>2 Transfers</option>
-                            <option value="3" ${numTransfers === 3 ? 'selected' : ''}>3 Transfers</option>
-                            <option value="4" ${numTransfers === 4 ? 'selected' : ''}>4 Transfers</option>
-                            <option value="5" ${numTransfers === 5 ? 'selected' : ''}>5 Transfers</option>
-                        </select>
-                    </div>
-                    <div style="display:flex; flex-direction:column; gap:6px;">
-                        <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Projection Horizon Weeks</label>
-                        <select id="tpHorizon" class="settings-select" style="width:100%;">
-                            <option value="1" ${horizon === 1 ? 'selected' : ''}>Next 1 Gameweek</option>
-                            <option value="2" ${horizon === 2 ? 'selected' : ''}>Next 2 Gameweeks</option>
-                            <option value="3" ${horizon === 3 ? 'selected' : ''}>Next 3 Gameweeks</option>
-                            <option value="4" ${horizon === 4 ? 'selected' : ''}>Next 4 Gameweeks</option>
-                            <option value="5" ${horizon === 5 ? 'selected' : ''}>Next 5 Gameweeks</option>
-                            <option value="10" ${horizon === 10 ? 'selected' : ''}>Next 10 Gameweeks</option>
-                            <option value="15" ${horizon === 15 ? 'selected' : ''}>Next 15 Gameweeks</option>
-                            <option value="20" ${horizon === 20 ? 'selected' : ''}>Next 20 Gameweeks</option>
-                            <option value="25" ${horizon === 25 ? 'selected' : ''}>Next 25 Gameweeks</option>
-                        </select>
-                    </div>
-                    <button class="action-main-btn" id="runTpBtn" style="margin:0; height:38px; display:flex; align-items:center; justify-content:center; gap:8px;">
-                        <i data-lucide="play" style="width:16px; height:16px;"></i> Calculate Roadmap
-                    </button>
+                    <!-- Optimization Results Grid -->
+                    <div id="tpResultsGrid"></div>
                 </div>
             </div>
-
-            <!-- Optimization Results Grid -->
-            <div id="tpResultsGrid"></div>
         </div>
     `;
 
@@ -324,8 +404,57 @@ export function renderTransferPlanner(container, state, actions) {
     const tpSourceSquad = container.querySelector('#tpSourceSquad');
     const tpFplTeamId = container.querySelector('#tpFplTeamId');
     const tpImportBtn = container.querySelector('#tpImportBtn');
+    const tpSquadPreviewContainer = container.querySelector('#tpSquadPreviewContainer');
 
-    tpSourceSquad.addEventListener('change', () => {
+    const updateSquadPreview = () => {
+        const sourceVal = tpSourceSquad.value;
+        let previewSlots = null;
+        let previewCap = state.captain;
+        let previewVice = state.vice;
+        let previewBank = bank;
+
+        if (sourceVal === 'active') {
+            previewSlots = state.squadSlots;
+        } else if (sourceVal.startsWith('draft_')) {
+            const draftIdx = parseInt(sourceVal.split('_')[1]);
+            const d = state.drafts[draftIdx];
+            if (!d.squadSlots) {
+                d.squadSlots = JSON.parse(JSON.stringify(state.squadSlots));
+                d.captain = state.captain;
+                d.vice = state.vice;
+                d.formation = state.formation;
+            }
+            previewSlots = d.squadSlots;
+            previewCap = d.captain || state.captain;
+            previewVice = d.vice || state.vice;
+            const spent = d.squadSlots.reduce((sum, slot) => {
+                if (slot.playerId === null) return sum;
+                const p = PLAYERS.find(pl => pl.id === slot.playerId);
+                return sum + (p ? p.price : 0);
+            }, 0);
+            previewBank = Math.max(0, 100 - spent);
+        } else if (sourceVal === 'import') {
+            if (tempSourceSlots) {
+                previewSlots = tempSourceSlots;
+                previewCap = tempCaptain || state.captain;
+                previewVice = tempVice || state.vice;
+                previewBank = tempBank;
+            } else {
+                tpSquadPreviewContainer.innerHTML = `
+                    <div style="background:var(--bg-card); border:1px dashed var(--border-color); border-radius:12px; padding:24px; text-align:center; color:var(--text-muted); font-size:12px;">
+                        Enter FPL Team ID and click "Import" to preview squad picks.
+                    </div>
+                `;
+                return;
+            }
+        }
+
+        if (previewSlots) {
+            tpSquadPreviewContainer.innerHTML = renderCurrentSquadList(previewSlots, previewCap, previewVice, previewBank);
+        }
+    };
+
+    const toggleImportFields = () => {
         if (tpSourceSquad.value === 'import') {
             tpFplTeamId.style.display = 'inline-block';
             tpImportBtn.style.display = 'inline-block';
@@ -333,6 +462,14 @@ export function renderTransferPlanner(container, state, actions) {
             tpFplTeamId.style.display = 'none';
             tpImportBtn.style.display = 'none';
         }
+    };
+
+    // Toggle fields on load (Active is default, so hidden initially)
+    toggleImportFields();
+
+    tpSourceSquad.addEventListener('change', () => {
+        toggleImportFields();
+        updateSquadPreview();
     });
 
     tpImportBtn.addEventListener('click', async () => {
@@ -359,7 +496,15 @@ export function renderTransferPlanner(container, state, actions) {
                 tempVice = data.picks.find(p => p.is_vice_captain)?.element || null;
                 tempBank = bankVal;
 
-                actions.showToast(`Imported Team ID ${teamId} successfully! Bank: £${bankVal.toFixed(1)}m.`, "success");
+                // Save to localStorage cache
+                localStorage.setItem('fpl_hub_last_imported_team_id', teamId);
+                localStorage.setItem('fpl_hub_last_imported_squad_slots', JSON.stringify(tempSourceSlots));
+                localStorage.setItem('fpl_hub_last_imported_captain', (tempCaptain || '').toString());
+                localStorage.setItem('fpl_hub_last_imported_vice', (tempVice || '').toString());
+                localStorage.setItem('fpl_hub_last_imported_bank', tempBank.toString());
+
+                actions.showToast(`Imported Team ID ${teamId} successfully!`, "success");
+                updateSquadPreview();
             } else {
                 throw new Error("Invalid picks data");
             }
@@ -382,6 +527,9 @@ export function renderTransferPlanner(container, state, actions) {
         runTransferPlannerOptimization(tpResultsGrid, state, actions, numTransfers, horizon);
     });
 
+    // Initialize default squad preview list on page load
+    updateSquadPreview();
+
     // Helper rendering function inside
     function runTransferPlannerOptimization(resultsContainer, state, actions, numTransfers, horizon) {
         resultsContainer.innerHTML = `
@@ -392,7 +540,6 @@ export function renderTransferPlanner(container, state, actions) {
         `;
 
         setTimeout(() => {
-            // Resolve source squad configurations
             let sourceSlots = null;
             let activeCap = state.captain;
             let activeVice = state.vice;
