@@ -1,6 +1,66 @@
 import { PLAYERS, TEAMS, getPlayerRatings, getPlayerEfficiency } from '../data.js';
 import { getFormationConstraints } from './formation.js';
 
+function getFdrColor(diff) {
+    switch (diff) {
+        case 1:
+            return 'var(--fpl-green-5)';
+        case 2:
+            return 'var(--fpl-green-4)';
+        case 3:
+            return 'var(--fpl-grey)';
+        case 4:
+            return 'var(--fpl-red-4)';
+        case 5:
+            return 'var(--fpl-red-5)';
+        default:
+            return '#334155'; // BYE
+    }
+}
+
+function renderFdrFixtures(player, currentGw) {
+    let html = '<div class="fdr-fixtures-container" style="display: flex; gap: 4px; align-items: center; flex-wrap: wrap; margin: 6px 0 2px 0;">';
+    for (let gw = currentGw; gw < currentGw + 5; gw++) {
+        const pr = player.predictions.find(p => p.gw === gw);
+        if (pr) {
+            const oppText = pr.opp !== 'BYE' ? `${pr.opp} (${pr.loc})` : 'BYE';
+            html += `
+                <span class="fdr-fixture-badge diff-${pr.diff}" title="GW${gw}: ${oppText} (FDR ${pr.diff})" style="
+                    font-size: 8.5px;
+                    font-weight: 800;
+                    padding: 2px 4px;
+                    border-radius: 4px;
+                    text-transform: uppercase;
+                    display: inline-block;
+                    min-width: 42px;
+                    text-align: center;
+                    box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+                ">
+                    ${pr.opp}${pr.opp !== 'BYE' ? `(${pr.loc})` : ''}
+                </span>
+            `;
+        } else {
+            html += `
+                <span class="fdr-fixture-badge" title="GW${gw}: BYE" style="
+                    font-size: 8.5px;
+                    font-weight: 800;
+                    color: #fff;
+                    background-color: #334155;
+                    padding: 2px 4px;
+                    border-radius: 4px;
+                    display: inline-block;
+                    min-width: 42px;
+                    text-align: center;
+                ">
+                    BYE
+                </span>
+            `;
+        }
+    }
+    html += '</div>';
+    return html;
+}
+
 export function renderOptimizer(container, state, actions) {
     // Premium Lock Check
     if (state.tier === 'starter') {
@@ -1309,6 +1369,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                                                     <span class="player-name-main">${up.out ? up.out.name : 'Empty Slot'}</span>
                                                     <span class="player-team-sub">${up.out ? `${up.out.team} • £${up.out.price.toFixed(1)}m` : 'N/A'}</span>
                                                     ${up.out ? renderPlayerStatsBreakdown(up.out) : ''}
+                                                    ${up.out ? renderFdrFixtures(up.out, state.currentGw) : ''}
                                                 </div>
                                                 <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding-top:12px;">
                                                     <i data-lucide="chevrons-right" class="transfer-arrow-icon" style="margin: 0 0 6px 0;"></i>
@@ -1321,6 +1382,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                                                     <span class="player-name-main">${up.in.name}</span>
                                                     <span class="player-team-sub">${up.in.team} • £${up.in.price.toFixed(1)}m</span>
                                                     ${renderPlayerStatsBreakdown(up.in)}
+                                                    ${renderFdrFixtures(up.in, state.currentGw)}
                                                 </div>
                                             </div>
                                             
@@ -1604,12 +1666,14 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                                     <span class="player-name-main">${best1Tx.out.name}</span>
                                     <span class="player-team-sub">${best1Tx.out.team} • £${best1Tx.out.price.toFixed(1)}m</span>
                                     ${renderPlayerStatsBreakdown(best1Tx.out)}
+                                    ${renderFdrFixtures(best1Tx.out, state.currentGw)}
                                 </div>
                                 <i data-lucide="chevrons-right" class="transfer-arrow-icon" style="align-self:center;"></i>
                                 <div class="transfer-player-card player-card-in" style="flex:1;">
                                     <span class="player-name-main">${best1Tx.in.name}</span>
                                     <span class="player-team-sub">${best1Tx.in.team} • £${best1Tx.in.price.toFixed(1)}m</span>
                                     ${renderPlayerStatsBreakdown(best1Tx.in)}
+                                    ${renderFdrFixtures(best1Tx.in, state.currentGw)}
                                 </div>
                             </div>
                             ${getOptimizationExplanation(best1Tx.out, best1Tx.in)}
@@ -1643,12 +1707,14 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                                         <span class="player-name-main">${best2Tx.out1.name}</span>
                                         <span class="player-team-sub">${best2Tx.out1.team} • £${best2Tx.out1.price.toFixed(1)}m</span>
                                         ${renderPlayerStatsBreakdown(best2Tx.out1)}
+                                        ${renderFdrFixtures(best2Tx.out1, state.currentGw)}
                                     </div>
                                     <i data-lucide="arrow-right" class="transfer-arrow-icon" style="align-self:center;"></i>
                                     <div class="transfer-player-card player-card-in" style="flex:1;">
                                         <span class="player-name-main">${best2Tx.in1.name}</span>
                                         <span class="player-team-sub">${best2Tx.in1.team} • £${best2Tx.in1.price.toFixed(1)}m</span>
                                         ${renderPlayerStatsBreakdown(best2Tx.in1)}
+                                        ${renderFdrFixtures(best2Tx.in1, state.currentGw)}
                                     </div>
                                 </div>
         
@@ -1658,12 +1724,14 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                                         <span class="player-name-main">${best2Tx.out2.name}</span>
                                         <span class="player-team-sub">${best2Tx.out2.team} • £${best2Tx.out2.price.toFixed(1)}m</span>
                                         ${renderPlayerStatsBreakdown(best2Tx.out2)}
+                                        ${renderFdrFixtures(best2Tx.out2, state.currentGw)}
                                     </div>
                                     <i data-lucide="arrow-right" class="transfer-arrow-icon" style="align-self:center;"></i>
                                     <div class="transfer-player-card player-card-in" style="flex:1;">
                                         <span class="player-name-main">${best2Tx.in2.name}</span>
                                         <span class="player-team-sub">${best2Tx.in2.team} • £${best2Tx.in2.price.toFixed(1)}m</span>
                                         ${renderPlayerStatsBreakdown(best2Tx.in2)}
+                                        ${renderFdrFixtures(best2Tx.in2, state.currentGw)}
                                     </div>
                                 </div>
                                 
