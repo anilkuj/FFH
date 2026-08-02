@@ -143,7 +143,7 @@ export function renderTransferPlanner(container, state, actions) {
 
     const showCompareModal = (tx) => {
         const modalDiv = document.createElement('div');
-        modalDiv.className = 'player-detail-modal-overlay';
+        modalDiv.className = 'player-detail-modal-overlay compare-modal-overlay';
         modalDiv.style.cssText = 'position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.75); z-index:99999; display:flex; align-items:center; justify-content:center; padding:10px;';
 
         const p1 = tx.out;
@@ -194,11 +194,18 @@ export function renderTransferPlanner(container, state, actions) {
                 }
                 
                 @media (max-width: 600px) {
+                    .compare-modal-overlay {
+                        align-items: flex-start !important;
+                        overflow-y: auto !important;
+                        padding: 10px !important;
+                    }
                     .compare-modal-card {
                         padding: 12px;
-                        gap: 10px;
+                        gap: 8px;
                         border-radius: 12px;
                         max-width: calc(100vw - 20px);
+                        margin: 10px auto !important;
+                        max-height: none !important;
                     }
                     .compare-modal-table {
                         font-size: 10.5px;
@@ -248,7 +255,7 @@ export function renderTransferPlanner(container, state, actions) {
                         <i data-lucide="arrow-right-left" style="width:18px; height:18px; color:var(--primary);"></i>
                     </div>
                     <div class="compare-banner-player" style="text-align:right;">
-                        <span style="font-size:10px; color:#00ff88; font-weight:800; text-transform:uppercase; letter-spacing:0.5px;">Transfer In</span>
+                        <span style="font-size:10px; color:var(--primary); font-weight:800; text-transform:uppercase; letter-spacing:0.5px;">Transfer In</span>
                         <h4 style="margin:2px 0 0 0; font-size:14px; font-weight:800; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${p2.name}">${p2.name}</h4>
                         <span style="font-size:11px; color:var(--text-muted);">${p2.team} • ${p2.position}</span>
                     </div>
@@ -261,7 +268,7 @@ export function renderTransferPlanner(container, state, actions) {
                             <tr style="border-bottom: 2px solid var(--border-color);">
                                 <th style="color: var(--text-muted); font-weight: 700; width: 34%;">Metric</th>
                                 <th style="color: #ef4444; font-weight: 800; text-align: right; width: 33%;">OUT Player</th>
-                                <th style="color: #00ff88; font-weight: 800; text-align: right; width: 33%;">IN Player</th>
+                                <th style="color: var(--primary); font-weight: 800; text-align: right; width: 33%;">IN Player</th>
                             </tr>
                         </thead>
                         <tbody>

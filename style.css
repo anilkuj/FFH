@@ -2674,6 +2674,50 @@ body {
         flex-direction: column;
         align-items: center;
     }
+
+    /* Ticker Table Mobile Scaling */
+    .ticker-table {
+        min-width: auto !important;
+    }
+    
+    .ticker-table th, .ticker-table td {
+        padding: 4px 2px !important;
+        font-size: 10px !important;
+    }
+
+    .ticker-table th:first-child, .ticker-table td:first-child {
+        width: 55px !important;
+        min-width: 55px !important;
+        padding-left: 4px !important;
+    }
+
+    .team-row-meta {
+        gap: 4px !important;
+    }
+
+    .team-color-dot {
+        width: 6px !important;
+        height: 6px !important;
+    }
+
+    .team-name-ticker {
+        font-size: 10px !important;
+    }
+
+    .difficulty-cell {
+        padding: 4px 2px !important;
+        border-radius: 4px !important;
+        font-size: 10px !important;
+    }
+
+    .fixture-opp-lbl {
+        font-size: 9px !important;
+    }
+
+    .fixture-metric-lbl {
+        font-size: 8px !important;
+        margin-top: 1px !important;
+    }
 }
 
 @media (max-width: 480px) {

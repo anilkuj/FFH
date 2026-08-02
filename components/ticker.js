@@ -80,18 +80,28 @@ function getProjectedGoals(teamShort, opponentShort, loc, gw, diff = 3) {
 
 export function renderTicker(container, state, actions) {
     let mode = container.dataset.tickerMode || 'fdr';
+    let horizon = parseInt(container.dataset.tickerHorizon || '5');
     let sortCol = container.dataset.sortCol || 'avg';
     let sortAsc = container.dataset.sortAsc !== undefined ? container.dataset.sortAsc === 'true' : (mode === 'fdr');
+
+    // Reset sort column if it exceeds current horizon
+    if (sortCol.startsWith('GW')) {
+        const gwNum = parseInt(sortCol.replace('GW', ''));
+        if (gwNum > horizon) {
+            sortCol = 'avg';
+        }
+    }
 
     const renderTable = () => {
         const teamsSorted = TEAMS.map(team => {
             const fixtures = TICKER_DATA[team.shortName] || [];
+            const activeFixtures = fixtures.slice(0, horizon);
             
             let adjustedFixtures = [];
             let avg = 0;
 
             if (mode === 'cleansheet') {
-                adjustedFixtures = fixtures.map(f => {
+                adjustedFixtures = activeFixtures.map(f => {
                     const odds = getCleanSheetOdds(team.shortName, f.opp, f.loc, f.gw, f.diff);
                     let diffClass = 'diff-3';
                     if (odds >= 38) diffClass = 'diff-2';
@@ -102,7 +112,7 @@ export function renderTicker(container, state, actions) {
                 });
                 avg = adjustedFixtures.reduce((sum, f) => sum + f.numeric, 0) / adjustedFixtures.length;
             } else if (mode === 'goals') {
-                adjustedFixtures = fixtures.map(f => {
+                adjustedFixtures = activeFixtures.map(f => {
                     const goals = getProjectedGoals(team.shortName, f.opp, f.loc, f.gw, f.diff);
                     let diffClass = 'diff-3';
                     if (goals >= 1.8) diffClass = 'diff-2';
@@ -113,7 +123,7 @@ export function renderTicker(container, state, actions) {
                 });
                 avg = adjustedFixtures.reduce((sum, f) => sum + f.numeric, 0) / adjustedFixtures.length;
             } else {
-                adjustedFixtures = fixtures.map(f => {
+                adjustedFixtures = activeFixtures.map(f => {
                     return { ...f, val: `FDR ${f.diff}`, numeric: f.diff, diffClass: `diff-${f.diff}` };
                 });
                 avg = adjustedFixtures.reduce((sum, f) => sum + f.numeric, 0) / adjustedFixtures.length;
@@ -130,8 +140,8 @@ export function renderTicker(container, state, actions) {
         teamsSorted.sort((a, b) => {
             let valA, valB;
             if (sortCol === 'name') {
-                valA = a.name;
-                valB = b.name;
+                valA = a.shortName;
+                valB = b.shortName;
                 return sortAsc ? valA.localeCompare(valB) : valB.localeCompare(valA);
             } else if (sortCol.startsWith('GW')) {
                 const gwNum = parseInt(sortCol.replace('GW', ''));
@@ -148,6 +158,8 @@ export function renderTicker(container, state, actions) {
         const tableBody = container.querySelector('#tickerTableBody');
         if (!tableBody) return;
 
+        const gwIndices = Array.from({ length: horizon }, (_, i) => i + 1);
+
         tableBody.innerHTML = teamsSorted.map(team => {
             let avgDisplay = team.avg.toFixed(1);
             if (mode === 'cleansheet') avgDisplay = `${team.avg.toFixed(1)}%`;
@@ -158,10 +170,10 @@ export function renderTicker(container, state, actions) {
                     <td>
                         <div class="team-row-meta">
                             <span class="team-color-dot" style="background-color: ${team.color};"></span>
-                            <span class="team-name-ticker">${team.name}</span>
+                            <span class="team-name-ticker">${team.shortName}</span>
                         </div>
                     </td>
-                    ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(gw => {
+                    ${gwIndices.map(gw => {
                         const f = team.fixtures.find(fi => fi.gw === gw) || { opp: 'BYE', loc: 'H', val: 'BYE', diffClass: 'diff-3' };
                         return `
                             <td>
@@ -184,6 +196,7 @@ export function renderTicker(container, state, actions) {
     };
 
     const avgColName = mode === 'cleansheet' ? 'Avg CS %' : (mode === 'goals' ? 'Avg Goals' : 'Avg Diff');
+    const gwIndices = Array.from({ length: horizon }, (_, i) => i + 1);
 
     container.innerHTML = `
         <div class="ticker-view-container">
@@ -192,30 +205,29 @@ export function renderTicker(container, state, actions) {
                     <h2 style="font-family: var(--font-heading); font-weight:700; margin-bottom: 4px;">Fixture Difficulty Ticker</h2>
                     <p style="color: var(--text-muted); font-size: 13px;">Plan transfer rotations by identifying teams with easy scheduling streaks. Click column headers to sort.</p>
                 </div>
-                <div class="ticker-btn-group">
-                    <button class="ticker-tab-btn ${mode === 'fdr' ? 'active' : ''}" data-mode="fdr">Difficulty (FDR)</button>
-                    <button class="ticker-tab-btn ${mode === 'cleansheet' ? 'active' : ''}" data-mode="cleansheet">Clean Sheet %</button>
-                    <button class="ticker-tab-btn ${mode === 'goals' ? 'active' : ''}" data-mode="goals">Projected Goals</button>
+                <div class="ticker-btn-group-wrapper" style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: space-between; width: 100%; align-items: center; margin-top: 8px;">
+                    <div class="ticker-btn-group">
+                        <button class="ticker-tab-btn ${mode === 'fdr' ? 'active' : ''}" data-mode="fdr">Difficulty (FDR)</button>
+                        <button class="ticker-tab-btn ${mode === 'cleansheet' ? 'active' : ''}" data-mode="cleansheet">Clean Sheet %</button>
+                        <button class="ticker-tab-btn ${mode === 'goals' ? 'active' : ''}" data-mode="goals">Projected Goals</button>
+                    </div>
+                    <div class="ticker-horizon-group" style="display: flex; gap: 4px; background: rgba(0, 0, 0, 0.04); padding: 4px; border-radius: 8px; border: 1px solid var(--border-color);">
+                        <button class="ticker-horizon-btn ${horizon === 5 ? 'active' : ''}" data-horizon="5" style="border: none; background: ${horizon === 5 ? 'var(--primary)' : 'transparent'}; color: ${horizon === 5 ? '#ffffff' : 'var(--text-muted)'}; padding: 6px 12px; font-size: 12px; font-weight: 700; border-radius: 6px; cursor: pointer; transition: all var(--transition-fast);">5 GWs</button>
+                        <button class="ticker-horizon-btn ${horizon === 10 ? 'active' : ''}" data-horizon="10" style="border: none; background: ${horizon === 10 ? 'var(--primary)' : 'transparent'}; color: ${horizon === 10 ? '#ffffff' : 'var(--text-muted)'}; padding: 6px 12px; font-size: 12px; font-weight: 700; border-radius: 6px; cursor: pointer; transition: all var(--transition-fast);">10 GWs</button>
+                    </div>
                 </div>
             </div>
  
             <!-- Ticker Grid Table -->
-            <div class="ticker-grid-wrapper">
+            <div class="ticker-grid-wrapper" style="width: 100%; overflow-x: auto;">
                 <table class="ticker-table">
                     <thead>
                         <tr>
-                            <th data-col="name" style="text-align: left; width: 180px; cursor: pointer;">Team ${getHeaderArrow('name')}</th>
-                            <th data-col="GW1" style="cursor: pointer;">GW1 ${getHeaderArrow('GW1')}</th>
-                            <th data-col="GW2" style="cursor: pointer;">GW2 ${getHeaderArrow('GW2')}</th>
-                            <th data-col="GW3" style="cursor: pointer;">GW3 ${getHeaderArrow('GW3')}</th>
-                            <th data-col="GW4" style="cursor: pointer;">GW4 ${getHeaderArrow('GW4')}</th>
-                            <th data-col="GW5" style="cursor: pointer;">GW5 ${getHeaderArrow('GW5')}</th>
-                            <th data-col="GW6" style="cursor: pointer;">GW6 ${getHeaderArrow('GW6')}</th>
-                            <th data-col="GW7" style="cursor: pointer;">GW7 ${getHeaderArrow('GW7')}</th>
-                            <th data-col="GW8" style="cursor: pointer;">GW8 ${getHeaderArrow('GW8')}</th>
-                            <th data-col="GW9" style="cursor: pointer;">GW9 ${getHeaderArrow('GW9')}</th>
-                            <th data-col="GW10" style="cursor: pointer;">GW10 ${getHeaderArrow('GW10')}</th>
-                            <th data-col="avg" style="cursor: pointer;">${avgColName} ${getHeaderArrow('avg')}</th>
+                            <th data-col="name" style="text-align: left; width: 80px; cursor: pointer;">Team ${getHeaderArrow('name')}</th>
+                            ${gwIndices.map(gw => `
+                                <th data-col="GW${gw}" style="cursor: pointer; text-align: center;">GW${gw} ${getHeaderArrow(`GW${gw}`)}</th>
+                            `).join('')}
+                            <th data-col="avg" style="cursor: pointer; text-align: center;">${avgColName} ${getHeaderArrow('avg')}</th>
                         </tr>
                     </thead>
                     <tbody id="tickerTableBody">
@@ -236,6 +248,15 @@ export function renderTicker(container, state, actions) {
             const defaultAsc = (nextMode === 'fdr');
             container.dataset.sortCol = 'avg';
             container.dataset.sortAsc = defaultAsc;
+            renderTicker(container, state, actions);
+        });
+    });
+
+    // Horizon Buttons Listeners
+    container.querySelectorAll('.ticker-horizon-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const nextHorizon = btn.getAttribute('data-horizon');
+            container.dataset.tickerHorizon = nextHorizon;
             renderTicker(container, state, actions);
         });
     });
