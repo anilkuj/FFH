@@ -299,6 +299,11 @@ class AppState {
                 } else {
                     freeTransfers = Math.min(5, Math.max(0, freeTransfers - txCount) + 1);
                 }
+            } else {
+                const txCount = weeklyTransfers.length;
+                if (!this.chips.wildcard) {
+                    freeTransfers = Math.max(0, freeTransfers - txCount);
+                }
             }
         }
 
@@ -585,7 +590,7 @@ const actions = {
 
         const formattedSquadValue = `£${(totalVal + squadInfo.bank).toFixed(1)}m`;
         const formattedBankValue = `£${squadInfo.bank.toFixed(1)}m`;
-        const formattedTransfers = state.currentGw === 1 ? 'Unlimited' : squadInfo.freeTransfers;
+        const formattedTransfers = (state.currentGw === 1 || state.chips.wildcard) ? 'Unlimited' : squadInfo.freeTransfers;
 
         document.getElementById('squadValueDisplay').innerText = formattedSquadValue;
         document.getElementById('bankValueDisplay').innerText = formattedBankValue;
