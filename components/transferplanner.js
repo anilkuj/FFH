@@ -150,7 +150,7 @@ export function renderTransferPlanner(container, state, actions) {
         const p2 = tx.in;
 
         modalDiv.innerHTML = `
-            <div class="player-detail-modal-card" style="width: 100%; max-width: 500px; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);">
+            <div class="player-detail-modal-card" style="width: 100%; max-width: 500px; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); overflow: hidden;">
                 <div class="modal-header-section" style="border-bottom: 1px solid var(--border-color); padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
                     <h3 style="font-family: var(--font-heading); margin: 0; font-weight: 800; font-size: 15px; display: flex; align-items: center; gap: 8px;">
                         <i data-lucide="git-compare" style="color: var(--primary);"></i> Player Stats Comparison
@@ -158,55 +158,55 @@ export function renderTransferPlanner(container, state, actions) {
                     <button class="close-modal-btn" id="closeCompareModalBtn" style="background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 4px; border-radius: 50%;"><i data-lucide="x" style="width: 18px; height: 18px;"></i></button>
                 </div>
 
-                <div style="overflow-x: auto; width: 100%;">
-                    <table class="ticker-table" style="width: 100%; border-collapse: collapse; font-size: 11.5px; text-align: left;">
+                <div style="overflow: hidden; width: 100%;">
+                    <table class="ticker-table" style="width: 100%; border-collapse: collapse; font-size: 11.5px; text-align: left; table-layout: fixed;">
                         <thead>
                             <tr style="border-bottom: 2px solid var(--border-color);">
-                                <th style="padding: 6px 4px; color: var(--text-muted); font-weight: 700;">Metric</th>
-                                <th style="padding: 6px 4px; color: #ef4444; font-weight: 700; text-align: right;">OUT: ${p1.name}</th>
-                                <th style="padding: 6px 4px; color: #00ff88; font-weight: 700; text-align: right;">IN: ${p2.name}</th>
+                                <th style="padding: 6px 4px; color: var(--text-muted); font-weight: 700; width: 34%;">Metric</th>
+                                <th style="padding: 6px 4px; color: #ef4444; font-weight: 700; text-align: right; width: 33%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="OUT: ${p1.name}">OUT: ${p1.name.split(' ').pop()}</th>
+                                <th style="padding: 6px 4px; color: #00ff88; font-weight: 700; text-align: right; width: 33%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="IN: ${p2.name}">IN: ${p2.name.split(' ').pop()}</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 6px 4px; font-weight: 600; color: var(--text-muted);">Team</td>
-                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.team}</td>
-                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.team}</td>
+                                <td style="padding: 6px 4px; font-weight: 600; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Team</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${p1.team}</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${p2.team}</td>
                             </tr>
                             <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 6px 4px; font-weight: 600; color: var(--text-muted);">Price</td>
-                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">£${p1.price.toFixed(1)}m</td>
-                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">£${p2.price.toFixed(1)}m</td>
+                                <td style="padding: 6px 4px; font-weight: 600; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Price</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">£${p1.price.toFixed(1)}m</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">£${p2.price.toFixed(1)}m</td>
                             </tr>
                             <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 6px 4px; font-weight: 600; color: var(--text-muted);">Ownership</td>
-                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.ownership.toFixed(1)}%</td>
-                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.ownership.toFixed(1)}%</td>
+                                <td style="padding: 6px 4px; font-weight: 600; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Ownership</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${p1.ownership.toFixed(1)}%</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${p2.ownership.toFixed(1)}%</td>
                             </tr>
                             <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 6px 4px; font-weight: 600; color: var(--text-muted);">GW${state.currentGw} Exp Pts</td>
-                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${getExpectedPts(p1, 1).toFixed(1)}</td>
-                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${getExpectedPts(p2, 1).toFixed(1)}</td>
+                                <td style="padding: 6px 4px; font-weight: 600; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">GW${state.currentGw} Exp Pts</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${getExpectedPts(p1, 1).toFixed(1)}</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${getExpectedPts(p2, 1).toFixed(1)}</td>
                             </tr>
                             <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 6px 4px; font-weight: 600; color: var(--text-muted);">${horizon}-GW Exp Pts</td>
-                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${getExpectedPts(p1, horizon).toFixed(1)}</td>
-                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${getExpectedPts(p2, horizon).toFixed(1)}</td>
+                                <td style="padding: 6px 4px; font-weight: 600; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${horizon}-GW Exp Pts</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${getExpectedPts(p1, horizon).toFixed(1)}</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${getExpectedPts(p2, horizon).toFixed(1)}</td>
                             </tr>
                             <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 6px 4px; font-weight: 600; color: var(--text-muted);">Starts</td>
-                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.GS}</td>
-                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.GS}</td>
+                                <td style="padding: 6px 4px; font-weight: 600; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Starts</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${p1.GS}</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${p2.GS}</td>
                             </tr>
                             <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 6px 4px; font-weight: 600; color: var(--text-muted);">Avg Minutes</td>
-                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.MPPG.toFixed(0)}m</td>
-                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.MPPG.toFixed(0)}m</td>
+                                <td style="padding: 6px 4px; font-weight: 600; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Avg Minutes</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${p1.MPPG.toFixed(0)}m</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${p2.MPPG.toFixed(0)}m</td>
                             </tr>
                             <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                                <td style="padding: 6px 4px; font-weight: 600; color: var(--text-muted);">Total Points</td>
-                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.points}</td>
-                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.points}</td>
+                                <td style="padding: 6px 4px; font-weight: 600; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Total Points</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${p1.points}</td>
+                                <td style="padding: 6px 4px; text-align: right; color: var(--text-main); font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${p2.points}</td>
                             </tr>
                         </tbody>
                     </table>
