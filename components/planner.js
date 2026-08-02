@@ -973,7 +973,8 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
                             return `
                                 <div class="compare-alternative-card" style="display: flex; flex-direction: column; padding: 10px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px; font-size: 11px;">
                                     <div style="font-weight:700; color:var(--text-main); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${comp.name}">${actions.getWebName(comp.name)}</div>
-                                    <div style="color:var(--text-muted); font-size: 10px; margin-top:2px;">£${comp.price.toFixed(1)}m • ${compPrediction.pts.toFixed(1)} XP</div>
+                                    <div style="color:var(--text-muted); font-size: 10px; margin-top:2px;">£${comp.price.toFixed(1)}m • GW${state.currentGw}: ${compPrediction.pts.toFixed(1)} XP</div>
+                                    <div style="color:var(--text-muted); font-size: 10px; margin-top:1px;">5-GW: ${get5GwXp(comp, state.currentGw).toFixed(1)} XP</div>
                                     
                                     <!-- Swap button and alert -->
                                     <div style="display: flex; flex-direction: column; gap: 4px; align-items: stretch; margin-top: 10px;">
