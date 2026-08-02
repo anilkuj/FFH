@@ -1109,9 +1109,21 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
 
     // Find buyable players
     const allSquadIds = state.squadSlots.map(s => s.playerId).filter(id => id !== null);
+    
+    // Count players per team in current squad to enforce FPL team limit (max 3 per team)
+    const teamCounts = {};
+    allSquadIds.forEach(id => {
+        const p = PLAYERS.find(pl => pl.id === id);
+        if (p) {
+            teamCounts[p.team] = (teamCounts[p.team] || 0) + 1;
+        }
+    });
+
     const buyablePlayers = PLAYERS.filter(p => 
         p.position === position && 
-        !allSquadIds.includes(p.id)
+        !allSquadIds.includes(p.id) &&
+        p.price <= bank &&
+        (teamCounts[p.team] || 0) < 3
     ).sort((a, b) => get5GwXp(b, state.currentGw) - get5GwXp(a, state.currentGw));
 
     // Generate Price Options in 0.5m increments
