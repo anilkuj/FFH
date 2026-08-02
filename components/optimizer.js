@@ -1325,7 +1325,8 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
         const formattedGain = objective === 'efficiency' ? `+${(overallGain / 10).toFixed(2)}` : `+${overallGain.toFixed(1)}`;
 
         resultsGrid.innerHTML = `
-            <div class="optimizer-card" style="grid-column: span 2;">
+            <div class="optimizer-card" style="grid-column: span 2; position: relative;">
+                <button class="close-modal-btn" id="closeResultsBtn" style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center;"><i data-lucide="x" style="width: 18px; height: 18px;"></i></button>
                 <h3><i data-lucide="sparkles" class="highlight-transfers"></i> Preseason AI Full-Squad Optimization</h3>
                 <div class="recommendations-list" style="margin-top: 16px;">
                     ${upgrades.length > 0 ? `
@@ -1468,8 +1469,9 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                 const pIn = PLAYERS.find(p => p.id === inId);
                 const pOut = outId !== null ? PLAYERS.find(p => p.id === outId) : null;
                 
-                actions.renderActiveView();
+                actions.syncTopBar();
                 actions.showToast(`Applied swap: ${pIn.name} in for ${pOut ? pOut.name : 'empty slot'}`, 'success');
+                performOptimization(resultsGrid, state, actions, horizon, mode);
             });
         });
     } else {
@@ -1651,6 +1653,11 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
 
         // Render Midseason results
         resultsGrid.innerHTML = `
+            <div style="grid-column: span 2; display: flex; justify-content: flex-end; margin-bottom: -8px; position: relative;">
+                <button class="close-modal-btn" id="closeResultsBtn" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 4px; display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600;">
+                    <i data-lucide="x" style="width: 16px; height: 16px;"></i> Close Results
+                </button>
+            </div>
             <!-- Single Transfer Recommendation -->
             <div class="optimizer-card" style="${freeTransfersCount === 1 ? 'grid-column: span 2;' : ''}">
                 <h3><i data-lucide="arrow-right-left" class="highlight-transfers"></i> Best Single Transfer</h3>
@@ -1769,8 +1776,11 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
             singleBtn.addEventListener('click', () => {
                 const ok = actions.addTransfer(state.currentGw, best1Tx.out.id, best1Tx.in.id);
                 if (ok) {
+                    state.optimizeCaptaincy();
+                    state.saveState();
+                    actions.syncTopBar();
                     actions.showToast("AI single transfer applied successfully!", "success");
-                    actions.switchTab('planner');
+                    performOptimization(resultsGrid, state, actions, horizon, mode);
                 }
             });
         }
@@ -1782,8 +1792,11 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                 if (ok1) {
                     const ok2 = actions.addTransfer(state.currentGw, best2Tx.out2.id, best2Tx.in2.id);
                     if (ok2) {
+                        state.optimizeCaptaincy();
+                        state.saveState();
+                        actions.syncTopBar();
                         actions.showToast("AI double transfer applied successfully!", "success");
-                        actions.switchTab('planner');
+                        performOptimization(resultsGrid, state, actions, horizon, mode);
                     } else {
                         const list = state.transfers[state.currentGw];
                         list.pop();
@@ -1793,6 +1806,14 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                 } else {
                     actions.showToast("Could not apply transfers due to constraints.", "error");
                 }
+            });
+        }
+
+        const closeBtn = resultsGrid.querySelector('#closeResultsBtn');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                resultsGrid.classList.add('hidden');
+                resultsGrid.innerHTML = '';
             });
         }
     }
