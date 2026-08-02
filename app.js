@@ -995,17 +995,18 @@ const actions = {
         const inStarters2 = state.starters.includes(id2);
 
         if (inStarters1 === inStarters2) {
-            // Swap ordering in starters or bench directly by swapping the player IDs in their slots
+            // Swap ordering in starters or bench directly by swapping the player IDs and positions in their slots
             const slot1 = state.squadSlots.find(s => s.playerId === id1);
             const slot2 = state.squadSlots.find(s => s.playerId === id2);
             if (slot1 && slot2) {
-                if (slot1.position !== slot2.position) {
-                    actions.showToast("Cannot swap players of different positions on the bench/starting XI.", "error");
-                    return;
-                }
-                const temp = slot1.playerId;
+                const tempId = slot1.playerId;
+                const tempPos = slot1.position;
+                
                 slot1.playerId = slot2.playerId;
-                slot2.playerId = temp;
+                slot1.position = slot2.position;
+                
+                slot2.playerId = tempId;
+                slot2.position = tempPos;
             }
         } else {
             // Starters vs Bench swap. Check formation validation
