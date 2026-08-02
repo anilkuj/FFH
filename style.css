@@ -646,6 +646,7 @@ body {
     background: var(--pitch-bg);
     border: 2px solid var(--pitch-border);
     border-radius: 16px;
+    height: 580px; /* Default desktop height */
     flex: 1;
     max-height: calc(100% - 110px);
     min-height: 250px;
@@ -2448,6 +2449,66 @@ body {
 
     body {
         font-size: 13px;
+    }
+
+    .pitch-header {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 8px !important;
+    }
+
+    .pitch-title-area {
+        gap: 8px !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+    }
+
+    .pitch-title-area h2 {
+        font-size: 15px !important;
+    }
+
+    .header-rating-badge {
+        padding: 2px 8px !important;
+        font-size: 9px !important;
+        gap: 6px !important;
+    }
+
+    .header-rating-badge strong {
+        font-size: 11px !important;
+    }
+
+    .pitch-actions {
+        gap: 4px !important;
+        justify-content: flex-start !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        padding-bottom: 4px !important;
+        scrollbar-width: none !important;
+        flex-wrap: nowrap !important;
+        width: 100% !important;
+    }
+
+    .pitch-actions::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    .pitch-actions .pitch-btn, .pitch-actions select {
+        flex: 0 0 auto !important;
+        font-size: 10px !important;
+        height: 28px !important;
+        padding: 4px 8px !important;
+        margin: 0 !important;
+    }
+
+    .draft-tabs-bar {
+        margin: 0 0 8px 0 !important;
+        padding: 2px 0 !important;
+    }
+
+    .draft-tabs-bar .pitch-btn {
+        height: 28px !important;
+        font-size: 10px !important;
+        padding: 4px 8px !important;
     }
 
     .pitch-container {

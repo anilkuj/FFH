@@ -10,9 +10,9 @@
             <i data-lucide="shield"></i> Bench Boost
         </button>
     `;const u=Math.min(100,Math.round(x/11*15));l.innerHTML=`
-        <div class="planner-grid" style="grid-template-columns: 1fr; height: auto; overflow: visible;">
+        <div class="planner-grid">
             <!-- Left Column: The Football Pitch -->
-            <div class="pitch-container" style="height: auto; overflow: visible;">
+            <div class="pitch-container">
                 <div class="pitch-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
                     <div class="pitch-title-area" style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
                         <h2 style="margin: 0;">Squad Selection</h2>
@@ -62,7 +62,7 @@
                 </div>
 
                 <!-- Football Pitch -->
-                <div class="football-pitch" id="pitchBoard" style="height: 580px; flex: none;">
+                <div class="football-pitch" id="pitchBoard">
                     <!-- Top Box (Away GK Box) -->
                     <div class="pitch-box-top"></div>
                     <div class="pitch-half-line"></div>
