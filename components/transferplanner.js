@@ -5,12 +5,24 @@ export function renderTransferPlanner(container, state, actions) {
     const squadInfo = state.getSquadForGw(state.currentGw);
     const bank = squadInfo.bank;
     
+    // Determine context-aware default transfers based on available Free Transfers
+    let defaultNumTransfers = squadInfo.freeTransfers;
+    if (defaultNumTransfers === 0 || isNaN(defaultNumTransfers)) {
+        defaultNumTransfers = 1;
+    }
+
     // Read selections from state or localStorage
-    let numTransfers = parseInt(localStorage.getItem('fpl_hub_tp_num_transfers')) || 2;
-    let horizon = parseInt(localStorage.getItem('fpl_hub_tp_horizon')) || 5;
+    const hasPrepopulated = !!state.tpPrepopulatedSource;
+    let numTransfers = hasPrepopulated ? defaultNumTransfers : (parseInt(localStorage.getItem('fpl_hub_tp_num_transfers')) || defaultNumTransfers);
+    let horizon = hasPrepopulated ? 5 : (parseInt(localStorage.getItem('fpl_hub_tp_horizon')) || 5);
+    
     let activeSource = state.tpPrepopulatedSource || localStorage.getItem('fpl_hub_tp_source') || 'active';
     delete state.tpPrepopulatedSource; // Clear the flag!
     localStorage.setItem('fpl_hub_tp_source', activeSource);
+
+    // Update local storage values to keep selections synced
+    localStorage.setItem('fpl_hub_tp_num_transfers', numTransfers.toString());
+    localStorage.setItem('fpl_hub_tp_horizon', horizon.toString());
 
     // Temporary variables for imported team (initialized from localStorage cache if available)
     let tempSourceSlots = null;
