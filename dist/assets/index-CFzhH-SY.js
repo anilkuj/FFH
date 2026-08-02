@@ -2339,7 +2339,7 @@ ${n.length>0?n.map(f=>`- **${f.name}** (${f.team}, £${f.price.toFixed(1)}m) —
                     </h3>
 
                     <!-- Regular Full Size Football Pitch -->
-                    <div class="football-pitch" id="pitchBoard" style="height: 580px; flex: none;">
+                    <div class="football-pitch" id="pitchBoard">
                         <div class="pitch-box-top"></div>
                         <div class="pitch-half-line"></div>
                         <div class="pitch-center-circle"></div>

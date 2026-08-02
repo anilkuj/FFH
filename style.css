@@ -2609,7 +2609,7 @@ body {
     }
 
     .player-pitch-points-sub {
-        font-size: 8px;
+        display: none !important;
     }
 
     /* Hide delete buttons on touch screens on the pitch map */
@@ -3534,37 +3534,41 @@ html.light-theme .rating-badge-na {
         font-size: 8px !important;
     }
 
-    /* Alternatives swipeable row */
+    /* Alternatives grid/flex row (fully visible on one page) */
     .alternatives-scroll-container {
         display: flex !important;
-        gap: 8px !important;
-        overflow-x: auto !important;
-        scrollbar-width: none !important;
-        padding-bottom: 2px !important;
-        flex-wrap: nowrap !important;
+        justify-content: space-between !important;
+        gap: 6px !important;
+        overflow: visible !important;
         width: 100% !important;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .alternatives-scroll-container::-webkit-scrollbar {
-        display: none !important;
+        flex-wrap: nowrap !important;
     }
 
     .compare-alternative-card {
-        flex: 0 0 110px !important;
-        width: 110px !important;
-        padding: 6px !important;
-        font-size: 10px !important;
+        flex: 1 1 0% !important;
+        min-width: 0 !important;
+        width: auto !important;
+        padding: 6px 4px !important;
+        font-size: 9.5px !important;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
 
     .compare-alternative-card div {
-        font-size: 9.5px !important;
+        font-size: 8.5px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
     }
 
     .compare-alternative-card .direct-comp-swap-btn {
-        font-size: 9.5px !important;
+        font-size: 9px !important;
         height: 22px !important;
-        padding: 2px 4px !important;
+        padding: 2px 0 !important;
+        text-align: center !important;
+        margin: 4px 0 0 0 !important;
+        width: 100% !important;
     }
 }
 

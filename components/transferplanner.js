@@ -503,7 +503,7 @@ export function renderTransferPlanner(container, state, actions) {
                     </h3>
 
                     <!-- Regular Full Size Football Pitch -->
-                    <div class="football-pitch" id="pitchBoard" style="height: 580px; flex: none;">
+                    <div class="football-pitch" id="pitchBoard">
                         <div class="pitch-box-top"></div>
                         <div class="pitch-half-line"></div>
                         <div class="pitch-center-circle"></div>
