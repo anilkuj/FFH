@@ -370,9 +370,8 @@ function renderPlayerRow(squadSlots, position, currentGw, captain, vice, actions
 
 function renderBenchRow(squadSlots, currentGw, captain, vice, actions) {
     const benchSlots = squadSlots.filter(s => !s.isStarting);
-    const labels = ["GKP", "1. DEF", "2. DEF", "3. FWD"];
     return benchSlots.map((slot, index) => {
-        const label = labels[index] || "SUB";
+        const label = index === 0 ? "GKP" : `Sub ${index} (${slot.position})`;
         const slotIndex = squadSlots.indexOf(slot);
         
         if (slot.playerId === null) {

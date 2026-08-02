@@ -116,6 +116,75 @@ class AppState {
         this.transfers = savedTransfers ? JSON.parse(savedTransfers) : {
             1: [], 2: [], 3: [], 4: [], 5: []
         };
+
+        this.alignSlotPositions();
+    }
+
+    alignSlotPositions() {
+        const alignSlots = (slots) => {
+            if (!slots) return null;
+            let modified = false;
+            slots.forEach(slot => {
+                if (slot.playerId !== null) {
+                    const p = PLAYERS.find(pl => pl.id === slot.playerId);
+                    if (p && slot.position !== p.position) {
+                        slot.position = p.position;
+                        modified = true;
+                    }
+                }
+            });
+            if (modified) {
+                const allPlayers = slots.map(s => s.playerId).filter(id => id !== null);
+                const starters = slots.filter(s => s.isStarting && s.playerId !== null).map(s => s.playerId);
+                
+                const newSlots = [];
+                const addSlotsForPosition = (pos, total) => {
+                    const posPlayers = allPlayers.filter(id => PLAYERS.find(p => p.id === id)?.position === pos);
+                    for (let i = 0; i < total; i++) {
+                        const id = posPlayers[i] || null;
+                        const isStarting = id !== null ? starters.includes(id) : false;
+                        newSlots.push({
+                            position: pos,
+                            playerId: id,
+                            isStarting
+                        });
+                    }
+                };
+                addSlotsForPosition('GKP', 2);
+                addSlotsForPosition('DEF', 5);
+                addSlotsForPosition('MID', 5);
+                addSlotsForPosition('FWD', 3);
+                
+                // fallback to ensure starting marking is populated if starters list was cleared
+                const currentStarters = newSlots.filter(s => s.isStarting && s.playerId !== null).length;
+                if (currentStarters === 0) {
+                    const gkp = newSlots.find(s => s.position === 'GKP' && s.playerId !== null);
+                    if (gkp) gkp.isStarting = true;
+                    newSlots.filter(s => s.position === 'DEF' && s.playerId !== null).slice(0, 3).forEach(s => s.isStarting = true);
+                    newSlots.filter(s => s.position === 'MID' && s.playerId !== null).slice(0, 4).forEach(s => s.isStarting = true);
+                    newSlots.filter(s => s.position === 'FWD' && s.playerId !== null).slice(0, 2).forEach(s => s.isStarting = true);
+                }
+                return newSlots;
+            }
+            return slots;
+        };
+
+        if (this.squadSlots) {
+            const aligned = alignSlots(this.squadSlots);
+            if (aligned !== this.squadSlots) {
+                this.squadSlots = aligned;
+            }
+        }
+        if (this.drafts) {
+            this.drafts.forEach(draft => {
+                if (draft.squadSlots) {
+                    const aligned = alignSlots(draft.squadSlots);
+                    if (aligned !== draft.squadSlots) {
+                        draft.squadSlots = aligned;
+                    }
+                }
+            });
+        }
     }
 
     get squad() {
@@ -930,6 +999,10 @@ const actions = {
             const slot1 = state.squadSlots.find(s => s.playerId === id1);
             const slot2 = state.squadSlots.find(s => s.playerId === id2);
             if (slot1 && slot2) {
+                if (slot1.position !== slot2.position) {
+                    actions.showToast("Cannot swap players of different positions on the bench/starting XI.", "error");
+                    return;
+                }
                 const temp = slot1.playerId;
                 slot1.playerId = slot2.playerId;
                 slot2.playerId = temp;
