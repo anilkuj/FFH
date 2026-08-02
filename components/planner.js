@@ -439,9 +439,9 @@ function renderTransfersList(state, actions) {
     const list = state.transfers[state.currentGw] || [];
     if (list.length === 0) {
         return `
-            <div class="transfer-list-empty" style="display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; padding: 20px;">
-                <div>No transfers planned for this Gameweek. Click a player to transfer out.</div>
-                <button class="action-main-btn goto-tp-btn" style="margin: 4px auto 0 auto; height: 32px; padding: 0 16px; font-size: 11px; display: flex; align-items: center; gap: 6px; border-radius: 6px; width: auto; font-family: var(--font-heading); font-weight: 700; cursor: pointer;">
+            <div class="transfer-list-empty" style="display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; padding: 20px; flex-shrink: 0;">
+                <div style="flex-shrink: 0;">No transfers planned for this Gameweek. Click a player to transfer out.</div>
+                <button class="action-main-btn goto-tp-btn" style="margin: 4px auto 0 auto; height: 32px; padding: 0 16px; font-size: 11px; display: flex; align-items: center; gap: 6px; border-radius: 6px; width: auto; font-family: var(--font-heading); font-weight: 700; cursor: pointer; flex-shrink: 0; flex: none;">
                     <i data-lucide="compass" style="width: 14px; height: 14px;"></i> Go to Transfer Planner
                 </button>
             </div>
