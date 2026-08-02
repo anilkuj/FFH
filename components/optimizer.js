@@ -568,7 +568,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
         }
     };
 
-    const getSquadExpectedPts = (slots) => {
+    const getSquadPointsForHorizon = (slots, h) => {
         let total = 0;
         let maxStarterPts = 0;
         
@@ -576,8 +576,15 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
             if (slot.playerId === null) return;
             const p = PLAYERS.find(pl => pl.id === slot.playerId);
             if (!p) return;
+            if (p.status === 'i' || p.status === 's' || p.status === 'u') return;
             
-            const rawScore = getSolverScore(p);
+            let sum = 0;
+            for (let gw = state.currentGw; gw < state.currentGw + h; gw++) {
+                const pred = p.predictions.find(pr => pr.gw === gw);
+                if (pred) sum += pred.pts;
+            }
+            
+            const rawScore = objective === 'efficiency' ? getPlayerEfficiency(p, state.currentGw) * 10 : sum;
             if (slot.isStarting) {
                 total += rawScore;
                 if (rawScore > maxStarterPts) {
@@ -593,6 +600,10 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
         total += maxStarterPts * captainMultiplier;
         
         return total;
+    };
+
+    const getSquadExpectedPts = (slots) => {
+        return getSquadPointsForHorizon(slots, horizon);
     };
 
     // Helper: FDR (average fixture difficulty)
@@ -1236,16 +1247,20 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
             const optimizedPlayer = optimizedId !== null ? PLAYERS.find(p => p.id === optimizedId) : null;
 
             if (originalId !== optimizedId) {
+                const inPts1Gw = optimizedPlayer ? (optimizedPlayer.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0) : 0;
+                const outPts1Gw = originalPlayer ? (originalPlayer.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0) : 0;
                 upgrades.push({
                     slotIndex: i,
                     out: originalPlayer,
                     in: optimizedPlayer,
-                    gain: (optimizedPlayer ? getSolverScore(optimizedPlayer) : 0) - (originalPlayer ? getSolverScore(originalPlayer) : 0)
+                    gain: (optimizedPlayer ? getSolverScore(optimizedPlayer) : 0) - (originalPlayer ? getSolverScore(originalPlayer) : 0),
+                    gain1Gw: inPts1Gw - outPts1Gw
                 });
             }
         }
 
         const overallGain = totalOptimizedPts - totalOriginalPts;
+        const overallGain1Gw = getSquadPointsForHorizon(optimizedSquadSlots, 1) - getSquadPointsForHorizon(activeSquadSlots, 1);
         const gainLabel = objective === 'efficiency' ? 'Overall Efficiency' : 'Overall XP';
         const formattedGain = objective === 'efficiency' ? `+${(overallGain / 10).toFixed(2)}` : `+${overallGain.toFixed(1)}`;
 
@@ -1257,7 +1272,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                         <div class="rec-option-box">
                             <div class="rec-option-header" style="margin-bottom: 16px;">
                                 <span class="rec-badge" style="background: rgba(0, 255, 136, 0.1); color: var(--primary); border-color: rgba(0, 255, 136, 0.2);">UNLIMITED UPGRADES ENABLED</span>
-                                <span class="rec-pts-gain">${formattedGain} ${gainLabel} (${horizon} GWs)</span>
+                                <span class="rec-pts-gain">+${overallGain.toFixed(1)} XP (${horizon}-GW) • +${overallGain1Gw.toFixed(1)} XP (Next GW)</span>
                             </div>
                             
                             <div style="display:flex; flex-direction:column; gap:20px;">
@@ -1271,7 +1286,9 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                                             </div>
                                             <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding-top:12px;">
                                                 <i data-lucide="chevrons-right" class="transfer-arrow-icon" style="margin: 0 0 6px 0;"></i>
-                                                <span class="pill-value" style="font-size:10px; background:rgba(0, 255, 136, 0.1); color:var(--primary); padding: 2px 6px; border-radius: 4px;">+${objective === 'efficiency' ? (up.gain / 10).toFixed(2) + ' Eff' : up.gain.toFixed(1) + ' XP'}</span>
+                                                <span class="pill-value" style="font-size:10px; background:rgba(0, 255, 136, 0.1); color:var(--primary); padding: 2px 6px; border-radius: 4px; white-space: nowrap;">
+                                                    +${up.gain.toFixed(1)} (${horizon}G) • +${up.gain1Gw.toFixed(1)} (Next)
+                                                </span>
                                             </div>
                                             <div class="transfer-player-card player-card-in" style="flex:1;">
                                                 <span class="player-name-main">${up.in.name}</span>
@@ -1479,6 +1496,25 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
             }
         }
 
+        // Calculate 1-GW expected points gains for display comparison
+        let best1Tx1GwGain = 0;
+        if (best1Tx) {
+            const tempSlots = JSON.parse(JSON.stringify(activeSquadSlots));
+            const slot = tempSlots.find(s => s.playerId === best1Tx.out.id);
+            if (slot) slot.playerId = best1Tx.in.id;
+            best1Tx1GwGain = getSquadPointsForHorizon(tempSlots, 1) - getSquadPointsForHorizon(activeSquadSlots, 1);
+        }
+
+        let best2Tx1GwGain = 0;
+        if (best2Tx) {
+            const tempSlots = JSON.parse(JSON.stringify(activeSquadSlots));
+            const slot1 = tempSlots.find(s => s.playerId === best2Tx.out1.id);
+            const slot2 = tempSlots.find(s => s.playerId === best2Tx.out2.id);
+            if (slot1) slot1.playerId = best2Tx.in1.id;
+            if (slot2) slot2.playerId = best2Tx.in2.id;
+            best2Tx1GwGain = getSquadPointsForHorizon(tempSlots, 1) - getSquadPointsForHorizon(activeSquadSlots, 1);
+        }
+
         // Render Midseason results
         resultsGrid.innerHTML = `
             <!-- Single Transfer Recommendation -->
@@ -1489,7 +1525,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                         <div class="rec-option-box">
                             <div class="rec-option-header" style="margin-bottom: 12px;">
                                 <span class="rec-badge">RECOMMENDED</span>
-                                <span class="rec-pts-gain">+${objective === 'efficiency' ? (best1Tx.gain / 10).toFixed(2) + ' Efficiency' : best1Tx.gain.toFixed(1) + ' XP'} (${horizon} GWs)</span>
+                                <span class="rec-pts-gain">+${best1Tx.gain.toFixed(1)} XP (${horizon}-GW) • +${best1Tx1GwGain.toFixed(1)} XP (Next GW)</span>
                             </div>
                             <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;">
                                 <div class="transfer-player-card player-card-out" style="flex:1;">
@@ -1507,7 +1543,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                             ${getOptimizationExplanation(best1Tx.out, best1Tx.in)}
                             <div class="optimizer-info-banner" style="margin-top: 12px; font-size: 11px; color: var(--text-muted); background: rgba(255, 255, 255, 0.01); padding: 10px; border-radius: 6px; border-left: 3px solid var(--primary); line-height: 1.5;">
                                 <i data-lucide="info" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px; color: var(--primary);"></i>
-                                <strong>Note on Horizon Gains:</strong> This <strong>+${best1Tx.gain.toFixed(1)} XP</strong> gain is calculated over the full <strong>${horizon}-GW horizon</strong>. Immediate points increase for next week may be smaller, with the rest realized over future weeks due to better fixtures.
+                                <strong>Horizon Points Calibration:</strong> This transfer is expected to yield <strong>+${best1Tx.gain.toFixed(1)} XP</strong> over the next 5 weeks. The immediate points increase for next week's single gameweek is <strong>+${best1Tx1GwGain.toFixed(1)} XP</strong>, with the remaining points improvement realized in subsequent weeks.
                             </div>
                             <button class="apply-rec-btn" id="applySingleBtn" style="margin-top: 16px; width: 100%;">Apply AI Transfer</button>
                         </div>
@@ -1526,7 +1562,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                             <div class="rec-option-box">
                                 <div class="rec-option-header" style="margin-bottom: 12px;">
                                     <span class="rec-badge" style="background:rgba(0, 242, 254, 0.1); color: var(--secondary); border-color: var(--secondary-glow)">HIGH IMPACT</span>
-                                    <span class="rec-pts-gain">+${objective === 'efficiency' ? (best2Tx.gain / 10).toFixed(2) + ' Efficiency' : best2Tx.gain.toFixed(1) + ' XP'} (${horizon} GWs)</span>
+                                    <span class="rec-pts-gain">+${best2Tx.gain.toFixed(1)} XP (${horizon}-GW) • +${best2Tx1GwGain.toFixed(1)} XP (Next GW)</span>
                                 </div>
                                 
                                 <!-- Transfer 1 -->
@@ -1564,7 +1600,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
         
                                 <div class="optimizer-info-banner" style="margin-top: 12px; font-size: 11px; color: var(--text-muted); background: rgba(255, 255, 255, 0.01); padding: 10px; border-radius: 6px; border-left: 3px solid var(--primary); line-height: 1.5;">
                                     <i data-lucide="info" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px; color: var(--primary);"></i>
-                                    <strong>Note on Horizon Gains:</strong> This <strong>+${best2Tx.gain.toFixed(1)} XP</strong> gain is calculated over the full <strong>${horizon}-GW horizon</strong>. Immediate points increase for next week may be smaller, with the rest realized over future weeks.
+                                    <strong>Horizon Points Calibration:</strong> This double transfer is expected to yield <strong>+${best2Tx.gain.toFixed(1)} XP</strong> over the next 5 weeks. The immediate points increase for next week's single gameweek is <strong>+${best2Tx1GwGain.toFixed(1)} XP</strong>, with the remaining points improvement realized in subsequent weeks.
                                 </div>
                                 <button class="apply-rec-btn" id="applyDoubleBtn" style="margin-top: 16px; width: 100%;">Apply Both Transfers</button>
                             </div>
