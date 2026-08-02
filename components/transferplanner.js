@@ -1,5 +1,5 @@
 import { PLAYERS, TEAMS } from '../data.js';
-import { getShirtSVG } from './planner.js';
+import { getShirtSVG, renderPlayerRow, renderBenchRow } from './planner.js';
 
 export function renderTransferPlanner(container, state, actions) {
     const squadInfo = state.getSquadForGw(state.currentGw);
@@ -141,88 +141,6 @@ export function renderTransferPlanner(container, state, actions) {
         return slots;
     };
 
-    const renderCurrentSquadPitch = (slots, capId, viceId, bankVal) => {
-        const gkps = slots.filter(s => s.position === 'GKP' && s.isStarting);
-        const defs = slots.filter(s => s.position === 'DEF' && s.isStarting);
-        const mids = slots.filter(s => s.position === 'MID' && s.isStarting);
-        const fwds = slots.filter(s => s.position === 'FWD' && s.isStarting);
-        const bench = slots.filter(s => !s.isStarting);
-
-        const renderMiniCard = (slot) => {
-            if (slot.playerId === null) {
-                return `
-                    <div class="player-pitch-card empty-slot" style="width: 50px; padding: 4px 2px; height: auto; cursor: default;">
-                        <div style="width: 22px; height: 22px; margin: 0 auto; background: rgba(255,255,255,0.05); border-radius: 50%;"></div>
-                        <div class="player-pitch-name" style="font-size: 8px; margin-top: 2px;">Empty</div>
-                        <div class="player-pitch-points" style="font-size: 7px;">£0.0m</div>
-                    </div>
-                `;
-            }
-            const p = PLAYERS.find(pl => pl.id === slot.playerId);
-            if (!p) return '';
-            const teamObj = TEAMS.find(t => t.shortName === p.team) || { color: '#ffffff' };
-            const isCap = slot.playerId === capId;
-            const isVice = slot.playerId === viceId;
-            const roleBadge = isCap ? ' (C)' : (isVice ? ' (V)' : '');
-            
-            return `
-                <div class="player-pitch-card" style="width: 54px; padding: 4px 2px; height: auto; cursor: default; position: relative;">
-                    <div class="profile-avatar-shirt" style="width: 22px; height: 22px; margin: 0 auto;">
-                        ${getShirtSVG(teamObj.color, p.team)}
-                    </div>
-                    <div class="player-pitch-name" style="font-size: 8px; font-weight: 800; margin-top: 2px; max-width: 52px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${p.name}">
-                        ${p.name.split(' ').pop()}${roleBadge}
-                    </div>
-                    <div class="player-pitch-points" style="font-size: 7.5px; font-weight: 700; color: rgba(255,255,255,0.7);">
-                        £${p.price.toFixed(1)}m
-                    </div>
-                </div>
-            `;
-        };
-
-        return `
-            <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:10px; box-shadow: var(--shadow-sm);">
-                <h3 style="font-family:var(--font-heading); margin:0; font-size:12.5px; font-weight:800; border-bottom:1px solid var(--border-color); padding-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
-                    <span>Squad Preview</span>
-                    <span style="font-size:11px; color:var(--primary);">Bank: £${bankVal.toFixed(1)}m</span>
-                </h3>
-
-                <!-- Mini Football Pitch -->
-                <div class="football-pitch" style="height: 300px; padding: 6px 0; justify-content: space-between; border-radius: 8px; position: relative; overflow: hidden; max-height: none; min-height: 0;">
-                    <div class="pitch-box-top" style="border-color: rgba(255,255,255,0.08);"></div>
-                    <div class="pitch-half-line" style="background: rgba(255,255,255,0.08); top: 50%;"></div>
-                    <div class="pitch-center-circle" style="border-color: rgba(255,255,255,0.08); top: 50%;"></div>
-                    <div class="pitch-box-bottom" style="border-color: rgba(255,255,255,0.08);"></div>
-
-                    <!-- Goalkeeper Row -->
-                    <div class="pitch-row" style="display: flex; justify-content: center; gap: 8px; margin: 0;">
-                        ${gkps.map(renderMiniCard).join('')}
-                    </div>
-                    <!-- Defender Row -->
-                    <div class="pitch-row" style="display: flex; justify-content: center; gap: 6px; margin: 0;">
-                        ${defs.map(renderMiniCard).join('')}
-                    </div>
-                    <!-- Midfielder Row -->
-                    <div class="pitch-row" style="display: flex; justify-content: center; gap: 6px; margin: 0;">
-                        ${mids.map(renderMiniCard).join('')}
-                    </div>
-                    <!-- Forward Row -->
-                    <div class="pitch-row" style="display: flex; justify-content: center; gap: 6px; margin: 0;">
-                        ${fwds.map(renderMiniCard).join('')}
-                    </div>
-                </div>
-
-                <!-- Bench Row -->
-                <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 8px; padding: 8px;">
-                    <h4 style="font-size:9px; text-transform:uppercase; color:var(--text-muted); margin:0 0 6px 0; text-align:center; font-weight:700;">Substitutes</h4>
-                    <div style="display:flex; justify-content:space-around; gap:4px;">
-                        ${bench.map(renderMiniCard).join('')}
-                    </div>
-                </div>
-            </div>
-        `;
-    };
-
     const showCompareModal = (tx) => {
         const modalDiv = document.createElement('div');
         modalDiv.className = 'player-detail-modal-overlay';
@@ -335,67 +253,67 @@ export function renderTransferPlanner(container, state, actions) {
                 </div>
             </div>
 
-            <div class="tp-main-layout" style="display:flex; gap:20px; flex-wrap:wrap; align-items: flex-start; width: 100%;">
-                <!-- Left Sidebar: Squad Preview Pitch -->
-                <div id="tpSquadPreviewContainer" style="flex: 1 1 260px; max-width: 320px; width: 100%;"></div>
-                
-                <!-- Right Side: Configurations & Results -->
-                <div style="flex: 2 2 400px; display:flex; flex-direction:column; gap:20px; width:100%;">
-                    <!-- Configuration Card -->
-                    <div class="optimizer-settings-card" style="padding:16px; margin:0;">
-                        <h3 style="font-family: var(--font-heading); margin-bottom:16px; font-weight:700; display:flex; align-items:center; gap:8px;">
-                            <i data-lucide="settings" class="highlight-transfers"></i> Setup Roadmap Configurations
-                        </h3>
-                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:16px; align-items: flex-end;">
-                            <!-- Source Selection -->
-                            <div style="display:flex; flex-direction:column; gap:6px; grid-column: span 2;">
-                                <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Source Squad / Team Selection</label>
-                                <div style="display:flex; gap:8px; align-items:center; flex-wrap: wrap;">
-                                    <select id="tpSourceSquad" class="settings-select" style="flex:1; min-width:180px;">
-                                        <option value="active" selected>Active Squad Roster</option>
-                                        <option value="import">Import from FPL Team ID...</option>
-                                        ${state.drafts.map((d, idx) => `
-                                            <option value="draft_${idx}">Draft ${idx + 1}: ${d.name}</option>
-                                        `).join('')}
-                                    </select>
-                                    <input type="text" id="tpFplTeamId" class="settings-select" placeholder="FPL Team ID" style="display:none; width:110px; font-size:12px; padding:8px;" value="${lastImportedId}" />
-                                    <button class="action-main-btn" id="tpImportBtn" style="display:none; margin:0; padding:8px 16px; font-size:12px; height:38px;">Import</button>
-                                </div>
-                            </div>
-
-                            <div style="display:flex; flex-direction:column; gap:6px;">
-                                <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Number of Transfers (1-5)</label>
-                                <select id="tpNumTransfers" class="settings-select" style="width:100%;">
-                                    <option value="1" ${numTransfers === 1 ? 'selected' : ''}>1 Transfer</option>
-                                    <option value="2" ${numTransfers === 2 ? 'selected' : ''}>2 Transfers</option>
-                                    <option value="3" ${numTransfers === 3 ? 'selected' : ''}>3 Transfers</option>
-                                    <option value="4" ${numTransfers === 4 ? 'selected' : ''}>4 Transfers</option>
-                                    <option value="5" ${numTransfers === 5 ? 'selected' : ''}>5 Transfers</option>
+            <!-- Top Section: Configurations & Recommendations -->
+            <div style="display:flex; flex-direction:column; gap:20px; width:100%;">
+                <!-- Configuration Card -->
+                <div class="optimizer-settings-card" style="padding:16px; margin:0;">
+                    <h3 style="font-family: var(--font-heading); margin-bottom:16px; font-weight:700; display:flex; align-items:center; gap:8px;">
+                        <i data-lucide="settings" class="highlight-transfers"></i> Setup Roadmap Configurations
+                    </h3>
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:16px; align-items: flex-end;">
+                        <!-- Source Selection -->
+                        <div style="display:flex; flex-direction:column; gap:6px; grid-column: span 2;">
+                            <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Source Squad / Team Selection</label>
+                            <div style="display:flex; gap:8px; align-items:center; flex-wrap: wrap;">
+                                <select id="tpSourceSquad" class="settings-select" style="flex:1; min-width:180px;">
+                                    <option value="active" selected>Active Squad Roster</option>
+                                    <option value="import">Import from FPL Team ID...</option>
+                                    ${state.drafts.map((d, idx) => `
+                                        <option value="draft_${idx}">Draft ${idx + 1}: ${d.name}</option>
+                                    `).join('')}
                                 </select>
+                                <input type="text" id="tpFplTeamId" class="settings-select" placeholder="FPL Team ID" style="display:none; width:110px; font-size:12px; padding:8px;" value="${lastImportedId}" />
+                                <button class="action-main-btn" id="tpImportBtn" style="display:none; margin:0; padding:8px 16px; font-size:12px; height:38px;">Import</button>
                             </div>
-                            <div style="display:flex; flex-direction:column; gap:6px;">
-                                <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Projection Horizon Weeks</label>
-                                <select id="tpHorizon" class="settings-select" style="width:100%;">
-                                    <option value="1" ${horizon === 1 ? 'selected' : ''}>Next 1 Gameweek</option>
-                                    <option value="2" ${horizon === 2 ? 'selected' : ''}>Next 2 Gameweeks</option>
-                                    <option value="3" ${horizon === 3 ? 'selected' : ''}>Next 3 Gameweeks</option>
-                                    <option value="4" ${horizon === 4 ? 'selected' : ''}>Next 4 Gameweeks</option>
-                                    <option value="5" ${horizon === 5 ? 'selected' : ''}>Next 5 Gameweeks</option>
-                                    <option value="10" ${horizon === 10 ? 'selected' : ''}>Next 10 Gameweeks</option>
-                                    <option value="15" ${horizon === 15 ? 'selected' : ''}>Next 15 Gameweeks</option>
-                                    <option value="20" ${horizon === 20 ? 'selected' : ''}>Next 20 Gameweeks</option>
-                                    <option value="25" ${horizon === 25 ? 'selected' : ''}>Next 25 Gameweeks</option>
-                                </select>
-                            </div>
-                            <button class="action-main-btn" id="runTpBtn" style="margin:0; height:38px; display:flex; align-items:center; justify-content:center; gap:8px;">
-                                <i data-lucide="play" style="width:16px; height:16px;"></i> Calculate Roadmap
-                            </button>
                         </div>
-                    </div>
 
-                    <!-- Optimization Results Grid -->
-                    <div id="tpResultsGrid"></div>
+                        <div style="display:flex; flex-direction:column; gap:6px;">
+                            <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Number of Transfers (1-5)</label>
+                            <select id="tpNumTransfers" class="settings-select" style="width:100%;">
+                                <option value="1" ${numTransfers === 1 ? 'selected' : ''}>1 Transfer</option>
+                                <option value="2" ${numTransfers === 2 ? 'selected' : ''}>2 Transfers</option>
+                                <option value="3" ${numTransfers === 3 ? 'selected' : ''}>3 Transfers</option>
+                                <option value="4" ${numTransfers === 4 ? 'selected' : ''}>4 Transfers</option>
+                                <option value="5" ${numTransfers === 5 ? 'selected' : ''}>5 Transfers</option>
+                            </select>
+                        </div>
+                        <div style="display:flex; flex-direction:column; gap:6px;">
+                            <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Projection Horizon Weeks</label>
+                            <select id="tpHorizon" class="settings-select" style="width:100%;">
+                                <option value="1" ${horizon === 1 ? 'selected' : ''}>Next 1 Gameweek</option>
+                                <option value="2" ${horizon === 2 ? 'selected' : ''}>Next 2 Gameweeks</option>
+                                <option value="3" ${horizon === 3 ? 'selected' : ''}>Next 3 Gameweeks</option>
+                                <option value="4" ${horizon === 4 ? 'selected' : ''}>Next 4 Gameweeks</option>
+                                <option value="5" ${horizon === 5 ? 'selected' : ''}>Next 5 Gameweeks</option>
+                                <option value="10" ${horizon === 10 ? 'selected' : ''}>Next 10 Gameweeks</option>
+                                <option value="15" ${horizon === 15 ? 'selected' : ''}>Next 15 Gameweeks</option>
+                                <option value="20" ${horizon === 20 ? 'selected' : ''}>Next 20 Gameweeks</option>
+                                <option value="25" ${horizon === 25 ? 'selected' : ''}>Next 25 Gameweeks</option>
+                            </select>
+                        </div>
+                        <button class="action-main-btn" id="runTpBtn" style="margin:0; height:38px; display:flex; align-items:center; justify-content:center; gap:8px;">
+                            <i data-lucide="play" style="width:16px; height:16px;"></i> Calculate Roadmap
+                        </button>
+                    </div>
                 </div>
+
+                <!-- Optimization Results Grid -->
+                <div id="tpResultsGrid"></div>
+            </div>
+
+            <!-- Bottom Section: Squad Preview (Regular Full Size Pitch) -->
+            <div style="border-top:1px solid var(--border-color); padding-top:20px; margin-top:10px; width:100%;">
+                <div id="tpSquadPreviewContainer" style="width: 100%;"></div>
             </div>
         </div>
     `;
@@ -456,7 +374,59 @@ export function renderTransferPlanner(container, state, actions) {
         }
 
         if (previewSlots) {
-            tpSquadPreviewContainer.innerHTML = renderCurrentSquadPitch(previewSlots, previewCap, previewVice, previewBank);
+            tpSquadPreviewContainer.innerHTML = `
+                <style>
+                    #tpSquadPreviewContainer .pitch-sell-btn {
+                        display: none !important;
+                    }
+                    #tpSquadPreviewContainer .player-pitch-card {
+                        cursor: default !important;
+                    }
+                </style>
+                <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:16px; padding:20px; display:flex; flex-direction:column; gap:16px; box-shadow: var(--shadow-sm);">
+                    <h3 style="font-family:var(--font-heading); margin:0; font-size:14px; font-weight:800; border-bottom:1px solid var(--border-color); padding-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+                        <span>Squad Preview</span>
+                        <span style="font-size:12px; color:var(--primary); font-weight:700;">Bank Capital: £${previewBank.toFixed(1)}m</span>
+                    </h3>
+
+                    <!-- Regular Full Size Football Pitch -->
+                    <div class="football-pitch" id="pitchBoard" style="height: 580px; flex: none;">
+                        <div class="pitch-box-top"></div>
+                        <div class="pitch-half-line"></div>
+                        <div class="pitch-center-circle"></div>
+                        <div class="pitch-box-bottom"></div>
+
+                        <!-- GKP Row -->
+                        <div class="pitch-row" data-row="GKP">
+                            ${renderPlayerRow(previewSlots, "GKP", state.currentGw, previewCap, previewVice, actions)}
+                        </div>
+
+                        <!-- DEF Row -->
+                        <div class="pitch-row" data-row="DEF">
+                            ${renderPlayerRow(previewSlots, "DEF", state.currentGw, previewCap, previewVice, actions)}
+                        </div>
+
+                        <!-- MID Row -->
+                        <div class="pitch-row" data-row="MID">
+                            ${renderPlayerRow(previewSlots, "MID", state.currentGw, previewCap, previewVice, actions)}
+                        </div>
+
+                        <!-- FWD Row -->
+                        <div class="pitch-row" data-row="FWD">
+                            ${renderPlayerRow(previewSlots, "FWD", state.currentGw, previewCap, previewVice, actions)}
+                        </div>
+                    </div>
+
+                    <!-- Bench Section -->
+                    <div class="bench-container" style="margin-top: 16px;">
+                        <span class="bench-title">Bench Preview</span>
+                        <div class="bench-row" id="benchRow">
+                            ${renderBenchRow(previewSlots, state.currentGw, previewCap, previewVice, actions)}
+                        </div>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
         }
     };
 

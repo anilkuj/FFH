@@ -307,7 +307,7 @@ function renderPlayerTooltip(player, currentGw) {
     `;
 }
 
-function renderPlayerRow(squadSlots, position, currentGw, captain, vice, actions) {
+export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, actions) {
     const rowSlots = squadSlots.filter(s => s.position === position && s.isStarting);
 
     return rowSlots.map((slot, index) => {
@@ -368,7 +368,7 @@ function renderPlayerRow(squadSlots, position, currentGw, captain, vice, actions
     }).join('');
 }
 
-function renderBenchRow(squadSlots, currentGw, captain, vice, actions) {
+export function renderBenchRow(squadSlots, currentGw, captain, vice, actions) {
     const benchSlots = squadSlots.filter(s => !s.isStarting);
     return benchSlots.map((slot, index) => {
         const label = index === 0 ? "GKP" : `Sub ${index} (${slot.position})`;
