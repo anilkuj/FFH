@@ -2099,7 +2099,7 @@ body {
     font-family: var(--font-heading);
     font-size: 15px;
     font-weight: 800;
-    color: #fff;
+    color: var(--text-main);
 }
 
 .detail-stat-lbl {
