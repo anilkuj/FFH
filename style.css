@@ -2448,6 +2448,12 @@ body {
 }
 
 @media (max-width: 768px) {
+    .modal-backdrop {
+        align-items: flex-start !important;
+        overflow-y: auto !important;
+        padding: 10px !important;
+    }
+
     .run-optimization-btn {
         width: 100% !important;
         justify-content: center !important;
@@ -2588,6 +2594,7 @@ body {
     }
 
     .player-pitch-card {
+        width: 19% !important;
         padding: 4px 2px !important;
     }
 
@@ -3421,8 +3428,8 @@ html.light-theme .rating-badge-na {
     /* Compress Player Profile Details Modal to fit without scrolling */
     .modal-content:has(.player-detail-horizontal-layout) {
         max-width: 95% !important;
-        margin: 10px !important;
-        max-height: 96vh !important;
+        margin: 10px auto !important;
+        max-height: none !important;
         padding: 12px !important;
     }
 
