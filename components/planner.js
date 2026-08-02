@@ -810,6 +810,9 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
         return ptsB - ptsA;
     }).slice(0, 3);
 
+    const starts = typeof player.GS === 'number' ? player.GS : 0;
+    const avgMins = typeof player.MPPG === 'number' ? player.MPPG.toFixed(0) : '0';
+
     const modalContent = `
         <div class="modal-header-section">
             <h3>Player Profile</h3>
@@ -894,6 +897,14 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
                         <div class="detail-stat-box" style="padding: 8px;">
                             <span class="detail-stat-val" style="font-size: 13px;">${player.points}</span>
                             <span class="detail-stat-lbl" style="font-size: 9px;">Total Points</span>
+                        </div>
+                        <div class="detail-stat-box" style="padding: 8px;">
+                            <span class="detail-stat-val" style="font-size: 13px;">${starts}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px;">Starts</span>
+                        </div>
+                        <div class="detail-stat-box" style="padding: 8px;">
+                            <span class="detail-stat-val" style="font-size: 13px;">${avgMins}m</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px;">Avg Minutes</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 8px;">
                             <span class="detail-stat-val" style="font-size: 13px;">${prediction.pts.toFixed(1)}</span>
