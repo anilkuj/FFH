@@ -927,20 +927,12 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
                             <span class="detail-stat-lbl" style="font-size: 9px;">ICT Index</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 8px;">
-                            <span class="detail-stat-val" style="font-size: 13px;">${player.shots}</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px;">Shots</span>
-                        </div>
-                        <div class="detail-stat-box" style="padding: 8px;">
                             <span class="detail-stat-val" style="font-size: 13px;">${player.xG90.toFixed(2)}</span>
                             <span class="detail-stat-lbl" style="font-size: 9px;">xG per 90</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 8px;">
                             <span class="detail-stat-val" style="font-size: 13px;">${player.xA90.toFixed(2)}</span>
                             <span class="detail-stat-lbl" style="font-size: 9px;">xA per 90</span>
-                        </div>
-                        <div class="detail-stat-box" style="padding: 8px;">
-                            <span class="detail-stat-val" style="font-size: 13px;">${player.GS}</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px;">Games Started</span>
                         </div>
                     </div>
                 </div>
