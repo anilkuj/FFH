@@ -730,6 +730,9 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
         const eff = getPlayerEfficiency(player, state.currentGw);
         const ratings = getPlayerRatings(player, state.currentGw);
         const grades = `${ratings.expectedMinutes}${ratings.next5Fixtures}${ratings.attackingRole}${ratings.attackingPotential}${ratings.defconPotential === 'N/A' ? '-' : ratings.defconPotential}${ratings.availability}`;
+        
+        const starts = typeof player.GS === 'number' ? player.GS : 0;
+        const avgMins = typeof player.MPPG === 'number' ? player.MPPG.toFixed(0) : '0';
 
         return `
             <div class="analysis-stats-grid">
@@ -744,6 +747,14 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                 <div class="stat-pill" title="Average grade rating score divided by price">
                     <span class="stat-pill-label">Efficiency</span>
                     <span class="stat-pill-val" style="color: var(--primary);">${eff.toFixed(2)}</span>
+                </div>
+                <div class="stat-pill" title="Matches started last season">
+                    <span class="stat-pill-label">Starts</span>
+                    <span class="stat-pill-val" style="color: var(--text-main); font-weight: 700;">${starts}</span>
+                </div>
+                <div class="stat-pill" title="Average minutes played per appearance">
+                    <span class="stat-pill-label">Avg Min</span>
+                    <span class="stat-pill-val" style="color: var(--text-main); font-weight: 700;">${avgMins}m</span>
                 </div>
                 <div class="stat-pill highlight">
                     <span class="stat-pill-label">XP (${horizon} GW)</span>
@@ -770,6 +781,18 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
         const inRet = getProjectedReturns(inPlayer);
 
         let reasons = [];
+        let warnings = [];
+
+        // Rotation & Starts Warnings
+        if (inPlayer.MPPG > 0 && inPlayer.MPPG < 60) {
+            warnings.push(`<i data-lucide="alert-triangle" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px; color:#f59e0b;"></i> <strong>Rotation Risk:</strong> ${inPlayer.name} averages only ${inPlayer.MPPG.toFixed(0)} minutes per game.`);
+        } else if (inPlayer.MPPG === 0) {
+            warnings.push(`<i data-lucide="alert-circle" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px; color:#ef4444;"></i> <strong>Non-Starter Risk:</strong> ${inPlayer.name} has played 0 minutes this season.`);
+        }
+
+        if (inPlayer.GS > 0 && inPlayer.GS < 15) {
+            warnings.push(`<i data-lucide="alert-triangle" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px; color:#f59e0b;"></i> <strong>Limited Starts:</strong> ${inPlayer.name} started only ${inPlayer.GS} games last season.`);
+        }
 
         // 1. Fixture difficulty comparison
         if (inFdr < outFdr) {
@@ -819,6 +842,11 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                 <ul class="rec-explanation-list">
                     ${reasons.map(r => `<li>${r}</li>`).join('')}
                 </ul>
+                ${warnings.length > 0 ? `
+                    <div class="rec-warning-box" style="margin-top: 12px; padding: 10px; background: rgba(245, 158, 11, 0.05); border: 1px solid rgba(245, 158, 11, 0.25); border-left: 3px solid #f59e0b; border-radius: 6px; font-size: 11px; display: flex; flex-direction: column; gap: 6px; color: var(--text-main);">
+                        ${warnings.map(w => `<div style="display:flex; align-items:center; gap:4px; line-height: 1.4;">${w}</div>`).join('')}
+                    </div>
+                ` : ''}
             </div>
         `;
     };
