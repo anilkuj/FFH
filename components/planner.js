@@ -65,11 +65,11 @@ export function renderPlanner(container, state, actions) {
                 <div class="pitch-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
                     <div class="pitch-title-area" style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
                         <h2 style="margin: 0;">Squad Selection</h2>
-                        <div class="header-rating-badge" style="display: flex; align-items: center; gap: 12px; background: rgba(0, 255, 136, 0.05); border: 1px solid var(--primary-glow); padding: 4px 12px; border-radius: 20px; flex-wrap: wrap;">
-                            <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">AI Squad Rating:</span>
+                        <div class="header-rating-badge" style="display: flex; align-items: center; gap: 12px; background: rgba(0, 255, 136, 0.05); border: 1px solid var(--primary-glow); padding: 4px 12px; border-radius: 20px; flex-wrap: nowrap;">
+                            <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Rating:</span>
                             <strong class="highlight-transfers" style="font-size: 14px; font-weight: 800;">${ratingScore}/100</strong>
                             <span style="height: 12px; width: 1px; background: rgba(255,255,255,0.1);"></span>
-                            <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">GW${state.currentGw} Expected Points:</span>
+                            <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">GW${state.currentGw} XP:</span>
                             <strong class="highlight-bank" style="font-size: 14px; font-weight: 800;">${expectedPoints.toFixed(1)}</strong>
                         </div>
                     </div>
