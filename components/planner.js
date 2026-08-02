@@ -438,7 +438,14 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions) {
 function renderTransfersList(state, actions) {
     const list = state.transfers[state.currentGw] || [];
     if (list.length === 0) {
-        return `<div class="transfer-list-empty">No transfers planned for this Gameweek. Click a player to transfer out.</div>`;
+        return `
+            <div class="transfer-list-empty" style="display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; padding: 20px;">
+                <div>No transfers planned for this Gameweek. Click a player to transfer out.</div>
+                <button class="action-main-btn goto-tp-btn" style="margin: 4px auto 0 auto; height: 32px; padding: 0 16px; font-size: 11px; display: flex; align-items: center; gap: 6px; border-radius: 6px; width: auto; font-family: var(--font-heading); font-weight: 700; cursor: pointer;">
+                    <i data-lucide="compass" style="width: 14px; height: 14px;"></i> Go to Transfer Planner
+                </button>
+            </div>
+        `;
     }
 
     return list.map((tx, idx) => {
@@ -476,6 +483,14 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
         }
     };
     document.addEventListener('click', window._mobileClearListener);
+
+    // Go to Transfer Planner Button click listener
+    container.querySelectorAll('.goto-tp-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            state.tpPrepopulatedSource = `draft_${state.activeDraftIndex}`;
+            actions.switchTab('transferplanner');
+        });
+    });
 
     // Sell/Remove button direct trigger
     container.querySelectorAll('.pitch-sell-btn').forEach(btn => {

@@ -8,6 +8,9 @@ export function renderTransferPlanner(container, state, actions) {
     // Read selections from state or localStorage
     let numTransfers = parseInt(localStorage.getItem('fpl_hub_tp_num_transfers')) || 2;
     let horizon = parseInt(localStorage.getItem('fpl_hub_tp_horizon')) || 5;
+    let activeSource = state.tpPrepopulatedSource || localStorage.getItem('fpl_hub_tp_source') || 'active';
+    delete state.tpPrepopulatedSource; // Clear the flag!
+    localStorage.setItem('fpl_hub_tp_source', activeSource);
 
     // Temporary variables for imported team (initialized from localStorage cache if available)
     let tempSourceSlots = null;
@@ -393,10 +396,10 @@ export function renderTransferPlanner(container, state, actions) {
                             <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Source Squad / Team Selection</label>
                             <div style="display:flex; gap:8px; align-items:center; flex-wrap: wrap;">
                                 <select id="tpSourceSquad" class="settings-select" style="flex:1; min-width:180px;">
-                                    <option value="active" selected>Active Squad Roster</option>
-                                    <option value="import">Import from FPL Team ID...</option>
+                                    <option value="active" ${activeSource === 'active' ? 'selected' : ''}>Active Squad Roster</option>
+                                    <option value="import" ${activeSource === 'import' ? 'selected' : ''}>Import from FPL Team ID...</option>
                                     ${state.drafts.map((d, idx) => `
-                                        <option value="draft_${idx}">Draft ${idx + 1}: ${d.name}</option>
+                                        <option value="draft_${idx}" ${activeSource === `draft_${idx}` ? 'selected' : ''}>Draft ${idx + 1}: ${d.name}</option>
                                     `).join('')}
                                 </select>
                                 <input type="text" id="tpFplTeamId" class="settings-select" placeholder="FPL Team ID" style="display:none; width:110px; font-size:12px; padding:8px;" value="${lastImportedId}" />
@@ -571,6 +574,7 @@ export function renderTransferPlanner(container, state, actions) {
     toggleImportFields();
 
     tpSourceSquad.addEventListener('change', () => {
+        localStorage.setItem('fpl_hub_tp_source', tpSourceSquad.value);
         toggleImportFields();
         updateSquadPreview();
     });

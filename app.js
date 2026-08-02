@@ -270,7 +270,7 @@ class AppState {
 
         // Trace and apply transfers sequentially up to targetGw
         // Keep track of free transfers
-        let freeTransfers = 1;
+        let freeTransfers = 0;
 
         for (let gw = 1; gw <= targetGw; gw++) {
             // Apply this week's planned transfers
