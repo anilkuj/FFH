@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light-theme">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,13 +19,9 @@
     <!-- Confetti CDN -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
-        // Load initial theme immediately to prevent flashing
-        const savedTheme = localStorage.getItem('fpl_hub_theme') || 'light';
-        if (savedTheme === 'light') {
-            document.documentElement.classList.add('light-theme');
-        } else {
-            document.documentElement.classList.remove('light-theme');
-        }
+        // Force light theme by default
+        document.documentElement.classList.add('light-theme');
+        localStorage.setItem('fpl_hub_theme', 'light');
     </script>
 </head>
 <body>
@@ -170,10 +166,7 @@
                     </div>
                     <!-- Top Bar Authentication Container -->
                     <div id="topBarAuthContainer" style="display: flex; align-items: center;"></div>
-                    <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Light/Dark Mode" style="border: none; background: var(--bg-panel); color: var(--text-main); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid var(--border-color); transition: all var(--transition-fast);">
-                        <i data-lucide="sun" class="sun-icon"></i>
-                        <i data-lucide="moon" class="moon-icon"></i>
-                    </button>
+                    <!-- Theme Toggle Removed -->
                 </div>
             </header>
 
