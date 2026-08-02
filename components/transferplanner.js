@@ -127,6 +127,127 @@ export function renderTransferPlanner(container, state, actions) {
         return slots;
     };
 
+    const showCompareModal = (tx) => {
+        // Create modal container
+        const modalDiv = document.createElement('div');
+        modalDiv.className = 'player-detail-modal-overlay';
+        modalDiv.style.cssText = 'position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.75); z-index:99999; display:flex; align-items:center; justify-content:center; padding:20px;';
+
+        const p1 = tx.out;
+        const p2 = tx.in;
+
+        modalDiv.innerHTML = `
+            <div class="player-detail-modal-card" style="width: 100%; max-width: 600px; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 20px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);">
+                <div class="modal-header-section" style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="font-family: var(--font-heading); margin: 0; font-weight: 800; font-size: 16px; display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="git-compare" style="color: var(--primary);"></i> Player Stats Comparison
+                    </h3>
+                    <button class="close-modal-btn" id="closeCompareModalBtn" style="background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 4px; border-radius: 50%;"><i data-lucide="x" style="width: 20px; height: 20px;"></i></button>
+                </div>
+
+                <div style="overflow-x: auto; max-height: 400px;">
+                    <table class="ticker-table" style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: left;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid var(--border-color);">
+                                <th style="padding: 8px 4px; color: var(--text-muted); font-weight: 700;">Metric</th>
+                                <th style="padding: 8px 4px; color: #ef4444; font-weight: 700; text-align: right;">OUT: ${p1.name}</th>
+                                <th style="padding: 8px 4px; color: #00ff88; font-weight: 700; text-align: right;">IN: ${p2.name}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+                                <td style="padding: 8px 4px; font-weight: 600; color: var(--text-muted);">Team</td>
+                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.team}</td>
+                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.team}</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+                                <td style="padding: 8px 4px; font-weight: 600; color: var(--text-muted);">Price</td>
+                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">£${p1.price.toFixed(1)}m</td>
+                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">£${p2.price.toFixed(1)}m</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+                                <td style="padding: 8px 4px; font-weight: 600; color: var(--text-muted);">Ownership</td>
+                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.ownership.toFixed(1)}%</td>
+                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.ownership.toFixed(1)}%</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+                                <td style="padding: 8px 4px; font-weight: 600; color: var(--text-muted);">Total Points</td>
+                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.points}</td>
+                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.points}</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+                                <td style="padding: 8px 4px; font-weight: 600; color: var(--text-muted);">Starts</td>
+                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.GS}</td>
+                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.GS}</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+                                <td style="padding: 8px 4px; font-weight: 600; color: var(--text-muted);">Avg Minutes</td>
+                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.MPPG.toFixed(0)}m</td>
+                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.MPPG.toFixed(0)}m</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+                                <td style="padding: 8px 4px; font-weight: 600; color: var(--text-muted);">Expected Goals (xG)</td>
+                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.xG.toFixed(1)}</td>
+                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.xG.toFixed(1)}</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+                                <td style="padding: 8px 4px; font-weight: 600; color: var(--text-muted);">Expected Assists (xA)</td>
+                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.xA.toFixed(1)}</td>
+                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.xA.toFixed(1)}</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+                                <td style="padding: 8px 4px; font-weight: 600; color: var(--text-muted);">xG per 90</td>
+                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.xG90.toFixed(2)}</td>
+                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.xG90.toFixed(2)}</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+                                <td style="padding: 8px 4px; font-weight: 600; color: var(--text-muted);">xA per 90</td>
+                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.xA90.toFixed(2)}</td>
+                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.xA90.toFixed(2)}</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+                                <td style="padding: 8px 4px; font-weight: 600; color: var(--text-muted);">ICT Index</td>
+                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p1.ictIndex.toFixed(1)}</td>
+                                <td style="padding: 8px 4px; text-align: right; color: var(--text-main); font-weight: 700;">${p2.ictIndex.toFixed(1)}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="player-action-section" style="padding: 0; display: flex; justify-content: flex-end; gap: 10px; width: 100%; border-top: 1px solid var(--border-color); padding-top: 16px;">
+                    <button class="action-main-btn btn-secondary-action" id="cancelCompareModalBtn" style="margin: 0; width: auto; padding: 10px 20px;">Close</button>
+                    <button class="action-main-btn" id="applyCompareModalBtn" style="margin: 0; width: auto; padding: 10px 20px;">Apply Transfer</button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(modalDiv);
+        lucide.createIcons();
+
+        // Close functions
+        const closeModal = () => {
+            document.body.removeChild(modalDiv);
+        };
+
+        modalDiv.querySelector('#closeCompareModalBtn').addEventListener('click', closeModal);
+        modalDiv.querySelector('#cancelCompareModalBtn').addEventListener('click', closeModal);
+
+        // Apply Transfer
+        modalDiv.querySelector('#applyCompareModalBtn').addEventListener('click', () => {
+            closeModal();
+            const slotIdx = tx.slotIdx;
+            const targetSlot = state.squadSlots[slotIdx];
+            if (targetSlot) {
+                targetSlot.playerId = p2.id;
+                state.optimizeCaptaincy();
+                state.saveState();
+                actions.syncTopBar();
+                actions.showToast(`Applied transfer: ${p2.name} in for ${p1.name}`, 'success');
+                actions.switchTab('planner');
+            }
+        });
+    };
+
     container.innerHTML = `
         <div class="optimizer-view-container" style="display:flex; flex-direction:column; gap:20px; height:100%; overflow-y:auto; padding-right:8px;">
             <div class="optimizer-intro" style="margin-bottom: 8px;">
@@ -359,6 +480,16 @@ export function renderTransferPlanner(container, state, actions) {
                                 ${renderFdrFixtures(tx.in)}
                             </div>
                         </div>
+
+                        <!-- Card Action Buttons -->
+                        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:12px; border-top:1px dashed var(--border-color); padding-top:12px;">
+                            <button class="action-main-btn compare-tx-btn" data-step-idx="${idx}" style="margin:0; padding:6px 12px; font-size:11px; height:32px; background:rgba(255,255,255,0.02); border-color:var(--border-color); color:var(--text-main); display:flex; align-items:center; gap:4px; width:auto; border-radius:6px; cursor:pointer;">
+                                <i data-lucide="git-compare" style="width:12px; height:12px;"></i> Compare Players
+                            </button>
+                            <button class="action-main-btn apply-tx-step-btn" data-step-idx="${idx}" style="margin:0; padding:6px 12px; font-size:11px; height:32px; display:flex; align-items:center; gap:4px; width:auto; border-radius:6px; cursor:pointer;">
+                                <i data-lucide="check" style="width:12px; height:12px;"></i> Apply Transfer
+                            </button>
+                        </div>
                     </div>
                 `;
             }).join('');
@@ -400,6 +531,35 @@ export function renderTransferPlanner(container, state, actions) {
                     actions.switchTab('planner');
                 });
             }
+
+            // Wire individual action buttons
+            resultsContainer.querySelectorAll('.compare-tx-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const stepIdx = parseInt(btn.getAttribute('data-step-idx'));
+                    const tx = result.sequence[stepIdx];
+                    if (tx) {
+                        showCompareModal(tx);
+                    }
+                });
+            });
+
+            resultsContainer.querySelectorAll('.apply-tx-step-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const stepIdx = parseInt(btn.getAttribute('data-step-idx'));
+                    const tx = result.sequence[stepIdx];
+                    if (tx) {
+                        const targetSlot = state.squadSlots[tx.slotIdx];
+                        if (targetSlot) {
+                            targetSlot.playerId = tx.in.id;
+                            state.optimizeCaptaincy();
+                            state.saveState();
+                            actions.syncTopBar();
+                            actions.showToast(`Applied transfer: ${tx.in.name} in for ${tx.out.name}`, 'success');
+                            actions.switchTab('planner');
+                        }
+                    }
+                });
+            });
 
         }, 400);
     }
