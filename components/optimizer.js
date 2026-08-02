@@ -1276,29 +1276,81 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                             </div>
                             
                             <div style="display:flex; flex-direction:column; gap:20px;">
-                                ${upgrades.map(up => `
-                                    <div class="rec-row-preseason">
-                                        <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px;">
-                                            <div class="transfer-player-card player-card-out" style="flex:1;">
-                                                <span class="player-name-main">${up.out ? up.out.name : 'Empty Slot'}</span>
-                                                <span class="player-team-sub">${up.out ? `${up.out.team} • £${up.out.price.toFixed(1)}m` : 'N/A'}</span>
-                                                ${up.out ? renderPlayerStatsBreakdown(up.out) : ''}
+                                ${upgrades.map(up => {
+                                    const currentSquadIds = activeSquadSlots.map(s => s.playerId).filter(id => id !== null);
+                                    const outPrice = up.out ? up.out.price : 0;
+                                    const budgetOk = bank + outPrice - up.in.price >= -0.01;
+
+                                    const hypSquad = currentSquadIds.filter(id => id !== (up.out ? up.out.id : null));
+                                    hypSquad.push(up.in.id);
+                                    const teamCounts = {};
+                                    let teamOk = true;
+                                    for (const id of hypSquad) {
+                                        const p = PLAYERS.find(pl => pl.id === id);
+                                        if (p) {
+                                            teamCounts[p.team] = (teamCounts[p.team] || 0) + 1;
+                                            if (teamCounts[p.team] > 3) {
+                                                teamOk = false;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    const canApply = budgetOk && teamOk;
+                                    const isDowngrade = up.gain < -0.01;
+                                    const badgeBg = isDowngrade ? 'rgba(239, 68, 68, 0.08)' : 'rgba(0, 255, 136, 0.1)';
+                                    const badgeColor = isDowngrade ? '#ef4444' : 'var(--primary)';
+                                    const badgeBorder = isDowngrade ? 'rgba(239, 68, 68, 0.2)' : 'rgba(0, 255, 136, 0.2)';
+                                    const badgeLabel = isDowngrade ? 'BUDGET DOWNGRADED' : 'POINTS UPGRADED';
+
+                                    return `
+                                        <div class="rec-row-preseason">
+                                            <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px;">
+                                                <div class="transfer-player-card player-card-out" style="flex:1;">
+                                                    <span class="player-name-main">${up.out ? up.out.name : 'Empty Slot'}</span>
+                                                    <span class="player-team-sub">${up.out ? `${up.out.team} • £${up.out.price.toFixed(1)}m` : 'N/A'}</span>
+                                                    ${up.out ? renderPlayerStatsBreakdown(up.out) : ''}
+                                                </div>
+                                                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding-top:12px;">
+                                                    <i data-lucide="chevrons-right" class="transfer-arrow-icon" style="margin: 0 0 6px 0;"></i>
+                                                    <span class="pill-value" style="font-size:10px; background:${badgeBg}; color:${badgeColor}; border: 1px solid ${badgeBorder}; padding: 2px 6px; border-radius: 4px; white-space: nowrap;">
+                                                        ${up.gain >= 0 ? '+' : ''}${up.gain.toFixed(1)} (${horizon}G) • ${up.gain1Gw >= 0 ? '+' : ''}${up.gain1Gw.toFixed(1)} (Next)
+                                                    </span>
+                                                    <span style="font-size: 8px; font-weight: 800; color: ${badgeColor}; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px;">${badgeLabel}</span>
+                                                </div>
+                                                <div class="transfer-player-card player-card-in" style="flex:1;">
+                                                    <span class="player-name-main">${up.in.name}</span>
+                                                    <span class="player-team-sub">${up.in.team} • £${up.in.price.toFixed(1)}m</span>
+                                                    ${renderPlayerStatsBreakdown(up.in)}
+                                                </div>
                                             </div>
-                                            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding-top:12px;">
-                                                <i data-lucide="chevrons-right" class="transfer-arrow-icon" style="margin: 0 0 6px 0;"></i>
-                                                <span class="pill-value" style="font-size:10px; background:rgba(0, 255, 136, 0.1); color:var(--primary); padding: 2px 6px; border-radius: 4px; white-space: nowrap;">
-                                                    +${up.gain.toFixed(1)} (${horizon}G) • +${up.gain1Gw.toFixed(1)} (Next)
-                                                </span>
-                                            </div>
-                                            <div class="transfer-player-card player-card-in" style="flex:1;">
-                                                <span class="player-name-main">${up.in.name}</span>
-                                                <span class="player-team-sub">${up.in.team} • £${up.in.price.toFixed(1)}m</span>
-                                                ${renderPlayerStatsBreakdown(up.in)}
+                                            
+                                            ${isDowngrade ? `
+                                                <div style="font-size: 10px; color: var(--text-muted); margin-top: 8px; text-align: center;">
+                                                    <i data-lucide="info" style="width:11px; height:11px; display:inline-block; vertical-align:middle; margin-right:3px;"></i>
+                                                    Budget release: Frees up <strong>£${(up.out.price - up.in.price).toFixed(1)}m</strong> for upgrades.
+                                                </div>
+                                            ` : ''}
+
+                                            ${getOptimizationExplanation(up.out, up.in)}
+                                            
+                                            <div style="margin-top: 12px; display: flex; justify-content: flex-end; gap: 8px; align-items: center; border-top: 1px dashed var(--border-color); padding-top: 8px;">
+                                                ${!canApply ? `
+                                                    <span style="font-size: 9px; color: #ef4444; font-weight: 500;">
+                                                        ${!budgetOk ? 'Insufficient budget' : 'Team limit exceeded (max 3)'}
+                                                    </span>
+                                                ` : ''}
+                                                <button class="apply-rec-btn apply-single-preseason-btn" 
+                                                        data-slot-idx="${up.slotIndex}" 
+                                                        data-in-id="${up.in.id}" 
+                                                        data-out-id="${up.out ? up.out.id : 'null'}"
+                                                        style="width: auto; padding: 4px 12px; font-size: 11px; height: 26px; border-radius: 6px; margin: 0;"
+                                                        ${!canApply ? 'disabled' : ''}>
+                                                    Apply Swap
+                                                </button>
                                             </div>
                                         </div>
-                                        ${getOptimizationExplanation(up.out, up.in)}
-                                    </div>
-                                `).join('')}
+                                    `;
+                                }).join('')}
                             </div>
                             
                             <div class="optimizer-info-banner" style="margin-top: 16px; font-size: 11px; color: var(--text-muted); background: rgba(255, 255, 255, 0.01); padding: 12px; border-radius: 8px; border-left: 3px solid var(--primary); line-height: 1.6;">
@@ -1338,6 +1390,26 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                 actions.switchTab('planner');
             });
         }
+
+        const applySingleBtns = resultsGrid.querySelectorAll('.apply-single-preseason-btn');
+        applySingleBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const slotIdx = parseInt(btn.getAttribute('data-slot-idx'));
+                const inId = parseInt(btn.getAttribute('data-in-id'));
+                const outIdStr = btn.getAttribute('data-out-id');
+                const outId = outIdStr !== 'null' ? parseInt(outIdStr) : null;
+                
+                state.squadSlots[slotIdx].playerId = inId;
+                state.optimizeCaptaincy();
+                state.saveState();
+                
+                const pIn = PLAYERS.find(p => p.id === inId);
+                const pOut = outId !== null ? PLAYERS.find(p => p.id === outId) : null;
+                
+                actions.renderActiveView();
+                actions.showToast(`Applied swap: ${pIn.name} in for ${pOut ? pOut.name : 'empty slot'}`, 'success');
+            });
+        });
     } else {
         // --- MIDSEASON SOLVER: CONSTRAINED BY FREE TRANSFERS ---
         const freeTransfersCount = state.currentGw === 1 ? 2 : squadInfo.freeTransfers;
