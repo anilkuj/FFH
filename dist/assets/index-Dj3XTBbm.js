@@ -102,7 +102,7 @@
 
             <!-- Gameweek Transfers planned (GW2+) -->
             ${t.currentGw>1?`
-            <div class="gw-transfers-card" style="margin-top: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px;">
+            <div class="gw-transfers-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; max-height: 100%; overflow-y: auto;">
                 <h3 style="font-family: var(--font-heading); font-size: 16px; font-weight: 700; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
                     <span>GW${t.currentGw} Planned Transfers</span>
                     <span class="pill-value highlight-transfers">${n} FT</span>
