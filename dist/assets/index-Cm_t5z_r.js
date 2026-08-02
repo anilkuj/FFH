@@ -2109,29 +2109,33 @@ ${n.length>0?n.map(r=>`- **${r.name}** (${r.team}, £${r.price.toFixed(1)}m) —
                     overflow: hidden;
                 }
                 
-                @media (max-width: 600px) {
+                @media (max-width: 768px) {
                     .compare-modal-overlay {
                         align-items: flex-start !important;
                         overflow-y: auto !important;
                         padding: 10px !important;
                     }
                     .compare-modal-card {
-                        padding: 12px;
-                        gap: 8px;
+                        padding: 10px !important;
+                        gap: 6px !important;
                         border-radius: 12px;
-                        max-width: calc(100vw - 20px);
+                        width: 95% !important;
+                        max-width: 95% !important;
                         margin: 10px auto !important;
                         max-height: none !important;
                     }
                     .compare-modal-table {
-                        font-size: 10.5px;
+                        font-size: 9.5px !important;
                     }
                     .compare-modal-table th, .compare-modal-table td {
-                        padding: 5px 3px;
+                        padding: 4px 2px !important;
+                        white-space: nowrap !important;
+                        overflow: hidden !important;
+                        text-overflow: ellipsis !important;
                     }
                     .compare-header-banner {
-                        gap: 8px;
-                        padding: 4px 0;
+                        gap: 6px !important;
+                        padding: 4px 0 !important;
                     }
                     .compare-banner-player h4 {
                         font-size: 11.5px !important;
@@ -2147,6 +2151,9 @@ ${n.length>0?n.map(r=>`- **${r.name}** (${r.team}, £${r.price.toFixed(1)}m) —
                         font-size: 11px !important;
                         height: 32px !important;
                         padding: 6px 12px !important;
+                    }
+                    .compare-player-lbl-suffix {
+                        display: none !important;
                     }
                 }
             </style>
@@ -2183,8 +2190,8 @@ ${n.length>0?n.map(r=>`- **${r.name}** (${r.team}, £${r.price.toFixed(1)}m) —
                         <thead>
                             <tr style="border-bottom: 2px solid var(--border-color);">
                                 <th style="color: var(--text-muted); font-weight: 700; width: 34%;">Metric</th>
-                                <th style="color: #ef4444; font-weight: 800; text-align: right; width: 33%;">OUT Player</th>
-                                <th style="color: var(--primary); font-weight: 800; text-align: right; width: 33%;">IN Player</th>
+                                <th style="color: #ef4444; font-weight: 800; text-align: right; width: 33%;">OUT<span class="compare-player-lbl-suffix"> Player</span></th>
+                                <th style="color: var(--primary); font-weight: 800; text-align: right; width: 33%;">IN<span class="compare-player-lbl-suffix"> Player</span></th>
                             </tr>
                         </thead>
                         <tbody>

@@ -2718,6 +2718,10 @@ body {
         font-size: 8px !important;
         margin-top: 1px !important;
     }
+
+    .ticker-view-container {
+        padding-bottom: 80px !important;
+    }
 }
 
 @media (max-width: 480px) {
