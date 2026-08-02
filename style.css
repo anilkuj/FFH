@@ -101,7 +101,28 @@ html.light-theme {
     --card-info-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
     --card-info-text: #1f2937;
     --card-info-subtext: #4b5563;
-    --card-info-hover-shadow: 0 4px 12px rgba(21, 128, 61, 0.1);
+}
+
+/* Light Theme Overrides for Header and Stat Bars */
+html.light-theme .top-bar {
+    background: #ffffff !important;
+    border-bottom: 1px solid var(--border-color) !important;
+}
+
+html.light-theme .mobile-quick-stats-bar {
+    background: #ffffff !important;
+    border-bottom: 1px solid var(--border-color) !important;
+}
+
+html.light-theme .mobile-quick-stats-bar .stat-pill {
+    background: var(--bg-dark) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-muted) !important;
+}
+
+html.light-theme .stat-pill {
+    background: #ffffff !important;
+    border: 1px solid var(--border-color) !important;
 }
 
 /* Global Reset & Base Styles */
