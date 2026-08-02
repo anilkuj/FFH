@@ -649,9 +649,16 @@ Enter target draft slot number (1-10):`,U=prompt(E);if(U===null)return;const A=p
                 </div>
             </div>
             
-            <div class="optimizer-settings-card">
-                <h3><i data-lucide="settings" style="color: var(--primary); margin-right: 8px;"></i> Optimization Settings</h3>
-                <div class="settings-form-grid" style="margin-top: 16px;">
+            <div class="optimizer-settings-card" style="padding: 20px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; border-bottom:1px solid var(--border-color); padding-bottom:12px; margin-bottom:16px;">
+                    <h3 style="font-family: var(--font-heading); margin:0; font-weight:700; display:flex; align-items:center; gap:8px;">
+                        <i data-lucide="settings" style="color: var(--primary);"></i> Optimization Settings
+                    </h3>
+                    <button class="run-optimization-btn" id="runOptBtn" style="margin:0; width:auto; padding:10px 24px; height:38px; display:flex; align-items:center; gap:8px;">
+                        <i data-lucide="play-circle"></i> Run AI Analysis
+                    </button>
+                </div>
+                <div class="settings-form-grid">
                     <div class="setting-group">
                         <label for="gwHorizon">Gameweek Horizon</label>
                         <select id="gwHorizon" class="settings-select">
@@ -735,8 +742,6 @@ Enter target draft slot number (1-10):`,U=prompt(E);if(U===null)return;const A=p
                     </div>
                 </div>
 
-                </div>
-
                 <div class="optimizer-rules-container" style="margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 20px;">
                     <h4 style="font-family: var(--font-heading); font-size: 15px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
                         <i data-lucide="shield-alert" style="color: var(--primary); width:16px; height:16px;"></i> Solver Constraints (Optional)
@@ -782,9 +787,6 @@ Enter target draft slot number (1-10):`,U=prompt(E);if(U===null)return;const A=p
                     </div>
                 </div>
 
-                <button class="run-optimization-btn" id="runOptBtn" style="margin-top: 20px; width: 100%; justify-content: center;">
-                    <i data-lucide="play-circle"></i> Run AI Analysis
-                </button>
             </div>
             
             <div class="optimization-results-grid hidden" id="optResultsGrid">
