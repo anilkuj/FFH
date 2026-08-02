@@ -2089,14 +2089,14 @@ ${n.length>0?n.map(f=>`- **${f.name}** (${f.team}, £${f.price.toFixed(1)}m) —
                         <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Source Squad / Team Selection</label>
                         <div style="display:flex; gap:8px; align-items:center; flex-wrap: wrap;">
                             <select id="tpSourceSquad" class="settings-select" style="flex:1; min-width:180px;">
+                                <option value="import" selected>Import from FPL Team ID...</option>
                                 <option value="active">Active Squad Roster</option>
                                 ${t.drafts.map((v,m)=>`
                                     <option value="draft_${m}">Draft ${m+1}: ${v.name}</option>
                                 `).join("")}
-                                <option value="import">Import from FPL Team ID...</option>
                             </select>
-                            <input type="text" id="tpFplTeamId" class="settings-select" placeholder="FPL Team ID" style="display:none; width:110px; font-size:12px; padding:8px;" />
-                            <button class="action-main-btn" id="tpImportBtn" style="display:none; margin:0; padding:8px 16px; font-size:12px; height:38px;">Import</button>
+                            <input type="text" id="tpFplTeamId" class="settings-select" placeholder="FPL Team ID" style="display:inline-block; width:110px; font-size:12px; padding:8px;" />
+                            <button class="action-main-btn" id="tpImportBtn" style="display:inline-block; margin:0; padding:8px 16px; font-size:12px; height:38px;">Import</button>
                         </div>
                     </div>
 
