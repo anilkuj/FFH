@@ -1284,6 +1284,10 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                                 `).join('')}
                             </div>
                             
+                            <div class="optimizer-info-banner" style="margin-top: 16px; font-size: 11px; color: var(--text-muted); background: rgba(255, 255, 255, 0.01); padding: 12px; border-radius: 8px; border-left: 3px solid var(--primary); line-height: 1.6;">
+                                <i data-lucide="info" style="width:14px; height:14px; display:inline-block; vertical-align:middle; margin-right:6px; color: var(--primary);"></i>
+                                <strong>Horizon Points Calibration:</strong> The cumulative gain of <strong>${formattedGain} ${gainLabel}</strong> is calculated over the full <strong>${horizon}-Gameweek horizon</strong>. The immediate point difference for next week's single gameweek may be smaller (e.g. +0.6 XP), with the rest of the improvement realized across future gameweeks due to optimal long-term fixture schedules and expected minutes.
+                            </div>
                             <button class="apply-rec-btn" id="applyAllPreseasonBtn" style="margin-top: 24px; width:100%;">Apply All AI Upgrades</button>
                         </div>
                     ` : `
@@ -1501,6 +1505,10 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                                 </div>
                             </div>
                             ${getOptimizationExplanation(best1Tx.out, best1Tx.in)}
+                            <div class="optimizer-info-banner" style="margin-top: 12px; font-size: 11px; color: var(--text-muted); background: rgba(255, 255, 255, 0.01); padding: 10px; border-radius: 6px; border-left: 3px solid var(--primary); line-height: 1.5;">
+                                <i data-lucide="info" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px; color: var(--primary);"></i>
+                                <strong>Note on Horizon Gains:</strong> This <strong>+${best1Tx.gain.toFixed(1)} XP</strong> gain is calculated over the full <strong>${horizon}-GW horizon</strong>. Immediate points increase for next week may be smaller, with the rest realized over future weeks due to better fixtures.
+                            </div>
                             <button class="apply-rec-btn" id="applySingleBtn" style="margin-top: 16px; width: 100%;">Apply AI Transfer</button>
                         </div>
                     ` : `
@@ -1554,6 +1562,10 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                                 ${getOptimizationExplanation(best2Tx.out1, best2Tx.in1)}
                                 ${getOptimizationExplanation(best2Tx.out2, best2Tx.in2)}
         
+                                <div class="optimizer-info-banner" style="margin-top: 12px; font-size: 11px; color: var(--text-muted); background: rgba(255, 255, 255, 0.01); padding: 10px; border-radius: 6px; border-left: 3px solid var(--primary); line-height: 1.5;">
+                                    <i data-lucide="info" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px; color: var(--primary);"></i>
+                                    <strong>Note on Horizon Gains:</strong> This <strong>+${best2Tx.gain.toFixed(1)} XP</strong> gain is calculated over the full <strong>${horizon}-GW horizon</strong>. Immediate points increase for next week may be smaller, with the rest realized over future weeks.
+                                </div>
                                 <button class="apply-rec-btn" id="applyDoubleBtn" style="margin-top: 16px; width: 100%;">Apply Both Transfers</button>
                             </div>
                         ` : `
