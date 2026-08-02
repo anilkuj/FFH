@@ -448,7 +448,7 @@ function renderTransfersList(state, actions) {
         `;
     }
 
-    return list.map((tx, idx) => {
+    const rowsHtml = list.map((tx, idx) => {
         const pOut = PLAYERS.find(p => p.id === tx.out);
         const pIn = PLAYERS.find(p => p.id === tx.in);
         if (!pOut || !pIn) return '';
@@ -457,12 +457,12 @@ function renderTransfersList(state, actions) {
             <div class="transfer-item-row">
                 <div class="transfer-player-card player-card-out">
                     <span class="player-name-main">${pOut.name}</span>
-                    <span class="player-team-sub">${pOut.team} • DEF OUT</span>
+                    <span class="player-team-sub">${pOut.team} • ${pOut.position} OUT</span>
                 </div>
                 <i data-lucide="arrow-right" class="transfer-arrow-icon"></i>
                 <div class="transfer-player-card player-card-in">
                     <span class="player-name-main">${pIn.name}</span>
-                    <span class="player-team-sub">${pIn.team} • DEF IN</span>
+                    <span class="player-team-sub">${pIn.team} • ${pIn.position} IN</span>
                 </div>
                 <button class="remove-transfer-btn" data-index="${idx}">
                     <i data-lucide="trash-2"></i>
@@ -470,6 +470,15 @@ function renderTransfersList(state, actions) {
             </div>
         `;
     }).join('');
+
+    return `
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+            ${rowsHtml}
+            <button class="action-main-btn goto-tp-btn" style="margin: 8px auto 0 auto; height: 32px; padding: 0 16px; font-size: 11px; display: flex; align-items: center; gap: 6px; border-radius: 6px; width: 100%; font-family: var(--font-heading); font-weight: 700; cursor: pointer; flex-shrink: 0; flex: none; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); color: var(--text-main);">
+                <i data-lucide="compass" style="width: 14px; height: 14px;"></i> Go to Transfer Planner
+            </button>
+        </div>
+    `;
 }
 
 function setupPlannerListeners(container, state, actions, starters, bench) {
