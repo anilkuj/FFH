@@ -563,6 +563,59 @@ export function renderOptimizer(container, state, actions) {
         excludeSearch.value = '';
     });
 
+    const settingsCard = container.querySelector('.optimizer-settings-card');
+
+    const collapseSettingsToBar = (horizon, mode) => {
+        const formationVal = container.querySelector('#optimizerFormationSelect')?.value || state.formation;
+        const horizonVal = container.querySelector('#gwHorizon')?.value || horizon;
+        const modeVal = container.querySelector('#seasonPhase')?.value || mode;
+        const formationLabel = formationVal === 'optimum' ? '⚡ Optimum' : formationVal;
+        const modeLabel = modeVal === 'preseason' ? 'Preseason' : 'Midseason';
+        const horizonLabel = `${horizonVal} GW`;
+
+        settingsCard.innerHTML = `
+            <div class="opt-collapsed-bar">
+                <div class="opt-collapsed-pills">
+                    <span class="opt-collapsed-pill"><i data-lucide="layers" style="width:12px;height:12px;"></i> ${modeLabel}</span>
+                    <span class="opt-collapsed-pill"><i data-lucide="calendar" style="width:12px;height:12px;"></i> ${horizonLabel}</span>
+                    <span class="opt-collapsed-pill"><i data-lucide="layout-grid" style="width:12px;height:12px;"></i> ${formationLabel}</span>
+                </div>
+                <div style="display:flex; gap:10px; align-items:center; flex-shrink:0;">
+                    <button id="expandSettingsBtn" class="draft-action-btn">
+                        <i data-lucide="settings-2" style="width:13px;height:13px;"></i> Change Settings
+                    </button>
+                    <button id="reRunOptBtn" class="run-optimization-btn" style="padding:9px 20px; font-size:13px;">
+                        <i data-lucide="play-circle"></i> Re-run Analysis
+                    </button>
+                </div>
+            </div>
+        `;
+        lucide.createIcons();
+
+        container.querySelector('#reRunOptBtn').addEventListener('click', () => {
+            const btn = container.querySelector('#reRunOptBtn');
+            btn.innerHTML = `<i data-lucide="loader" class="animate-spin" style="margin-right:6px;"></i> Running...`;
+            lucide.createIcons();
+            setTimeout(() => {
+                performOptimization(resultsGrid, state, actions, horizon, mode);
+                btn.innerHTML = `<i data-lucide="play-circle"></i> Re-run Analysis`;
+                lucide.createIcons();
+            }, 1200);
+        });
+
+        container.querySelector('#expandSettingsBtn').addEventListener('click', () => {
+            renderOptimizer(container, state, actions);
+            // After re-render, scroll results back into view if they existed
+            const newResultsGrid = container.querySelector('#optResultsGrid');
+            if (newResultsGrid) {
+                newResultsGrid.classList.remove('hidden');
+                performOptimization(newResultsGrid, state, actions, horizon, mode);
+                lucide.createIcons();
+                setTimeout(() => newResultsGrid.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+            }
+        });
+    };
+
     runBtn.addEventListener('click', () => {
         runBtn.innerHTML = `<i data-lucide="loader" class="animate-spin" style="margin-right: 8px;"></i> Running AI Solver...`;
         lucide.createIcons();
@@ -571,10 +624,13 @@ export function renderOptimizer(container, state, actions) {
         const mode = phaseSelect.value;
 
         setTimeout(() => {
-            runBtn.innerHTML = `<i data-lucide="check-circle" style="margin-right: 8px;"></i> Optimization Complete`;
             resultsGrid.classList.remove('hidden');
             performOptimization(resultsGrid, state, actions, horizon, mode);
             lucide.createIcons();
+            // Collapse settings into compact bar after results load
+            collapseSettingsToBar(horizon, mode);
+            // Scroll results into view
+            setTimeout(() => resultsGrid.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
         }, 1200);
     });
 }
