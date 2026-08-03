@@ -1296,18 +1296,30 @@ const actions = {
     },
 
     showModal(contentHTML, initCallback) {
+        document.querySelectorAll('body > .player-card-tooltip').forEach(el => el.remove());
+
         const backdrop = document.getElementById('modalContainer');
         const content = document.getElementById('modalContent');
 
         content.innerHTML = contentHTML;
         backdrop.classList.remove('hidden');
         
+        if (backdrop && !backdrop._hasClickListener) {
+            backdrop._hasClickListener = true;
+            backdrop.addEventListener('click', (e) => {
+                if (e.target === backdrop) {
+                    actions.hideModal();
+                }
+            });
+        }
+
         if (initCallback) initCallback();
     },
 
     hideModal() {
         const backdrop = document.getElementById('modalContainer');
         if (backdrop) backdrop.classList.add('hidden');
+        document.querySelectorAll('body > .player-card-tooltip').forEach(el => el.remove());
     },
 
     showToast(message, type = 'success') {
@@ -1451,3 +1463,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Render Initial View
     actions.renderActiveView();
 });
+
+if (typeof window !== 'undefined' && !window._modalEscListener) {
+    window._modalEscListener = (e) => {
+        if (e.key === 'Escape') {
+            const backdrop = document.getElementById('modalContainer');
+            if (backdrop && !backdrop.classList.contains('hidden')) {
+                backdrop.classList.add('hidden');
+            }
+            document.querySelectorAll('body > .player-card-tooltip').forEach(el => el.remove());
+        }
+    };
+    document.addEventListener('keydown', window._modalEscListener);
+}

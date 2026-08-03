@@ -561,18 +561,34 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
     let _activeTooltipOrigin = null; // the card it came from
 
     const hideActiveTooltip = () => {
-        if (_activeTooltip && _activeTooltip.parentNode === document.body) {
+        if (_tooltipHideTimer) {
+            clearTimeout(_tooltipHideTimer);
+            _tooltipHideTimer = null;
+        }
+        if (_activeTooltip) {
             _activeTooltip.classList.remove('tooltip-visible');
-            // Move back to its original card after the fade transition
-            setTimeout(() => {
-                if (_activeTooltipOrigin && _activeTooltip) {
-                    _activeTooltipOrigin.appendChild(_activeTooltip);
-                }
-                _activeTooltip = null;
-                _activeTooltipOrigin = null;
-            }, 200);
+            if (_activeTooltipOrigin) {
+                _activeTooltipOrigin.appendChild(_activeTooltip);
+            } else if (_activeTooltip.parentNode === document.body) {
+                _activeTooltip.remove();
+            }
+            _activeTooltip = null;
+            _activeTooltipOrigin = null;
+        }
+        document.querySelectorAll('body > .player-card-tooltip').forEach(el => {
+            el.classList.remove('tooltip-visible');
+            el.remove();
+        });
+    };
+
+    const _docClickHideTooltip = (e) => {
+        if (!e.target.closest('.player-pitch-card') && !e.target.closest('.player-card-tooltip')) {
+            hideActiveTooltip();
         }
     };
+    document.addEventListener('click', _docClickHideTooltip);
+    if (window._plannerDocClickCleanup) window._plannerDocClickCleanup();
+    window._plannerDocClickCleanup = () => document.removeEventListener('click', _docClickHideTooltip);
 
     container.querySelectorAll('.player-pitch-card:not(.empty-slot)').forEach(card => {
         card.addEventListener('mouseenter', () => {
@@ -882,6 +898,7 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
                 actions.swapPlayers(swapId, playerId);
                 selectedForSwap = null;
             } else {
+                hideActiveTooltip();
                 openPlayerDetailModal(playerId, type, starters, bench, state, actions, (swapSelected) => {
                     selectedForSwap = swapSelected;
                     const targetCard = container.querySelector(`.player-pitch-card[data-id="${playerId}"]`);

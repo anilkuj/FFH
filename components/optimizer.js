@@ -1115,6 +1115,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         optimizedSquadSlots.forEach(s => {
             s.isStarting = false;
             s.locked = false;
+            s.playerId = null;
         });
         
         let assignedGKP = 0, assignedDEF = 0, assignedMID = 0, assignedFWD = 0;
@@ -1325,7 +1326,8 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                     p.position === currentSlot.position && 
                     !usedStartingIds.includes(p.id) && 
                     p.price <= maxBudgetForSlot &&
-                    !state.mustExclude.includes(p.id)
+                    !state.mustExclude.includes(p.id) &&
+                    passesMinFwd(p)
                 );
 
                 const guaranteedCandidates = candidates.filter(isGuaranteedStart);
