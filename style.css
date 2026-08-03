@@ -3933,3 +3933,27 @@ html.light-theme .rating-badge-na {
     }
 }
 
+/* 10. TRANSFER PLANNER SPLIT GRID */
+.tp-main-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 24px;
+    height: 100%;
+    overflow: hidden;
+}
+
+@media (max-width: 1024px) {
+    .tp-main-grid {
+        grid-template-columns: 1fr !important;
+        overflow-y: auto !important;
+        height: auto !important;
+        flex: none !important;
+    }
+    .tp-left-col, .tp-right-col {
+        overflow-y: visible !important;
+        height: auto !important;
+        max-height: none !important;
+        min-height: auto !important;
+    }
+}
+

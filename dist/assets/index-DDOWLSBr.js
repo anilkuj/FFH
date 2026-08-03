@@ -2296,75 +2296,77 @@ ${c.length>0?c.map(r=>`- **${r.name}** (${r.team}, £${r.price.toFixed(1)}m) —
                 </div>
             </div>
         `,document.body.appendChild(M),lucide.createIcons();const z=()=>{document.body.removeChild(M)};M.querySelector("#closeCompareModalBtn").addEventListener("click",z),M.querySelector("#cancelCompareModalBtn").addEventListener("click",z),M.querySelector("#applyCompareModalBtn").addEventListener("click",()=>{if(z(),a.addTransfer(t.currentGw,v.id,I.id,!1)){K();const Q=O.step-1,D=l.querySelector(`[data-step-card-idx="${Q}"]`);if(D){D.querySelectorAll(".apply-option-btn").forEach(nt=>{nt.disabled=!0,nt.style.opacity="0.5",nt.style.cursor="default"});const Z=D.querySelector(`.apply-option-btn[data-opt-id="${I.id}"]`);Z&&(Z.disabled=!0,Z.style.opacity="1",Z.style.background="var(--primary)",Z.style.color="#000",Z.style.borderColor="var(--primary)",Z.innerHTML='<i data-lucide="check-circle" style="width:12px; height:12px;"></i> Applied');const at=D.querySelector("h4");if(at&&!at.querySelector(".applied-badge-label")){const nt=document.createElement("span");nt.className="applied-badge-label",nt.style.cssText="font-size:11px; background:rgba(0, 255, 136, 0.15); padding:2px 8px; border-radius:4px; color:var(--primary); text-transform:none; margin-left:12px; font-weight:700;",nt.innerHTML=`Applied: ${I.name}`,at.appendChild(nt)}lucide.createIcons()}}})};l.innerHTML=`
-        <div class="optimizer-view-container" style="display:flex; flex-direction:column; gap:20px; height:100%; overflow-y:auto; padding-right:8px;">
-            <div class="optimizer-intro" style="margin-bottom: 8px;">
+        <div class="tp-outer-container" style="display:flex; flex-direction:column; gap:16px; height:100%; width:100%; overflow:hidden;">
+            <div class="optimizer-intro" style="margin-bottom: 4px; flex-shrink: 0;">
                 <div class="intro-text-area">
-                    <h2>AI Multi-Transfer Roadmap Planner</h2>
-                    <p>Map out multi-gameweek transfer sequences. Simulate step-by-step roster changes from 1 to 5 transfers over long projection horizons.</p>
+                    <h2 style="font-size: 20px; font-weight: 800; margin: 0;">AI Multi-Transfer Roadmap Planner</h2>
+                    <p style="margin: 4px 0 0 0; font-size: 12px; color: var(--text-muted);">Map out multi-gameweek transfer sequences. Simulate step-by-step roster changes from 1 to 5 transfers.</p>
                 </div>
             </div>
 
-            <!-- Top Section: Configurations & Recommendations -->
-            <div style="display:flex; flex-direction:column; gap:20px; width:100%;">
-                <!-- Configuration Card -->
-                <div class="optimizer-settings-card" style="padding:16px; margin:0;">
-                    <h3 style="font-family: var(--font-heading); margin-bottom:16px; font-weight:700; display:flex; align-items:center; gap:8px;">
-                        <i data-lucide="settings" class="highlight-transfers"></i> Setup Roadmap Configurations
-                    </h3>
-                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:16px; align-items: flex-end;">
-                        <!-- Source Selection -->
-                        <div style="display:flex; flex-direction:column; gap:6px; grid-column: span 2;">
-                            <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Source Squad / Team Selection</label>
-                            <div style="display:flex; gap:8px; align-items:center; flex-wrap: wrap;">
-                                <select id="tpSourceSquad" class="settings-select" style="flex:1; min-width:180px;">
-                                    <option value="active" ${d==="active"?"selected":""}>Active Squad Roster</option>
-                                    <option value="import" ${d==="import"?"selected":""}>Import from FPL Team ID...</option>
-                                    ${t.drafts.map((O,M)=>`
-                                        <option value="draft_${M}" ${d===`draft_${M}`?"selected":""}>Draft ${M+1}: ${O.name}</option>
-                                    `).join("")}
-                                </select>
-                                <input type="text" id="tpFplTeamId" class="settings-select" placeholder="FPL Team ID" style="display:none; width:110px; font-size:12px; padding:8px;" value="${f}" />
-                                <button class="action-main-btn" id="tpImportBtn" style="display:none; margin:0; padding:8px 16px; font-size:12px; height:38px;">Import</button>
+            <div class="tp-main-grid" style="display: grid; gap: 20px; flex: 1; min-height: 0; overflow: hidden; width: 100%;">
+                <!-- Left Column: Configurations & Results -->
+                <div class="tp-left-col" style="display: flex; flex-direction: column; gap: 16px; overflow-y: auto; height: 100%; min-height: 0; padding-right: 4px;">
+                    <!-- Configuration Card -->
+                    <div class="optimizer-settings-card" style="padding:16px; margin:0; flex-shrink: 0;">
+                        <h3 style="font-family: var(--font-heading); margin-bottom:16px; font-weight:700; display:flex; align-items:center; gap:8px; font-size: 14px;">
+                            <i data-lucide="settings" class="highlight-transfers"></i> Setup Roadmap Configurations
+                        </h3>
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:16px; align-items: flex-end;">
+                            <!-- Source Selection -->
+                            <div style="display:flex; flex-direction:column; gap:6px; grid-column: span 2;">
+                                <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Source Squad / Team Selection</label>
+                                <div style="display:flex; gap:8px; align-items:center; flex-wrap: wrap;">
+                                    <select id="tpSourceSquad" class="settings-select" style="flex:1; min-width:180px;">
+                                        <option value="active" ${d==="active"?"selected":""}>Active Squad Roster</option>
+                                        <option value="import" ${d==="import"?"selected":""}>Import from FPL Team ID...</option>
+                                        ${t.drafts.map((O,M)=>`
+                                            <option value="draft_${M}" ${d===`draft_${M}`?"selected":""}>Draft ${M+1}: ${O.name}</option>
+                                        `).join("")}
+                                    </select>
+                                    <input type="text" id="tpFplTeamId" class="settings-select" placeholder="FPL Team ID" style="display:none; width:110px; font-size:12px; padding:8px;" value="${f}" />
+                                    <button class="action-main-btn" id="tpImportBtn" style="display:none; margin:0; padding:8px 16px; font-size:12px; height:38px;">Import</button>
+                                </div>
                             </div>
-                        </div>
 
-                        <div style="display:flex; flex-direction:column; gap:6px;">
-                            <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Number of Transfers (1-5)</label>
-                            <select id="tpNumTransfers" class="settings-select" style="width:100%;">
-                                <option value="1" ${c===1?"selected":""}>1 Transfer</option>
-                                <option value="2" ${c===2?"selected":""}>2 Transfers</option>
-                                <option value="3" ${c===3?"selected":""}>3 Transfers</option>
-                                <option value="4" ${c===4?"selected":""}>4 Transfers</option>
-                                <option value="5" ${c===5?"selected":""}>5 Transfers</option>
-                            </select>
+                            <div style="display:flex; flex-direction:column; gap:6px;">
+                                <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Number of Transfers (1-5)</label>
+                                <select id="tpNumTransfers" class="settings-select" style="width:100%;">
+                                    <option value="1" ${c===1?"selected":""}>1 Transfer</option>
+                                    <option value="2" ${c===2?"selected":""}>2 Transfers</option>
+                                    <option value="3" ${c===3?"selected":""}>3 Transfers</option>
+                                    <option value="4" ${c===4?"selected":""}>4 Transfers</option>
+                                    <option value="5" ${c===5?"selected":""}>5 Transfers</option>
+                                </select>
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:6px;">
+                                <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Projection Horizon Weeks</label>
+                                <select id="tpHorizon" class="settings-select" style="width:100%;">
+                                    <option value="1" ${u===1?"selected":""}>Next 1 Gameweek</option>
+                                    <option value="2" ${u===2?"selected":""}>Next 2 Gameweeks</option>
+                                    <option value="3" ${u===3?"selected":""}>Next 3 Gameweeks</option>
+                                    <option value="4" ${u===4?"selected":""}>Next 4 Gameweeks</option>
+                                    <option value="5" ${u===5?"selected":""}>Next 5 Gameweeks</option>
+                                    <option value="10" ${u===10?"selected":""}>Next 10 Gameweeks</option>
+                                    <option value="15" ${u===15?"selected":""}>Next 15 Gameweeks</option>
+                                    <option value="20" ${u===20?"selected":""}>Next 20 Gameweeks</option>
+                                    <option value="25" ${u===25?"selected":""}>Next 25 Gameweeks</option>
+                                </select>
+                            </div>
+                            <button class="action-main-btn" id="runTpBtn" style="margin:0; height:38px; display:flex; align-items:center; justify-content:center; gap:8px;">
+                                <i data-lucide="play" style="width:16px; height:16px;"></i> Calculate Roadmap
+                            </button>
                         </div>
-                        <div style="display:flex; flex-direction:column; gap:6px;">
-                            <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Projection Horizon Weeks</label>
-                            <select id="tpHorizon" class="settings-select" style="width:100%;">
-                                <option value="1" ${u===1?"selected":""}>Next 1 Gameweek</option>
-                                <option value="2" ${u===2?"selected":""}>Next 2 Gameweeks</option>
-                                <option value="3" ${u===3?"selected":""}>Next 3 Gameweeks</option>
-                                <option value="4" ${u===4?"selected":""}>Next 4 Gameweeks</option>
-                                <option value="5" ${u===5?"selected":""}>Next 5 Gameweeks</option>
-                                <option value="10" ${u===10?"selected":""}>Next 10 Gameweeks</option>
-                                <option value="15" ${u===15?"selected":""}>Next 15 Gameweeks</option>
-                                <option value="20" ${u===20?"selected":""}>Next 20 Gameweeks</option>
-                                <option value="25" ${u===25?"selected":""}>Next 25 Gameweeks</option>
-                            </select>
-                        </div>
-                        <button class="action-main-btn" id="runTpBtn" style="margin:0; height:38px; display:flex; align-items:center; justify-content:center; gap:8px;">
-                            <i data-lucide="play" style="width:16px; height:16px;"></i> Calculate Roadmap
-                        </button>
                     </div>
+
+                    <!-- Optimization Results Grid -->
+                    <div id="tpResultsGrid" style="flex:1; min-height:0; display:flex; flex-direction:column;"></div>
                 </div>
 
-                <!-- Optimization Results Grid -->
-                <div id="tpResultsGrid"></div>
-            </div>
-
-            <!-- Bottom Section: Squad Preview (Regular Full Size Pitch) -->
-            <div style="border-top:1px solid var(--border-color); padding-top:20px; margin-top:10px; width:100%;">
-                <div id="tpSquadPreviewContainer" style="width: 100%;"></div>
+                <!-- Right Column: Squad Preview -->
+                <div class="tp-right-col" style="height:100%; min-height:0; overflow-y:auto; padding-right:4px;">
+                    <div id="tpSquadPreviewContainer" style="width: 100%; height: 100%;"></div>
+                </div>
             </div>
         </div>
     `,lucide.createIcons();const W=l.querySelector("#runTpBtn"),x=l.querySelector("#tpNumTransfers"),S=l.querySelector("#tpHorizon"),R=l.querySelector("#tpResultsGrid"),C=l.querySelector("#tpSourceSquad"),q=l.querySelector("#tpFplTeamId"),L=l.querySelector("#tpImportBtn"),J=l.querySelector("#tpSquadPreviewContainer"),K=()=>{const O=C.value;let M=null,v=t.captain,I=t.vice,N=s;if(O==="active")M=t.squadSlots;else if(O.startsWith("draft_")){const z=parseInt(O.split("_")[1]),j=t.drafts[z];j.squadSlots||(j.squadSlots=JSON.parse(JSON.stringify(t.squadSlots)),j.captain=t.captain,j.vice=t.vice,j.formation=t.formation),M=j.squadSlots,v=j.captain||t.captain,I=j.vice||t.vice;const Q=j.squadSlots.reduce((D,Z)=>{if(Z.playerId===null)return D;const at=G.find(nt=>nt.id===Z.playerId);return D+(at?at.price:0)},0);N=Math.max(0,100-Q)}else if(O==="import")if(o)M=o,v=w||t.captain,I=e||t.vice,N=g;else{J.innerHTML=`
