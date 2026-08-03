@@ -413,7 +413,7 @@ export function renderTransferPlanner(container, state, actions) {
     };
 
     container.innerHTML = `
-        <div class="tp-outer-container" style="display:flex; flex-direction:column; gap:16px; height:100vh; width:100%; overflow-y:auto; -webkit-overflow-scrolling:touch;">
+        <div class="tp-outer-container" style="display:flex; flex-direction:column; gap:16px; width:100%;">
             <div class="optimizer-intro" style="margin-bottom: 4px; flex-shrink: 0;">
                 <div class="intro-text-area">
                     <h2 style="font-size: 20px; font-weight: 800; margin: 0;">AI Multi-Transfer Roadmap Planner</h2>
@@ -421,9 +421,9 @@ export function renderTransferPlanner(container, state, actions) {
                 </div>
             </div>
 
-            <div class="tp-main-grid" style="display: flex; flex-direction: column; gap: 20px; flex: 1; min-height: 0; overflow: auto; width: 100%;">
+            <div class="tp-main-grid" style="display: flex; flex-direction: column; gap: 20px; width: 100%;">
                 <!-- Left Column: Configurations & Results -->
-                <div class="tp-left-col" style="display: flex; flex-direction: column; gap: 16px; overflow-y: auto; flex: 1; min-height: 0; padding-right: 4px;">
+                <div class="tp-left-col" style="display: flex; flex-direction: column; gap: 16px; width: 100%;">
                     <!-- Configuration Card -->
                     <div class="optimizer-settings-card" style="padding:16px; margin:0; flex-shrink: 0;">
                         <h3 style="font-family: var(--font-heading); margin-bottom:16px; font-weight:700; display:flex; align-items:center; gap:8px; font-size: 14px;">
@@ -477,11 +477,11 @@ export function renderTransferPlanner(container, state, actions) {
                     </div>
 
                     <!-- Optimization Results Grid -->
-                    <div id="tpResultsGrid" style="flex:1; min-height:0; display:flex; flex-direction:column;"></div>
+                    <div id="tpResultsGrid" style="display:flex; flex-direction:column;"></div>
                 </div>
 
                 <!-- Right Column: Squad Preview -->
-                <div class="tp-right-col" style="flex:1; min-height:0; overflow-y:auto; padding-right:4px;">
+                <div class="tp-right-col" style="width:100%;">
                     <div id="tpSquadPreviewContainer" style="width: 100%; height: auto;"></div>
                 </div>
             </div>

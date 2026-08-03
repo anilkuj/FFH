@@ -608,6 +608,10 @@ html, body {
     overflow: hidden;
 }
 
+.planner-grid:has(> :only-child) {
+    grid-template-columns: 1fr !important;
+}
+
 /* Pitch Board Container */
 .pitch-container {
     background: var(--bg-card);
@@ -1145,7 +1149,7 @@ html.light-theme .stats-table td:first-child {
 .stats-table th {
     background: rgba(255, 255, 255, 0.01);
     color: var(--text-muted);
-    font-weight: 600;
+    font-weight: 700 !important;
     cursor: pointer;
     user-select: none;
     position: relative;
@@ -1536,6 +1540,10 @@ html.light-theme .stats-table td:first-child {
     padding: 4px 6px;
     border-bottom: 1px solid var(--border-color);
     text-align: center;
+}
+
+.ticker-table th {
+    font-weight: 700 !important;
 }
 
 .ticker-table th:first-child, .ticker-table td:first-child {
