@@ -132,7 +132,7 @@ html.light-theme .stat-pill {
     box-sizing: border-box;
 }
 
-body {
+html, body {
     background-color: var(--bg-dark);
     color: var(--text-main);
     font-family: var(--font-main);
@@ -140,7 +140,8 @@ body {
     line-height: 1.5;
     overflow: hidden;
     height: 100vh;
-    width: 100vw;
+    width: 100%;
+    max-width: 100%;
 }
 
 /* Scrollbar Customization */
@@ -163,7 +164,8 @@ body {
 .app-container {
     display: flex;
     height: 100vh;
-    width: 100vw;
+    width: 100%;
+    max-width: 100%;
     overflow: hidden;
 }
 
@@ -1122,6 +1124,24 @@ body {
     border-bottom: 1px solid var(--border-color);
 }
 
+.stats-table th:first-child,
+.stats-table td:first-child {
+    position: sticky !important;
+    left: 0 !important;
+    background: var(--bg-panel) !important;
+    z-index: 5 !important;
+    border-right: 1px solid var(--border-color) !important;
+}
+
+.stats-table tr:hover td:first-child {
+    background: var(--bg-panel) !important;
+}
+
+html.light-theme .stats-table th:first-child,
+html.light-theme .stats-table td:first-child {
+    background: #ffffff !important;
+}
+
 .stats-table th {
     background: rgba(255, 255, 255, 0.01);
     color: var(--text-muted);
@@ -2041,8 +2061,8 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     background: rgba(7, 11, 25, 0.85);
     backdrop-filter: blur(10px);
     z-index: 200;
@@ -2559,19 +2579,26 @@ body {
         padding: 4px 8px !important;
     }
 
+    /* Fluid Pitch Container - No scaling */
     .pitch-container {
-        padding: 10px !important;
-        gap: 10px !important;
+        padding: 8px 6px !important;
+        gap: 6px !important;
         overflow: visible !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+        box-sizing: border-box !important;
     }
 
+    /* Fixed compact height on mobile to fit the viewport without scrolling */
     .football-pitch {
-        height: 520px !important;
-    }
-
-    .shirt-icon-wrapper {
-        width: 42px !important;
-        height: 42px !important;
+        padding: 8px 4px 32px 4px !important;
+        height: 350px !important;
+        min-height: 320px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-around !important;
+        box-sizing: border-box !important;
     }
 
     .sidebar {
@@ -2601,18 +2628,140 @@ body {
         padding: 0 12px !important;
     }
 
+    .gameweek-controller {
+        gap: 4px !important;
+    }
+
+    .gw-text-container {
+        min-width: 90px !important;
+        padding: 0 4px !important;
+    }
+
+    .gw-title {
+        font-size: 8px !important;
+    }
+
+    .gw-number {
+        font-size: 11px !important;
+    }
+
     /* Hide desktop quick stats pill bar on mobile */
     .top-bar-right .squad-quick-stats {
         display: none !important;
     }
 
-    /* Show mobile quick stats bar */
+    /* Premium Stacked Mobile Stats Bar */
     .mobile-quick-stats-bar {
         display: flex !important;
+        background: rgba(15, 23, 42, 0.6) !important;
+        border-bottom: 1px solid var(--border-color) !important;
+        padding: 8px 12px !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        gap: 6px !important;
+        z-index: 10 !important;
+    }
+
+    .mobile-quick-stats-bar .stat-pill {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 6px 4px !important;
+        border-radius: 8px !important;
+        font-size: 10px !important;
+        flex: 1 !important;
+        min-width: 0 !important;
+        gap: 2px !important;
+        background: rgba(255, 255, 255, 0.04) !important;
+        border: 1px solid rgba(255, 255, 255, 0.02) !important;
+        color: var(--text-main) !important;
+    }
+
+    .mobile-quick-stats-bar .pill-label {
+        font-size: 8.5px !important;
+        color: var(--text-muted) !important;
+        font-weight: 500 !important;
+    }
+
+    .mobile-quick-stats-bar .pill-value {
+        font-size: 10.5px !important;
+        font-weight: 700 !important;
+    }
+
+    html.light-theme .mobile-quick-stats-bar {
+        background: #ffffff !important;
+    }
+
+    html.light-theme .mobile-quick-stats-bar .stat-pill {
+        background: #ffffff !important;
+        border: 1px solid var(--border-color) !important;
+        color: var(--text-main) !important;
+    }
+
+    html.light-theme .mobile-quick-stats-bar .pill-label {
+        color: var(--text-muted) !important;
+    }
+
+    html.light-theme .mobile-quick-stats-bar .pill-value {
+        color: var(--text-main) !important;
+    }
+
+    html.light-theme .mobile-quick-stats-bar .pill-value.highlight-bank {
+        color: var(--secondary) !important;
+    }
+
+    html.light-theme .mobile-quick-stats-bar .pill-value.highlight-transfers {
+        color: var(--primary) !important;
     }
 
     .view-container {
-        padding: 16px;
+        padding: 8px 8px !important;
+        overflow-x: hidden; /* Prevent horizontal container overflow */
+    }
+
+    /* Force layouts and tables to fit within the viewport width */
+    .planner-grid,
+    .pitch-container,
+    .football-pitch,
+    .bench-container,
+    .gw-transfers-card,
+    .stats-table-wrapper,
+    .compare-details-grid {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Override inline styles of differentials grid to stack columns */
+    .diff-cards-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Keep transfer rows from stretching past screen width */
+    .transfer-item-row {
+        gap: 6px !important;
+        padding: 8px 6px !important;
+    }
+    .transfer-item-row .transfer-player-card {
+        font-size: 11px !important;
+        min-width: 0 !important;
+        flex: 1 1 35% !important;
+    }
+    .transfer-item-row .player-name-main {
+        font-size: 11px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        max-width: 80px !important;
+    }
+    .transfer-item-row .player-team-sub {
+        font-size: 9px !important;
+        white-space: nowrap !important;
+    }
+    .transfer-item-row .transfer-arrow-icon {
+        font-size: 12px !important;
+        margin: 0 2px !important;
     }
 
     .pricing-cards-container {
@@ -2624,16 +2773,43 @@ body {
         grid-template-columns: 1fr !important;
     }
 
-    /* Resizing cards and jerseys on tablets/large phones */
+    /* Responsive Grid Spans: Reset all 2-column spans on mobile */
+    [style*="grid-column: span 2"],
+    [style*="grid-column:span 2"],
+    .optimizer-card[style*="grid-column: span 2"],
+    #aiStrategistReportContainer {
+        grid-column: span 1 !important;
+    }
+
+    /* Swap and Captaincy modal buttons */
+    .player-action-section {
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 16px !important;
+        gap: 10px !important;
+    }
+
+    .player-action-section .action-main-btn {
+        width: 100% !important;
+        grid-column: span 1 !important;
+    }
+
+    /* Mobile player cards sizing */
     .shirt-icon-wrapper {
-        width: 46px;
-        height: 46px;
+        width: 32px !important;
+        height: 32px !important;
+        margin-bottom: 2px !important;
     }
 
     .player-pitch-card {
-        width: 19% !important;
+        width: 18.5% !important;
+        max-width: 18.5% !important;
         min-width: 0 !important;
-        padding: 4px 2px !important;
+        padding: 2px 0 !important;
+    }
+
+    .pitch-row {
+        gap: 4px !important;
     }
 
     .bench-slot-wrapper .player-pitch-card {
@@ -2641,40 +2817,53 @@ body {
         max-width: 100% !important;
     }
 
-    .player-xp-subtext {
+    .badge-captain, .badge-vice {
+        width: 12px !important;
+        height: 12px !important;
         font-size: 7.5px !important;
+        right: -2px !important;
+        bottom: -2px !important;
     }
 
     .player-card-info {
-        padding: 4px;
+        padding: 3px 1px !important;
+        border-radius: 4px !important;
     }
 
     .player-pitch-name {
-        font-size: 10px;
+        font-size: 8px !important;
     }
 
     .player-pitch-points {
-        font-size: 9px;
+        font-size: 7.5px !important;
+        margin-top: 1px !important;
+        white-space: nowrap !important;
     }
 
-    .player-pitch-points-sub {
+    /* Hide individual gameweek fixtures grid on small cards */
+    .pitch-card-fixtures-grid {
         display: none !important;
     }
 
-    /* Hide delete buttons on touch screens on the pitch map */
+    /* Hide verbose labels in price/XP string to keep it single line */
+    .player-xp-prefix, .player-xp-subtext {
+        display: none !important;
+    }
+
+    /* Hide sell button by default on mobile touch screens */
     .pitch-sell-btn {
         display: none !important;
     }
 
-    /* Resize bench container and elements under 768px */
+    /* Resize bench container */
     .bench-container {
-        padding: 8px !important;
-        gap: 6px !important;
-        margin-top: 28px !important;
+        padding: 6px !important;
+        gap: 4px !important;
+        margin-top: 16px !important;
     }
 
     .bench-row {
-        gap: 6px !important;
+        gap: 4px !important;
         justify-content: space-between !important;
     }
 
@@ -2687,9 +2876,14 @@ body {
         align-items: center;
     }
 
-    /* Ticker Table Mobile Scaling */
+    .bench-slot-label {
+        font-size: 6.5px !important;
+        margin-bottom: 2px !important;
+    }
+
+    /* Ticker Table Mobile Scaling - enforce min-width to scroll horizontally */
     .ticker-table {
-        min-width: auto !important;
+        min-width: 500px !important;
     }
     
     .ticker-table th, .ticker-table td {
@@ -2733,114 +2927,6 @@ body {
 
     .ticker-view-container {
         padding-bottom: 80px !important;
-    }
-}
-
-@media (max-width: 480px) {
-    .view-container {
-        padding: 6px 8px !important;
-    }
-
-    .pitch-header {
-        flex-direction: row !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        gap: 4px !important;
-    }
-
-    .pitch-title-area {
-        display: none !important;
-    }
-
-    .pitch-container {
-        padding: 6px !important;
-        gap: 8px !important;
-        overflow: visible !important;
-        transform: scale(0.8) !important;
-        transform-origin: top center !important;
-        width: 100% !important;
-        margin: 0 auto !important;
-        margin-bottom: -110px !important; /* Absorb empty space from scaling */
-    }
-
-    /* Mobile scaling of the football pitch slots to fit 100% width cleanly */
-    .football-pitch {
-        padding: 8px 0 48px 0 !important;
-        height: 460px !important; /* Unscaled height to allow spacious layout with zero overlap */
-        max-height: none !important;
-        min-height: auto !important;
-        flex: none !important;
-    }
-
-    .player-pitch-card {
-        width: 19%;
-    }
-    .bench-slot-wrapper .player-pitch-card {
-        width: 100% !important;
-    }
-
-    .shirt-icon-wrapper {
-        width: 32px !important;
-        height: 32px !important;
-        margin-bottom: 2px !important;
-    }
-
-    .badge-captain, .badge-vice {
-        width: 12px !important;
-        height: 12px !important;
-        font-size: 7.5px !important;
-        right: -2px !important;
-        bottom: -2px !important;
-    }
-
-    .player-card-info {
-        padding: 3px 1px !important;
-        border-radius: 4px !important;
-    }
-
-    .player-pitch-name {
-        font-size: 8px !important;
-    }
-
-    .player-pitch-points {
-        font-size: 7.5px !important;
-        margin-top: 1px !important;
-    }
-
-    /* Hide sub stats like FDR dots and 5-GW XP on extra-small screens to avoid overlay clutter */
-    .player-pitch-points-sub {
-        display: none !important;
-    }
-
-    /* Resizing bench items for narrow screens */
-    .bench-container {
-        padding: 6px !important;
-        gap: 4px !important;
-        margin-top: 16px !important;
-    }
-    
-    .bench-row {
-        gap: 4px !important;
-        justify-content: space-between !important;
-    }
-
-    .bench-slot-wrapper {
-        flex: 1 1 0% !important;
-        min-width: 0 !important;
-        width: auto !important;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .bench-slot-label {
-        font-size: 6.5px !important;
-        margin-bottom: 2px !important;
-    }
-
-    /* Hide delete buttons on touch screens with appropriate mobile size */
-    .pitch-sell-btn {
-        display: none !important;
     }
 
     /* Make modals and dialogs mobile friendly */

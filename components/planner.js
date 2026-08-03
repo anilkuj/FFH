@@ -381,7 +381,7 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
                             £${player.price.toFixed(1)}m • 
                             ${prediction.actualPts !== undefined && prediction.actualPts !== null ? 
                                 `<strong style="color: var(--primary);">${prediction.actualPts} pts</strong> <span class="player-xp-subtext">(5 GW: ${get5GwXp(player, currentGw).toFixed(1)} XP)</span>` : 
-                                `5 GW: ${get5GwXp(player, currentGw).toFixed(1)} XP`
+                                `<span class="player-xp-prefix">5 GW: </span>${get5GwXp(player, currentGw).toFixed(1)}<span class="player-xp-suffix"> XP</span>`
                             }
                         </div>
                     </div>
@@ -447,7 +447,7 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions) {
                                 £${player.price.toFixed(1)}m • 
                                 ${prediction.actualPts !== undefined && prediction.actualPts !== null ? 
                                     `<strong style="color: var(--primary);">${prediction.actualPts} pts</strong> <span class="player-xp-subtext">(5 GW: ${get5GwXp(player, currentGw).toFixed(1)} XP)</span>` : 
-                                    `5 GW: ${get5GwXp(player, currentGw).toFixed(1)} XP`
+                                    `<span class="player-xp-prefix">5 GW: </span>${get5GwXp(player, currentGw).toFixed(1)}<span class="player-xp-suffix"> XP</span>`
                                 }
                             </div>
                         </div>
