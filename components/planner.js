@@ -551,20 +551,50 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
     };
     document.addEventListener('click', window._mobileClearListener);
 
-    // === Smart Tooltip Positioning ===
-    // We use position:fixed on the tooltip and JS to decide above/below placement.
-    // This avoids CSS overflow/crop issues for GK (top row) and bench (bottom row).
+
+    // IMPORTANT: .player-pitch-card:hover has a CSS transform (translateY + scale).
+    // CSS transforms create a new stacking context, which breaks position:fixed children —
+    // they get trapped inside the transformed element no matter the z-index.
+    // Fix: physically move the tooltip to document.body on mouseenter, restore on hide.
     let _tooltipHideTimer = null;
+    let _activeTooltip = null;     // the tooltip currently in body
+    let _activeTooltipOrigin = null; // the card it came from
+
+    const hideActiveTooltip = () => {
+        if (_activeTooltip && _activeTooltip.parentNode === document.body) {
+            _activeTooltip.classList.remove('tooltip-visible');
+            // Move back to its original card after the fade transition
+            setTimeout(() => {
+                if (_activeTooltipOrigin && _activeTooltip) {
+                    _activeTooltipOrigin.appendChild(_activeTooltip);
+                }
+                _activeTooltip = null;
+                _activeTooltipOrigin = null;
+            }, 200);
+        }
+    };
+
     container.querySelectorAll('.player-pitch-card:not(.empty-slot)').forEach(card => {
         card.addEventListener('mouseenter', () => {
-            if (_tooltipHideTimer) clearTimeout(_tooltipHideTimer);
-            // Hide any other visible tooltips
-            container.querySelectorAll('.player-card-tooltip.tooltip-visible').forEach(t => t.classList.remove('tooltip-visible'));
+            if (_tooltipHideTimer) { clearTimeout(_tooltipHideTimer); _tooltipHideTimer = null; }
+
+            // If there's already a tooltip from another card, hide it immediately
+            if (_activeTooltip && _activeTooltipOrigin !== card) {
+                _activeTooltip.classList.remove('tooltip-visible');
+                if (_activeTooltipOrigin) _activeTooltipOrigin.appendChild(_activeTooltip);
+                _activeTooltip = null;
+                _activeTooltipOrigin = null;
+            }
 
             const tooltip = card.querySelector('.player-card-tooltip');
             if (!tooltip) return;
 
-            // Temporarily show off-screen to measure
+            // Detach from card and attach to body to escape the CSS transform stacking context
+            document.body.appendChild(tooltip);
+            _activeTooltip = tooltip;
+            _activeTooltipOrigin = card;
+
+            // Measure while invisible
             tooltip.style.visibility = 'hidden';
             tooltip.style.display = 'block';
             const tooltipH = tooltip.offsetHeight;
@@ -573,21 +603,18 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
             tooltip.style.visibility = '';
 
             const cardRect = card.getBoundingClientRect();
-            const vpH = window.innerHeight;
             const vpW = window.innerWidth;
             const GAP = 8;
 
-            // Decide vertical placement: above if enough room, else below
+            // Vertical: prefer above, fall back to below
             let top;
             if (cardRect.top - tooltipH - GAP >= 0) {
-                // Show above
                 top = cardRect.top - tooltipH - GAP;
             } else {
-                // Show below
                 top = cardRect.bottom + GAP;
             }
 
-            // Decide horizontal placement: center on card, but clamp to viewport
+            // Horizontal: center on card, clamped to viewport
             let left = cardRect.left + cardRect.width / 2 - tooltipW / 2;
             left = Math.max(GAP, Math.min(left, vpW - tooltipW - GAP));
 
@@ -597,12 +624,18 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
         });
 
         card.addEventListener('mouseleave', () => {
-            const tooltip = card.querySelector('.player-card-tooltip');
-            if (tooltip) {
-                _tooltipHideTimer = setTimeout(() => tooltip.classList.remove('tooltip-visible'), 80);
-            }
+            _tooltipHideTimer = setTimeout(() => {
+                hideActiveTooltip();
+            }, 80);
         });
     });
+
+    // Hide tooltip if user scrolls (position would be stale)
+    const _scrollHideTooltip = () => hideActiveTooltip();
+    window.addEventListener('scroll', _scrollHideTooltip, { passive: true, once: false });
+    // Clean up scroll listener when planner re-renders (next renderActiveView call)
+    if (window._plannerScrollCleanup) window._plannerScrollCleanup();
+    window._plannerScrollCleanup = () => window.removeEventListener('scroll', _scrollHideTooltip);
 
     // Go to Transfer Planner Button click listener
 
