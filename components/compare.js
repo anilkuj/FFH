@@ -52,10 +52,6 @@ export function renderCompare(container, state, actions) {
                     </div>
                 </div>
 
-                <!-- Compare Trigger button -->
-                <button class="run-optimization-btn" id="runCompareBtn" style="width: 100%; justify-content: center; height: 44px; display: flex; align-items: center; gap: 8px; margin: 0; font-size: 14px;">
-                    <i data-lucide="bar-chart-2" style="width: 16px; height: 16px;"></i> Compare Selected Players
-                </button>
             </div>
 
             <!-- Comparison Results Grid Section -->
@@ -274,13 +270,7 @@ export function renderCompare(container, state, actions) {
         }
     });
 
-    // Compare trigger event handling
-    const runCompareBtn = container.querySelector('#runCompareBtn');
-    if (runCompareBtn) {
-        runCompareBtn.addEventListener('click', () => {
-            runComparison();
-        });
-    }
+
 
     // Run initial comparison on load with default selected midfielders
     runComparison();
