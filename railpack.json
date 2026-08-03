@@ -1,5 +1,12 @@
 {
   "$schema": "https://schema.railpack.com",
+  "steps": {
+    "build": {
+      "commands": [
+        "echo 'Bypassing build on server. Serving precompiled dist folder.'"
+      ]
+    }
+  },
   "deploy": {
     "startCommand": "sirv dist --port $PORT --host 0.0.0.0 --single"
   }
