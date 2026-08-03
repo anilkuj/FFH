@@ -1,0 +1,74 @@
+name: 🔄 Auto Sync FPL Data (Every 6 Hours)
+
+on:
+  schedule:
+    # Runs at 00:00, 06:00, 12:00, 18:00 UTC every day
+    - cron: '0 0,6,12,18 * * *'
+  # Allow manual trigger from GitHub Actions UI
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync-and-deploy:
+    name: Fetch FPL Data → Rebuild → Deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      # 1. Checkout the full repo
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      # 2. Setup Node.js (matches local dev environment)
+      - name: ⚙️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # 3. Install dependencies (needed for vite build)
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      # 4. Run the data sync — fetches FPL Bootstrap + Fixtures API
+      #    and overwrites data.js with fresh player data & predictions
+      - name: 🌐 Sync live FPL data
+        run: node sync.js
+        env:
+          NODE_OPTIONS: '--no-warnings'
+
+      # 5. Rebuild the production bundle with the fresh data.js
+      - name: 🏗️ Rebuild production bundle
+        run: npm run build
+
+      # 6. Check if anything actually changed
+      - name: 🔍 Check for changes
+        id: changes
+        run: |
+          git diff --quiet data.js dist/ || echo "changed=true" >> $GITHUB_OUTPUT
+
+      # 7. Commit and push if data changed
+      - name: 📤 Commit & push updated data + dist
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config --global user.name "FPL Hub Auto-Sync"
+          git config --global user.email "autosync@fplhub.app"
+          git add data.js dist/
+          git commit -m "chore(sync): auto-refresh FPL data [$(date -u '+%Y-%m-%d %H:%M UTC')]"
+          git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # 8. Log outcome
+      - name: ✅ Sync complete
+        run: |
+          if [ "${{ steps.changes.outputs.changed }}" == "true" ]; then
+            echo "✅ Data updated and pushed. Railway will auto-redeploy."
+          else
+            echo "ℹ️  No data changes detected. Nothing to push."
+          fi
