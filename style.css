@@ -667,12 +667,12 @@ body {
     background: var(--pitch-bg);
     border: 2px solid var(--pitch-border);
     border-radius: 16px;
-    height: 580px; /* Default desktop height */
+    height: 600px; /* Default desktop height */
     flex: 1;
     max-height: none;
-    min-height: 480px;
+    min-height: 540px;
     position: relative;
-    padding: 8px 0 64px 0 !important;
+    padding: 8px 0 48px 0 !important;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -743,9 +743,9 @@ body {
 
 .shirt-icon-wrapper {
     position: relative;
-    width: 58px;
-    height: 58px;
-    margin-bottom: 6px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 4px;
 }
 
 .shirt-svg {
