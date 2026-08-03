@@ -2894,6 +2894,15 @@ html.light-theme .stats-table td:first-child {
         display: grid !important;
     }
 
+    .pitch-fixture-badge-xp {
+        display: none !important;
+    }
+
+    .pitch-fixture-badge-team {
+        font-size: 8.5px !important;
+        margin-top: 0 !important;
+    }
+
     /* Hide verbose labels in price/XP string to keep it single line */
     .player-xp-prefix {
         display: none !important;
@@ -3865,10 +3874,11 @@ html.light-theme .rating-badge-na {
         padding: 3px 0.5px !important;
     }
     .pitch-fixture-badge-xp {
-        font-size: 8px !important;
+        display: none !important;
     }
     .pitch-fixture-badge-team {
-        font-size: 6.5px !important;
+        font-size: 8px !important;
+        margin-top: 0 !important;
     }
     .pitch-card-info-header {
         padding: 4px 2px !important;
