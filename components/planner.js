@@ -110,6 +110,9 @@ export function renderPlanner(container, state, actions) {
                     </select>
                     <button class="pitch-btn" id="renameDraftBtn" title="Rename Current Draft" style="height: 32px; width: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); cursor: pointer;"><i data-lucide="edit-3" style="width: 14px; height: 14px;"></i></button>
                     <button class="pitch-btn" id="cloneDraftBtn" title="Clone Current Draft" style="height: 32px; width: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); cursor: pointer;"><i data-lucide="copy" style="width: 14px; height: 14px;"></i></button>
+                    <button class="pitch-btn" id="exportDraftsBtn" title="Export All Drafts" style="height: 32px; width: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); cursor: pointer;"><i data-lucide="download" style="width: 14px; height: 14px;"></i></button>
+                    <button class="pitch-btn" id="importDraftsBtn" title="Import Drafts from File" style="height: 32px; width: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); cursor: pointer;"><i data-lucide="upload" style="width: 14px; height: 14px;"></i></button>
+                    <input type="file" id="importDraftsInput" accept=".json" style="display: none;" />
                     
                     <!-- Lock / Unlock Button -->
                     <button class="pitch-btn" id="toggleLockBtn" title="${state.isSquadUnlocked ? 'Lock Squad' : 'Unlock Squad to Remove Players'}" style="height: 32px; padding: 0 10px; display: flex; align-items: center; gap: 6px; border-radius: 6px; background: ${state.isSquadUnlocked ? 'rgba(239, 68, 68, 0.15)' : 'rgba(255, 255, 255, 0.02)'}; border: 1px solid ${state.isSquadUnlocked ? 'rgba(239, 68, 68, 0.4)' : 'var(--border-color)'}; color: ${state.isSquadUnlocked ? '#ef4444' : 'var(--text-main)'}; cursor: pointer; font-size: 12px; font-weight: 600; margin-left: auto; flex-shrink: 0;">
@@ -642,6 +645,99 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
             state.saveState();
             actions.renderActiveView();
             actions.showToast(`Successfully cloned into slot ${targetNum} ("${targetDraft.name}")`, "success");
+        });
+    }
+
+    // Export drafts
+    const exportDraftsBtn = container.querySelector('#exportDraftsBtn');
+    if (exportDraftsBtn) {
+        exportDraftsBtn.addEventListener('click', () => {
+            // Sync current active view to the active draft slot first
+            if (state.drafts && state.drafts[state.activeDraftIndex]) {
+                state.drafts[state.activeDraftIndex].squadSlots = JSON.parse(JSON.stringify(state.squadSlots));
+                state.drafts[state.activeDraftIndex].captain = state.captain;
+                state.drafts[state.activeDraftIndex].vice = state.vice;
+                state.drafts[state.activeDraftIndex].formation = state.formation;
+            }
+            state.saveState();
+
+            try {
+                const dataStr = JSON.stringify(state.drafts, null, 2);
+                const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+                const linkElement = document.createElement('a');
+                linkElement.setAttribute('href', dataUri);
+                linkElement.setAttribute('download', 'fpl_hub_drafts.json');
+                linkElement.click();
+                actions.showToast("All drafts exported successfully!", "success");
+            } catch (err) {
+                console.error(err);
+                actions.showToast("Failed to export drafts.", "error");
+            }
+        });
+    }
+
+    // Import drafts
+    const importDraftsBtn = container.querySelector('#importDraftsBtn');
+    const importDraftsInput = container.querySelector('#importDraftsInput');
+    if (importDraftsBtn && importDraftsInput) {
+        importDraftsBtn.addEventListener('click', () => {
+            importDraftsInput.click();
+        });
+
+        importDraftsInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                try {
+                    const imported = JSON.parse(event.target.result);
+                    if (!Array.isArray(imported)) {
+                        throw new Error("Imported data must be an array of drafts.");
+                    }
+
+                    const validatedDrafts = imported.map((draft, idx) => {
+                        return {
+                            name: draft.name || `Draft ${idx + 1}`,
+                            squadSlots: Array.isArray(draft.squadSlots) ? draft.squadSlots : null,
+                            captain: typeof draft.captain === 'number' || draft.captain === null ? draft.captain : null,
+                            vice: typeof draft.vice === 'number' || draft.vice === null ? draft.vice : null,
+                            formation: draft.formation || '4-4-2'
+                        };
+                    });
+
+                    while (validatedDrafts.length < 10) {
+                        const idx = validatedDrafts.length;
+                        validatedDrafts.push({
+                            name: `Draft ${idx + 1}`,
+                            squadSlots: null,
+                            captain: null,
+                            vice: null,
+                            formation: '4-4-2'
+                        });
+                    }
+
+                    state.drafts = validatedDrafts.slice(0, 10);
+
+                    // Sync the active draft to current state
+                    const currentDraft = state.drafts[state.activeDraftIndex];
+                    if (currentDraft && currentDraft.squadSlots) {
+                        state.squadSlots = JSON.parse(JSON.stringify(currentDraft.squadSlots));
+                        state.captain = currentDraft.captain;
+                        state.vice = currentDraft.vice;
+                        state.formation = currentDraft.formation;
+                    }
+
+                    state.saveState();
+                    actions.renderActiveView();
+                    actions.showToast("All drafts imported successfully!", "success");
+                } catch (err) {
+                    console.error(err);
+                    actions.showToast("Failed to parse file. Ensure it is a valid drafts JSON file.", "error");
+                }
+                importDraftsInput.value = '';
+            };
+            reader.readAsText(file);
         });
     }
 
