@@ -8,6 +8,6 @@
     }
   },
   "deploy": {
-    "startCommand": "sirv dist --port $PORT --host 0.0.0.0 --single"
+    "startCommand": "sirv dist --port $PORT --host 0.0.0.0 --single --nocache"
   }
 }
