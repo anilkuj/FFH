@@ -207,48 +207,44 @@ export function renderOptimizer(container, state, actions) {
                     </div>
                 </div>
 
-                <div class="optimizer-rules-container" style="margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 20px;">
-                    <h4 style="font-family: var(--font-heading); font-size: 15px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-                        <i data-lucide="shield-alert" style="color: var(--primary); width:16px; height:16px;"></i> Solver Constraints (Optional)
-                    </h4>
-                    <div class="settings-form-grid">
+                <!-- Solver Constraints Section -->
+                <div class="opt-settings-section">
+                    <div class="opt-section-label"><i data-lucide="shield-alert" style="width:13px;height:13px;"></i> Solver Constraints (Optional)</div>
+                    <div class="opt-settings-row">
                         <div class="setting-group">
-                            <label style="font-size: 13px; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 6px;">Force Include Players</label>
+                            <label style="font-size: 12px; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 6px;">Force Include Players</label>
                             <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-                                <input type="text" list="mustIncludeOptions" id="mustIncludeSearch" placeholder="Type to search player..." class="settings-select" style="flex: 1; min-width: 140px; border-color: rgba(255, 255, 255, 0.08);">
+                                <input type="text" list="mustIncludeOptions" id="mustIncludeSearch" placeholder="Type to search player..." class="settings-select" style="flex: 1; min-width: 140px;">
                                 <datalist id="mustIncludeOptions"></datalist>
-                                <button id="addMustIncludeBtn" class="pitch-btn" style="padding: 10px 14px; border-radius: 8px; height: 38px; display: flex; align-items: center; justify-content: center;"><i data-lucide="plus"></i></button>
+                                <button id="addMustIncludeBtn" class="draft-action-btn" style="padding: 8px 14px; flex-shrink:0;"><i data-lucide="plus" style="width:13px;height:13px;"></i></button>
                             </div>
-                            <div id="mustIncludeTags" style="display: flex; flex-wrap: wrap; gap: 8px; min-height: 24px;">
-                                <!-- Badges dynamic -->
-                            </div>
+                            <div id="mustIncludeTags" style="display: flex; flex-wrap: wrap; gap: 8px; min-height: 24px;"></div>
                         </div>
 
                         <div class="setting-group">
-                            <label style="font-size: 13px; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 6px;">Force Exclude Players</label>
+                            <label style="font-size: 12px; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 6px;">Force Exclude Players</label>
                             <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-                                <input type="text" list="mustExcludeOptions" id="mustExcludeSearch" placeholder="Type to search player..." class="settings-select" style="flex: 1; min-width: 140px; border-color: rgba(255, 255, 255, 0.08);">
+                                <input type="text" list="mustExcludeOptions" id="mustExcludeSearch" placeholder="Type to search player..." class="settings-select" style="flex: 1; min-width: 140px;">
                                 <datalist id="mustExcludeOptions"></datalist>
-                                <button id="addMustExcludeBtn" class="pitch-btn" style="padding: 10px 14px; border-radius: 8px; height: 38px; display: flex; align-items: center; justify-content: center;"><i data-lucide="plus"></i></button>
+                                <button id="addMustExcludeBtn" class="draft-action-btn" style="padding: 8px 14px; flex-shrink:0;"><i data-lucide="plus" style="width:13px;height:13px;"></i></button>
                             </div>
-                            <div id="mustExcludeTags" style="display: flex; flex-wrap: wrap; gap: 8px; min-height: 24px;">
-                                <!-- Badges dynamic -->
-                            </div>
+                            <div id="mustExcludeTags" style="display: flex; flex-wrap: wrap; gap: 8px; min-height: 24px;"></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="optimizer-rules-container" style="margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 20px;">
-                    <h4 style="font-family: var(--font-heading); font-size: 15px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-                        <i data-lucide="brain" style="color: var(--secondary); width:16px; height:16px;"></i> AI Analyst Settings
-                    </h4>
-                    <div style="display: flex; flex-direction: column; gap: 8px; max-width: 450px;">
-                        <label for="geminiApiKey" style="font-size: 13px; font-weight: 700; color: var(--text-main);">Gemini API Key (Optional)</label>
-                        <div style="display: flex; gap: 8px;">
-                            <input type="password" id="geminiApiKey" placeholder="Enter your Gemini API Key..." class="settings-select" style="flex: 1; border-color: rgba(255, 255, 255, 0.08);" value="${localStorage.getItem('fpl_hub_gemini_api_key') || ''}">
-                            <button id="saveApiKeyBtn" class="pitch-btn" style="padding: 10px 16px; border-radius: 8px; height: 38px; font-weight: 600;">Save</button>
+                <!-- AI Analyst Settings Section -->
+                <div class="opt-settings-section">
+                    <div class="opt-section-label"><i data-lucide="brain" style="width:13px;height:13px;color:var(--secondary);"></i> AI Analyst Settings</div>
+                    <div class="opt-settings-row" style="max-width: 640px;">
+                        <div class="setting-group" style="grid-column: span 2;">
+                            <label for="geminiApiKey">Gemini API Key <span style="font-weight:400; color:var(--text-muted);">(Optional)</span></label>
+                            <div style="display: flex; gap: 8px;">
+                                <input type="password" id="geminiApiKey" placeholder="Enter your Gemini API Key..." class="settings-select" style="flex: 1;" value="${localStorage.getItem('fpl_hub_gemini_api_key') || ''}">
+                                <button id="saveApiKeyBtn" class="draft-action-btn" style="padding: 8px 16px; font-weight: 700; flex-shrink:0;">Save</button>
+                            </div>
+                            <span class="setting-help">Provides real-time elite LLM strategist reports customized to your team. If left blank, FPL Hub's local analysis engine will be used.</span>
                         </div>
-                        <span class="setting-help">Provides real-time elite LLM strategist reports customized to your team. If left blank, FPL Hub's local analysis engine will be used.</span>
                     </div>
                 </div>
 
@@ -608,24 +604,28 @@ function renderLockOverlay(container, actions) {
 const ALL_FORMATIONS = ['4-3-3', '4-4-2', '3-5-2', '3-4-3', '4-5-1', '5-3-2', '5-4-1', '5-2-3'];
 
 function performOptimization(resultsGrid, state, actions, horizon, mode) {
-    // If 'optimum' formation: run solver for each formation and pick the best
+    // If 'optimum' formation: score each formation with the lightweight scorer,
+    // then temporarily set state.formation to the winner before running the real solver.
+    // We use the REAL state object (not a clone) so that Apply buttons write to the
+    // correct state and the squad is never lost.
     if (state.formation === 'optimum') {
-        let bestResult = null;
         let bestFormation = null;
         let bestScore = -Infinity;
 
         for (const formation of ALL_FORMATIONS) {
-            const testState = Object.assign(Object.create(Object.getPrototypeOf(state)), state, { formation });
-            const score = _scoreOptimizationForFormation(testState, horizon, mode);
+            // Temporarily swap formation on the real state for scoring
+            state.formation = formation;
+            const score = _scoreOptimizationForFormation(state, horizon, mode);
             if (score > bestScore) {
                 bestScore = score;
                 bestFormation = formation;
             }
         }
 
-        // Run the real optimization with the best formation
-        const overrideState = Object.assign(Object.create(Object.getPrototypeOf(state)), state, { formation: bestFormation });
-        _performOptimizationWithFormation(resultsGrid, overrideState, actions, horizon, mode, bestFormation, true);
+        // Set the winning formation on the real state so all apply-button handlers
+        // use the correct formation and squad slots are saved properly
+        state.formation = bestFormation;
+        _performOptimizationWithFormation(resultsGrid, state, actions, horizon, mode, bestFormation, true);
         return;
     }
 
