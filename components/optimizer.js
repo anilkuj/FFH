@@ -86,96 +86,122 @@ export function renderOptimizer(container, state, actions) {
                 </div>
             </div>
             
-            <div class="optimizer-settings-card" style="padding: 20px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; border-bottom:1px solid var(--border-color); padding-bottom:12px; margin-bottom:16px;">
-                    <h3 style="font-family: var(--font-heading); margin:0; font-weight:700; display:flex; align-items:center; gap:8px;">
-                        <i data-lucide="settings" style="color: var(--primary);"></i> Optimization Settings
-                    </h3>
-                    <button class="run-optimization-btn" id="runOptBtn" style="margin:0; width:auto; padding:10px 24px; height:38px; display:flex; align-items:center; gap:8px;">
+            <div class="optimizer-settings-card">
+                <!-- Card Header -->
+                <div class="opt-card-header">
+                    <div class="opt-card-title">
+                        <div class="opt-title-icon">
+                            <i data-lucide="settings-2"></i>
+                        </div>
+                        <div>
+                            <h3>Optimization Settings</h3>
+                            <p>Configure how the AI solver analyzes and selects your squad.</p>
+                        </div>
+                    </div>
+                    <button class="run-optimization-btn" id="runOptBtn">
                         <i data-lucide="play-circle"></i> Run AI Analysis
                     </button>
                 </div>
-                <div class="settings-form-grid">
-                    <div class="setting-group">
-                        <label for="gwHorizon">Gameweek Horizon</label>
-                        <select id="gwHorizon" class="settings-select">
-                            <option value="1">1 Gameweek (Short-term)</option>
-                            <option value="3">3 Gameweeks (Recommended)</option>
-                            <option value="5" selected>5 Gameweeks (Long-term)</option>
-                        </select>
-                        <span class="setting-help">Analyze fixtures and expected points over this horizon.</span>
-                    </div>
 
-                    <div class="setting-group">
-                        <label for="optimizerObjectiveSelect">Optimization Objective</label>
-                        <select id="optimizerObjectiveSelect" class="settings-select">
-                            <option value="xp" ${state.optimizerObjective === 'xp' ? 'selected' : ''}>Maximize Projected Points (XP)</option>
-                            <option value="efficiency" ${state.optimizerObjective === 'efficiency' ? 'selected' : ''}>Maximize Rating Efficiency (A-E/Price)</option>
-                        </select>
-                        <span class="setting-help">Optimize for raw expected points or value-for-money rating efficiency.</span>
-                    </div>
+                <!-- Row 1: Core Strategy Settings -->
+                <div class="opt-settings-section">
+                    <div class="opt-section-label"><i data-lucide="sliders-horizontal" style="width:13px;height:13px;"></i> Strategy</div>
+                    <div class="opt-settings-row">
+                        <div class="setting-group">
+                            <label for="gwHorizon">Gameweek Horizon</label>
+                            <select id="gwHorizon" class="settings-select">
+                                <option value="1">1 Gameweek (Short-term)</option>
+                                <option value="3">3 Gameweeks (Recommended)</option>
+                                <option value="5" selected>5 Gameweeks (Long-term)</option>
+                            </select>
+                            <span class="setting-help">Analyze fixtures and expected points over this horizon.</span>
+                        </div>
 
-                    <div class="setting-group">
-                        <label for="seasonPhase">Season Mode</label>
-                        <select id="seasonPhase" class="settings-select">
-                            <option value="preseason" ${state.currentGw === 1 ? 'selected' : ''}>Preseason Mode (Unlimited Transfers)</option>
-                            <option value="midseason" ${state.currentGw > 1 ? 'selected' : ''}>Midseason Mode (Respect Free Transfers)</option>
-                        </select>
-                        <span class="setting-help" id="phaseHelpText">Respects FPL rules.</span>
-                    </div>
+                        <div class="setting-group">
+                            <label for="optimizerObjectiveSelect">Optimization Objective</label>
+                            <select id="optimizerObjectiveSelect" class="settings-select">
+                                <option value="xp" ${state.optimizerObjective === 'xp' ? 'selected' : ''}>Maximize Projected Points (XP)</option>
+                                <option value="efficiency" ${state.optimizerObjective === 'efficiency' ? 'selected' : ''}>Maximize Rating Efficiency</option>
+                            </select>
+                            <span class="setting-help">Optimize for raw expected points or value-for-money rating efficiency.</span>
+                        </div>
 
-                    <div class="setting-group">
-                        <label for="optimizerFormationSelect">Preferred Formation</label>
-                        <select id="optimizerFormationSelect" class="settings-select">
-                            <option value="4-3-3" ${state.formation === '4-3-3' ? 'selected' : ''}>4-3-3</option>
-                            <option value="4-4-2" ${state.formation === '4-4-2' ? 'selected' : ''}>4-4-2</option>
-                            <option value="3-5-2" ${state.formation === '3-5-2' ? 'selected' : ''}>3-5-2</option>
-                            <option value="3-4-3" ${state.formation === '3-4-3' ? 'selected' : ''}>3-4-3</option>
-                            <option value="4-5-1" ${state.formation === '4-5-1' ? 'selected' : ''}>4-5-1</option>
-                            <option value="5-3-2" ${state.formation === '5-3-2' ? 'selected' : ''}>5-3-2</option>
-                            <option value="5-4-1" ${state.formation === '5-4-1' ? 'selected' : ''}>5-4-1</option>
-                            <option value="5-2-3" ${state.formation === '5-2-3' ? 'selected' : ''}>5-2-3</option>
-                        </select>
-                    </div>
+                        <div class="setting-group">
+                            <label for="seasonPhase">Season Mode</label>
+                            <select id="seasonPhase" class="settings-select">
+                                <option value="preseason" ${state.currentGw === 1 ? 'selected' : ''}>Preseason (Unlimited Transfers)</option>
+                                <option value="midseason" ${state.currentGw > 1 ? 'selected' : ''}>Midseason (Respect Free Transfers)</option>
+                            </select>
+                            <span class="setting-help" id="phaseHelpText">Respects FPL rules.</span>
+                        </div>
 
-                    <div class="setting-group">
-                        <label for="optimizerDraftSelect">Active Optimization Draft</label>
-                        <div style="display: flex; gap: 8px;">
-                            <select id="optimizerDraftSelect" class="settings-select" style="flex: 1;">
+                        <div class="setting-group">
+                            <label for="optimizerFormationSelect">Preferred Formation</label>
+                            <select id="optimizerFormationSelect" class="settings-select">
+                                <option value="4-3-3" ${state.formation === '4-3-3' ? 'selected' : ''}>4-3-3</option>
+                                <option value="4-4-2" ${state.formation === '4-4-2' ? 'selected' : ''}>4-4-2</option>
+                                <option value="3-5-2" ${state.formation === '3-5-2' ? 'selected' : ''}>3-5-2</option>
+                                <option value="3-4-3" ${state.formation === '3-4-3' ? 'selected' : ''}>3-4-3</option>
+                                <option value="4-5-1" ${state.formation === '4-5-1' ? 'selected' : ''}>4-5-1</option>
+                                <option value="5-3-2" ${state.formation === '5-3-2' ? 'selected' : ''}>5-3-2</option>
+                                <option value="5-4-1" ${state.formation === '5-4-1' ? 'selected' : ''}>5-4-1</option>
+                                <option value="5-2-3" ${state.formation === '5-2-3' ? 'selected' : ''}>5-2-3</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 2: Draft + Sliders -->
+                <div class="opt-settings-section">
+                    <div class="opt-section-label"><i data-lucide="layers" style="width:13px;height:13px;"></i> Squad Budget & Draft</div>
+                    <div class="opt-settings-row opt-settings-row--mixed">
+
+                        <!-- Draft Selector with actions below -->
+                        <div class="setting-group">
+                            <label for="optimizerDraftSelect">Active Optimization Draft</label>
+                            <select id="optimizerDraftSelect" class="settings-select">
                                 ${state.drafts.map((draft, idx) => `
-                                    <option value="${idx}" ${state.activeDraftIndex === idx ? 'selected' : ''}>
-                                        ${draft.name}
-                                    </option>
+                                    <option value="${idx}" ${state.activeDraftIndex === idx ? 'selected' : ''}>${draft.name}</option>
                                 `).join('')}
                             </select>
-                            <button id="renameOptDraftBtn" class="pitch-btn" title="Rename Selected Draft" style="padding: 10px 14px; border-radius: 8px; height: 38px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.02);">
-                                <i data-lucide="edit-3" style="width: 14px; height: 14px;"></i>
-                            </button>
-                            <button id="cloneOptDraftBtn" class="pitch-btn" title="Clone Selected Draft" style="padding: 10px 14px; border-radius: 8px; height: 38px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.02); margin-left: 4px;">
-                                <i data-lucide="copy" style="width: 14px; height: 14px;"></i>
-                            </button>
+                            <div class="draft-actions-row">
+                                <button id="renameOptDraftBtn" class="draft-action-btn" title="Rename Draft">
+                                    <i data-lucide="edit-3" style="width:13px;height:13px;"></i> Rename
+                                </button>
+                                <button id="cloneOptDraftBtn" class="draft-action-btn" title="Clone Draft">
+                                    <i data-lucide="copy" style="width:13px;height:13px;"></i> Clone
+                                </button>
+                            </div>
+                            <span class="setting-help">Select which draft the optimizer reads from and saves recommendations into.</span>
                         </div>
-                        <span class="setting-help">Select which draft the optimizer will read from and save recommendations into.</span>
-                    </div>
 
-                    <div class="setting-group" id="benchBudgetGroup">
-                        <label for="benchBudgetRange">Reserved Bench Budget: <span id="benchBudgetValue" style="color: var(--primary); font-weight: 800;">£${state.benchBudget.toFixed(1)}m</span></label>
-                        <div style="display: flex; align-items: center; gap: 12px; margin-top: 8px; height: 38px;">
-                            <span style="font-size: 11px; color: var(--text-muted);">£17.0m</span>
-                            <input type="range" id="benchBudgetRange" min="17.0" max="25.0" step="0.5" value="${state.benchBudget}" style="flex: 1; accent-color: var(--primary); cursor: pointer; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.1); outline: none;">
-                            <span style="font-size: 11px; color: var(--text-muted);">£25.0m</span>
+                        <!-- Bench Budget Slider -->
+                        <div class="setting-group" id="benchBudgetGroup">
+                            <label for="benchBudgetRange">
+                                Reserved Bench Budget
+                                <span class="opt-slider-value" id="benchBudgetValue">£${state.benchBudget.toFixed(1)}m</span>
+                            </label>
+                            <div class="opt-slider-container">
+                                <span class="opt-slider-bound">£17m</span>
+                                <input type="range" id="benchBudgetRange" min="17.0" max="25.0" step="0.5" value="${state.benchBudget}" class="opt-range-input">
+                                <span class="opt-slider-bound">£25m</span>
+                            </div>
+                            <span class="setting-help">Reserves a portion of your £${squadValue.toFixed(1)}m total budget for the 4 bench slots.</span>
                         </div>
-                        <span class="setting-help">Reserves a portion of your total squad budget (£${squadValue.toFixed(1)}m) for the 4 bench slots.</span>
-                    </div>
 
-                    <div class="setting-group" id="guaranteedStartGroup">
-                        <label for="guaranteedStartRange">Guaranteed Start: <span id="guaranteedStartValue" style="color: var(--primary); font-weight: 800;">${state.guaranteedStart}m</span></label>
-                        <div style="display: flex; align-items: center; gap: 12px; margin-top: 8px; height: 38px;">
-                            <span style="font-size: 11px; color: var(--text-muted);">0m</span>
-                            <input type="range" id="guaranteedStartRange" min="0" max="90" step="5" value="${state.guaranteedStart}" style="flex: 1; accent-color: var(--primary); cursor: pointer; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.1); outline: none;">
-                            <span style="font-size: 11px; color: var(--text-muted);">90m</span>
+                        <!-- Guaranteed Start Slider -->
+                        <div class="setting-group" id="guaranteedStartGroup">
+                            <label for="guaranteedStartRange">
+                                Guaranteed Start
+                                <span class="opt-slider-value" id="guaranteedStartValue">${state.guaranteedStart}m</span>
+                            </label>
+                            <div class="opt-slider-container">
+                                <span class="opt-slider-bound">0m</span>
+                                <input type="range" id="guaranteedStartRange" min="0" max="90" step="5" value="${state.guaranteedStart}" class="opt-range-input">
+                                <span class="opt-slider-bound">90m</span>
+                            </div>
+                            <span class="setting-help">Filter by minimum average minutes per appearance to guarantee playing starters.</span>
                         </div>
-                        <span class="setting-help">Filter candidates by minimum average minutes per appearance to guarantee playing starters.</span>
                     </div>
                 </div>
 
