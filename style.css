@@ -2602,6 +2602,7 @@ html.light-theme .stats-table td:first-child {
     }
 
     .sidebar {
+        display: none !important; /* Hide completely from layout when closed */
         position: fixed !important;
         left: 0 !important;
         top: 0 !important;
@@ -2614,6 +2615,7 @@ html.light-theme .stats-table td:first-child {
     }
 
     .sidebar.open {
+        display: flex !important; /* Show only when hamburger menu is active */
         transform: translateX(0) !important;
     }
 
