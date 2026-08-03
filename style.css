@@ -2596,7 +2596,8 @@ body {
     }
 
     .top-bar {
-        padding: 0 16px;
+        height: 56px !important;
+        padding: 0 12px !important;
     }
 
     /* Hide desktop quick stats pill bar on mobile */
@@ -2739,16 +2740,27 @@ body {
         padding: 6px 8px !important;
     }
 
+    .pitch-header {
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 4px !important;
+    }
+
+    .pitch-title-area {
+        display: none !important;
+    }
+
     .pitch-container {
-        padding: 6px !important;
+        padding: 4px !important;
         gap: 4px !important;
         overflow: visible !important;
     }
 
     /* Mobile scaling of the football pitch slots to fit 100% width cleanly */
     .football-pitch {
-        padding: 4px 0 28px 0 !important;
-        height: 340px !important; /* Stable fixed height on mobiles so layout does not squish or overflow */
+        padding: 4px 0 16px 0 !important;
+        height: 280px !important; /* Stable fixed height on mobiles so layout does not squish or overflow */
         max-height: none !important;
         min-height: auto !important;
         flex: none !important;
@@ -2798,7 +2810,7 @@ body {
     .bench-container {
         padding: 6px !important;
         gap: 4px !important;
-        margin-top: 8px !important;
+        margin-top: 4px !important;
     }
     
     .bench-row {
