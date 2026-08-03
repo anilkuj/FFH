@@ -673,10 +673,10 @@ html, body {
     background: var(--pitch-bg);
     border: 2px solid var(--pitch-border);
     border-radius: 16px;
-    height: 600px; /* Default desktop height */
+    height: 480px; /* Default desktop height */
     flex: 1;
     max-height: none;
-    min-height: 540px;
+    min-height: 440px;
     position: relative;
     padding: 8px 0 48px 0 !important;
     display: flex;
@@ -834,7 +834,7 @@ html, body {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    margin-top: 36px;
+    margin-top: 20px;
 }
 
 .bench-title {
