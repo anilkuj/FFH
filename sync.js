@@ -154,6 +154,12 @@ function parseAndWriteData(data, fixturesData) {
         const xG90 = minutes > 0 ? (xG / minutes) * 90 : 0.0;
         const xA90 = minutes > 0 ? (xA / minutes) * 90 : 0.0;
 
+        // GK-specific last-season stats
+        const totalSaves = parseInt(el.saves) || 0;
+        const goalsConceded = parseInt(el.goals_conceded) || 0;
+        const saves90 = minutes > 0 ? (totalSaves / minutes) * 90 : 0.0;
+        const goalsConceded90 = minutes > 0 ? (goalsConceded / minutes) * 90 : 0.0;
+
         let appearances = starts;
         if (minutes > starts * 90) {
             appearances = starts + Math.round((minutes - starts * 90) / 20);
@@ -183,6 +189,52 @@ function parseAndWriteData(data, fixturesData) {
         else if (position === 'MID') basePPG = Math.max(1.8, Math.min(8.5, basePPG));
         else if (position === 'FWD') basePPG = Math.max(2.0, Math.min(8.5, basePPG));
 
+        // -------------------------------------------------------
+        // Clean Sheet Probability Model (mirrors Defcon logic)
+        // Used to project CS contribution to XP for GKP/DEF/MID
+        // -------------------------------------------------------
+        const getCleanSheetProb = (diff, loc) => {
+            // Base clean sheet % derived from FDR (opponent strength)
+            let base;
+            if (diff <= 2)      base = 0.48;
+            else if (diff === 3) base = 0.30;
+            else if (diff === 4) base = 0.18;
+            else                 base = 0.08;  // diff 5
+
+            // Home advantage shifts the odds
+            base += (loc === 'H') ? 0.05 : -0.05;
+            return Math.max(0.02, Math.min(0.65, base));
+        };
+
+        // -------------------------------------------------------
+        // GK Saves XP Model
+        // Expected saves per game depends on opposition strength:
+        //   tough opponents (high FDR) → more shots → more saves
+        //   easy opponents (low FDR)   → fewer shots → fewer saves
+        // FPL rule: every 3 saves = 1 point
+        // -------------------------------------------------------
+        const getExpectedSavePts = (diff, loc) => {
+            if (position !== 'GKP') return 0;
+
+            // Saves-per-game expected from last season's rate, adjusted by fixture difficulty
+            // Harder fixture → more shots conceded → more saves (but fewer CS)
+            let diffMultiplier;
+            if (diff <= 2)       diffMultiplier = 0.65; // easy opponent → fewer shots
+            else if (diff === 3) diffMultiplier = 1.0;
+            else if (diff === 4) diffMultiplier = 1.30;
+            else                 diffMultiplier = 1.60; // tough opponent → many shots
+
+            // Home/away: playing away typically faces slightly more shots
+            const locMultiplier = (loc === 'A') ? 1.10 : 0.92;
+
+            // If the GK has saves data from last season, use it. Otherwise use a league-average default.
+            const baseSaves90 = saves90 > 0 ? saves90 : 3.0;
+            const expectedSavesPerGame = baseSaves90 * diffMultiplier * locMultiplier;
+
+            // FPL: every 3 saves earns 1 bonus point
+            return expectedSavesPerGame / 3;
+        };
+
         const predictions = [];
         const fixtures = fixturesSchedule[teamShort] || [];
         
@@ -191,17 +243,49 @@ function parseAndWriteData(data, fixturesData) {
             let pts = basePPG;
             
             if (fixture.opp !== 'BYE') {
+                // --- FDR-based scaling ---
                 if (fixture.diff === 2) pts *= 1.25;
                 else if (fixture.diff === 4) pts *= 0.85;
                 else if (fixture.diff === 5) pts *= 0.65;
                 
+                // --- Home/Away base adjustment ---
                 if (fixture.loc === 'H') pts += 0.35;
                 else pts -= 0.35;
                 
                 if (position === 'GKP' || position === 'DEF') {
-                    if (fixture.diff === 2) pts += 0.8;
-                    if (fixture.diff === 5) pts -= 0.6;
+                    // --- Defcon-aligned clean sheet XP contribution ---
+                    // CS probability * CS points value (4 for GKP/DEF)
+                    const csProb = getCleanSheetProb(fixture.diff, fixture.loc);
+                    const csXp = csProb * 4;
+
+                    // --- Remove the old flat CS bonus that was baked into basePPG ---
+                    // (basePPG already encodes historical CS partially, so we add the
+                    //  *difference* between the fixture-specific CS expectation and the
+                    //  average-fixture CS expectation to avoid double-counting)
+                    const avgCsProb = getCleanSheetProb(3, 'H'); // average fixture baseline
+                    const csAdjustment = (csProb - avgCsProb) * 4;
+
+                    pts += csAdjustment;
+
+                    // --- GK Saves contribution ---
+                    if (position === 'GKP') {
+                        pts += getExpectedSavePts(fixture.diff, fixture.loc);
+                    }
+
+                } else if (position === 'MID') {
+                    // MID gets 1 pt for a clean sheet (FPL rule)
+                    const csProb = getCleanSheetProb(fixture.diff, fixture.loc);
+                    const avgCsProb = getCleanSheetProb(3, 'H');
+                    pts += (csProb - avgCsProb) * 1; // marginal CS contribution vs average
+
+                    // Attacking bonus for MID/FWD
+                    const xGI90 = xG90 + xA90;
+                    if (xGI90 > 0.1) {
+                        if (fixture.diff === 2) pts += xGI90 * 1.5;
+                        if (fixture.diff === 5) pts -= xGI90 * 0.8;
+                    }
                 } else {
+                    // FWD — attacking only, no CS points
                     const xGI90 = xG90 + xA90;
                     if (xGI90 > 0.1) {
                         if (fixture.diff === 2) pts += xGI90 * 1.5;
@@ -252,7 +336,17 @@ function parseAndWriteData(data, fixturesData) {
                     else if (pseudoRandom < 0.25) bonusPts = 2;
                     else if (pseudoRandom < 0.35) bonusPts = 1;
                     
-                    actualPts = ptsBase + attackingPts + cardPts + bonusPts;
+                    // GK: actual saves bonus from real match data
+                    let savePts = 0;
+                    if (position === 'GKP') {
+                        // Use goals conceded as a proxy: teams that concede 2+ goals typically face 5+ shots saved
+                        const goalsIn = fData.team_h === teamId ? fData.team_a_score : fData.team_h_score;
+                        // Rough: 2-3 saves per goal scored on average (FPL-approximate)
+                        const estimatedSaves = Math.round(goalsIn * 2.5 + (pseudoRandom * 2));
+                        savePts = Math.floor(estimatedSaves / 3);
+                    }
+                    
+                    actualPts = ptsBase + attackingPts + cardPts + bonusPts + savePts;
                     const playChance = el.starts / 38;
                     if (pseudoRandom > playChance && playChance < 0.8) {
                         actualPts = 0;
@@ -291,6 +385,10 @@ function parseAndWriteData(data, fixturesData) {
             predictions: predictions,
             GS: starts,
             MPPG: parseFloat(mppg.toFixed(1)),
+            saves: totalSaves,
+            saves90: parseFloat(saves90.toFixed(2)),
+            goalsConceded: goalsConceded,
+            goalsConceded90: parseFloat(goalsConceded90.toFixed(2)),
             transferredThisSeason: transferredThisSeason,
             oldTeam: oldTeam,
             news: el.news || "",
@@ -298,6 +396,7 @@ function parseAndWriteData(data, fixturesData) {
             chanceOfPlaying: el.chance_of_playing_next_round !== null ? el.chance_of_playing_next_round : 100,
             xp10: parseFloat(totalXp10.toFixed(1))
         };
+
     });
 
     // 4. Generate a valid DEFAULT_SQUAD of 15 players

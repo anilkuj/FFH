@@ -3536,27 +3536,24 @@ select option {
 /* Player Card Hover Tooltip Styling */
 .player-card-tooltip {
     display: none;
-    position: absolute;
-    bottom: 115%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(13, 20, 38, 0.98);
+    position: fixed;
+    background: var(--bg-panel);
     border: 1px solid var(--primary);
     border-radius: 10px;
     padding: 12px;
-    width: 220px;
-    z-index: 1000;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 255, 136, 0.15);
+    width: 230px;
+    z-index: 99999;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), 0 0 12px rgba(0, 255, 136, 0.1);
     backdrop-filter: blur(12px);
     pointer-events: none;
     font-family: var(--font-main);
     text-align: left;
-    color: #fff;
+    color: var(--text-main);
     opacity: 0;
-    transition: opacity 0.2s ease-in-out;
+    transition: opacity 0.18s ease-in-out;
 }
 
-.player-pitch-card:hover .player-card-tooltip {
+.player-card-tooltip.tooltip-visible {
     display: block;
     opacity: 1;
 }
@@ -3565,7 +3562,7 @@ select option {
     font-family: var(--font-heading);
     font-size: 13px;
     font-weight: 800;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid var(--border-color);
     padding-bottom: 6px;
     margin-bottom: 8px;
     color: var(--primary);
@@ -3576,10 +3573,48 @@ select option {
 
 .tooltip-title-team {
     font-size: 10px;
-    background: rgba(255, 255, 255, 0.06);
+    background: var(--bg-input, rgba(255, 255, 255, 0.06));
     padding: 1px 5px;
     border-radius: 4px;
     color: var(--text-muted);
+}
+
+.tooltip-stats-divider {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 6px 0;
+}
+
+.tooltip-quick-stats {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.tooltip-quick-stat {
+    flex: 1;
+    text-align: center;
+    background: var(--bg-input, rgba(255,255,255,0.04));
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 4px 6px;
+}
+
+.tooltip-quick-stat-val {
+    display: block;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1.2;
+}
+
+.tooltip-quick-stat-lbl {
+    display: block;
+    font-size: 9px;
+    color: var(--text-muted);
+    margin-top: 1px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
 }
 
 .tooltip-rating-row {

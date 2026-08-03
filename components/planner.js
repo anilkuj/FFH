@@ -295,6 +295,14 @@ function renderPlayerTooltip(player, currentGw) {
         if (val === 'E') return 'rating-badge-e';
         return 'rating-badge-na';
     };
+
+    const starts = typeof player.GS === 'number' ? player.GS : '—';
+    const avgMins = typeof player.MPPG === 'number' ? player.MPPG.toFixed(0) + 'm' : '—';
+
+    // GK-specific quick stats
+    const isGKP = player.position === 'GKP';
+    const savesTotal = isGKP && typeof player.saves === 'number' ? player.saves : null;
+    const saves90Val = isGKP && typeof player.saves90 === 'number' ? player.saves90.toFixed(1) : null;
     
     return `
         <div class="player-card-tooltip">
@@ -302,6 +310,26 @@ function renderPlayerTooltip(player, currentGw) {
                 <span>${player.name}</span>
                 <span class="tooltip-title-team">${player.team}</span>
             </div>
+            <div class="tooltip-quick-stats">
+                <div class="tooltip-quick-stat">
+                    <span class="tooltip-quick-stat-val">${starts}</span>
+                    <span class="tooltip-quick-stat-lbl">Starts</span>
+                </div>
+                <div class="tooltip-quick-stat">
+                    <span class="tooltip-quick-stat-val">${avgMins}</span>
+                    <span class="tooltip-quick-stat-lbl">Avg Mins</span>
+                </div>
+                ${isGKP && savesTotal !== null ? `
+                <div class="tooltip-quick-stat">
+                    <span class="tooltip-quick-stat-val">${savesTotal}</span>
+                    <span class="tooltip-quick-stat-lbl">Saves</span>
+                </div>
+                <div class="tooltip-quick-stat">
+                    <span class="tooltip-quick-stat-val">${saves90Val}</span>
+                    <span class="tooltip-quick-stat-lbl">Sv/90</span>
+                </div>` : ''}
+            </div>
+            <hr class="tooltip-stats-divider">
             <div class="tooltip-rating-row">
                 <span class="tooltip-rating-label">Expected Minutes:</span>
                 <span class="tooltip-rating-value ${getBadgeClass(ratings.expectedMinutes)}">${ratings.expectedMinutes}</span>
@@ -329,6 +357,7 @@ function renderPlayerTooltip(player, currentGw) {
         </div>
     `;
 }
+
 
 export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, actions, isSquadUnlocked = false) {
     const rowSlots = squadSlots.filter(s => s.position === position && s.isStarting);
@@ -522,7 +551,61 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
     };
     document.addEventListener('click', window._mobileClearListener);
 
+    // === Smart Tooltip Positioning ===
+    // We use position:fixed on the tooltip and JS to decide above/below placement.
+    // This avoids CSS overflow/crop issues for GK (top row) and bench (bottom row).
+    let _tooltipHideTimer = null;
+    container.querySelectorAll('.player-pitch-card:not(.empty-slot)').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            if (_tooltipHideTimer) clearTimeout(_tooltipHideTimer);
+            // Hide any other visible tooltips
+            container.querySelectorAll('.player-card-tooltip.tooltip-visible').forEach(t => t.classList.remove('tooltip-visible'));
+
+            const tooltip = card.querySelector('.player-card-tooltip');
+            if (!tooltip) return;
+
+            // Temporarily show off-screen to measure
+            tooltip.style.visibility = 'hidden';
+            tooltip.style.display = 'block';
+            const tooltipH = tooltip.offsetHeight;
+            const tooltipW = tooltip.offsetWidth;
+            tooltip.style.display = '';
+            tooltip.style.visibility = '';
+
+            const cardRect = card.getBoundingClientRect();
+            const vpH = window.innerHeight;
+            const vpW = window.innerWidth;
+            const GAP = 8;
+
+            // Decide vertical placement: above if enough room, else below
+            let top;
+            if (cardRect.top - tooltipH - GAP >= 0) {
+                // Show above
+                top = cardRect.top - tooltipH - GAP;
+            } else {
+                // Show below
+                top = cardRect.bottom + GAP;
+            }
+
+            // Decide horizontal placement: center on card, but clamp to viewport
+            let left = cardRect.left + cardRect.width / 2 - tooltipW / 2;
+            left = Math.max(GAP, Math.min(left, vpW - tooltipW - GAP));
+
+            tooltip.style.top = top + 'px';
+            tooltip.style.left = left + 'px';
+            tooltip.classList.add('tooltip-visible');
+        });
+
+        card.addEventListener('mouseleave', () => {
+            const tooltip = card.querySelector('.player-card-tooltip');
+            if (tooltip) {
+                _tooltipHideTimer = setTimeout(() => tooltip.classList.remove('tooltip-visible'), 80);
+            }
+        });
+    });
+
     // Go to Transfer Planner Button click listener
+
     container.querySelectorAll('.goto-tp-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             state.tpPrepopulatedSource = `draft_${state.activeDraftIndex}`;
