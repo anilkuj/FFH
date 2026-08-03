@@ -2,8 +2,16 @@ import { PLAYERS, TEAMS } from '../data.js';
 import { getShirtSVG } from './planner.js';
 
 export function renderCompare(container, state, actions) {
-    // Selected player IDs (default prepopulate with Cole Palmer and Erling Haaland)
-    let selectedIds = [302, 401]; 
+    // Default load all midfielders from the active squad, filter out duplicates and NaNs
+    let selectedIds = state.squadSlots
+        .filter(s => s.position === 'MID' && s.playerId !== null)
+        .map(s => parseInt(s.playerId))
+        .filter(id => !isNaN(id));
+
+    // Fallback default prepopulate (Cole Palmer and Bukayo Saka) if active squad has fewer than 2 midfielders
+    if (selectedIds.length < 2) {
+        selectedIds = [302, 12]; 
+    }
 
     container.innerHTML = `
         <div class="compare-view-container" style="display: flex; flex-direction: column; gap: 24px; width: 100%;">
@@ -62,104 +70,17 @@ export function renderCompare(container, state, actions) {
         </div>
     `;
 
-    // Render deck chips on load
-    const updateCompareDeck = () => {
-        const deck = container.querySelector('#compareDeck');
-        if (!deck) return;
-        if (selectedIds.length === 0) {
-            deck.innerHTML = `<span style="color: var(--text-muted); font-size: 13px;">No players selected. Search and add up to 5 players to compare.</span>`;
-            return;
-        }
-        deck.innerHTML = selectedIds.map(id => {
-            const p = PLAYERS.find(pl => pl.id === id);
-            if (!p) return '';
-            return `
-                <div class="stat-pill" style="padding: 6px 12px; display: flex; align-items: center; gap: 8px; background: rgba(0, 255, 136, 0.05); border: 1px solid var(--primary-glow); border-radius: 20px; font-size: 12px;">
-                    <span style="font-weight: 700; color: var(--text-main);">${p.name} (${p.team} • ${p.position})</span>
-                    <button class="remove-compare-player-btn" data-id="${p.id}" style="background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; padding: 0 2px; transition: color 0.2s;"><i data-lucide="x" style="width: 14px; height: 14px;"></i></button>
-                </div>
-            `;
-        }).join('');
-        lucide.createIcons();
-
-        // Bind remove actions
-        deck.querySelectorAll('.remove-compare-player-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const id = parseInt(btn.getAttribute('data-id'));
-                selectedIds = selectedIds.filter(x => x !== id);
-                updateCompareDeck();
-            });
-        });
-    };
-
-    updateCompareDeck();
-
-    // Search event handling
-    const searchInput = container.querySelector('#playerCompareSearch');
-    const searchResults = container.querySelector('#compareSearchResults');
-
-    searchInput.addEventListener('input', e => {
-        const query = e.target.value.toLowerCase().trim();
-        if (!query) {
-            searchResults.style.display = 'none';
-            return;
-        }
-
-        const matches = PLAYERS.filter(p => p.name.toLowerCase().includes(query))
-                               .filter(p => !selectedIds.includes(p.id))
-                               .slice(0, 10);
-
-        if (matches.length === 0) {
-            searchResults.innerHTML = `<div style="padding: 12px; color: var(--text-muted); font-size: 13px; text-align: center;">No matching players found.</div>`;
-        } else {
-            searchResults.innerHTML = matches.map(p => `
-                <div class="search-result-item" data-id="${p.id}" style="padding: 10px 14px; cursor: pointer; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; transition: background-color 0.2s;">
-                    <div>
-                        <strong style="color: var(--text-main); font-size: 13px;">${p.name}</strong>
-                        <span style="font-size: 11px; color: var(--text-muted); margin-left: 6px;">${p.position} • ${p.team}</span>
-                    </div>
-                    <span style="font-size: 12px; color: var(--primary); font-weight: 700;">£${p.price.toFixed(1)}m</span>
-                </div>
-            `).join('');
-        }
-        searchResults.style.display = 'block';
-
-        // Bind clicks on search items
-        searchResults.querySelectorAll('.search-result-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const id = parseInt(item.getAttribute('data-id'));
-                if (selectedIds.length >= 5) {
-                    actions.showToast("You can compare up to 5 players at a time.", "error");
-                    return;
-                }
-                selectedIds.push(id);
-                searchInput.value = '';
-                searchResults.style.display = 'none';
-                updateCompareDeck();
-            });
-        });
-    });
-
-    // Close search dropdown when clicking outside
-    document.addEventListener('click', e => {
-        if (searchResults && !searchResults.contains(e.target) && e.target !== searchInput) {
-            searchResults.style.display = 'none';
-        }
-    });
-
-    // Compare trigger event handling
-    const runCompareBtn = container.querySelector('#runCompareBtn');
     const resultsSection = container.querySelector('#compareResultsSection');
     const statsTable = container.querySelector('#compareStatsTable');
     const aiAnalysisCard = container.querySelector('#compareAiAnalysisCard');
 
-    runCompareBtn.addEventListener('click', () => {
-        if (selectedIds.length < 2) {
-            actions.showToast("Select at least 2 players to compare.", "error");
+    // Main comparison runner
+    const runComparison = () => {
+        const players = selectedIds.map(id => PLAYERS.find(p => p.id === id)).filter(Boolean);
+        if (players.length < 2) {
+            resultsSection.style.display = 'none';
             return;
         }
-
-        const players = selectedIds.map(id => PLAYERS.find(p => p.id === id)).filter(Boolean);
 
         // Build stats grid table columns
         let tableHtml = `
@@ -190,7 +111,7 @@ export function renderCompare(container, state, actions) {
                 <tr>
                     <td style="font-weight: 600; color: var(--text-muted);">Expected Points (GW${state.currentGw})</td>
                     ${players.map(p => {
-                        const pred = (p.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 }).pts;
+                        const pred = ((p.predictions || []).find(pr => pr.gw === state.currentGw) || { pts: 0 }).pts;
                         return `<td style="text-align: center; font-weight: bold; color: var(--secondary);">${pred.toFixed(1)}</td>`;
                     }).join('')}
                 </tr>
@@ -244,18 +165,111 @@ export function renderCompare(container, state, actions) {
 
         resultsSection.style.display = 'flex';
         lucide.createIcons();
+    };
+
+    // Render deck chips on load
+    const updateCompareDeck = () => {
+        const deck = container.querySelector('#compareDeck');
+        if (!deck) return;
+        if (selectedIds.length === 0) {
+            deck.innerHTML = `<span style="color: var(--text-muted); font-size: 13px;">No players selected. Search and add up to 5 players to compare.</span>`;
+            resultsSection.style.display = 'none';
+            return;
+        }
+        deck.innerHTML = selectedIds.map(id => {
+            const p = PLAYERS.find(pl => pl.id === id);
+            if (!p) return '';
+            return `
+                <div class="stat-pill" style="padding: 6px 12px; display: flex; align-items: center; gap: 8px; background: rgba(0, 255, 136, 0.05); border: 1px solid var(--primary-glow); border-radius: 20px; font-size: 12px;">
+                    <span style="font-weight: 700; color: var(--text-main);">${p.name} (${p.team} • ${p.position})</span>
+                    <button class="remove-compare-player-btn" data-id="${p.id}" style="background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; padding: 0 2px; transition: color 0.2s;"><i data-lucide="x" style="width: 14px; height: 14px;"></i></button>
+                </div>
+            `;
+        }).join('');
+        lucide.createIcons();
+
+        // Bind remove actions
+        deck.querySelectorAll('.remove-compare-player-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = parseInt(btn.getAttribute('data-id'));
+                selectedIds = selectedIds.filter(x => x !== id);
+                updateCompareDeck();
+                runComparison(); // Automatically run comparison on remove
+            });
+        });
+    };
+
+    updateCompareDeck();
+
+    // Search event handling
+    const searchInput = container.querySelector('#playerCompareSearch');
+    const searchResults = container.querySelector('#compareSearchResults');
+
+    searchInput.addEventListener('input', e => {
+        const query = e.target.value.toLowerCase().trim();
+        if (!query) {
+            searchResults.style.display = 'none';
+            return;
+        }
+
+        const matches = PLAYERS.filter(p => p.name.toLowerCase().includes(query))
+                               .filter(p => !selectedIds.includes(p.id))
+                               .slice(0, 10);
+
+        if (matches.length === 0) {
+            searchResults.innerHTML = `<div style="padding: 12px; color: var(--text-muted); font-size: 13px; text-align: center;">No matching players found.</div>`;
+        } else {
+            searchResults.innerHTML = matches.map(p => `
+                <div class="search-result-item" data-id="${p.id}" style="padding: 10px 14px; cursor: pointer; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; transition: background-color 0.2s;">
+                    <div>
+                        <strong style="color: var(--text-main); font-size: 13px;">${p.name}</strong>
+                        <span style="font-size: 11px; color: var(--text-muted); margin-left: 6px;">${p.position} • ${p.team}</span>
+                    </div>
+                    <span style="font-size: 12px; color: var(--primary); font-weight: 700;">£${p.price.toFixed(1)}m</span>
+                </div>
+            `).join('');
+        }
+        searchResults.style.display = 'block';
+
+        // Bind clicks on search items
+        searchResults.querySelectorAll('.search-result-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const id = parseInt(item.getAttribute('data-id'));
+                if (selectedIds.length >= 5) {
+                    actions.showToast("You can compare up to 5 players at a time.", "error");
+                    return;
+                }
+                selectedIds.push(id);
+                searchInput.value = '';
+                searchResults.style.display = 'none';
+                updateCompareDeck();
+                runComparison(); // Automatically run comparison on add
+            });
+        });
     });
 
-    // Auto-run comparison on load with Palmer and Haaland
-    runCompareBtn.click();
+    // Close search dropdown when clicking outside
+    document.addEventListener('click', e => {
+        if (searchResults && !searchResults.contains(e.target) && e.target !== searchInput) {
+            searchResults.style.display = 'none';
+        }
+    });
+
+    // Compare trigger event handling
+    const runCompareBtn = container.querySelector('#runCompareBtn');
+    runCompareBtn.addEventListener('click', () => {
+        runComparison();
+    });
+
+    // Run initial comparison on load with default selected midfielders
+    runComparison();
 }
 
-// Logic-based FPL Analyzer for comparing up to 5 players
+// Logic-based FPL Advisor comparison report
 function generateAiComparisonReport(players, state) {
-    // 1. Identify the top stats performers
     const sortedByGwXp = [...players].sort((a, b) => {
-        const predA = (a.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 }).pts;
-        const predB = (b.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 }).pts;
+        const predA = ((a.predictions || []).find(pr => pr.gw === state.currentGw) || { pts: 0 }).pts;
+        const predB = ((b.predictions || []).find(pr => pr.gw === state.currentGw) || { pts: 0 }).pts;
         return predB - predA;
     });
 
@@ -265,7 +279,7 @@ function generateAiComparisonReport(players, state) {
 
     // Compute dynamic scores
     const scoredPlayers = players.map(p => {
-        const gwXp = (p.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 }).pts;
+        const gwXp = ((p.predictions || []).find(pr => pr.gw === state.currentGw) || { pts: 0 }).pts;
         const valueRatio = p.xp10 / p.price; // points per million
         const optaScore = p.xGI + (p.shots * 0.05);
 
