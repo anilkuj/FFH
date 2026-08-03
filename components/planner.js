@@ -74,12 +74,6 @@ export function renderPlanner(container, state, actions) {
                         </div>
                     </div>
                     <div class="pitch-actions" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end;">
-                        <button class="pitch-btn" id="renameDraftBtn" title="Rename Current Draft" style="flex: 0 0 auto; padding: 6px; border-radius: 6px; background: rgba(255, 255, 255, 0.02); display: flex; align-items: center; justify-content: center; height: 32px; width: 32px;">
-                            <i data-lucide="edit-3" style="width: 14px; height: 14px;"></i>
-                        </button>
-                        <button class="pitch-btn" id="cloneDraftBtn" title="Clone Current Draft" style="flex: 0 0 auto; padding: 6px; border-radius: 6px; background: rgba(255, 255, 255, 0.02); display: flex; align-items: center; justify-content: center; height: 32px; width: 32px;">
-                            <i data-lucide="copy" style="width: 14px; height: 14px;"></i>
-                        </button>
                         <button class="pitch-btn" id="captainAnalyzerBtn" title="Captaincy Analyzer" style="flex: 0 0 auto; padding: 6px; border-radius: 6px; background: rgba(255, 255, 255, 0.02); display: flex; align-items: center; justify-content: center; height: 32px; width: 32px; margin-right: 4px;">
                             <i data-lucide="award" style="width: 14px; height: 14px; color: #fbbf24;"></i>
                         </button>
@@ -100,14 +94,19 @@ export function renderPlanner(container, state, actions) {
                     </div>
                 </div>
 
-                <!-- Draft Tabs Bar -->
-                <div class="draft-tabs-bar" style="display: flex; gap: 8px; margin: 0 0 16px 0; overflow-x: auto; padding: 4px 0; scrollbar-width: none; align-items: center; width: 100%;">
-                    ${state.drafts.map((draft, idx) => `
-                        <button class="pitch-btn draft-tab-btn ${state.activeDraftIndex === idx ? 'active-chip' : ''}" data-draft-idx="${idx}" style="flex: 0 0 auto; min-width: 80px; text-transform: none; font-size: 11px; padding: 6px 12px; border-radius: 6px; display: flex; align-items: center; gap: 6px; height: 32px;">
-                            <i data-lucide="folder" style="width: 12px; height: 12px;"></i>
-                            <span>${draft.name}</span>
-                        </button>
-                    `).join('')}
+                <!-- Draft Selector Dropdown Row -->
+                <div class="draft-select-row" style="display: flex; align-items: center; gap: 8px; margin: 0 0 16px 0; background: rgba(30, 41, 59, 0.15); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 8px; box-sizing: border-box; width: 100%;">
+                    <i data-lucide="folder" style="width: 14px; height: 14px; color: var(--text-muted); flex-shrink: 0;"></i>
+                    <span style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--text-muted); letter-spacing: 0.5px; white-space: nowrap; margin-right: 4px;">Active Draft:</span>
+                    <select id="draftSelect" class="formation-select" style="flex: 1; min-width: 120px; max-width: 250px; text-transform: none; font-size: 13px; font-weight: 500; height: 32px; padding: 4px 10px; border-radius: 6px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); cursor: pointer;">
+                        ${state.drafts.map((draft, idx) => `
+                            <option value="${idx}" ${state.activeDraftIndex === idx ? 'selected' : ''}>
+                                📁 ${draft.name}
+                            </option>
+                        `).join('')}
+                    </select>
+                    <button class="pitch-btn" id="renameDraftBtn" title="Rename Current Draft" style="height: 32px; width: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); cursor: pointer;"><i data-lucide="edit-3" style="width: 14px; height: 14px;"></i></button>
+                    <button class="pitch-btn" id="cloneDraftBtn" title="Clone Current Draft" style="height: 32px; width: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); cursor: pointer;"><i data-lucide="copy" style="width: 14px; height: 14px;"></i></button>
                 </div>
 
                 <!-- Football Pitch -->
@@ -167,9 +166,7 @@ export function renderPlanner(container, state, actions) {
     // Trigger Lucide icons
     lucide.createIcons();
 
-    // Scroll active draft into view
-    const activeTab = document.querySelector('.draft-tab-btn.active-chip');
-    if (activeTab) activeTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    // No horizontal draft tabs to scroll
 
     // Event listeners
     setupPlannerListeners(container, state, actions, starters, bench);
@@ -552,10 +549,11 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
         });
     });
 
-    // Draft Tabs switching
-    container.querySelectorAll('.draft-tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const newIdx = parseInt(btn.getAttribute('data-draft-idx'));
+    // Draft switching dropdown listener
+    const draftSelect = container.querySelector('#draftSelect');
+    if (draftSelect) {
+        draftSelect.addEventListener('change', e => {
+            const newIdx = parseInt(e.target.value);
             if (newIdx === state.activeDraftIndex) return;
 
             // Auto-save current squad state to previous active draft slot
@@ -586,7 +584,7 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
             actions.renderActiveView();
             actions.showToast(`Loaded ${targetDraft.name}`, 'success');
         });
-    });
+    }
 
     // Draft renaming
     const renameDraftBtn = container.querySelector('#renameDraftBtn');
@@ -835,11 +833,7 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
         });
     }
 
-    // Scroll active draft tab into view
-    const activeTab = container.querySelector('.draft-tab-btn.active-chip');
-    if (activeTab) {
-        activeTab.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'nearest' });
-    }
+    // Scroll active draft tab into view removed
 }
 
 // Opens the detail modal when player pitch card is clicked
