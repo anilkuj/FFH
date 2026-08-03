@@ -726,6 +726,22 @@ body {
     width: 100%;
 }
 
+.pitch-row[data-row="FWD"] {
+    margin-bottom: 24px !important;
+}
+
+@media (max-width: 768px) {
+    .pitch-row[data-row="FWD"] {
+        margin-bottom: 16px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .pitch-row[data-row="FWD"] {
+        margin-bottom: 12px !important;
+    }
+}
+
 /* Pitch Card (Player slot on pitch) */
 .player-pitch-card {
     display: flex;
@@ -2563,7 +2579,7 @@ body {
     }
 
     .football-pitch {
-        height: 400px !important;
+        height: 520px !important;
     }
 
     .shirt-icon-wrapper {
@@ -2745,7 +2761,7 @@ body {
     /* Mobile scaling of the football pitch slots to fit 100% width cleanly */
     .football-pitch {
         padding: 4px 0 28px 0 !important;
-        height: 380px !important; /* Stable fixed height on mobiles so layout does not squish or overflow */
+        height: 440px !important; /* Stable fixed height on mobiles so layout does not squish or overflow */
         max-height: none !important;
         min-height: auto !important;
         flex: none !important;
