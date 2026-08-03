@@ -202,16 +202,28 @@ function get5GwXp(player, currentGw) {
     return sum;
 }
 
-function renderFdrDots(player, currentGw) {
-    let html = '<div class="fdr-dots-container" style="display: inline-flex; gap: 3px; align-items: center; justify-content: center; vertical-align: middle;">';
+function renderPitchFixtures(player, currentGw) {
+    let html = '<div class="pitch-fdr-fixtures" style="display: flex; gap: 2px; align-items: center; justify-content: center; margin-top: 4px; flex-wrap: nowrap; width: 100%; overflow: hidden;">';
     for (let gw = currentGw; gw < currentGw + 5; gw++) {
+        if (gw > 10) break;
         const pr = player.predictions.find(p => p.gw === gw);
         if (pr) {
             const oppText = pr.opp !== 'BYE' ? `${pr.opp} (${pr.loc})` : 'BYE';
             const fdrColor = getFdrColor(pr.diff);
-            html += `<span class="fdr-dot" title="GW${gw}: ${oppText} (FDR ${pr.diff})" style="width: 6px; height: 6px; border-radius: 50%; background-color: ${fdrColor}; display: inline-block;"></span>`;
+            const ptsText = pr.actualPts !== undefined && pr.actualPts !== null ? pr.actualPts : pr.pts.toFixed(1);
+            html += `
+                <div class="pitch-fixture-box" title="GW${gw}: ${oppText} - FDR ${pr.diff} (XP: ${pr.pts.toFixed(1)})" style="background-color: ${fdrColor}; color: #0f172a; flex: 1; min-width: 0; max-width: 24px; height: 24px; border-radius: 3px; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1; font-weight: 800; flex-shrink: 1;">
+                    <span style="font-size: 7px; text-transform: uppercase; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%;">${pr.opp}</span>
+                    <span style="font-size: 6px; opacity: 0.9; display: block; margin-top: 1px;">${ptsText}</span>
+                </div>
+            `;
         } else {
-            html += `<span class="fdr-dot" title="GW${gw}: BYE" style="width: 6px; height: 6px; border-radius: 50%; background-color: #334155; display: inline-block;"></span>`;
+            html += `
+                <div class="pitch-fixture-box" title="GW${gw}: BYE" style="background-color: #334155; color: #94a3b8; flex: 1; min-width: 0; max-width: 24px; height: 24px; border-radius: 3px; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1; font-weight: 800; flex-shrink: 1;">
+                    <span style="font-size: 7px; text-transform: uppercase; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%;">BYE</span>
+                    <span style="font-size: 6px; opacity: 0.9; display: block; margin-top: 1px;">0.0</span>
+                </div>
+            `;
         }
     }
     html += '</div>';
@@ -354,12 +366,10 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
                         ${prediction.actualPts !== undefined && prediction.actualPts !== null ? 
                             `<strong style="color: var(--primary);">${prediction.actualPts} pts</strong> <span class="player-xp-subtext">(${prediction.pts.toFixed(1)} XP)</span>` : 
                             `${prediction.pts.toFixed(1)} XP`
-                        }
+                        } • 5-GW: ${get5GwXp(player, currentGw).toFixed(1)} XP
                     </div>
-                    <div class="player-pitch-points-sub" style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 2px;">
-                        ${renderFdrDots(player, currentGw)}
-                        <span style="opacity: 0.6;">•</span>
-                        <span>5-GW: ${get5GwXp(player, currentGw).toFixed(1)} XP</span>
+                    <div class="player-pitch-points-sub" style="display: flex; align-items: center; justify-content: center; margin-top: 4px; width: 100%;">
+                        ${renderPitchFixtures(player, currentGw)}
                     </div>
                 </div>
                 ${renderPlayerTooltip(player, currentGw)}
@@ -420,12 +430,10 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions) {
                             ${prediction.actualPts !== undefined && prediction.actualPts !== null ? 
                                 `<strong style="color: var(--primary);">${prediction.actualPts} pts</strong> <span class="player-xp-subtext">(${prediction.pts.toFixed(1)} XP)</span>` : 
                                 `${prediction.pts.toFixed(1)} XP`
-                            }
+                            } • 5-GW: ${get5GwXp(player, currentGw).toFixed(1)} XP
                         </div>
-                        <div class="player-pitch-points-sub" style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 2px;">
-                            ${renderFdrDots(player, currentGw)}
-                            <span style="opacity: 0.6;">•</span>
-                            <span>5-GW: ${get5GwXp(player, currentGw).toFixed(1)} XP</span>
+                        <div class="player-pitch-points-sub" style="display: flex; align-items: center; justify-content: center; margin-top: 4px; width: 100%;">
+                            ${renderPitchFixtures(player, currentGw)}
                         </div>
                     </div>
                     ${renderPlayerTooltip(player, currentGw)}
