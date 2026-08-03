@@ -598,6 +598,18 @@ const actions = {
         document.getElementById('bankValueDisplay').innerText = formattedBankValue;
         document.getElementById('freeTransfersDisplay').innerText = formattedTransfers;
 
+        // Dynamic Available Transfers button configuration next to Gameweek
+        const avTransBtn = document.getElementById('availableTransfersBtn');
+        if (avTransBtn) {
+            const hasTransfersAvailable = (formattedTransfers === 'Unlimited' || parseInt(formattedTransfers) > 0);
+            if (state.activeTab === 'planner' && hasTransfersAvailable) {
+                avTransBtn.style.display = 'flex';
+                avTransBtn.querySelector('span').innerText = `Plan Transfers (${formattedTransfers === 'Unlimited' ? 'Unlimited' : `${formattedTransfers} FT`})`;
+            } else {
+                avTransBtn.style.display = 'none';
+            }
+        }
+
         // Sync mobile stats bar
         const mobVal = document.getElementById('mobileSquadValueDisplay');
         const mobBank = document.getElementById('mobileBankValueDisplay');
@@ -1391,6 +1403,14 @@ document.addEventListener('DOMContentLoaded', () => {
             actions.renderActiveView();
         }
     });
+
+    const avTransBtn = document.getElementById('availableTransfersBtn');
+    if (avTransBtn) {
+        avTransBtn.addEventListener('click', () => {
+            state.tpPrepopulatedSource = 'active'; // Force prepopulation
+            actions.switchTab('transferplanner'); // Switch tab
+        });
+    }
 
     // Mobile Hamburger Menu Controls
     const mobileBtn = document.getElementById('mobileMenuBtn');
