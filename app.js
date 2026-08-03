@@ -97,6 +97,9 @@ class AppState {
         const savedGuaranteedStart = localStorage.getItem('fpl_hub_guaranteed_start');
         this.guaranteedStart = savedGuaranteedStart ? parseInt(savedGuaranteedStart) : 60;
 
+        const savedMinFwdPrice = localStorage.getItem('fpl_hub_min_fwd_price');
+        this.minFwdPrice = savedMinFwdPrice ? parseFloat(savedMinFwdPrice) : 6.0;
+
         this.optimizerObjective = localStorage.getItem('fpl_hub_optimizer_objective') || 'xp';
 
         const savedProfile = localStorage.getItem('fpl_hub_user_profile');
@@ -227,6 +230,7 @@ class AppState {
         localStorage.setItem('fpl_hub_must_exclude', JSON.stringify(this.mustExclude));
         localStorage.setItem('fpl_hub_bench_budget', this.benchBudget.toString());
         localStorage.setItem('fpl_hub_guaranteed_start', this.guaranteedStart.toString());
+        localStorage.setItem('fpl_hub_min_fwd_price', (this.minFwdPrice || 6.0).toString());
         localStorage.setItem('fpl_hub_optimizer_objective', this.optimizerObjective || 'xp');
 
         // Save drafts state
@@ -401,6 +405,7 @@ class AppState {
             'fpl_hub_must_exclude',
             'fpl_hub_bench_budget',
             'fpl_hub_guaranteed_start',
+            'fpl_hub_min_fwd_price',
             'fpl_hub_drafts',
             'fpl_hub_active_draft_idx',
             'fpl_hub_optimizer_objective'
@@ -414,6 +419,8 @@ class AppState {
         this.mustInclude = [];
         this.mustExclude = [];
         this.benchBudget = 17.0;
+        this.guaranteedStart = 60;
+        this.minFwdPrice = 6.0;
         this.optimizerObjective = 'xp';
         this.chips = {
             wildcard: false,

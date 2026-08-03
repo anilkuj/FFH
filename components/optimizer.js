@@ -95,160 +95,194 @@ export function renderOptimizer(container, state, actions) {
                         </div>
                         <div>
                             <h3>Optimization Settings</h3>
-                            <p>Configure how the AI solver analyzes and selects your squad.</p>
+                            <p id="optHeaderSubtitle">Configure how the AI solver analyzes and selects your squad.</p>
                         </div>
                     </div>
-                    <button class="run-optimization-btn" id="runOptBtn">
-                        <i data-lucide="play-circle"></i> Run AI Analysis
-                    </button>
-                </div>
 
-                <!-- Row 1: Core Strategy Settings -->
-                <div class="opt-settings-section">
-                    <div class="opt-section-label"><i data-lucide="sliders-horizontal" style="width:13px;height:13px;"></i> Strategy</div>
-                    <div class="opt-settings-row">
-                        <div class="setting-group">
-                            <label for="gwHorizon">Gameweek Horizon</label>
-                            <select id="gwHorizon" class="settings-select">
-                                <option value="1">1 Gameweek (Short-term)</option>
-                                <option value="3">3 Gameweeks (Recommended)</option>
-                                <option value="5" selected>5 Gameweeks (Long-term)</option>
-                            </select>
-                            <span class="setting-help">Analyze fixtures and expected points over this horizon.</span>
-                        </div>
+                    <div id="optActivePills" class="opt-collapsed-pills" style="display: none;"></div>
 
-                        <div class="setting-group">
-                            <label for="optimizerObjectiveSelect">Optimization Objective</label>
-                            <select id="optimizerObjectiveSelect" class="settings-select">
-                                <option value="xp" ${state.optimizerObjective === 'xp' ? 'selected' : ''}>Maximize Projected Points (XP)</option>
-                                <option value="efficiency" ${state.optimizerObjective === 'efficiency' ? 'selected' : ''}>Maximize Rating Efficiency</option>
-                            </select>
-                            <span class="setting-help">Optimize for raw expected points or value-for-money rating efficiency.</span>
-                        </div>
-
-                        <div class="setting-group">
-                            <label for="seasonPhase">Season Mode</label>
-                            <select id="seasonPhase" class="settings-select">
-                                <option value="preseason" ${state.currentGw === 1 ? 'selected' : ''}>Preseason (Unlimited Transfers)</option>
-                                <option value="midseason" ${state.currentGw > 1 ? 'selected' : ''}>Midseason (Respect Free Transfers)</option>
-                            </select>
-                            <span class="setting-help" id="phaseHelpText">Respects FPL rules.</span>
-                        </div>
-
-                        <div class="setting-group">
-                            <label for="optimizerFormationSelect">Preferred Formation</label>
-                            <select id="optimizerFormationSelect" class="settings-select">
-                                <option value="optimum" ${state.formation === 'optimum' ? 'selected' : ''}>⚡ Optimum Formation (AI Pick)</option>
-                                <option value="4-3-3" ${state.formation === '4-3-3' ? 'selected' : ''}>4-3-3</option>
-                                <option value="4-4-2" ${state.formation === '4-4-2' ? 'selected' : ''}>4-4-2</option>
-                                <option value="3-5-2" ${state.formation === '3-5-2' ? 'selected' : ''}>3-5-2</option>
-                                <option value="3-4-3" ${state.formation === '3-4-3' ? 'selected' : ''}>3-4-3</option>
-                                <option value="4-5-1" ${state.formation === '4-5-1' ? 'selected' : ''}>4-5-1</option>
-                                <option value="5-3-2" ${state.formation === '5-3-2' ? 'selected' : ''}>5-3-2</option>
-                                <option value="5-4-1" ${state.formation === '5-4-1' ? 'selected' : ''}>5-4-1</option>
-                                <option value="5-2-3" ${state.formation === '5-2-3' ? 'selected' : ''}>5-2-3</option>
-                            </select>
-                            <span class="setting-help" id="formationHelpText">${state.formation === 'optimum' ? '⚡ AI will test all 8 formations and pick the one maximizing predicted points.' : 'Fix the formation the optimizer builds the squad around.'}</span>
-                        </div>
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <button class="draft-action-btn" id="toggleSettingsBtn" style="padding: 9px 14px; font-weight: 700;">
+                            <i data-lucide="chevron-up" id="toggleSettingsChevron" style="width:14px;height:14px;"></i> <span id="toggleSettingsBtnText">Collapse Settings</span>
+                        </button>
+                        <button class="run-optimization-btn" id="runOptBtn">
+                            <i data-lucide="play-circle"></i> Run AI Analysis
+                        </button>
                     </div>
                 </div>
 
-                <!-- Row 2: Draft + Sliders -->
-                <div class="opt-settings-section">
-                    <div class="opt-section-label"><i data-lucide="layers" style="width:13px;height:13px;"></i> Squad Budget & Draft</div>
-                    <div class="opt-settings-row opt-settings-row--mixed">
-
-                        <!-- Draft Selector with actions below -->
-                        <div class="setting-group">
-                            <label for="optimizerDraftSelect">Active Optimization Draft</label>
-                            <select id="optimizerDraftSelect" class="settings-select">
-                                ${state.drafts.map((draft, idx) => `
-                                    <option value="${idx}" ${state.activeDraftIndex === idx ? 'selected' : ''}>${draft.name}</option>
-                                `).join('')}
-                            </select>
-                            <div class="draft-actions-row">
-                                <button id="renameOptDraftBtn" class="draft-action-btn" title="Rename Draft">
-                                    <i data-lucide="edit-3" style="width:13px;height:13px;"></i> Rename
-                                </button>
-                                <button id="cloneOptDraftBtn" class="draft-action-btn" title="Clone Draft">
-                                    <i data-lucide="copy" style="width:13px;height:13px;"></i> Clone
-                                </button>
+                <!-- Settings Form Body (collapsible without wiping DOM) -->
+                <div class="opt-settings-body" id="optSettingsBody">
+                    <!-- Row 1: Core Strategy Settings -->
+                    <div class="opt-settings-section">
+                        <div class="opt-section-label"><i data-lucide="sliders-horizontal" style="width:13px;height:13px;"></i> Strategy</div>
+                        <div class="opt-settings-row">
+                            <div class="setting-group">
+                                <label for="gwHorizon">Gameweek Horizon</label>
+                                <select id="gwHorizon" class="settings-select">
+                                    <option value="1">1 Gameweek (Short-term)</option>
+                                    <option value="3">3 Gameweeks (Recommended)</option>
+                                    <option value="5" selected>5 Gameweeks (Long-term)</option>
+                                </select>
+                                <span class="setting-help">Analyze fixtures and expected points over this horizon.</span>
                             </div>
-                            <span class="setting-help">Select which draft the optimizer reads from and saves recommendations into.</span>
-                        </div>
 
-                        <!-- Bench Budget Slider -->
-                        <div class="setting-group" id="benchBudgetGroup">
-                            <label for="benchBudgetRange">
-                                Reserved Bench Budget
-                                <span class="opt-slider-value" id="benchBudgetValue">£${state.benchBudget.toFixed(1)}m</span>
-                            </label>
-                            <div class="opt-slider-container">
-                                <span class="opt-slider-bound">£17m</span>
-                                <input type="range" id="benchBudgetRange" min="17.0" max="25.0" step="0.5" value="${state.benchBudget}" class="opt-range-input">
-                                <span class="opt-slider-bound">£25m</span>
+                            <div class="setting-group">
+                                <label for="optimizerObjectiveSelect">Optimization Objective</label>
+                                <select id="optimizerObjectiveSelect" class="settings-select">
+                                    <option value="xp" ${state.optimizerObjective === 'xp' ? 'selected' : ''}>Maximize Projected Points (XP)</option>
+                                    <option value="efficiency" ${state.optimizerObjective === 'efficiency' ? 'selected' : ''}>Maximize Rating Efficiency</option>
+                                </select>
+                                <span class="setting-help">Optimize for raw expected points or value-for-money rating efficiency.</span>
                             </div>
-                            <span class="setting-help">Reserves a portion of your £${squadValue.toFixed(1)}m total budget for the 4 bench slots.</span>
-                        </div>
 
-                        <!-- Guaranteed Start Slider -->
-                        <div class="setting-group" id="guaranteedStartGroup">
-                            <label for="guaranteedStartRange">
-                                Guaranteed Start
-                                <span class="opt-slider-value" id="guaranteedStartValue">${state.guaranteedStart}m</span>
-                            </label>
-                            <div class="opt-slider-container">
-                                <span class="opt-slider-bound">0m</span>
-                                <input type="range" id="guaranteedStartRange" min="0" max="90" step="5" value="${state.guaranteedStart}" class="opt-range-input">
-                                <span class="opt-slider-bound">90m</span>
+                            <div class="setting-group">
+                                <label for="seasonPhase">Season Mode</label>
+                                <select id="seasonPhase" class="settings-select">
+                                    <option value="preseason" ${state.currentGw === 1 ? 'selected' : ''}>Preseason (Unlimited Transfers)</option>
+                                    <option value="midseason" ${state.currentGw > 1 ? 'selected' : ''}>Midseason (Respect Free Transfers)</option>
+                                </select>
+                                <span class="setting-help" id="phaseHelpText">Respects FPL rules.</span>
                             </div>
-                            <span class="setting-help">Filter by minimum average minutes per appearance to guarantee playing starters.</span>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Solver Constraints Section -->
-                <div class="opt-settings-section">
-                    <div class="opt-section-label"><i data-lucide="shield-alert" style="width:13px;height:13px;"></i> Solver Constraints (Optional)</div>
-                    <div class="opt-settings-row">
-                        <div class="setting-group">
-                            <label style="font-size: 12px; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 6px;">Force Include Players</label>
-                            <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-                                <input type="text" list="mustIncludeOptions" id="mustIncludeSearch" placeholder="Type to search player..." class="settings-select" style="flex: 1; min-width: 140px;">
-                                <datalist id="mustIncludeOptions"></datalist>
-                                <button id="addMustIncludeBtn" class="draft-action-btn" style="padding: 8px 14px; flex-shrink:0;"><i data-lucide="plus" style="width:13px;height:13px;"></i></button>
+                            <div class="setting-group">
+                                <label for="optimizerFormationSelect">Preferred Formation</label>
+                                <select id="optimizerFormationSelect" class="settings-select">
+                                    <option value="optimum" ${state.formation === 'optimum' ? 'selected' : ''}>⚡ Optimum Formation (AI Pick)</option>
+                                    <option value="4-3-3" ${state.formation === '4-3-3' ? 'selected' : ''}>4-3-3</option>
+                                    <option value="4-4-2" ${state.formation === '4-4-2' ? 'selected' : ''}>4-4-2</option>
+                                    <option value="3-5-2" ${state.formation === '3-5-2' ? 'selected' : ''}>3-5-2</option>
+                                    <option value="3-4-3" ${state.formation === '3-4-3' ? 'selected' : ''}>3-4-3</option>
+                                    <option value="4-5-1" ${state.formation === '4-5-1' ? 'selected' : ''}>4-5-1</option>
+                                    <option value="5-3-2" ${state.formation === '5-3-2' ? 'selected' : ''}>5-3-2</option>
+                                    <option value="5-4-1" ${state.formation === '5-4-1' ? 'selected' : ''}>5-4-1</option>
+                                    <option value="5-2-3" ${state.formation === '5-2-3' ? 'selected' : ''}>5-2-3</option>
+                                </select>
+                                <span class="setting-help" id="formationHelpText">${state.formation === 'optimum' ? '⚡ AI will test all 8 formations and pick the one maximizing predicted points.' : 'Fix the formation the optimizer builds the squad around.'}</span>
                             </div>
-                            <div id="mustIncludeTags" style="display: flex; flex-wrap: wrap; gap: 8px; min-height: 24px;"></div>
-                        </div>
-
-                        <div class="setting-group">
-                            <label style="font-size: 12px; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 6px;">Force Exclude Players</label>
-                            <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-                                <input type="text" list="mustExcludeOptions" id="mustExcludeSearch" placeholder="Type to search player..." class="settings-select" style="flex: 1; min-width: 140px;">
-                                <datalist id="mustExcludeOptions"></datalist>
-                                <button id="addMustExcludeBtn" class="draft-action-btn" style="padding: 8px 14px; flex-shrink:0;"><i data-lucide="plus" style="width:13px;height:13px;"></i></button>
-                            </div>
-                            <div id="mustExcludeTags" style="display: flex; flex-wrap: wrap; gap: 8px; min-height: 24px;"></div>
                         </div>
                     </div>
-                </div>
 
-                <!-- AI Analyst Settings Section -->
-                <div class="opt-settings-section">
-                    <div class="opt-section-label"><i data-lucide="brain" style="width:13px;height:13px;color:var(--secondary);"></i> AI Analyst Settings</div>
-                    <div class="opt-settings-row" style="max-width: 640px;">
-                        <div class="setting-group" style="grid-column: span 2;">
-                            <label for="geminiApiKey">Gemini API Key <span style="font-weight:400; color:var(--text-muted);">(Optional)</span></label>
-                            <div style="display: flex; gap: 8px;">
-                                <input type="password" id="geminiApiKey" placeholder="Enter your Gemini API Key..." class="settings-select" style="flex: 1;" value="${localStorage.getItem('fpl_hub_gemini_api_key') || ''}">
-                                <button id="saveApiKeyBtn" class="draft-action-btn" style="padding: 8px 16px; font-weight: 700; flex-shrink:0;">Save</button>
+                    <!-- Row 2: Draft + Sliders -->
+                    <div class="opt-settings-section">
+                        <div class="opt-section-label"><i data-lucide="layers" style="width:13px;height:13px;"></i> Squad Budget & Constraints</div>
+                        <div class="opt-settings-row" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+
+                            <!-- Draft Selector with actions below -->
+                            <div class="setting-group">
+                                <label for="optimizerDraftSelect">Active Optimization Draft</label>
+                                <select id="optimizerDraftSelect" class="settings-select">
+                                    ${state.drafts.map((draft, idx) => `
+                                        <option value="${idx}" ${state.activeDraftIndex === idx ? 'selected' : ''}>${draft.name}</option>
+                                    `).join('')}
+                                </select>
+                                <div class="draft-actions-row">
+                                    <button id="renameOptDraftBtn" class="draft-action-btn" title="Rename Draft">
+                                        <i data-lucide="edit-3" style="width:13px;height:13px;"></i> Rename
+                                    </button>
+                                    <button id="cloneOptDraftBtn" class="draft-action-btn" title="Clone Draft">
+                                        <i data-lucide="copy" style="width:13px;height:13px;"></i> Clone
+                                    </button>
+                                </div>
+                                <span class="setting-help">Select draft to read & save recommendations.</span>
                             </div>
-                            <span class="setting-help">Provides real-time elite LLM strategist reports customized to your team. If left blank, FPL Hub's local analysis engine will be used.</span>
+
+                            <!-- Bench Budget Slider -->
+                            <div class="setting-group" id="benchBudgetGroup">
+                                <label for="benchBudgetRange">
+                                    Reserved Bench Budget
+                                    <span class="opt-slider-value" id="benchBudgetValue">£${state.benchBudget.toFixed(1)}m</span>
+                                </label>
+                                <div class="opt-slider-container">
+                                    <span class="opt-slider-bound">£17m</span>
+                                    <input type="range" id="benchBudgetRange" min="17.0" max="25.0" step="0.5" value="${state.benchBudget}" class="opt-range-input">
+                                    <span class="opt-slider-bound">£25m</span>
+                                </div>
+                                <span class="setting-help">Budget reserved for 4 bench slots.</span>
+                            </div>
+
+                            <!-- Guaranteed Start Slider -->
+                            <div class="setting-group" id="guaranteedStartGroup">
+                                <label for="guaranteedStartRange">
+                                    Guaranteed Start
+                                    <span class="opt-slider-value" id="guaranteedStartValue">${state.guaranteedStart}m</span>
+                                </label>
+                                <div class="opt-slider-container">
+                                    <span class="opt-slider-bound">0m</span>
+                                    <input type="range" id="guaranteedStartRange" min="0" max="90" step="5" value="${state.guaranteedStart}" class="opt-range-input">
+                                    <span class="opt-slider-bound">90m</span>
+                                </div>
+                                <span class="setting-help">Min avg minutes per appearance.</span>
+                            </div>
+
+                            <!-- Min FWD Price Slider -->
+                            <div class="setting-group" id="minFwdPriceGroup">
+                                <label for="minFwdPriceRange">
+                                    Min FWD Price
+                                    <span class="opt-slider-value" id="minFwdPriceValue">£${(state.minFwdPrice || 6.0).toFixed(1)}m</span>
+                                </label>
+                                <div class="opt-slider-container">
+                                    <span class="opt-slider-bound">£4.5m</span>
+                                    <input type="range" id="minFwdPriceRange" min="4.5" max="10.0" step="0.5" value="${state.minFwdPrice || 6.0}" class="opt-range-input">
+                                    <span class="opt-slider-bound">£10.0m</span>
+                                </div>
+                                <span class="setting-help">Min price for FWDs (default £6.0m).</span>
+                            </div>
                         </div>
+                    </div>
+
+                    <!-- Solver Constraints Section -->
+                    <div class="opt-settings-section">
+                        <div class="opt-section-label"><i data-lucide="shield-alert" style="width:13px;height:13px;"></i> Solver Constraints (Optional)</div>
+                        <div class="opt-settings-row">
+                            <div class="setting-group">
+                                <label style="font-size: 12px; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 6px;">Force Include Players</label>
+                                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                                    <input type="text" list="mustIncludeOptions" id="mustIncludeSearch" placeholder="Type to search player..." class="settings-select" style="flex: 1; min-width: 140px;">
+                                    <datalist id="mustIncludeOptions"></datalist>
+                                    <button id="addMustIncludeBtn" class="draft-action-btn" style="padding: 8px 14px; flex-shrink:0;"><i data-lucide="plus" style="width:13px;height:13px;"></i></button>
+                                </div>
+                                <div id="mustIncludeTags" style="display: flex; flex-wrap: wrap; gap: 8px; min-height: 24px;"></div>
+                            </div>
+
+                            <div class="setting-group">
+                                <label style="font-size: 12px; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 6px;">Force Exclude Players</label>
+                                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                                    <input type="text" list="mustExcludeOptions" id="mustExcludeSearch" placeholder="Type to search player..." class="settings-select" style="flex: 1; min-width: 140px;">
+                                    <datalist id="mustExcludeOptions"></datalist>
+                                    <button id="addMustExcludeBtn" class="draft-action-btn" style="padding: 8px 14px; flex-shrink:0;"><i data-lucide="plus" style="width:13px;height:13px;"></i></button>
+                                </div>
+                                <div id="mustExcludeTags" style="display: flex; flex-wrap: wrap; gap: 8px; min-height: 24px;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Analyst Settings Section -->
+                    <div class="opt-settings-section">
+                        <div class="opt-section-label"><i data-lucide="brain" style="width:13px;height:13px;color:var(--secondary);"></i> AI Analyst Settings</div>
+                        <div class="opt-settings-row" style="max-width: 640px;">
+                            <div class="setting-group" style="grid-column: span 2;">
+                                <label for="geminiApiKey">Gemini API Key <span style="font-weight:400; color:var(--text-muted);">(Optional)</span></label>
+                                <div style="display: flex; gap: 8px;">
+                                    <input type="password" id="geminiApiKey" placeholder="Enter your Gemini API Key..." class="settings-select" style="flex: 1;" value="${localStorage.getItem('fpl_hub_gemini_api_key') || ''}">
+                                    <button id="saveApiKeyBtn" class="draft-action-btn" style="padding: 8px 16px; font-weight: 700; flex-shrink:0;">Save</button>
+                                </div>
+                                <span class="setting-help">Provides real-time elite LLM strategist reports customized to your team. If left blank, FPL Hub's local analysis engine will be used.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Action Bar inside settings body -->
+                    <div style="padding: 16px 24px; background: rgba(0, 0, 0, 0.15); border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                        <span style="font-size: 12px; color: var(--text-muted);">Tweak any settings above and click to run or re-run the solver.</span>
+                        <button class="run-optimization-btn" id="reRunInBodyBtn" style="padding: 10px 24px;">
+                            <i data-lucide="play-circle"></i> Run AI Analysis
+                        </button>
                     </div>
                 </div>
 
             </div>
+
             
             <div class="optimization-results-grid hidden" id="optResultsGrid">
                 <!-- Recommendations will be populated here -->
@@ -298,6 +332,18 @@ export function renderOptimizer(container, state, actions) {
             const val = parseInt(e.target.value);
             startValueDisplay.textContent = `${val}m`;
             state.guaranteedStart = val;
+            state.saveState();
+        });
+    }
+
+    // Wire min FWD price slider listeners
+    const minFwdSlider = container.querySelector('#minFwdPriceRange');
+    const minFwdValueDisplay = container.querySelector('#minFwdPriceValue');
+    if (minFwdSlider && minFwdValueDisplay) {
+        minFwdSlider.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            minFwdValueDisplay.textContent = `£${val.toFixed(1)}m`;
+            state.minFwdPrice = val;
             state.saveState();
         });
     }
@@ -563,61 +609,51 @@ export function renderOptimizer(container, state, actions) {
         excludeSearch.value = '';
     });
 
-    const settingsCard = container.querySelector('.optimizer-settings-card');
+    const settingsBody = container.querySelector('#optSettingsBody');
+    const toggleBtn = container.querySelector('#toggleSettingsBtn');
+    const toggleChevron = container.querySelector('#toggleSettingsChevron');
+    const toggleBtnText = container.querySelector('#toggleSettingsBtnText');
+    const activePills = container.querySelector('#optActivePills');
+    const reRunInBodyBtn = container.querySelector('#reRunInBodyBtn');
 
-    const collapseSettingsToBar = (horizon, mode) => {
+    const updateActivePills = (horizon, mode) => {
         const formationVal = container.querySelector('#optimizerFormationSelect')?.value || state.formation;
-        const horizonVal = container.querySelector('#gwHorizon')?.value || horizon;
-        const modeVal = container.querySelector('#seasonPhase')?.value || mode;
         const formationLabel = formationVal === 'optimum' ? '⚡ Optimum' : formationVal;
-        const modeLabel = modeVal === 'preseason' ? 'Preseason' : 'Midseason';
-        const horizonLabel = `${horizonVal} GW`;
+        const modeLabel = mode === 'preseason' ? 'Preseason' : 'Midseason';
+        const horizonLabel = `${horizon} GW`;
+        const minFwdLabel = `Min FWD: £${(state.minFwdPrice || 6.0).toFixed(1)}m`;
 
-        settingsCard.innerHTML = `
-            <div class="opt-collapsed-bar">
-                <div class="opt-collapsed-pills">
-                    <span class="opt-collapsed-pill"><i data-lucide="layers" style="width:12px;height:12px;"></i> ${modeLabel}</span>
-                    <span class="opt-collapsed-pill"><i data-lucide="calendar" style="width:12px;height:12px;"></i> ${horizonLabel}</span>
-                    <span class="opt-collapsed-pill"><i data-lucide="layout-grid" style="width:12px;height:12px;"></i> ${formationLabel}</span>
-                </div>
-                <div style="display:flex; gap:10px; align-items:center; flex-shrink:0;">
-                    <button id="expandSettingsBtn" class="draft-action-btn">
-                        <i data-lucide="settings-2" style="width:13px;height:13px;"></i> Change Settings
-                    </button>
-                    <button id="reRunOptBtn" class="run-optimization-btn" style="padding:9px 20px; font-size:13px;">
-                        <i data-lucide="play-circle"></i> Re-run Analysis
-                    </button>
-                </div>
-            </div>
+        activePills.innerHTML = `
+            <span class="opt-collapsed-pill"><i data-lucide="layers" style="width:12px;height:12px;"></i> ${modeLabel}</span>
+            <span class="opt-collapsed-pill"><i data-lucide="calendar" style="width:12px;height:12px;"></i> ${horizonLabel}</span>
+            <span class="opt-collapsed-pill"><i data-lucide="layout-grid" style="width:12px;height:12px;"></i> ${formationLabel}</span>
+            <span class="opt-collapsed-pill"><i data-lucide="tag" style="width:12px;height:12px;"></i> ${minFwdLabel}</span>
         `;
+        activePills.style.display = 'flex';
         lucide.createIcons();
-
-        container.querySelector('#reRunOptBtn').addEventListener('click', () => {
-            const btn = container.querySelector('#reRunOptBtn');
-            btn.innerHTML = `<i data-lucide="loader" class="animate-spin" style="margin-right:6px;"></i> Running...`;
-            lucide.createIcons();
-            setTimeout(() => {
-                performOptimization(resultsGrid, state, actions, horizon, mode);
-                btn.innerHTML = `<i data-lucide="play-circle"></i> Re-run Analysis`;
-                lucide.createIcons();
-            }, 1200);
-        });
-
-        container.querySelector('#expandSettingsBtn').addEventListener('click', () => {
-            renderOptimizer(container, state, actions);
-            // After re-render, scroll results back into view if they existed
-            const newResultsGrid = container.querySelector('#optResultsGrid');
-            if (newResultsGrid) {
-                newResultsGrid.classList.remove('hidden');
-                performOptimization(newResultsGrid, state, actions, horizon, mode);
-                lucide.createIcons();
-                setTimeout(() => newResultsGrid.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
-            }
-        });
     };
 
-    runBtn.addEventListener('click', () => {
+    const toggleSettingsBody = (forceCollapse) => {
+        const isCollapsed = forceCollapse !== undefined ? forceCollapse : !settingsBody.classList.contains('is-collapsed');
+        if (isCollapsed) {
+            settingsBody.classList.add('is-collapsed');
+            if (toggleBtnText) toggleBtnText.textContent = 'Change Settings';
+            if (toggleChevron) toggleChevron.setAttribute('data-lucide', 'settings-2');
+        } else {
+            settingsBody.classList.remove('is-collapsed');
+            if (toggleBtnText) toggleBtnText.textContent = 'Collapse Settings';
+            if (toggleChevron) toggleChevron.setAttribute('data-lucide', 'chevron-up');
+        }
+        lucide.createIcons();
+    };
+
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => toggleSettingsBody());
+    }
+
+    const executeAnalysis = () => {
         runBtn.innerHTML = `<i data-lucide="loader" class="animate-spin" style="margin-right: 8px;"></i> Running AI Solver...`;
+        if (reRunInBodyBtn) reRunInBodyBtn.innerHTML = `<i data-lucide="loader" class="animate-spin" style="margin-right: 8px;"></i> Running AI Solver...`;
         lucide.createIcons();
 
         const horizon = parseInt(container.querySelector('#gwHorizon').value);
@@ -626,13 +662,20 @@ export function renderOptimizer(container, state, actions) {
         setTimeout(() => {
             resultsGrid.classList.remove('hidden');
             performOptimization(resultsGrid, state, actions, horizon, mode);
+            runBtn.innerHTML = `<i data-lucide="play-circle"></i> Re-run Analysis`;
+            if (reRunInBodyBtn) reRunInBodyBtn.innerHTML = `<i data-lucide="play-circle"></i> Re-run Analysis`;
             lucide.createIcons();
-            // Collapse settings into compact bar after results load
-            collapseSettingsToBar(horizon, mode);
-            // Scroll results into view
+
+            updateActivePills(horizon, mode);
+            toggleSettingsBody(true); // Gently collapse form so results are focal, while preserving form DOM
+
             setTimeout(() => resultsGrid.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
         }, 1200);
-    });
+    };
+
+    runBtn.addEventListener('click', executeAnalysis);
+    if (reRunInBodyBtn) reRunInBodyBtn.addEventListener('click', executeAnalysis);
+
 }
 
 function renderLockOverlay(container, actions) {
@@ -730,9 +773,11 @@ function _scoreOptimizationForFormation(state, horizon, mode) {
     }, 0) + bank;
     const maxStartingBudget = totalValue - minBenchBudget;
 
+    const minFwd = state.minFwdPrice ?? 6.0;
     const candidatePool = (pos) => PLAYERS.filter(p =>
         p.position === pos &&
         !state.mustExclude.includes(p.id) &&
+        (pos !== 'FWD' || p.price >= minFwd || (state.mustInclude && state.mustInclude.includes(p.id))) &&
         getSolverScore(p) > 0
     ).sort((a, b) => getSolverScore(b) - getSolverScore(a));
 
@@ -1150,12 +1195,15 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         const minBenchBudget = state.benchBudget || 17.0;
         const maxBenchBudget = minBenchBudget;
         const maxStartingBudget = totalValue - minBenchBudget; // remaining budget for starting 11
+        const minFwd = state.minFwdPrice ?? 6.0;
+        const passesMinFwd = (p) => p.position !== 'FWD' || p.price >= minFwd || (state.mustInclude && state.mustInclude.includes(p.id));
 
         // Cheapest players for fallback and initialization (excluding mustExclude)
         const cheapestGKPs = PLAYERS.filter(p => p.position === 'GKP' && !state.mustExclude.includes(p.id)).sort((a, b) => a.price - b.price);
         const cheapestDEFs = PLAYERS.filter(p => p.position === 'DEF' && !state.mustExclude.includes(p.id)).sort((a, b) => a.price - b.price);
         const cheapestMIDs = PLAYERS.filter(p => p.position === 'MID' && !state.mustExclude.includes(p.id)).sort((a, b) => a.price - b.price);
-        const cheapestFWDs = PLAYERS.filter(p => p.position === 'FWD' && !state.mustExclude.includes(p.id)).sort((a, b) => a.price - b.price);
+        const cheapestFWDsFiltered = PLAYERS.filter(p => p.position === 'FWD' && !state.mustExclude.includes(p.id) && passesMinFwd(p)).sort((a, b) => a.price - b.price);
+        const cheapestFWDs = cheapestFWDsFiltered.length > 0 ? cheapestFWDsFiltered : PLAYERS.filter(p => p.position === 'FWD' && !state.mustExclude.includes(p.id)).sort((a, b) => a.price - b.price);
 
         const getCheapestPlayersList = (pos, count, usedIds, forceGuaranteed = false) => {
             const list = pos === 'GKP' ? cheapestGKPs : (pos === 'DEF' ? cheapestDEFs : (pos === 'MID' ? cheapestMIDs : cheapestFWDs));
@@ -1369,7 +1417,8 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                     !unavailableIds.includes(p.id) && 
                     p.price <= maxBudgetForSlot &&
                     getSolverScore(p) >= 0.5 &&
-                    !state.mustExclude.includes(p.id)
+                    !state.mustExclude.includes(p.id) &&
+                    passesMinFwd(p)
                 );
 
                 const guaranteedCandidates = candidates.filter(isGuaranteedStart);
@@ -1462,7 +1511,8 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                     p.position === slot.position && 
                     !currentSquadIds.includes(p.id) && 
                     p.price <= maxPrice &&
-                    !state.mustExclude.includes(p.id)
+                    !state.mustExclude.includes(p.id) &&
+                    passesMinFwd(p)
                 );
 
                 const guaranteedCandidates = candidates.filter(isGuaranteedStart);
@@ -1820,7 +1870,8 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 p.position === soldPlayer.position && 
                 !currentSquadIds.includes(p.id) &&
                 p.price <= sellBudget &&
-                !state.mustExclude.includes(p.id)
+                !state.mustExclude.includes(p.id) &&
+                (p.position !== 'FWD' || p.price >= (state.minFwdPrice ?? 6.0) || (state.mustInclude && state.mustInclude.includes(p.id)))
             );
 
             const guaranteedCandidates = candidates.filter(isGuaranteedStart);
@@ -1884,7 +1935,8 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                     p.position === s1.position && 
                     !currentSquadIds.includes(p.id) &&
                     !state.mustExclude.includes(p.id) &&
-                    p.id !== single1TxOutId  // Don't buy back who the single says to sell
+                    p.id !== single1TxOutId &&
+                    (p.position !== 'FWD' || p.price >= (state.minFwdPrice ?? 6.0) || (state.mustInclude && state.mustInclude.includes(p.id)))
                 );
                 const g1 = candidates1.filter(isGuaranteedStart);
                 if (g1.length > 0) candidates1 = g1;
@@ -1901,7 +1953,8 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                     p.position === s2.position && 
                     !currentSquadIds.includes(p.id) &&
                     !state.mustExclude.includes(p.id) &&
-                    p.id !== single1TxOutId  // Don't buy back who the single says to sell
+                    p.id !== single1TxOutId &&
+                    (p.position !== 'FWD' || p.price >= (state.minFwdPrice ?? 6.0) || (state.mustInclude && state.mustInclude.includes(p.id)))
                 );
                 const g2 = candidates2.filter(isGuaranteedStart);
                 if (g2.length > 0) candidates2 = g2;

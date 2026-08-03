@@ -3442,6 +3442,20 @@ html.light-theme .stats-table td:first-child {
     margin: 0;
 }
 
+/* Settings Body Collapsible Container */
+.opt-settings-body {
+    transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    max-height: 2000px;
+    opacity: 1;
+    overflow: hidden;
+}
+
+.opt-settings-body.is-collapsed {
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
 /* Settings Section */
 .opt-settings-section {
     padding: 20px 24px;
