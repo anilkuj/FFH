@@ -1324,31 +1324,57 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
             }
         }
 
-        // Compare original and optimized slots
+        // Compare original and optimized squads by player ID SETS — not slot-by-slot.
+        // Slot-by-slot comparison shows intermediate iteration swaps (A→B then B→C displayed
+        // as two changes) when the net result is just A→C. We want net changes only.
+        const originalIds = activeSquadSlots.map(s => s.playerId).filter(id => id !== null);
+        const optimizedIds = optimizedSquadSlots.map(s => s.playerId).filter(id => id !== null);
+
+        const removedIds = originalIds.filter(id => !optimizedIds.includes(id));
+        const addedIds   = optimizedIds.filter(id => !originalIds.includes(id));
+
+        // Match removed → added players by position to form logical swap pairs
         const upgrades = [];
-        const totalOriginalPts = getSquadExpectedPts(activeSquadSlots);
-        const totalOptimizedPts = getSquadExpectedPts(optimizedSquadSlots);
+        const removedPlayers = removedIds.map(id => PLAYERS.find(p => p.id === id)).filter(Boolean);
+        const addedPlayers   = addedIds.map(id => PLAYERS.find(p => p.id === id)).filter(Boolean);
 
-        for (let i = 0; i < activeSquadSlots.length; i++) {
-            const originalId = activeSquadSlots[i].playerId;
-            const optimizedId = optimizedSquadSlots[i].playerId;
-            
-            const originalPlayer = originalId !== null ? PLAYERS.find(p => p.id === originalId) : null;
-            const optimizedPlayer = optimizedId !== null ? PLAYERS.find(p => p.id === optimizedId) : null;
-
-            if (originalId !== optimizedId) {
-                const inPts1Gw = optimizedPlayer ? (optimizedPlayer.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0) : 0;
-                const outPts1Gw = originalPlayer ? (originalPlayer.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0) : 0;
+        // Pair by position, highest gain first
+        const usedAdded = new Set();
+        for (const outPlayer of removedPlayers) {
+            const match = addedPlayers
+                .filter(p => p.position === outPlayer.position && !usedAdded.has(p.id))
+                .sort((a, b) => getSolverScore(b) - getSolverScore(a))[0];
+            if (match) {
+                usedAdded.add(match.id);
+                const inPts1Gw = match.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0;
+                const outPts1Gw = outPlayer.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0;
                 upgrades.push({
-                    slotIndex: i,
-                    out: originalPlayer,
-                    in: optimizedPlayer,
-                    gain: (optimizedPlayer ? getSolverScore(optimizedPlayer) : 0) - (originalPlayer ? getSolverScore(originalPlayer) : 0),
+                    out: outPlayer,
+                    in: match,
+                    gain: getSolverScore(match) - getSolverScore(outPlayer),
                     gain1Gw: inPts1Gw - outPts1Gw
                 });
             }
         }
+        // Any unmatched additions (e.g. empty slot filled) — show as additions
+        for (const inPlayer of addedPlayers) {
+            if (!usedAdded.has(inPlayer.id)) {
+                const inPts1Gw = inPlayer.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0;
+                upgrades.push({
+                    out: null,
+                    in: inPlayer,
+                    gain: getSolverScore(inPlayer),
+                    gain1Gw: inPts1Gw
+                });
+            }
+        }
 
+        // Sort: net gains descending, then downgrades
+        upgrades.sort((a, b) => b.gain - a.gain);
+
+
+        const totalOriginalPts = getSquadExpectedPts(activeSquadSlots);
+        const totalOptimizedPts = getSquadExpectedPts(optimizedSquadSlots);
         const overallGain = totalOptimizedPts - totalOriginalPts;
         const overallGain1Gw = getSquadPointsForHorizon(optimizedSquadSlots, 1) - getSquadPointsForHorizon(activeSquadSlots, 1);
         const gainLabel = objective === 'efficiency' ? 'Overall Efficiency' : 'Overall XP';
