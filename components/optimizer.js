@@ -1611,7 +1611,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
 
                 const gain = getSquadExpectedPts(tempSlots) - getSquadExpectedPts(activeSquadSlots);
 
-                if (gain > maxGain1) {
+                if (gain > maxGain1 && gain > 0.01) {
                     maxGain1 = gain;
                     best1Tx = {
                         out: soldPlayer,
@@ -1681,7 +1681,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
 
                         const gain = getSquadExpectedPts(tempSlots) - getSquadExpectedPts(activeSquadSlots);
 
-                        if (gain > maxGain2) {
+                        if (gain > maxGain2 && gain > 0.01) {
                             maxGain2 = gain;
                             best2Tx = {
                                 out1: s1,

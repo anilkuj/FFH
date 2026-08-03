@@ -1028,10 +1028,12 @@ export function renderTransferPlanner(container, state, actions) {
                     if (targetSlot) targetSlot.playerId = boughtPlayer.id;
 
                     const gain = getSquadExpectedPts(tempSlots) - getSquadExpectedPts(currentSquadSlots);
-                    optionsList.push({
-                        player: boughtPlayer,
-                        gain: gain
-                    });
+                    if (gain > 0.01) {
+                        optionsList.push({
+                            player: boughtPlayer,
+                            gain: gain
+                        });
+                    }
                 }
 
                 // Sort options by gain descending
