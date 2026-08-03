@@ -2561,7 +2561,7 @@ body {
     }
 
     .football-pitch {
-        height: 380px !important;
+        height: 400px !important;
     }
 
     .shirt-icon-wrapper {
@@ -2742,7 +2742,7 @@ body {
     /* Mobile scaling of the football pitch slots to fit 100% width cleanly */
     .football-pitch {
         padding: 4px 0;
-        height: 320px !important; /* Stable fixed height on mobiles so layout does not squish or overflow */
+        height: 360px !important; /* Stable fixed height on mobiles so layout does not squish or overflow */
         max-height: none !important;
         min-height: auto !important;
         flex: none !important;

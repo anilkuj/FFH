@@ -113,7 +113,7 @@
             </div>
             `:""}
         </div>
-    `,lucide.createIcons();const c=document.querySelector(".draft-tab-btn.active-chip");c&&c.scrollIntoView({behavior:"smooth",block:"nearest",inline:"center"}),wl(l,t,a,p,i)}function pl(l){switch(l){case 1:return"var(--fpl-green-5)";case 2:return"var(--fpl-green-4)";case 3:return"var(--fpl-grey)";case 4:return"var(--fpl-red-4)";case 5:return"var(--fpl-red-5)";default:return"#334155"}}function Dt(l,t){if(!l.predictions)return 0;let a=0;for(let s=t;s<t+5;s++){const p=l.predictions.find(i=>i.gw===s);p&&(a+=p.pts)}return a}function sl(l,t){let a="";for(let s=t;s<t+5&&!(s>10);s++){const p=l.predictions.find(i=>i.gw===s);if(p){const i=p.opp!=="BYE"?`${p.opp} (${p.loc})`:"BYE",e=pl(p.diff),n=p.actualPts!==void 0&&p.actualPts!==null?p.actualPts:p.pts,g=n.toFixed(1).endsWith(".0")?Math.round(n):n.toFixed(1),f=p.opp!=="BYE"?p.loc==="A"?p.opp.toLowerCase():p.opp.toUpperCase():"bye",o=p.diff===4||p.diff===5,x=o?"#ffffff":"#0f172a",c=o?"0 0.5px 1px rgba(0,0,0,0.5)":"0 0.5px 1px rgba(255,255,255,0.4)";a+=`
+    `,lucide.createIcons();const c=document.querySelector(".draft-tab-btn.active-chip");c&&c.scrollIntoView({behavior:"smooth",block:"nearest",inline:"center"}),wl(l,t,a,p,i)}function pl(l){switch(l){case 1:return"var(--fpl-green-5)";case 2:return"var(--fpl-green-4)";case 3:return"var(--fpl-grey)";case 4:return"var(--fpl-red-4)";case 5:return"var(--fpl-red-5)";default:return"#334155"}}function Dt(l,t){if(!l.predictions)return 0;let a=0;for(let s=t;s<t+5;s++){const p=l.predictions.find(i=>i.gw===s);p&&(a+=p.pts)}return a}function sl(l,t){let a="";for(let s=t;s<t+3&&!(s>10);s++){const p=l.predictions.find(i=>i.gw===s);if(p){const i=p.opp!=="BYE"?`${p.opp} (${p.loc})`:"BYE",e=pl(p.diff),n=p.actualPts!==void 0&&p.actualPts!==null?p.actualPts:p.pts,g=n.toFixed(1).endsWith(".0")?Math.round(n):n.toFixed(1),f=p.opp!=="BYE"?p.loc==="A"?p.opp.toLowerCase():p.opp.toUpperCase():"bye",o=p.diff===4||p.diff===5,x=o?"#ffffff":"#0f172a",c=o?"0 0.5px 1px rgba(0,0,0,0.5)":"0 0.5px 1px rgba(255,255,255,0.4)";a+=`
                 <div class="pitch-fixture-badge" title="GW${s}: ${i} - FDR ${p.diff} (XP: ${p.pts.toFixed(1)})" style="background-color: ${e}; color: ${x}; padding: 4px 1px; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; font-weight: 800; text-align: center; font-family: var(--font-body); width: 100%; box-sizing: border-box;">
                     <span class="pitch-fixture-badge-xp" style="font-size: 10.5px; font-weight: 800; display: block; text-shadow: ${c}; color: ${x};">${g}</span>
                     <span class="pitch-fixture-badge-team" style="font-size: 8.5px; font-weight: 700; opacity: ${o?"0.95":"0.85"}; display: block; margin-top: 1px; text-transform: none; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: ${x}; text-shadow: ${c};">${f}</span>
@@ -208,7 +208,7 @@
                             ${o.actualPts!==void 0&&o.actualPts!==null?`<strong style="color: var(--primary);">${o.actualPts} pts</strong> <span class="player-xp-subtext">(${o.pts.toFixed(1)} XP)</span>`:`${o.pts.toFixed(1)} XP`}
                         </div>
                     </div>
-                    <div style="display: grid; grid-template-columns: repeat(5, 1fr); width: 100%; gap: 0; border-top: 1px solid rgba(255,255,255,0.05); margin-top: auto;">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; gap: 0; border-top: 1px solid rgba(255,255,255,0.05); margin-top: auto;">
                         ${sl(f,a)}
                     </div>
                 </div>
@@ -245,7 +245,7 @@
                                 ${x.actualPts!==void 0&&x.actualPts!==null?`<strong style="color: var(--primary);">${x.actualPts} pts</strong> <span class="player-xp-subtext">(${x.pts.toFixed(1)} XP)</span>`:`${x.pts.toFixed(1)} XP`}
                             </div>
                         </div>
-                        <div style="display: grid; grid-template-columns: repeat(5, 1fr); width: 100%; gap: 0; border-top: 1px solid rgba(255,255,255,0.05); margin-top: auto;">
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; gap: 0; border-top: 1px solid rgba(255,255,255,0.05); margin-top: auto;">
                             ${sl(o,t)}
                         </div>
                     </div>

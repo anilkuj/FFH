@@ -204,7 +204,7 @@ function get5GwXp(player, currentGw) {
 
 function renderPitchFixtures(player, currentGw) {
     let html = '';
-    for (let gw = currentGw; gw < currentGw + 5; gw++) {
+    for (let gw = currentGw; gw < currentGw + 3; gw++) {
         if (gw > 10) break;
         const pr = player.predictions.find(p => p.gw === gw);
         if (pr) {
@@ -385,7 +385,7 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
                             }
                         </div>
                     </div>
-                    <div style="display: grid; grid-template-columns: repeat(5, 1fr); width: 100%; gap: 0; border-top: 1px solid rgba(255,255,255,0.05); margin-top: auto;">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; gap: 0; border-top: 1px solid rgba(255,255,255,0.05); margin-top: auto;">
                         ${renderPitchFixtures(player, currentGw)}
                     </div>
                 </div>
@@ -451,7 +451,7 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions) {
                                 }
                             </div>
                         </div>
-                        <div style="display: grid; grid-template-columns: repeat(5, 1fr); width: 100%; gap: 0; border-top: 1px solid rgba(255,255,255,0.05); margin-top: auto;">
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; gap: 0; border-top: 1px solid rgba(255,255,255,0.05); margin-top: auto;">
                             ${renderPitchFixtures(player, currentGw)}
                         </div>
                     </div>
