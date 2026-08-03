@@ -2925,9 +2925,9 @@ html.light-theme .stats-table td:first-child {
         text-shadow: none !important;
     }
 
-    /* Hide verbose labels in price/XP string to keep it single line */
+    /* Show prefix on mobile since price and XP are stacked vertically */
     .player-xp-prefix {
-        display: none !important;
+        display: inline !important;
     }
 
     /* Hide sell button by default on mobile touch screens */
