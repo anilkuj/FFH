@@ -217,13 +217,13 @@ function renderPitchFixtures(player, currentGw) {
                 : 'BYE';
                 
             html += `
-                <div class="pitch-fixture-badge" title="GW${gw}: ${oppText} - FDR ${pr.diff} (XP: ${pr.pts.toFixed(1)})" style="background-color: ${fdrColor}; color: #0f172a; padding: 2px 1px; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-weight: 800; flex: 1; min-width: 0; text-align: center; font-family: var(--font-body);">
+                <div class="pitch-fixture-badge" title="GW${gw}: ${oppText} - FDR ${pr.diff} (XP: ${pr.pts.toFixed(1)})" style="background-color: ${fdrColor}; color: #0f172a; padding: 4px 1px; display: flex; align-items: center; justify-content: center; font-weight: 800; text-align: center; font-family: var(--font-body); width: 100%; box-sizing: border-box;">
                     <span style="font-size: 7.5px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%;">${teamNameText}</span>
                 </div>
             `;
         } else {
             html += `
-                <div class="pitch-fixture-badge" title="GW${gw}: BYE" style="background-color: #334155; color: #94a3b8; padding: 2px 1px; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-weight: 800; flex: 1; min-width: 0; text-align: center; font-family: var(--font-body);">
+                <div class="pitch-fixture-badge" title="GW${gw}: BYE" style="background-color: #334155; color: #94a3b8; padding: 4px 1px; display: flex; align-items: center; justify-content: center; font-weight: 800; text-align: center; font-family: var(--font-body); width: 100%; box-sizing: border-box;">
                     <span style="font-size: 7.5px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%;">BYE</span>
                 </div>
             `;
@@ -361,16 +361,18 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
                     ${designationBadge}
                     ${player.transferredThisSeason ? `<div class="pitch-transfer-icon" title="Transferred from ${player.oldTeam}">⇆</div>` : ''}
                 </div>
-                <div class="player-card-info">
-                    <div class="player-pitch-name">${actions.getWebName(player.name)}</div>
-                    <div class="player-pitch-points">
-                        £${player.price.toFixed(1)}m • 
-                        ${prediction.actualPts !== undefined && prediction.actualPts !== null ? 
-                            `<strong style="color: var(--primary);">${prediction.actualPts} pts</strong> <span class="player-xp-subtext">(${prediction.pts.toFixed(1)} XP)</span>` : 
-                            `${prediction.pts.toFixed(1)} XP`
-                        }
+                <div class="player-card-info" style="padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; border-radius: 8px;">
+                    <div style="padding: 6px 8px; display: flex; flex-direction: column; gap: 2px; width: 100%; box-sizing: border-box; text-align: center;">
+                        <div class="player-pitch-name">${actions.getWebName(player.name)}</div>
+                        <div class="player-pitch-points">
+                            £${player.price.toFixed(1)}m • 
+                            ${prediction.actualPts !== undefined && prediction.actualPts !== null ? 
+                                `<strong style="color: var(--primary);">${prediction.actualPts} pts</strong> <span class="player-xp-subtext">(${prediction.pts.toFixed(1)} XP)</span>` : 
+                                `${prediction.pts.toFixed(1)} XP`
+                            }
+                        </div>
                     </div>
-                    <div style="display: flex; gap: 2px; justify-content: center; margin-top: 5px; width: 100%;">
+                    <div style="display: grid; grid-template-columns: repeat(5, 1fr); width: 100%; gap: 0; border-top: 1px solid rgba(255,255,255,0.05); margin-top: auto;">
                         ${renderPitchFixtures(player, currentGw)}
                     </div>
                 </div>
@@ -425,16 +427,18 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions) {
                         ${designationBadge}
                         ${player.transferredThisSeason ? `<div class="pitch-transfer-icon" title="Transferred from ${player.oldTeam}">⇆</div>` : ''}
                     </div>
-                    <div class="player-card-info">
-                        <div class="player-pitch-name">${actions.getWebName(player.name)}</div>
-                        <div class="player-pitch-points">
-                            £${player.price.toFixed(1)}m • 
-                            ${prediction.actualPts !== undefined && prediction.actualPts !== null ? 
-                                `<strong style="color: var(--primary);">${prediction.actualPts} pts</strong> <span class="player-xp-subtext">(${prediction.pts.toFixed(1)} XP)</span>` : 
-                                `${prediction.pts.toFixed(1)} XP`
-                            }
+                    <div class="player-card-info" style="padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; border-radius: 8px;">
+                        <div style="padding: 6px 8px; display: flex; flex-direction: column; gap: 2px; width: 100%; box-sizing: border-box; text-align: center;">
+                            <div class="player-pitch-name">${actions.getWebName(player.name)}</div>
+                            <div class="player-pitch-points">
+                                £${player.price.toFixed(1)}m • 
+                                ${prediction.actualPts !== undefined && prediction.actualPts !== null ? 
+                                    `<strong style="color: var(--primary);">${prediction.actualPts} pts</strong> <span class="player-xp-subtext">(${prediction.pts.toFixed(1)} XP)</span>` : 
+                                    `${prediction.pts.toFixed(1)} XP`
+                                }
+                            </div>
                         </div>
-                        <div style="display: flex; gap: 2px; justify-content: center; margin-top: 5px; width: 100%;">
+                        <div style="display: grid; grid-template-columns: repeat(5, 1fr); width: 100%; gap: 0; border-top: 1px solid rgba(255,255,255,0.05); margin-top: auto;">
                             ${renderPitchFixtures(player, currentGw)}
                         </div>
                     </div>
