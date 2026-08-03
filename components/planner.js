@@ -380,8 +380,8 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
                         <div class="player-pitch-points">
                             £${player.price.toFixed(1)}m • 
                             ${prediction.actualPts !== undefined && prediction.actualPts !== null ? 
-                                `<strong style="color: var(--primary);">${prediction.actualPts} pts</strong> <span class="player-xp-subtext">(${prediction.pts.toFixed(1)} XP)</span>` : 
-                                `${prediction.pts.toFixed(1)} XP`
+                                `<strong style="color: var(--primary);">${prediction.actualPts} pts</strong> <span class="player-xp-subtext">(${get5GwXp(player, currentGw).toFixed(1)} XP)</span>` : 
+                                `${get5GwXp(player, currentGw).toFixed(1)} XP`
                             }
                         </div>
                     </div>
@@ -446,8 +446,8 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions) {
                             <div class="player-pitch-points">
                                 £${player.price.toFixed(1)}m • 
                                 ${prediction.actualPts !== undefined && prediction.actualPts !== null ? 
-                                    `<strong style="color: var(--primary);">${prediction.actualPts} pts</strong> <span class="player-xp-subtext">(${prediction.pts.toFixed(1)} XP)</span>` : 
-                                    `${prediction.pts.toFixed(1)} XP`
+                                    `<strong style="color: var(--primary);">${prediction.actualPts} pts</strong> <span class="player-xp-subtext">(${get5GwXp(player, currentGw).toFixed(1)} XP)</span>` : 
+                                    `${get5GwXp(player, currentGw).toFixed(1)} XP`
                                 }
                             </div>
                         </div>
