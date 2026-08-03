@@ -118,6 +118,8 @@ class AppState {
             1: [], 2: [], 3: [], 4: [], 5: []
         };
 
+        this.isSquadUnlocked = false; // By default the squad is locked to prevent accidental removals
+
         this.alignSlotPositions();
     }
 

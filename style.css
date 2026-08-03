@@ -2930,10 +2930,7 @@ html.light-theme .stats-table td:first-child {
         display: inline !important;
     }
 
-    /* Hide sell button by default on mobile touch screens */
-    .pitch-sell-btn {
-        display: none !important;
-    }
+
 
     /* Resize bench container */
     .bench-container {

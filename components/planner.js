@@ -1,6 +1,9 @@
 import { PLAYERS, TEAMS, getPlayerRatings } from '../data.js';
 
 export function renderPlanner(container, state, actions) {
+    if (state.isSquadUnlocked === undefined) {
+        state.isSquadUnlocked = false;
+    }
     // Determine active squad for this gameweek.
     // The active squad is computed by applying transfers from previous gameweeks up to the current one.
     const squadInfo = state.getSquadForGw(state.currentGw);
@@ -107,6 +110,12 @@ export function renderPlanner(container, state, actions) {
                     </select>
                     <button class="pitch-btn" id="renameDraftBtn" title="Rename Current Draft" style="height: 32px; width: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); cursor: pointer;"><i data-lucide="edit-3" style="width: 14px; height: 14px;"></i></button>
                     <button class="pitch-btn" id="cloneDraftBtn" title="Clone Current Draft" style="height: 32px; width: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); cursor: pointer;"><i data-lucide="copy" style="width: 14px; height: 14px;"></i></button>
+                    
+                    <!-- Lock / Unlock Button -->
+                    <button class="pitch-btn" id="toggleLockBtn" title="${state.isSquadUnlocked ? 'Lock Squad' : 'Unlock Squad to Remove Players'}" style="height: 32px; padding: 0 10px; display: flex; align-items: center; gap: 6px; border-radius: 6px; background: ${state.isSquadUnlocked ? 'rgba(239, 68, 68, 0.15)' : 'rgba(255, 255, 255, 0.02)'}; border: 1px solid ${state.isSquadUnlocked ? 'rgba(239, 68, 68, 0.4)' : 'var(--border-color)'}; color: ${state.isSquadUnlocked ? '#ef4444' : 'var(--text-main)'}; cursor: pointer; font-size: 12px; font-weight: 600; margin-left: auto; flex-shrink: 0;">
+                        <i data-lucide="${state.isSquadUnlocked ? 'unlock' : 'lock'}" style="width: 14px; height: 14px;"></i>
+                        <span>${state.isSquadUnlocked ? 'Unlocked' : 'Locked'}</span>
+                    </button>
                 </div>
 
                 <!-- Football Pitch -->
@@ -120,22 +129,22 @@ export function renderPlanner(container, state, actions) {
 
                     <!-- GKP Row -->
                     <div class="pitch-row" data-row="GKP">
-                        ${renderPlayerRow(state.squadSlots, "GKP", state.currentGw, state.captain, state.vice, actions)}
+                        ${renderPlayerRow(state.squadSlots, "GKP", state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked)}
                     </div>
 
                     <!-- DEF Row -->
                     <div class="pitch-row" data-row="DEF">
-                        ${renderPlayerRow(state.squadSlots, "DEF", state.currentGw, state.captain, state.vice, actions)}
+                        ${renderPlayerRow(state.squadSlots, "DEF", state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked)}
                     </div>
 
                     <!-- MID Row -->
                     <div class="pitch-row" data-row="MID">
-                        ${renderPlayerRow(state.squadSlots, "MID", state.currentGw, state.captain, state.vice, actions)}
+                        ${renderPlayerRow(state.squadSlots, "MID", state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked)}
                     </div>
 
                     <!-- FWD Row -->
                     <div class="pitch-row" data-row="FWD">
-                        ${renderPlayerRow(state.squadSlots, "FWD", state.currentGw, state.captain, state.vice, actions)}
+                        ${renderPlayerRow(state.squadSlots, "FWD", state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked)}
                     </div>
                 </div>
 
@@ -143,7 +152,7 @@ export function renderPlanner(container, state, actions) {
                 <div class="bench-container">
                     <span class="bench-title">Bench (Click starter to swap with bench)</span>
                     <div class="bench-row" id="benchRow">
-                        ${renderBenchRow(state.squadSlots, state.currentGw, state.captain, state.vice, actions)}
+                        ${renderBenchRow(state.squadSlots, state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked)}
                     </div>
                 </div>
             </div>
@@ -331,7 +340,7 @@ function renderPlayerTooltip(player, currentGw) {
     `;
 }
 
-export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, actions) {
+export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, actions, isSquadUnlocked = false) {
     const rowSlots = squadSlots.filter(s => s.position === position && s.isStarting);
 
     return rowSlots.map((slot, index) => {
@@ -365,7 +374,7 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
 
         return `
             <div class="player-pitch-card" data-id="${player.id}" data-type="starter">
-                <button class="pitch-sell-btn" data-id="${player.id}" title="Remove Player">&times;</button>
+                <button class="pitch-sell-btn" data-id="${player.id}" title="Remove Player" style="display: ${isSquadUnlocked ? 'flex' : 'none'} !important; opacity: 1 !important;">&times;</button>
                 <div class="shirt-icon-wrapper">
                     ${getShirtSVG(teamObj.color, player.team)}
                     ${designationBadge}
@@ -395,7 +404,7 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
     }).join('');
 }
 
-export function renderBenchRow(squadSlots, currentGw, captain, vice, actions) {
+export function renderBenchRow(squadSlots, currentGw, captain, vice, actions, isSquadUnlocked = false) {
     const benchSlots = squadSlots.filter(s => !s.isStarting);
     return benchSlots.map((slot, index) => {
         const label = index === 0 ? "GKP" : `Sub ${index} (${slot.position})`;
@@ -434,7 +443,7 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions) {
             <div class="bench-slot-wrapper">
                 <span class="bench-slot-label">${label}</span>
                 <div class="player-pitch-card" data-id="${player.id}" data-type="bench" data-index="${index}" style="width: 100%;">
-                    <button class="pitch-sell-btn" data-id="${player.id}" title="Remove Player">&times;</button>
+                    <button class="pitch-sell-btn" data-id="${player.id}" title="Remove Player" style="display: ${isSquadUnlocked ? 'flex' : 'none'} !important; opacity: 1 !important;">&times;</button>
                     <div class="shirt-icon-wrapper">
                         ${getShirtSVG(teamObj.color, player.team)}
                         ${designationBadge}
@@ -583,6 +592,16 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
             state.saveState();
             actions.renderActiveView();
             actions.showToast(`Loaded ${targetDraft.name}`, 'success');
+        });
+    }
+
+    // Toggle Squad Lock/Unlock
+    const toggleLockBtn = container.querySelector('#toggleLockBtn');
+    if (toggleLockBtn) {
+        toggleLockBtn.addEventListener('click', () => {
+            state.isSquadUnlocked = !state.isSquadUnlocked;
+            actions.renderActiveView();
+            actions.showToast(state.isSquadUnlocked ? "Squad unlocked! Tap the red X to remove players." : "Squad locked.", "info");
         });
     }
 
