@@ -2593,8 +2593,8 @@ html.light-theme .stats-table td:first-child {
     /* Fixed compact height on mobile to fit the viewport without scrolling */
     .football-pitch {
         padding: 8px 4px 32px 4px !important;
-        height: 350px !important;
-        min-height: 320px !important;
+        height: 390px !important;
+        min-height: 370px !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: space-around !important;
@@ -2873,13 +2873,13 @@ html.light-theme .stats-table td:first-child {
         font-weight: 800 !important;
     }
 
-    /* Hide individual gameweek fixtures grid on small cards */
+    /* Show individual gameweek fixtures grid on small cards */
     .pitch-card-fixtures-grid {
-        display: none !important;
+        display: grid !important;
     }
 
     /* Hide verbose labels in price/XP string to keep it single line */
-    .player-xp-prefix, .player-xp-subtext {
+    .player-xp-prefix {
         display: none !important;
     }
 
