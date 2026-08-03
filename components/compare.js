@@ -140,10 +140,6 @@ export function renderCompare(container, state, actions) {
                     ${players.map(p => `<td style="text-align: center; color: var(--text-main); font-weight: 600;">${p.xGI.toFixed(2)}</td>`).join('')}
                 </tr>
                 <tr>
-                    <td style="font-weight: 600; color: var(--text-muted);">Shots on Target</td>
-                    ${players.map(p => `<td style="text-align: center; color: var(--text-main);">${p.shots}</td>`).join('')}
-                </tr>
-                <tr>
                     <td style="font-weight: 600; color: var(--text-muted);">ICT Index</td>
                     ${players.map(p => `<td style="text-align: center; color: var(--text-main);">${p.ictIndex.toFixed(1)}</td>`).join('')}
                 </tr>
@@ -281,7 +277,7 @@ function generateAiComparisonReport(players, state) {
     const scoredPlayers = players.map(p => {
         const gwXp = ((p.predictions || []).find(pr => pr.gw === state.currentGw) || { pts: 0 }).pts;
         const valueRatio = p.xp10 / p.price; // points per million
-        const optaScore = p.xGI + (p.shots * 0.05);
+        const optaScore = p.xGI || 0; // xGI is season expected goal involvement
 
         // Overall score logic: 40% 10-GW expectation + 30% value + 20% immediate GW projection + 10% underlying OPTA strength
         const score = (p.xp10 * 0.40) + (valueRatio * 5.0) + (gwXp * 0.20) + (optaScore * 0.20);
