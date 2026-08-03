@@ -616,7 +616,7 @@ body {
     flex-direction: column;
     gap: 16px;
     position: relative;
-    overflow: hidden;
+    overflow-y: auto;
 }
 
 .pitch-header {
@@ -670,7 +670,7 @@ body {
     height: 580px; /* Default desktop height */
     flex: 1;
     max-height: calc(100% - 110px);
-    min-height: 250px;
+    min-height: 480px;
     position: relative;
     padding: 8px 0 32px 0;
     display: flex;
@@ -2744,8 +2744,8 @@ body {
 
     /* Mobile scaling of the football pitch slots to fit 100% width cleanly */
     .football-pitch {
-        padding: 4px 0 24px 0 !important;
-        height: 360px !important; /* Stable fixed height on mobiles so layout does not squish or overflow */
+        padding: 4px 0 28px 0 !important;
+        height: 380px !important; /* Stable fixed height on mobiles so layout does not squish or overflow */
         max-height: none !important;
         min-height: auto !important;
         flex: none !important;
