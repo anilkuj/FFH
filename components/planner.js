@@ -219,18 +219,25 @@ function renderPitchFixtures(player, currentGw) {
             const teamNameText = pr.opp !== 'BYE' 
                 ? (pr.loc === 'A' ? pr.opp.toLowerCase() : pr.opp.toUpperCase()) 
                 : 'bye';
+            
+            // Dynamic text color for accessibility contrast
+            const isDarkBg = pr.diff === 4 || pr.diff === 5;
+            const textColor = isDarkBg ? '#ffffff' : '#0f172a';
+            const textShadow = isDarkBg 
+                ? '0 0.5px 1px rgba(0,0,0,0.5)' 
+                : '0 0.5px 1px rgba(255,255,255,0.4)';
                 
             html += `
-                <div class="pitch-fixture-badge" title="GW${gw}: ${oppText} - FDR ${pr.diff} (XP: ${pr.pts.toFixed(1)})" style="background-color: ${fdrColor}; color: #0f172a; padding: 4px 1px; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; font-weight: 800; text-align: center; font-family: var(--font-body); width: 100%; box-sizing: border-box;">
-                    <span class="pitch-fixture-badge-xp" style="font-size: 10.5px; font-weight: 800; display: block; text-shadow: 0 0.5px 1px rgba(255,255,255,0.4);">${ptsText}</span>
-                    <span class="pitch-fixture-badge-team" style="font-size: 8.5px; font-weight: 700; opacity: 0.85; display: block; margin-top: 1px; text-transform: none; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${teamNameText}</span>
+                <div class="pitch-fixture-badge" title="GW${gw}: ${oppText} - FDR ${pr.diff} (XP: ${pr.pts.toFixed(1)})" style="background-color: ${fdrColor}; color: ${textColor}; padding: 4px 1px; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; font-weight: 800; text-align: center; font-family: var(--font-body); width: 100%; box-sizing: border-box;">
+                    <span class="pitch-fixture-badge-xp" style="font-size: 10.5px; font-weight: 800; display: block; text-shadow: ${textShadow}; color: ${textColor};">${ptsText}</span>
+                    <span class="pitch-fixture-badge-team" style="font-size: 8.5px; font-weight: 700; opacity: ${isDarkBg ? '0.95' : '0.85'}; display: block; margin-top: 1px; text-transform: none; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: ${textColor}; text-shadow: ${textShadow};">${teamNameText}</span>
                 </div>
             `;
         } else {
             html += `
-                <div class="pitch-fixture-badge" title="GW${gw}: BYE" style="background-color: #334155; color: #94a3b8; padding: 4px 1px; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; font-weight: 800; text-align: center; font-family: var(--font-body); width: 100%; box-sizing: border-box;">
-                    <span class="pitch-fixture-badge-xp" style="font-size: 10.5px; font-weight: 800; display: block; color: #fff;">0</span>
-                    <span class="pitch-fixture-badge-team" style="font-size: 8.5px; font-weight: 700; opacity: 0.85; display: block; margin-top: 1px; color: #94a3b8;">bye</span>
+                <div class="pitch-fixture-badge" title="GW${gw}: BYE" style="background-color: #334155; color: #ffffff; padding: 4px 1px; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; font-weight: 800; text-align: center; font-family: var(--font-body); width: 100%; box-sizing: border-box;">
+                    <span class="pitch-fixture-badge-xp" style="font-size: 10.5px; font-weight: 800; display: block; color: #ffffff; text-shadow: 0 0.5px 1px rgba(0,0,0,0.5);">0</span>
+                    <span class="pitch-fixture-badge-team" style="font-size: 8.5px; font-weight: 700; opacity: 0.9; display: block; margin-top: 1px; color: #94a3b8; text-shadow: 0 0.5px 1px rgba(0,0,0,0.5);">bye</span>
                 </div>
             `;
         }
