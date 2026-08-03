@@ -2837,7 +2837,27 @@ html.light-theme .stats-table td:first-child {
     .player-pitch-points {
         font-size: 7.5px !important;
         margin-top: 1px !important;
-        white-space: nowrap !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 1px !important;
+        white-space: normal !important;
+    }
+
+    .player-pitch-price {
+        display: block !important;
+        font-size: 8px !important;
+        font-weight: 700 !important;
+    }
+
+    .player-pitch-sep {
+        display: none !important;
+    }
+
+    .player-pitch-xp {
+        display: block !important;
+        font-size: 7.5px !important;
+        font-weight: 800 !important;
     }
 
     /* Hide individual gameweek fixtures grid on small cards */

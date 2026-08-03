@@ -204,8 +204,11 @@
                     <div class="pitch-card-info-header">
                         <div class="player-pitch-name">${i.getWebName(f.name)}</div>
                         <div class="player-pitch-points">
-                            £${f.price.toFixed(1)}m • 
-                            ${o.actualPts!==void 0&&o.actualPts!==null?`<strong style="color: var(--primary);">${o.actualPts} pts</strong> <span class="player-xp-subtext">(5 GW: ${Ot(f,a).toFixed(1)} XP)</span>`:`<span class="player-xp-prefix">5 GW: </span>${Ot(f,a).toFixed(1)}<span class="player-xp-suffix"> XP</span>`}
+                            <span class="player-pitch-price">£${f.price.toFixed(1)}m</span>
+                            <span class="player-pitch-sep"> • </span>
+                            <span class="player-pitch-xp">
+                                ${o.actualPts!==void 0&&o.actualPts!==null?`<strong style="color: var(--primary);">${o.actualPts} pts</strong> <span class="player-xp-subtext">(5 GW: ${Ot(f,a).toFixed(1)} XP)</span>`:`<span class="player-xp-prefix">5 GW: </span>${Ot(f,a).toFixed(1)}<span class="player-xp-suffix"> XP</span>`}
+                            </span>
                         </div>
                     </div>
                     <div class="pitch-card-fixtures-grid">
@@ -241,8 +244,11 @@
                         <div class="pitch-card-info-header">
                             <div class="player-pitch-name">${s.getWebName(o.name)}</div>
                             <div class="player-pitch-points">
-                                £${o.price.toFixed(1)}m • 
-                                ${x.actualPts!==void 0&&x.actualPts!==null?`<strong style="color: var(--primary);">${x.actualPts} pts</strong> <span class="player-xp-subtext">(5 GW: ${Ot(o,t).toFixed(1)} XP)</span>`:`<span class="player-xp-prefix">5 GW: </span>${Ot(o,t).toFixed(1)}<span class="player-xp-suffix"> XP</span>`}
+                                <span class="player-pitch-price">£${o.price.toFixed(1)}m</span>
+                                <span class="player-pitch-sep"> • </span>
+                                <span class="player-pitch-xp">
+                                    ${x.actualPts!==void 0&&x.actualPts!==null?`<strong style="color: var(--primary);">${x.actualPts} pts</strong> <span class="player-xp-subtext">(5 GW: ${Ot(o,t).toFixed(1)} XP)</span>`:`<span class="player-xp-prefix">5 GW: </span>${Ot(o,t).toFixed(1)}<span class="player-xp-suffix"> XP</span>`}
+                                </span>
                             </div>
                         </div>
                         <div class="pitch-card-fixtures-grid">

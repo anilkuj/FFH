@@ -378,11 +378,14 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
                     <div class="pitch-card-info-header">
                         <div class="player-pitch-name">${actions.getWebName(player.name)}</div>
                         <div class="player-pitch-points">
-                            £${player.price.toFixed(1)}m • 
-                            ${prediction.actualPts !== undefined && prediction.actualPts !== null ? 
-                                `<strong style="color: var(--primary);">${prediction.actualPts} pts</strong> <span class="player-xp-subtext">(5 GW: ${get5GwXp(player, currentGw).toFixed(1)} XP)</span>` : 
-                                `<span class="player-xp-prefix">5 GW: </span>${get5GwXp(player, currentGw).toFixed(1)}<span class="player-xp-suffix"> XP</span>`
-                            }
+                            <span class="player-pitch-price">£${player.price.toFixed(1)}m</span>
+                            <span class="player-pitch-sep"> • </span>
+                            <span class="player-pitch-xp">
+                                ${prediction.actualPts !== undefined && prediction.actualPts !== null ? 
+                                    `<strong style="color: var(--primary);">${prediction.actualPts} pts</strong> <span class="player-xp-subtext">(5 GW: ${get5GwXp(player, currentGw).toFixed(1)} XP)</span>` : 
+                                    `<span class="player-xp-prefix">5 GW: </span>${get5GwXp(player, currentGw).toFixed(1)}<span class="player-xp-suffix"> XP</span>`
+                                }
+                            </span>
                         </div>
                     </div>
                     <div class="pitch-card-fixtures-grid">
@@ -444,11 +447,14 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions) {
                         <div class="pitch-card-info-header">
                             <div class="player-pitch-name">${actions.getWebName(player.name)}</div>
                             <div class="player-pitch-points">
-                                £${player.price.toFixed(1)}m • 
-                                ${prediction.actualPts !== undefined && prediction.actualPts !== null ? 
-                                    `<strong style="color: var(--primary);">${prediction.actualPts} pts</strong> <span class="player-xp-subtext">(5 GW: ${get5GwXp(player, currentGw).toFixed(1)} XP)</span>` : 
-                                    `<span class="player-xp-prefix">5 GW: </span>${get5GwXp(player, currentGw).toFixed(1)}<span class="player-xp-suffix"> XP</span>`
-                                }
+                                <span class="player-pitch-price">£${player.price.toFixed(1)}m</span>
+                                <span class="player-pitch-sep"> • </span>
+                                <span class="player-pitch-xp">
+                                    ${prediction.actualPts !== undefined && prediction.actualPts !== null ? 
+                                        `<strong style="color: var(--primary);">${prediction.actualPts} pts</strong> <span class="player-xp-subtext">(5 GW: ${get5GwXp(player, currentGw).toFixed(1)} XP)</span>` : 
+                                        `<span class="player-xp-prefix">5 GW: </span>${get5GwXp(player, currentGw).toFixed(1)}<span class="player-xp-suffix"> XP</span>`
+                                    }
+                                </span>
                             </div>
                         </div>
                         <div class="pitch-card-fixtures-grid">
