@@ -2296,7 +2296,7 @@ ${c.length>0?c.map(r=>`- **${r.name}** (${r.team}, £${r.price.toFixed(1)}m) —
                 </div>
             </div>
         `,document.body.appendChild(M),lucide.createIcons();const z=()=>{document.body.removeChild(M)};M.querySelector("#closeCompareModalBtn").addEventListener("click",z),M.querySelector("#cancelCompareModalBtn").addEventListener("click",z),M.querySelector("#applyCompareModalBtn").addEventListener("click",()=>{if(z(),a.addTransfer(t.currentGw,v.id,I.id,!1)){K();const Q=O.step-1,D=l.querySelector(`[data-step-card-idx="${Q}"]`);if(D){D.querySelectorAll(".apply-option-btn").forEach(nt=>{nt.disabled=!0,nt.style.opacity="0.5",nt.style.cursor="default"});const Z=D.querySelector(`.apply-option-btn[data-opt-id="${I.id}"]`);Z&&(Z.disabled=!0,Z.style.opacity="1",Z.style.background="var(--primary)",Z.style.color="#000",Z.style.borderColor="var(--primary)",Z.innerHTML='<i data-lucide="check-circle" style="width:12px; height:12px;"></i> Applied');const at=D.querySelector("h4");if(at&&!at.querySelector(".applied-badge-label")){const nt=document.createElement("span");nt.className="applied-badge-label",nt.style.cssText="font-size:11px; background:rgba(0, 255, 136, 0.15); padding:2px 8px; border-radius:4px; color:var(--primary); text-transform:none; margin-left:12px; font-weight:700;",nt.innerHTML=`Applied: ${I.name}`,at.appendChild(nt)}lucide.createIcons()}}})};l.innerHTML=`
-        <div class="tp-outer-container" style="display:flex; flex-direction:column; gap:16px; height:100%; width:100%; overflow:hidden;">
+        <div class="tp-outer-container" style="display:flex; flex-direction:column; gap:16px; height:100vh; width:100%; overflow-y:auto; -webkit-overflow-scrolling:touch;">
             <div class="optimizer-intro" style="margin-bottom: 4px; flex-shrink: 0;">
                 <div class="intro-text-area">
                     <h2 style="font-size: 20px; font-weight: 800; margin: 0;">AI Multi-Transfer Roadmap Planner</h2>
@@ -2304,9 +2304,9 @@ ${c.length>0?c.map(r=>`- **${r.name}** (${r.team}, £${r.price.toFixed(1)}m) —
                 </div>
             </div>
 
-            <div class="tp-main-grid" style="display: grid; gap: 20px; flex: 1; min-height: 0; overflow: hidden; width: 100%;">
+            <div class="tp-main-grid" style="display: flex; flex-direction: column; gap: 20px; flex: 1; min-height: 0; overflow: auto; width: 100%;">
                 <!-- Left Column: Configurations & Results -->
-                <div class="tp-left-col" style="display: flex; flex-direction: column; gap: 16px; overflow-y: auto; height: 100%; min-height: 0; padding-right: 4px;">
+                <div class="tp-left-col" style="display: flex; flex-direction: column; gap: 16px; overflow-y: auto; flex: 1; min-height: 0; padding-right: 4px;">
                     <!-- Configuration Card -->
                     <div class="optimizer-settings-card" style="padding:16px; margin:0; flex-shrink: 0;">
                         <h3 style="font-family: var(--font-heading); margin-bottom:16px; font-weight:700; display:flex; align-items:center; gap:8px; font-size: 14px;">
@@ -2364,8 +2364,8 @@ ${c.length>0?c.map(r=>`- **${r.name}** (${r.team}, £${r.price.toFixed(1)}m) —
                 </div>
 
                 <!-- Right Column: Squad Preview -->
-                <div class="tp-right-col" style="height:100%; min-height:0; overflow-y:auto; padding-right:4px;">
-                    <div id="tpSquadPreviewContainer" style="width: 100%; height: 100%;"></div>
+                <div class="tp-right-col" style="flex:1; min-height:0; overflow-y:auto; padding-right:4px;">
+                    <div id="tpSquadPreviewContainer" style="width: 100%; height: auto;"></div>
                 </div>
             </div>
         </div>
