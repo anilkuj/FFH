@@ -4112,15 +4112,15 @@ html.light-theme .rating-badge-na {
 }
 
 /* Responsive Vertical Heights to prevent vertical cropping on square screens (Foldables, iPads) */
-@media (max-height: 850px) {
+@media (max-height: 950px) {
     .football-pitch {
         height: 380px !important;
         min-height: auto !important;
     }
 }
-@media (max-height: 768px) {
+@media (max-height: 850px) {
     .football-pitch {
-        height: 350px !important;
+        height: 340px !important;
         min-height: auto !important;
     }
     @media (max-width: 767px) {
@@ -4150,9 +4150,9 @@ html.light-theme .rating-badge-na {
         }
     }
 }
-@media (max-height: 680px) {
+@media (max-height: 740px) {
     .football-pitch {
-        height: 300px !important;
+        height: 295px !important;
         min-height: auto !important;
     }
     .bench-container {
