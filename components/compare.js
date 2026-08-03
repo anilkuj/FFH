@@ -370,7 +370,7 @@ function generateAiComparisonReport(players, state) {
                     <span style="color: var(--text-muted); font-size: 13px;">
                         If you have budget to spare, <strong>${sortedByXp10[0].name || 'Unknown'}</strong> remains the absolute best pick for raw expected output. However, taking squad value and structural flexibility into account, 
                         <strong>${recommended.name || 'Unknown'}</strong> scores the highest overall rating of <strong>${(scoredPlayers[0].score).toFixed(1)}/100</strong>. 
-                        ${runnerUp ? `If you are looking for a cheaper differential option, consider <strong>${runnerUp.player.name || 'Unknown'}</strong> who scored the second highest rating with ${(scoredPlayers[1].score).toFixed(1)}/100.` : ''}
+                        ${runnerUp ? `If you are looking for a cheaper differential option, consider <strong>${runnerUp.name || 'Unknown'}</strong> who scored the second highest rating with ${(scoredPlayers[1].score).toFixed(1)}/100.` : ''}
                     </span>
                 </div>
             </div>

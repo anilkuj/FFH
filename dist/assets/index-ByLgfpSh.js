@@ -1484,7 +1484,7 @@ ${n.length>0?n.map(g=>`- **${g.name}** (${g.team}, £${g.price.toFixed(1)}m) —
                     <span style="color: var(--text-muted); font-size: 13px;">
                         If you have budget to spare, <strong>${s[0].name||"Unknown"}</strong> remains the absolute best pick for raw expected output. However, taking squad value and structural flexibility into account, 
                         <strong>${n.name||"Unknown"}</strong> scores the highest overall rating of <strong>${w[0].score.toFixed(1)}/100</strong>. 
-                        ${r?`If you are looking for a cheaper differential option, consider <strong>${r.player.name||"Unknown"}</strong> who scored the second highest rating with ${w[1].score.toFixed(1)}/100.`:""}
+                        ${r?`If you are looking for a cheaper differential option, consider <strong>${r.name||"Unknown"}</strong> who scored the second highest rating with ${w[1].score.toFixed(1)}/100.`:""}
                     </span>
                 </div>
             </div>
