@@ -138,6 +138,7 @@ export function renderOptimizer(container, state, actions) {
                         <div class="setting-group">
                             <label for="optimizerFormationSelect">Preferred Formation</label>
                             <select id="optimizerFormationSelect" class="settings-select">
+                                <option value="optimum" ${state.formation === 'optimum' ? 'selected' : ''}>⚡ Optimum Formation (AI Pick)</option>
                                 <option value="4-3-3" ${state.formation === '4-3-3' ? 'selected' : ''}>4-3-3</option>
                                 <option value="4-4-2" ${state.formation === '4-4-2' ? 'selected' : ''}>4-4-2</option>
                                 <option value="3-5-2" ${state.formation === '3-5-2' ? 'selected' : ''}>3-5-2</option>
@@ -147,6 +148,7 @@ export function renderOptimizer(container, state, actions) {
                                 <option value="5-4-1" ${state.formation === '5-4-1' ? 'selected' : ''}>5-4-1</option>
                                 <option value="5-2-3" ${state.formation === '5-2-3' ? 'selected' : ''}>5-2-3</option>
                             </select>
+                            <span class="setting-help" id="formationHelpText">${state.formation === 'optimum' ? '⚡ AI will test all 8 formations and pick the one maximizing predicted points.' : 'Fix the formation the optimizer builds the squad around.'}</span>
                         </div>
                     </div>
                 </div>
@@ -305,9 +307,15 @@ export function renderOptimizer(container, state, actions) {
     }
 
     const formationSelect = container.querySelector('#optimizerFormationSelect');
+    const formationHelpText = container.querySelector('#formationHelpText');
     if (formationSelect) {
         formationSelect.addEventListener('change', () => {
             actions.setFormation(formationSelect.value);
+            if (formationHelpText) {
+                formationHelpText.textContent = formationSelect.value === 'optimum'
+                    ? '⚡ AI will test all 8 formations and pick the one maximizing predicted points.'
+                    : 'Fix the formation the optimizer builds the squad around.';
+            }
         });
     }
 
@@ -597,7 +605,119 @@ function renderLockOverlay(container, actions) {
     });
 }
 
+const ALL_FORMATIONS = ['4-3-3', '4-4-2', '3-5-2', '3-4-3', '4-5-1', '5-3-2', '5-4-1', '5-2-3'];
+
 function performOptimization(resultsGrid, state, actions, horizon, mode) {
+    // If 'optimum' formation: run solver for each formation and pick the best
+    if (state.formation === 'optimum') {
+        let bestResult = null;
+        let bestFormation = null;
+        let bestScore = -Infinity;
+
+        for (const formation of ALL_FORMATIONS) {
+            const testState = Object.assign(Object.create(Object.getPrototypeOf(state)), state, { formation });
+            const score = _scoreOptimizationForFormation(testState, horizon, mode);
+            if (score > bestScore) {
+                bestScore = score;
+                bestFormation = formation;
+            }
+        }
+
+        // Run the real optimization with the best formation
+        const overrideState = Object.assign(Object.create(Object.getPrototypeOf(state)), state, { formation: bestFormation });
+        _performOptimizationWithFormation(resultsGrid, overrideState, actions, horizon, mode, bestFormation, true);
+        return;
+    }
+
+    _performOptimizationWithFormation(resultsGrid, state, actions, horizon, mode, state.formation, false);
+}
+
+/**
+ * Quick scorer: runs a lightweight greedy pass to estimate expected points
+ * for a given formation without rendering any UI. Used for optimum-formation picking.
+ */
+function _scoreOptimizationForFormation(state, horizon, mode) {
+    const squadInfo = state.getSquadForGw(state.currentGw);
+    const { bank } = squadInfo;
+
+    const activeSquadSlots = (() => {
+        let slots = JSON.parse(JSON.stringify(state.squadSlots));
+        for (let gw = 1; gw <= state.currentGw; gw++) {
+            const weeklyTransfers = state.transfers[gw] || [];
+            weeklyTransfers.forEach(tx => {
+                slots.forEach(slot => { if (slot.playerId === tx.out) slot.playerId = tx.in; });
+            });
+        }
+        return slots;
+    })();
+
+    const getExpectedPts = (player) => {
+        let sum = 0;
+        for (let gw = state.currentGw; gw < state.currentGw + horizon; gw++) {
+            const pred = player.predictions.find(pr => pr.gw === gw);
+            if (pred) sum += pred.pts;
+        }
+        return sum;
+    };
+
+    const getSolverScore = (player) => {
+        if (!player) return 0;
+        if (player.status === 'i' || player.status === 's' || player.status === 'u') return 0;
+        return getExpectedPts(player);
+    };
+
+    const cons = getFormationConstraints(state.formation);
+    const minBenchBudget = state.benchBudget || 17.0;
+    const totalValue = activeSquadSlots.reduce((sum, s) => {
+        const p = PLAYERS.find(pl => pl.id === s.playerId);
+        return sum + (p ? p.price : 0);
+    }, 0) + bank;
+    const maxStartingBudget = totalValue - minBenchBudget;
+
+    const candidatePool = (pos) => PLAYERS.filter(p =>
+        p.position === pos &&
+        !state.mustExclude.includes(p.id) &&
+        getSolverScore(p) > 0
+    ).sort((a, b) => getSolverScore(b) - getSolverScore(a));
+
+    const pick = (pos, count, budget) => {
+        const pool = candidatePool(pos);
+        const picked = [];
+        let spent = 0;
+        for (const p of pool) {
+            if (picked.length >= count) break;
+            if (spent + p.price <= budget - (count - picked.length - 1) * 4.0) {
+                picked.push(p);
+                spent += p.price;
+            }
+        }
+        return { players: picked, spent };
+    };
+
+    // Budget split: GKP gets ~4.5m bench, rest proportional
+    const gkpBudget = 9.5; // 1 start + 1 bench
+    const fieldBudget = maxStartingBudget - gkpBudget;
+    const defBudget = (cons.DEF / 10) * fieldBudget * 1.2;
+    const midBudget = (cons.MID / 10) * fieldBudget;
+    const fwdBudget = fieldBudget - defBudget - midBudget;
+
+    const gkps = pick('GKP', cons.GKP, gkpBudget);
+    const defs = pick('DEF', cons.DEF, defBudget);
+    const mids = pick('MID', cons.MID, midBudget);
+    const fwds = pick('FWD', cons.FWD, fwdBudget);
+
+    const allPicked = [...gkps.players, ...defs.players, ...mids.players, ...fwds.players];
+    let totalScore = allPicked.reduce((sum, p) => sum + getSolverScore(p), 0);
+    // Captain bonus
+    const maxScore = allPicked.reduce((best, p) => Math.max(best, getSolverScore(p)), 0);
+    totalScore += maxScore;
+    return totalScore;
+}
+
+/**
+ * Full optimizer render function. chosenFormation is set when 'optimum' mode selects the best formation.
+ */
+function _performOptimizationWithFormation(resultsGrid, state, actions, horizon, mode, chosenFormation, isOptimumMode) {
     const squadInfo = state.getSquadForGw(state.currentGw);
     const { starters, bench, bank } = squadInfo;
     const currentSquadIds = [...starters, ...bench];
@@ -1410,6 +1530,14 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
             <div class="optimizer-card" style="grid-column: span 2; position: relative;">
                 <button class="close-modal-btn" id="closeResultsBtn" style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center;"><i data-lucide="x" style="width: 18px; height: 18px;"></i></button>
                 <h3><i data-lucide="sparkles" class="highlight-transfers"></i> Preseason AI Full-Squad Optimization</h3>
+                ${isOptimumMode ? `
+                    <div style="display:inline-flex; align-items:center; gap:8px; margin-top:10px; padding:8px 14px; background:linear-gradient(135deg, rgba(0,255,136,0.1), rgba(0,242,254,0.07)); border:1px solid rgba(0,255,136,0.25); border-radius:10px; font-size:12px; font-weight:600;">
+                        <i data-lucide="zap" style="width:14px;height:14px;color:var(--primary);"></i>
+                        <span style="color:var(--primary);">AI Selected Formation:</span>
+                        <span style="color:var(--text-main); font-family:var(--font-heading); font-size:14px; font-weight:800;">${chosenFormation}</span>
+                        <span style="color:var(--text-muted); font-weight:400;">— Best formation for maximum predicted points across ${horizon} GW${horizon > 1 ? 's' : ''}</span>
+                    </div>
+                ` : ''}
                 <div class="recommendations-list" style="margin-top: 16px;">
                     ${upgrades.length > 0 ? `
                         <div class="rec-option-box">
@@ -1787,6 +1915,14 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                     <i data-lucide="x" style="width: 16px; height: 16px;"></i> Close Results
                 </button>
             </div>
+            ${isOptimumMode ? `
+                <div style="grid-column: span 2; display:inline-flex; align-items:center; gap:8px; margin-bottom:4px; padding:8px 14px; background:linear-gradient(135deg, rgba(0,255,136,0.1), rgba(0,242,254,0.07)); border:1px solid rgba(0,255,136,0.25); border-radius:10px; font-size:12px; font-weight:600;">
+                    <i data-lucide="zap" style="width:14px;height:14px;color:var(--primary);"></i>
+                    <span style="color:var(--primary);">AI Selected Formation:</span>
+                    <span style="color:var(--text-main); font-family:var(--font-heading); font-size:14px; font-weight:800;">${chosenFormation}</span>
+                    <span style="color:var(--text-muted); font-weight:400;">— Best formation for maximum predicted points across ${horizon} GW${horizon > 1 ? 's' : ''}</span>
+                </div>
+            ` : ''}
             <!-- Single Transfer Recommendation -->
             <div class="optimizer-card" style="${freeTransfersCount === 1 ? 'grid-column: span 2;' : ''}">
                 <h3><i data-lucide="arrow-right-left" class="highlight-transfers"></i> Best Single Transfer</h3>
