@@ -3681,6 +3681,25 @@ html.light-theme .rating-badge-na {
     box-sizing: border-box;
 }
 
+.pitch-card-info-header {
+    padding: 6px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.pitch-card-fixtures-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: 100%;
+    gap: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: auto;
+}
+
 @media (max-width: 767px) {
     .pitch-fixture-badge {
         padding: 3px 0.5px !important;
@@ -3690,5 +3709,12 @@ html.light-theme .rating-badge-na {
     }
     .pitch-fixture-badge-team {
         font-size: 6.5px !important;
+    }
+    .pitch-card-info-header {
+        padding: 4px 2px !important;
+        gap: 1px !important;
+    }
+    .pitch-card-fixtures-grid {
+        border-top: none !important;
     }
 }

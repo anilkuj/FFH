@@ -375,7 +375,7 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
                     ${player.transferredThisSeason ? `<div class="pitch-transfer-icon" title="Transferred from ${player.oldTeam}">⇆</div>` : ''}
                 </div>
                 <div class="player-card-info" style="padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; border-radius: 8px;">
-                    <div style="padding: 6px 8px; display: flex; flex-direction: column; gap: 2px; width: 100%; box-sizing: border-box; text-align: center;">
+                    <div class="pitch-card-info-header">
                         <div class="player-pitch-name">${actions.getWebName(player.name)}</div>
                         <div class="player-pitch-points">
                             £${player.price.toFixed(1)}m • 
@@ -385,7 +385,7 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
                             }
                         </div>
                     </div>
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; gap: 0; border-top: 1px solid rgba(255,255,255,0.05); margin-top: auto;">
+                    <div class="pitch-card-fixtures-grid">
                         ${renderPitchFixtures(player, currentGw)}
                     </div>
                 </div>
@@ -441,7 +441,7 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions) {
                         ${player.transferredThisSeason ? `<div class="pitch-transfer-icon" title="Transferred from ${player.oldTeam}">⇆</div>` : ''}
                     </div>
                     <div class="player-card-info" style="padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; border-radius: 8px;">
-                        <div style="padding: 6px 8px; display: flex; flex-direction: column; gap: 2px; width: 100%; box-sizing: border-box; text-align: center;">
+                        <div class="pitch-card-info-header">
                             <div class="player-pitch-name">${actions.getWebName(player.name)}</div>
                             <div class="player-pitch-points">
                                 £${player.price.toFixed(1)}m • 
@@ -451,7 +451,7 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions) {
                                 }
                             </div>
                         </div>
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; gap: 0; border-top: 1px solid rgba(255,255,255,0.05); margin-top: auto;">
+                        <div class="pitch-card-fixtures-grid">
                             ${renderPitchFixtures(player, currentGw)}
                         </div>
                     </div>
