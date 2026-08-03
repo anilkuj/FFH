@@ -3685,7 +3685,10 @@ html.light-theme .rating-badge-na {
     .pitch-fixture-badge {
         padding: 3px 0.5px !important;
     }
-    .pitch-fixture-badge span {
-        font-size: 5.5px !important;
+    .pitch-fixture-badge-xp {
+        font-size: 8px !important;
+    }
+    .pitch-fixture-badge-team {
+        font-size: 6.5px !important;
     }
 }
