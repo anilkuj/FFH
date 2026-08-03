@@ -2,14 +2,19 @@ import { PLAYERS, TEAMS } from '../data.js';
 import { getShirtSVG } from './planner.js';
 
 export function renderCompare(container, state, actions) {
-    // Default load all midfielders from the active squad, filter out duplicates and NaNs
-    let selectedIds = state.squadSlots
-        .filter(s => s.position === 'MID' && s.playerId !== null)
-        .map(s => parseInt(s.playerId))
-        .filter(id => !isNaN(id));
+    if (!container) return;
+
+    // Safely load midfielders from active squad
+    let selectedIds = [];
+    if (state && state.squadSlots && Array.isArray(state.squadSlots)) {
+        selectedIds = state.squadSlots
+            .filter(s => s && s.position === 'MID' && s.playerId !== null && s.playerId !== undefined)
+            .map(s => parseInt(s.playerId))
+            .filter(id => !isNaN(id));
+    }
 
     // Fallback default prepopulate (Cole Palmer and Bukayo Saka) if active squad has fewer than 2 midfielders
-    if (selectedIds.length < 2) {
+    if (!selectedIds || selectedIds.length < 2) {
         selectedIds = [302, 12]; 
     }
 
@@ -74,11 +79,13 @@ export function renderCompare(container, state, actions) {
     const statsTable = container.querySelector('#compareStatsTable');
     const aiAnalysisCard = container.querySelector('#compareAiAnalysisCard');
 
+    const currentGw = (state && state.currentGw) ? state.currentGw : 1;
+
     // Main comparison runner
     const runComparison = () => {
         const players = selectedIds.map(id => PLAYERS.find(p => p.id === id)).filter(Boolean);
         if (players.length < 2) {
-            resultsSection.style.display = 'none';
+            if (resultsSection) resultsSection.style.display = 'none';
             return;
         }
 
@@ -89,8 +96,8 @@ export function renderCompare(container, state, actions) {
                     <th style="font-weight: 700 !important; background: var(--bg-panel); color: var(--text-muted); font-size: 11px; text-transform: uppercase;">Metric</th>
                     ${players.map(p => `
                         <th style="font-weight: 700 !important; text-align: center; color: var(--primary); background: var(--bg-panel);">
-                            <div style="font-size: 13px; font-weight: 800;">${p.name}</div>
-                            <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; margin-top: 2px;">${p.position} • ${p.team}</div>
+                            <div style="font-size: 13px; font-weight: 800;">${p.name || 'Unknown'}</div>
+                            <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; margin-top: 2px;">${p.position || 'MID'} • ${p.team || 'UNK'}</div>
                         </th>
                     `).join('')}
                 </tr>
@@ -98,69 +105,74 @@ export function renderCompare(container, state, actions) {
             <tbody>
                 <tr>
                     <td style="font-weight: 600; color: var(--text-muted);">Price</td>
-                    ${players.map(p => `<td style="text-align: center; font-weight: 700; color: var(--text-main);">£${p.price.toFixed(1)}m</td>`).join('')}
+                    ${players.map(p => `<td style="text-align: center; font-weight: 700; color: var(--text-main);">£${(p.price || 0).toFixed(1)}m</td>`).join('')}
                 </tr>
                 <tr>
                     <td style="font-weight: 600; color: var(--text-muted);">Ownership</td>
-                    ${players.map(p => `<td style="text-align: center; color: var(--text-main);">${p.ownership.toFixed(1)}%</td>`).join('')}
+                    ${players.map(p => `<td style="text-align: center; color: var(--text-main);">${(p.ownership || 0).toFixed(1)}%</td>`).join('')}
                 </tr>
                 <tr>
                     <td style="font-weight: 600; color: var(--text-muted);">Total Points</td>
-                    ${players.map(p => `<td style="text-align: center; color: var(--text-main); font-weight: 600;">${p.points}</td>`).join('')}
+                    ${players.map(p => `<td style="text-align: center; color: var(--text-main); font-weight: 600;">${p.points || 0}</td>`).join('')}
                 </tr>
                 <tr>
-                    <td style="font-weight: 600; color: var(--text-muted);">Expected Points (GW${state.currentGw})</td>
+                    <td style="font-weight: 600; color: var(--text-muted);">Expected Points (GW${currentGw})</td>
                     ${players.map(p => {
-                        const pred = ((p.predictions || []).find(pr => pr.gw === state.currentGw) || { pts: 0 }).pts;
+                        const pred = ((p.predictions || []).find(pr => pr.gw === currentGw) || { pts: 0 }).pts || 0;
                         return `<td style="text-align: center; font-weight: bold; color: var(--secondary);">${pred.toFixed(1)}</td>`;
                     }).join('')}
                 </tr>
                 <tr>
                     <td style="font-weight: 600; color: var(--text-muted);">10-GW Expected Points</td>
-                    ${players.map(p => `<td style="text-align: center; font-weight: bold; color: var(--primary);">${p.xp10.toFixed(1)}</td>`).join('')}
+                    ${players.map(p => `<td style="text-align: center; font-weight: bold; color: var(--primary);">${(p.xp10 || 0).toFixed(1)}</td>`).join('')}
                 </tr>
                 <tr>
                     <td style="font-weight: 600; color: var(--text-muted);">Expected Goals (xG)</td>
-                    ${players.map(p => `<td style="text-align: center; color: var(--text-main);">${p.xG.toFixed(2)}</td>`).join('')}
+                    ${players.map(p => `<td style="text-align: center; color: var(--text-main);">${(p.xG || 0).toFixed(2)}</td>`).join('')}
                 </tr>
                 <tr>
                     <td style="font-weight: 600; color: var(--text-muted);">xG per 90 (xG90)</td>
-                    ${players.map(p => `<td style="text-align: center; color: var(--text-main);">${p.xG90.toFixed(2)}</td>`).join('')}
+                    ${players.map(p => `<td style="text-align: center; color: var(--text-main);">${(p.xG90 || 0).toFixed(2)}</td>`).join('')}
                 </tr>
                 <tr>
                     <td style="font-weight: 600; color: var(--text-muted);">Expected Assists (xA)</td>
-                    ${players.map(p => `<td style="text-align: center; color: var(--text-main);">${p.xA.toFixed(2)}</td>`).join('')}
+                    ${players.map(p => `<td style="text-align: center; color: var(--text-main);">${(p.xA || 0).toFixed(2)}</td>`).join('')}
                 </tr>
                 <tr>
                     <td style="font-weight: 600; color: var(--text-muted);">xA per 90 (xA90)</td>
-                    ${players.map(p => `<td style="text-align: center; color: var(--text-main);">${p.xA90.toFixed(2)}</td>`).join('')}
+                    ${players.map(p => `<td style="text-align: center; color: var(--text-main);">${(p.xA90 || 0).toFixed(2)}</td>`).join('')}
                 </tr>
                 <tr>
                     <td style="font-weight: 600; color: var(--text-muted);">xG Involvement (xGI)</td>
-                    ${players.map(p => `<td style="text-align: center; color: var(--text-main); font-weight: 600;">${p.xGI.toFixed(2)}</td>`).join('')}
+                    ${players.map(p => `<td style="text-align: center; color: var(--text-main); font-weight: 600;">${(p.xGI || 0).toFixed(2)}</td>`).join('')}
                 </tr>
                 <tr>
                     <td style="font-weight: 600; color: var(--text-muted);">ICT Index</td>
-                    ${players.map(p => `<td style="text-align: center; color: var(--text-main);">${p.ictIndex.toFixed(1)}</td>`).join('')}
+                    ${players.map(p => `<td style="text-align: center; color: var(--text-main);">${(p.ictIndex || 0).toFixed(1)}</td>`).join('')}
                 </tr>
                 <tr>
                     <td style="font-weight: 600; color: var(--text-muted);">Games Started</td>
-                    ${players.map(p => `<td style="text-align: center; color: var(--text-main);">${p.GS}</td>`).join('')}
+                    ${players.map(p => `<td style="text-align: center; color: var(--text-main);">${p.GS || 0}</td>`).join('')}
                 </tr>
                 <tr>
                     <td style="font-weight: 600; color: var(--text-muted);">Avg Minutes Per Game</td>
-                    ${players.map(p => `<td style="text-align: center; color: var(--text-main);">${p.MPPG.toFixed(1)}</td>`).join('')}
+                    ${players.map(p => `<td style="text-align: center; color: var(--text-main);">${(p.MPPG || 0).toFixed(1)}</td>`).join('')}
                 </tr>
             </tbody>
         `;
-        statsTable.innerHTML = tableHtml;
+        if (statsTable) statsTable.innerHTML = tableHtml;
 
         // Generate AI analysis report content
         const reportHtml = generateAiComparisonReport(players, state);
-        aiAnalysisCard.innerHTML = reportHtml;
+        if (aiAnalysisCard) aiAnalysisCard.innerHTML = reportHtml;
 
-        resultsSection.style.display = 'flex';
-        lucide.createIcons();
+        if (resultsSection) resultsSection.style.display = 'flex';
+        
+        if (window.lucide) {
+            window.lucide.createIcons();
+        } else if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
     };
 
     // Render deck chips on load
@@ -169,7 +181,7 @@ export function renderCompare(container, state, actions) {
         if (!deck) return;
         if (selectedIds.length === 0) {
             deck.innerHTML = `<span style="color: var(--text-muted); font-size: 13px;">No players selected. Search and add up to 5 players to compare.</span>`;
-            resultsSection.style.display = 'none';
+            if (resultsSection) resultsSection.style.display = 'none';
             return;
         }
         deck.innerHTML = selectedIds.map(id => {
@@ -177,12 +189,17 @@ export function renderCompare(container, state, actions) {
             if (!p) return '';
             return `
                 <div class="stat-pill" style="padding: 6px 12px; display: flex; align-items: center; gap: 8px; background: rgba(0, 255, 136, 0.05); border: 1px solid var(--primary-glow); border-radius: 20px; font-size: 12px;">
-                    <span style="font-weight: 700; color: var(--text-main);">${p.name} (${p.team} • ${p.position})</span>
+                    <span style="font-weight: 700; color: var(--text-main);">${p.name || 'Unknown'} (${p.team || 'UNK'} • ${p.position || 'MID'})</span>
                     <button class="remove-compare-player-btn" data-id="${p.id}" style="background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; padding: 0 2px; transition: color 0.2s;"><i data-lucide="x" style="width: 14px; height: 14px;"></i></button>
                 </div>
             `;
         }).join('');
-        lucide.createIcons();
+        
+        if (window.lucide) {
+            window.lucide.createIcons();
+        } else if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
 
         // Bind remove actions
         deck.querySelectorAll('.remove-compare-player-btn').forEach(btn => {
@@ -201,48 +218,54 @@ export function renderCompare(container, state, actions) {
     const searchInput = container.querySelector('#playerCompareSearch');
     const searchResults = container.querySelector('#compareSearchResults');
 
-    searchInput.addEventListener('input', e => {
-        const query = e.target.value.toLowerCase().trim();
-        if (!query) {
-            searchResults.style.display = 'none';
-            return;
-        }
+    if (searchInput) {
+        searchInput.addEventListener('input', e => {
+            const query = e.target.value.toLowerCase().trim();
+            if (!query) {
+                if (searchResults) searchResults.style.display = 'none';
+                return;
+            }
 
-        const matches = PLAYERS.filter(p => p.name.toLowerCase().includes(query))
-                               .filter(p => !selectedIds.includes(p.id))
-                               .slice(0, 10);
+            const matches = PLAYERS.filter(p => p.name && p.name.toLowerCase().includes(query))
+                                   .filter(p => !selectedIds.includes(p.id))
+                                   .slice(0, 10);
 
-        if (matches.length === 0) {
-            searchResults.innerHTML = `<div style="padding: 12px; color: var(--text-muted); font-size: 13px; text-align: center;">No matching players found.</div>`;
-        } else {
-            searchResults.innerHTML = matches.map(p => `
-                <div class="search-result-item" data-id="${p.id}" style="padding: 10px 14px; cursor: pointer; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; transition: background-color 0.2s;">
-                    <div>
-                        <strong style="color: var(--text-main); font-size: 13px;">${p.name}</strong>
-                        <span style="font-size: 11px; color: var(--text-muted); margin-left: 6px;">${p.position} • ${p.team}</span>
-                    </div>
-                    <span style="font-size: 12px; color: var(--primary); font-weight: 700;">£${p.price.toFixed(1)}m</span>
-                </div>
-            `).join('');
-        }
-        searchResults.style.display = 'block';
-
-        // Bind clicks on search items
-        searchResults.querySelectorAll('.search-result-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const id = parseInt(item.getAttribute('data-id'));
-                if (selectedIds.length >= 5) {
-                    actions.showToast("You can compare up to 5 players at a time.", "error");
-                    return;
+            if (searchResults) {
+                if (matches.length === 0) {
+                    searchResults.innerHTML = `<div style="padding: 12px; color: var(--text-muted); font-size: 13px; text-align: center;">No matching players found.</div>`;
+                } else {
+                    searchResults.innerHTML = matches.map(p => `
+                        <div class="search-result-item" data-id="${p.id}" style="padding: 10px 14px; cursor: pointer; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; transition: background-color 0.2s;">
+                            <div>
+                                <strong style="color: var(--text-main); font-size: 13px;">${p.name || 'Unknown'}</strong>
+                                <span style="font-size: 11px; color: var(--text-muted); margin-left: 6px;">${p.position || 'MID'} • ${p.team || 'UNK'}</span>
+                            </div>
+                            <span style="font-size: 12px; color: var(--primary); font-weight: 700;">£${(p.price || 0).toFixed(1)}m</span>
+                        </div>
+                    `).join('');
                 }
-                selectedIds.push(id);
-                searchInput.value = '';
-                searchResults.style.display = 'none';
-                updateCompareDeck();
-                runComparison(); // Automatically run comparison on add
-            });
+                searchResults.style.display = 'block';
+
+                // Bind clicks on search items
+                searchResults.querySelectorAll('.search-result-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const id = parseInt(item.getAttribute('data-id'));
+                        if (selectedIds.length >= 5) {
+                            if (actions && actions.showToast) {
+                                actions.showToast("You can compare up to 5 players at a time.", "error");
+                            }
+                            return;
+                        }
+                        selectedIds.push(id);
+                        searchInput.value = '';
+                        searchResults.style.display = 'none';
+                        updateCompareDeck();
+                        runComparison(); // Automatically run comparison on add
+                    });
+                });
+            }
         });
-    });
+    }
 
     // Close search dropdown when clicking outside
     document.addEventListener('click', e => {
@@ -253,9 +276,11 @@ export function renderCompare(container, state, actions) {
 
     // Compare trigger event handling
     const runCompareBtn = container.querySelector('#runCompareBtn');
-    runCompareBtn.addEventListener('click', () => {
-        runComparison();
-    });
+    if (runCompareBtn) {
+        runCompareBtn.addEventListener('click', () => {
+            runComparison();
+        });
+    }
 
     // Run initial comparison on load with default selected midfielders
     runComparison();
@@ -263,24 +288,28 @@ export function renderCompare(container, state, actions) {
 
 // Logic-based FPL Advisor comparison report
 function generateAiComparisonReport(players, state) {
+    const currentGw = (state && state.currentGw) ? state.currentGw : 1;
+
     const sortedByGwXp = [...players].sort((a, b) => {
-        const predA = ((a.predictions || []).find(pr => pr.gw === state.currentGw) || { pts: 0 }).pts;
-        const predB = ((b.predictions || []).find(pr => pr.gw === state.currentGw) || { pts: 0 }).pts;
+        const predA = ((a.predictions || []).find(pr => pr.gw === currentGw) || { pts: 0 }).pts || 0;
+        const predB = ((b.predictions || []).find(pr => pr.gw === currentGw) || { pts: 0 }).pts || 0;
         return predB - predA;
     });
 
-    const sortedByXp10 = [...players].sort((a, b) => b.xp10 - a.xp10);
-    const sortedByValue = [...players].sort((a, b) => (b.xp10 / b.price) - (a.xp10 / a.price));
-    const sortedByXg = [...players].sort((a, b) => b.xG - a.xG);
+    const sortedByXp10 = [...players].sort((a, b) => (b.xp10 || 0) - (a.xp10 || 0));
+    const sortedByValue = [...players].sort((a, b) => ((b.xp10 || 0) / (b.price || 1)) - ((a.xp10 || 0) / (a.price || 1)));
+    const sortedByXg = [...players].sort((a, b) => (b.xG || 0) - (a.xG || 0));
 
     // Compute dynamic scores
     const scoredPlayers = players.map(p => {
-        const gwXp = ((p.predictions || []).find(pr => pr.gw === state.currentGw) || { pts: 0 }).pts;
-        const valueRatio = p.xp10 / p.price; // points per million
+        const gwXp = ((p.predictions || []).find(pr => pr.gw === currentGw) || { pts: 0 }).pts || 0;
+        const xp10 = p.xp10 || 0;
+        const price = p.price || 1;
+        const valueRatio = xp10 / price; // points per million
         const optaScore = p.xGI || 0; // xGI is season expected goal involvement
 
         // Overall score logic: 40% 10-GW expectation + 30% value + 20% immediate GW projection + 10% underlying OPTA strength
-        const score = (p.xp10 * 0.40) + (valueRatio * 5.0) + (gwXp * 0.20) + (optaScore * 0.20);
+        const score = (xp10 * 0.40) + (valueRatio * 5.0) + (gwXp * 0.20) + (optaScore * 0.20);
         return { player: p, score: score, gwXp: gwXp, valueRatio: valueRatio };
     });
 
@@ -297,7 +326,7 @@ function generateAiComparisonReport(players, state) {
                     <i data-lucide="sparkles" style="color: var(--secondary); width: 18px; height: 18px;"></i> FPL AI Advisor Recommendation
                 </h3>
                 <span class="logo-badge" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #000; font-weight: 800; padding: 4px 12px; border-radius: 20px; font-size: 11px;">
-                    AI PICK: ${recommended.name}
+                    AI PICK: ${recommended.name || 'Unknown'}
                 </span>
             </div>
 
@@ -305,7 +334,7 @@ function generateAiComparisonReport(players, state) {
                 <!-- Recommended Pick Header -->
                 <p>
                     Based on an algorithmic evaluation of expected points, price configurations, and underlying OPTA threat metrics, we recommend recruiting 
-                    <strong style="color: var(--primary);">${recommended.name}</strong> (${recommended.position} • ${recommended.team}) as your primary target.
+                    <strong style="color: var(--primary);">${recommended.name || 'Unknown'}</strong> (${recommended.position || 'MID'} • ${recommended.team || 'UNK'}) as your primary target.
                 </p>
 
                 <!-- Comparative Highlights -->
@@ -313,24 +342,24 @@ function generateAiComparisonReport(players, state) {
                     <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 12px; border-radius: 8px;">
                         <strong style="color: var(--secondary); font-size: 12px; display: block; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">👑 Projections King</strong>
                         <span style="font-size: 13px;">
-                            <strong>${sortedByXp10[0].name}</strong> leads long-term projections with a total expected output of 
-                            <strong style="color: var(--primary);">${sortedByXp10[0].xp10.toFixed(1)} Expected Points</strong> over the next 10 gameweeks.
+                            <strong>${sortedByXp10[0].name || 'Unknown'}</strong> leads long-term projections with a total expected output of 
+                            <strong style="color: var(--primary);">${(sortedByXp10[0].xp10 || 0).toFixed(1)} Expected Points</strong> over the next 10 gameweeks.
                         </span>
                     </div>
 
                     <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 12px; border-radius: 8px;">
                         <strong style="color: var(--accent-purple); font-size: 12px; display: block; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">💎 Value Engine</strong>
                         <span style="font-size: 13px;">
-                            <strong>${sortedByValue[0].name}</strong> offers the best value-for-money, generating 
-                            <strong style="color: var(--primary);">${(sortedByValue[0].xp10 / sortedByValue[0].price).toFixed(2)} XP per million</strong> spent.
+                            <strong>${sortedByValue[0].name || 'Unknown'}</strong> offers the best value-for-money, generating 
+                            <strong style="color: var(--primary);">${((sortedByValue[0].xp10 || 0) / (sortedByValue[0].price || 1)).toFixed(2)} XP per million</strong> spent.
                         </span>
                     </div>
 
                     <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 12px; border-radius: 8px;">
                         <strong style="color: #fbbf24; font-size: 12px; display: block; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">⚽ Underlying Goal Threat</strong>
                         <span style="font-size: 13px;">
-                            <strong>${sortedByXg[0].name}</strong> is generating the highest shot quality, accumulating 
-                            <strong style="color: var(--primary);">${sortedByXg[0].xG.toFixed(2)} Expected Goals (xG)</strong> over the current season.
+                            <strong>${sortedByXg[0].name || 'Unknown'}</strong> is generating the highest shot quality, accumulating 
+                            <strong style="color: var(--primary);">${(sortedByXg[0].xG || 0).toFixed(2)} Expected Goals (xG)</strong> over the current season.
                         </span>
                     </div>
                 </div>
@@ -339,9 +368,9 @@ function generateAiComparisonReport(players, state) {
                 <div style="margin-top: 8px; border-left: 3px solid var(--primary); padding-left: 12px; background: rgba(0, 255, 136, 0.02); padding-top: 8px; padding-bottom: 8px; border-radius: 0 8px 8px 0;">
                     <strong>Advisor Verdict:</strong>
                     <span style="color: var(--text-muted); font-size: 13px;">
-                        If you have budget to spare, <strong>${sortedByXp10[0].name}</strong> remains the absolute best pick for raw expected output. However, taking squad value and structural flexibility into account, 
-                        <strong>${recommended.name}</strong> scores the highest overall rating of <strong>${(scoredPlayers[0].score).toFixed(1)}/100</strong>. 
-                        ${runnerUp ? `If you are looking for a cheaper differential option, consider <strong>${runnerUp.player.name}</strong> who scored the second highest rating with ${(scoredPlayers[1].score).toFixed(1)}/100.` : ''}
+                        If you have budget to spare, <strong>${sortedByXp10[0].name || 'Unknown'}</strong> remains the absolute best pick for raw expected output. However, taking squad value and structural flexibility into account, 
+                        <strong>${recommended.name || 'Unknown'}</strong> scores the highest overall rating of <strong>${(scoredPlayers[0].score).toFixed(1)}/100</strong>. 
+                        ${runnerUp ? `If you are looking for a cheaper differential option, consider <strong>${runnerUp.player.name || 'Unknown'}</strong> who scored the second highest rating with ${(scoredPlayers[1].score).toFixed(1)}/100.` : ''}
                     </span>
                 </div>
             </div>
