@@ -139,7 +139,7 @@ html, body {
     font-size: 14px;
     line-height: 1.5;
     overflow: hidden;
-    height: 100vh;
+    height: 100dvh;
     width: 100%;
     max-width: 100%;
 }
@@ -163,7 +163,7 @@ html, body {
 /* Layout Framework */
 .app-container {
     display: flex;
-    height: 100vh;
+    height: 100dvh;
     width: 100%;
     max-width: 100%;
     overflow: hidden;
@@ -3915,19 +3915,19 @@ html.light-theme .rating-badge-na {
 /* Responsive Vertical Heights to prevent vertical cropping on square screens (Foldables, iPads) */
 @media (max-height: 850px) {
     .football-pitch {
-        height: 420px !important;
+        height: 380px !important;
         min-height: auto !important;
     }
 }
 @media (max-height: 768px) {
     .football-pitch {
-        height: 380px !important;
+        height: 350px !important;
         min-height: auto !important;
     }
 }
-@media (max-height: 640px) {
+@media (max-height: 680px) {
     .football-pitch {
-        height: 300px !important;
+        height: 310px !important;
         min-height: auto !important;
     }
     .bench-container {
