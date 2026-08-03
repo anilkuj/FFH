@@ -5,7 +5,7 @@
   },
   "preinstall": ["mkdir -p /app/node_modules/.cache"],
   "copy": ["package.json", "package-lock.json", "/"],
-  "build": "npm ci && npm run build",
+  "build": "echo 'Bypassing server-side build. Serving pre-compiled dist folder.'",
   "postbuild": "echo 'Postbuild complete'",
   "start": "sirv dist --port $PORT --host 0.0.0.0 --single"
 }

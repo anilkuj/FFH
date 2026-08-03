@@ -1,2 +1,5 @@
+[build]
+cmd = "echo 'Static deploy'"
+
 [start]
 cmd = "sirv dist --port $PORT --host 0.0.0.0 --single"
