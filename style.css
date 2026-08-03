@@ -2736,19 +2736,19 @@ body {
 
 @media (max-width: 480px) {
     .view-container {
-        padding: 12px;
+        padding: 6px 8px !important;
     }
 
     .pitch-container {
-        padding: 8px !important;
-        gap: 8px !important;
+        padding: 6px !important;
+        gap: 4px !important;
         overflow: visible !important;
     }
 
     /* Mobile scaling of the football pitch slots to fit 100% width cleanly */
     .football-pitch {
-        padding: 4px 0 40px 0 !important;
-        height: 440px !important; /* Stable fixed height on mobiles so layout does not squish or overflow */
+        padding: 4px 0 28px 0 !important;
+        height: 340px !important; /* Stable fixed height on mobiles so layout does not squish or overflow */
         max-height: none !important;
         min-height: auto !important;
         flex: none !important;
@@ -2798,7 +2798,7 @@ body {
     .bench-container {
         padding: 6px !important;
         gap: 4px !important;
-        margin-top: 20px !important;
+        margin-top: 8px !important;
     }
     
     .bench-row {
