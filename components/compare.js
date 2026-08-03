@@ -1,322 +1,340 @@
 import { PLAYERS, TEAMS } from '../data.js';
 import { getShirtSVG } from './planner.js';
 
-let comparisonChartInstance = null; // Store chart instance globally for this component to destroy/re-render cleanly
-
 export function renderCompare(container, state, actions) {
-    // Default selected players if not set yet
-    let p1Id = parseInt(container.dataset.player1Id) || 302; // Cole Palmer
-    let p2Id = parseInt(container.dataset.player2Id) || 401; // Haaland
+    // Selected player IDs (default prepopulate with Cole Palmer and Erling Haaland)
+    let selectedIds = [302, 401]; 
 
-    let player1 = PLAYERS.find(p => p.id === p1Id);
-    let player2 = PLAYERS.find(p => p.id === p2Id);
-
-    const renderDetails = () => {
-        if (!player1 || !player2) return;
-
-        const t1 = TEAMS.find(t => t.shortName === player1.team) || { color: "#ffffff" };
-        const t2 = TEAMS.find(t => t.shortName === player2.team) || { color: "#ffffff" };
-
-        const pred1 = (player1.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 }).pts;
-        const pred2 = (player2.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 }).pts;
-
-        const detailsBox = container.querySelector('#compareDetailsGrid');
-        if (!detailsBox) return;
-
-        detailsBox.innerHTML = `
-            <!-- Left Cards: Player Info Profiles -->
-            <div class="compare-cards-column">
-                <div class="compare-player-profile-card compare-card-accent-p1">
-                    <div class="profile-card-header">
-                        <div class="profile-avatar-shirt">
-                            ${getShirtSVG(t1.color, player1.team)}
-                        </div>
-                        <div class="profile-title-info">
-                            <h3>${player1.name}</h3>
-                            <p>${player1.position} • ${player1.team}</p>
-                        </div>
-                    </div>
-                    <div class="profile-stats-grid">
-                        <div class="profile-stat-box">
-                            <span class="profile-stat-val">£${player1.price.toFixed(1)}m</span>
-                            <span class="profile-stat-lbl">Price</span>
-                        </div>
-                        <div class="profile-stat-box">
-                            <span class="profile-stat-val">${player1.ownership.toFixed(1)}%</span>
-                            <span class="profile-stat-lbl">Ownership</span>
-                        </div>
-                        <div class="profile-stat-box">
-                            <span class="profile-stat-val">${player1.points}</span>
-                            <span class="profile-stat-lbl">Total Points</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="compare-player-profile-card compare-card-accent-p2">
-                    <div class="profile-card-header">
-                        <div class="profile-avatar-shirt">
-                            ${getShirtSVG(t2.color, player2.team)}
-                        </div>
-                        <div class="profile-title-info">
-                            <h3>${player2.name}</h3>
-                            <p>${player2.position} • ${player2.team}</p>
-                        </div>
-                    </div>
-                    <div class="profile-stats-grid">
-                        <div class="profile-stat-box">
-                            <span class="profile-stat-val">£${player2.price.toFixed(1)}m</span>
-                            <span class="profile-stat-lbl">Price</span>
-                        </div>
-                        <div class="profile-stat-box">
-                            <span class="profile-stat-val">${player2.ownership.toFixed(1)}%</span>
-                            <span class="profile-stat-lbl">Ownership</span>
-                        </div>
-                        <div class="profile-stat-box">
-                            <span class="profile-stat-val">${player2.points}</span>
-                            <span class="profile-stat-lbl">Total Points</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Stats Compare Table -->
-                <div class="stats-table-wrapper" style="margin-top: 8px;">
-                    <table class="stats-table" style="font-size:12px;">
-                        <thead>
-                            <tr>
-                                <th>Metric</th>
-                                <th style="color:var(--primary); font-weight:700;">${actions.getWebName(player1.name)}</th>
-                                <th style="color:var(--secondary); font-weight:700;">${actions.getWebName(player2.name)}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Expected Points (GW${state.currentGw})</td>
-                                <td>${pred1.toFixed(1)}</td>
-                                <td>${pred2.toFixed(1)}</td>
-                            </tr>
-                            <tr>
-                                <td>10-GW Expected Points (10-GW XP)</td>
-                                <td>${player1.xp10.toFixed(1)}</td>
-                                <td>${player2.xp10.toFixed(1)}</td>
-                            </tr>
-                            <tr>
-                                <td>Expected Goals (xG)</td>
-                                <td>${player1.xG.toFixed(2)}</td>
-                                <td>${player2.xG.toFixed(2)}</td>
-                            </tr>
-                            <tr>
-                                <td>xG per 90 (xG90)</td>
-                                <td>${player1.xG90.toFixed(2)}</td>
-                                <td>${player2.xG90.toFixed(2)}</td>
-                            </tr>
-                            <tr>
-                                <td>Expected Assists (xA)</td>
-                                <td>${player1.xA.toFixed(2)}</td>
-                                <td>${player2.xA.toFixed(2)}</td>
-                            </tr>
-                            <tr>
-                                <td>xA per 90 (xA90)</td>
-                                <td>${player1.xA90.toFixed(2)}</td>
-                                <td>${player2.xA90.toFixed(2)}</td>
-                            </tr>
-                            <tr>
-                                <td>xG Involvement (xGI)</td>
-                                <td>${player1.xGI.toFixed(2)}</td>
-                                <td>${player2.xGI.toFixed(2)}</td>
-                            </tr>
-                            <tr>
-                                <td>Shots on Target</td>
-                                <td>${player1.shots}</td>
-                                <td>${player2.shots}</td>
-                            </tr>
-                            <tr>
-                                <td>ICT Index</td>
-                                <td>${player1.ictIndex.toFixed(1)}</td>
-                                <td>${player2.ictIndex.toFixed(1)}</td>
-                            </tr>
-                            <tr>
-                                <td>Games Started (GS)</td>
-                                <td>${player1.GS}</td>
-                                <td>${player2.GS}</td>
-                            </tr>
-                            <tr>
-                                <td>Avg Min Per Game (MPPG)</td>
-                                <td>${player1.MPPG.toFixed(1)}</td>
-                                <td>${player2.MPPG.toFixed(1)}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+    container.innerHTML = `
+        <div class="compare-view-container" style="display: flex; flex-direction: column; gap: 24px; width: 100%;">
+            <!-- Header section -->
+            <div class="optimizer-intro" style="margin-bottom: 4px; flex-shrink: 0; padding: 24px; background: linear-gradient(135deg, var(--bg-card), rgba(139, 92, 246, 0.05)); border: 1px solid var(--border-color); border-radius: 16px;">
+                <div class="intro-text-area">
+                    <h2 style="font-size: 20px; font-weight: 800; margin: 0; display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="users" class="highlight-transfers"></i> FPL Player Comparison Deck
+                    </h2>
+                    <p style="margin: 4px 0 0 0; font-size: 12px; color: var(--text-muted);">Compare up to 5 players side-by-side. Get detailed stats and AI recommendation reports to choose your transfers.</p>
                 </div>
             </div>
 
-            <!-- Right Card: Radar Chart comparison -->
-            <div class="compare-chart-card">
-                <h3 style="font-family: var(--font-heading); margin-bottom: 20px; font-weight:700;">OPTA Performance Radar</h3>
-                <div class="chart-container-compare">
-                    <canvas id="radarCompareCanvas"></canvas>
+            <!-- Search and Deck Controls Card -->
+            <div class="optimizer-settings-card" style="padding: 20px; margin: 0; display: flex; flex-direction: column; gap: 16px;">
+                <h3 style="font-family: var(--font-heading); font-size: 14px; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 8px;">
+                    <i data-lucide="search" class="highlight-bank"></i> Search and Add Players
+                </h3>
+                
+                <!-- Search bar input -->
+                <div style="position: relative; width: 100%;">
+                    <i data-lucide="search" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); width: 16px; height: 16px;"></i>
+                    <input type="text" id="playerCompareSearch" class="search-field" placeholder="Search players by name (e.g. Palmer, Saka, Salah)..." style="width: 100%; height: 42px; border-radius: 8px; padding-left: 42px; background: var(--bg-dark); border: 1px solid var(--border-color); color: #fff; outline: none; transition: border-color 0.2s;" />
+                    <!-- Search Results dropdown -->
+                    <div id="compareSearchResults" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; z-index: 100; max-height: 250px; overflow-y: auto; margin-top: 6px; box-shadow: var(--shadow-lg);"></div>
+                </div>
+
+                <!-- Compare deck slots -->
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Comparison Deck (Max 5 Players)</label>
+                    <div id="compareDeck" style="display: flex; gap: 8px; flex-wrap: wrap; min-height: 48px; align-items: center; background: rgba(0, 0, 0, 0.1); border: 1px solid var(--border-color); padding: 12px; border-radius: 8px; width: 100%;">
+                        <!-- Dynamic compare cards will display here -->
+                    </div>
+                </div>
+
+                <!-- Compare Trigger button -->
+                <button class="run-optimization-btn" id="runCompareBtn" style="width: 100%; justify-content: center; height: 44px; display: flex; align-items: center; gap: 8px; margin: 0; font-size: 14px;">
+                    <i data-lucide="bar-chart-2" style="width: 16px; height: 16px;"></i> Compare Selected Players
+                </button>
+            </div>
+
+            <!-- Comparison Results Grid Section -->
+            <div id="compareResultsSection" style="display: none; flex-direction: column; gap: 24px; width: 100%;">
+                <!-- Dynamic comparison table -->
+                <div class="stats-table-wrapper" style="width: 100%;">
+                    <table class="stats-table" id="compareStatsTable" style="width: 100%;">
+                        <!-- Content rendered in JS -->
+                    </table>
+                </div>
+
+                <!-- AI Analysis Card -->
+                <div class="optimizer-card" id="compareAiAnalysisCard" style="background: linear-gradient(135deg, var(--bg-card), rgba(139, 92, 246, 0.05)); border: 1px solid rgba(139, 92, 246, 0.2); padding: 24px; border-radius: 16px;">
+                    <!-- Content rendered in JS -->
                 </div>
             </div>
         </div>
     `;
 
-    renderRadarChart(player1, player2);
-  };
+    // Render deck chips on load
+    const updateCompareDeck = () => {
+        const deck = container.querySelector('#compareDeck');
+        if (!deck) return;
+        if (selectedIds.length === 0) {
+            deck.innerHTML = `<span style="color: var(--text-muted); font-size: 13px;">No players selected. Search and add up to 5 players to compare.</span>`;
+            return;
+        }
+        deck.innerHTML = selectedIds.map(id => {
+            const p = PLAYERS.find(pl => pl.id === id);
+            if (!p) return '';
+            return `
+                <div class="stat-pill" style="padding: 6px 12px; display: flex; align-items: center; gap: 8px; background: rgba(0, 255, 136, 0.05); border: 1px solid var(--primary-glow); border-radius: 20px; font-size: 12px;">
+                    <span style="font-weight: 700; color: var(--text-main);">${p.name} (${p.team} • ${p.position})</span>
+                    <button class="remove-compare-player-btn" data-id="${p.id}" style="background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; padding: 0 2px; transition: color 0.2s;"><i data-lucide="x" style="width: 14px; height: 14px;"></i></button>
+                </div>
+            `;
+        }).join('');
+        lucide.createIcons();
 
-  container.innerHTML = `
-      <div class="compare-view-container">
-          <div class="compare-selectors-card">
-              <div class="compare-dropdown-wrapper">
-                  <label style="font-size:12px; color: var(--text-muted);">Player 1</label>
-                  <select class="compare-select" id="p1CompareSelect">
-                      ${PLAYERS.map(p => `<option value="${p.id}" ${p.id === p1Id ? 'selected' : ''}>${p.name} (${p.team} • MID)</option>`).join('')}
-                  </select>
-              </div>
+        // Bind remove actions
+        deck.querySelectorAll('.remove-compare-player-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = parseInt(btn.getAttribute('data-id'));
+                selectedIds = selectedIds.filter(x => x !== id);
+                updateCompareDeck();
+            });
+        });
+    };
 
-              <div class="vs-divider">VS</div>
+    updateCompareDeck();
 
-              <div class="compare-dropdown-wrapper">
-                  <label style="font-size:12px; color: var(--text-muted);">Player 2</label>
-                  <select class="compare-select" id="p2CompareSelect">
-                      ${PLAYERS.map(p => `<option value="${p.id}" ${p.id === p2Id ? 'selected' : ''}>${p.name} (${p.team} • FWD)</option>`).join('')}
-                  </select>
-              </div>
-          </div>
+    // Search event handling
+    const searchInput = container.querySelector('#playerCompareSearch');
+    const searchResults = container.querySelector('#compareSearchResults');
 
-          <div class="compare-details-grid" id="compareDetailsGrid">
-              <!-- Rendered via JS -->
-          </div>
-      </div>
-  `;
+    searchInput.addEventListener('input', e => {
+        const query = e.target.value.toLowerCase().trim();
+        if (!query) {
+            searchResults.style.display = 'none';
+            return;
+        }
 
-  renderDetails();
+        const matches = PLAYERS.filter(p => p.name.toLowerCase().includes(query))
+                               .filter(p => !selectedIds.includes(p.id))
+                               .slice(0, 10);
 
-  // Listeners
-  const select1 = container.querySelector('#p1CompareSelect');
-  select1.addEventListener('change', e => {
-      p1Id = parseInt(e.target.value);
-      player1 = PLAYERS.find(p => p.id === p1Id);
-      container.dataset.player1Id = p1Id;
-      renderDetails();
-  });
+        if (matches.length === 0) {
+            searchResults.innerHTML = `<div style="padding: 12px; color: var(--text-muted); font-size: 13px; text-align: center;">No matching players found.</div>`;
+        } else {
+            searchResults.innerHTML = matches.map(p => `
+                <div class="search-result-item" data-id="${p.id}" style="padding: 10px 14px; cursor: pointer; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; transition: background-color 0.2s;">
+                    <div>
+                        <strong style="color: var(--text-main); font-size: 13px;">${p.name}</strong>
+                        <span style="font-size: 11px; color: var(--text-muted); margin-left: 6px;">${p.position} • ${p.team}</span>
+                    </div>
+                    <span style="font-size: 12px; color: var(--primary); font-weight: 700;">£${p.price.toFixed(1)}m</span>
+                </div>
+            `).join('');
+        }
+        searchResults.style.display = 'block';
 
-  const select2 = container.querySelector('#p2CompareSelect');
-  select2.addEventListener('change', e => {
-      p2Id = parseInt(e.target.value);
-      player2 = PLAYERS.find(p => p.id === p2Id);
-      container.dataset.player2Id = p2Id;
-      renderDetails();
-  });
-}
-
-function renderRadarChart(p1, p2) {
-    const ctx = document.getElementById('radarCompareCanvas');
-    if (!ctx) return;
-
-    if (comparisonChartInstance) {
-        comparisonChartInstance.destroy();
-    }
-
-    // Normalized stats for Radar (Values 0 - 100)
-    const normP1 = [
-        Math.min(100, (p1.points / 250) * 100),
-        Math.min(100, (p1.price / 15) * 100),
-        Math.min(100, (p1.xG / 25) * 100),
-        Math.min(100, (p1.xA / 12) * 100),
-        Math.min(100, (p1.shots / 130) * 100),
-        Math.min(100, (p1.ictIndex / 310) * 100)
-    ];
-
-    const normP2 = [
-        Math.min(100, (p2.points / 250) * 100),
-        Math.min(100, (p2.price / 15) * 100),
-        Math.min(100, (p2.xG / 25) * 100),
-        Math.min(100, (p2.xA / 12) * 100),
-        Math.min(100, (p2.shots / 130) * 100),
-        Math.min(100, (p2.ictIndex / 310) * 100)
-    ];
-
-    const isLight = document.documentElement.classList.contains('light-theme');
-    const color1 = isLight ? '#15803d' : '#00ff88';
-    const bg1 = isLight ? 'rgba(21, 128, 61, 0.12)' : 'rgba(0, 255, 136, 0.15)';
-    const color2 = isLight ? '#0f766e' : '#00f2fe';
-    const bg2 = isLight ? 'rgba(15, 118, 110, 0.12)' : 'rgba(0, 242, 254, 0.15)';
-    const gridColor = isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.08)';
-    const labelColor = isLight ? '#4b5563' : '#94a3b8';
-
-    comparisonChartInstance = new Chart(ctx, {
-        type: 'radar',
-        data: {
-            labels: ['Total Points', 'Cost', 'xG', 'xA', 'Shots', 'ICT Index'],
-            datasets: [
-                {
-                    label: p1.name,
-                    data: normP1,
-                    backgroundColor: bg1,
-                    borderColor: color1,
-                    pointBackgroundColor: color1,
-                    pointBorderColor: color1,
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: color1
-                },
-                {
-                    label: p2.name,
-                    data: normP2,
-                    backgroundColor: bg2,
-                    borderColor: color2,
-                    pointBackgroundColor: color2,
-                    pointBorderColor: color2,
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: color2
+        // Bind clicks on search items
+        searchResults.querySelectorAll('.search-result-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const id = parseInt(item.getAttribute('data-id'));
+                if (selectedIds.length >= 5) {
+                    actions.showToast("You can compare up to 5 players at a time.", "error");
+                    return;
                 }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                r: {
-                    angleLines: {
-                        color: gridColor
-                    },
-                    grid: {
-                        color: gridColor
-                    },
-                    pointLabels: {
-                        color: labelColor,
-                        font: {
-                            family: 'Inter',
-                            size: 11,
-                            weight: '500'
-                        }
-                    },
-                    ticks: {
-                        display: false,
-                        maxTicksLimit: 5
-                    },
-                    min: 0,
-                    max: 100
-                }
-            },
-            plugins: {
-                legend: {
-                    labels: {
-                        color: '#f8fafc',
-                        font: {
-                            family: 'Inter',
-                            size: 12,
-                            weight: '600'
-                        }
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            // Map value back to human readable or display raw normalized
-                            return `${context.dataset.label}: ${context.raw.toFixed(1)}/100 (Relative)`;
-                        }
-                    }
-                }
-            }
+                selectedIds.push(id);
+                searchInput.value = '';
+                searchResults.style.display = 'none';
+                updateCompareDeck();
+            });
+        });
+    });
+
+    // Close search dropdown when clicking outside
+    document.addEventListener('click', e => {
+        if (searchResults && !searchResults.contains(e.target) && e.target !== searchInput) {
+            searchResults.style.display = 'none';
         }
     });
+
+    // Compare trigger event handling
+    const runCompareBtn = container.querySelector('#runCompareBtn');
+    const resultsSection = container.querySelector('#compareResultsSection');
+    const statsTable = container.querySelector('#compareStatsTable');
+    const aiAnalysisCard = container.querySelector('#compareAiAnalysisCard');
+
+    runCompareBtn.addEventListener('click', () => {
+        if (selectedIds.length < 2) {
+            actions.showToast("Select at least 2 players to compare.", "error");
+            return;
+        }
+
+        const players = selectedIds.map(id => PLAYERS.find(p => p.id === id)).filter(Boolean);
+
+        // Build stats grid table columns
+        let tableHtml = `
+            <thead>
+                <tr>
+                    <th style="font-weight: 700 !important; background: var(--bg-panel); color: var(--text-muted); font-size: 11px; text-transform: uppercase;">Metric</th>
+                    ${players.map(p => `
+                        <th style="font-weight: 700 !important; text-align: center; color: var(--primary); background: var(--bg-panel);">
+                            <div style="font-size: 13px; font-weight: 800;">${p.name}</div>
+                            <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; margin-top: 2px;">${p.position} • ${p.team}</div>
+                        </th>
+                    `).join('')}
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="font-weight: 600; color: var(--text-muted);">Price</td>
+                    ${players.map(p => `<td style="text-align: center; font-weight: 700; color: var(--text-main);">£${p.price.toFixed(1)}m</td>`).join('')}
+                </tr>
+                <tr>
+                    <td style="font-weight: 600; color: var(--text-muted);">Ownership</td>
+                    ${players.map(p => `<td style="text-align: center; color: var(--text-main);">${p.ownership.toFixed(1)}%</td>`).join('')}
+                </tr>
+                <tr>
+                    <td style="font-weight: 600; color: var(--text-muted);">Total Points</td>
+                    ${players.map(p => `<td style="text-align: center; color: var(--text-main); font-weight: 600;">${p.points}</td>`).join('')}
+                </tr>
+                <tr>
+                    <td style="font-weight: 600; color: var(--text-muted);">Expected Points (GW${state.currentGw})</td>
+                    ${players.map(p => {
+                        const pred = (p.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 }).pts;
+                        return `<td style="text-align: center; font-weight: bold; color: var(--secondary);">${pred.toFixed(1)}</td>`;
+                    }).join('')}
+                </tr>
+                <tr>
+                    <td style="font-weight: 600; color: var(--text-muted);">10-GW Expected Points</td>
+                    ${players.map(p => `<td style="text-align: center; font-weight: bold; color: var(--primary);">${p.xp10.toFixed(1)}</td>`).join('')}
+                </tr>
+                <tr>
+                    <td style="font-weight: 600; color: var(--text-muted);">Expected Goals (xG)</td>
+                    ${players.map(p => `<td style="text-align: center; color: var(--text-main);">${p.xG.toFixed(2)}</td>`).join('')}
+                </tr>
+                <tr>
+                    <td style="font-weight: 600; color: var(--text-muted);">xG per 90 (xG90)</td>
+                    ${players.map(p => `<td style="text-align: center; color: var(--text-main);">${p.xG90.toFixed(2)}</td>`).join('')}
+                </tr>
+                <tr>
+                    <td style="font-weight: 600; color: var(--text-muted);">Expected Assists (xA)</td>
+                    ${players.map(p => `<td style="text-align: center; color: var(--text-main);">${p.xA.toFixed(2)}</td>`).join('')}
+                </tr>
+                <tr>
+                    <td style="font-weight: 600; color: var(--text-muted);">xA per 90 (xA90)</td>
+                    ${players.map(p => `<td style="text-align: center; color: var(--text-main);">${p.xA90.toFixed(2)}</td>`).join('')}
+                </tr>
+                <tr>
+                    <td style="font-weight: 600; color: var(--text-muted);">xG Involvement (xGI)</td>
+                    ${players.map(p => `<td style="text-align: center; color: var(--text-main); font-weight: 600;">${p.xGI.toFixed(2)}</td>`).join('')}
+                </tr>
+                <tr>
+                    <td style="font-weight: 600; color: var(--text-muted);">Shots on Target</td>
+                    ${players.map(p => `<td style="text-align: center; color: var(--text-main);">${p.shots}</td>`).join('')}
+                </tr>
+                <tr>
+                    <td style="font-weight: 600; color: var(--text-muted);">ICT Index</td>
+                    ${players.map(p => `<td style="text-align: center; color: var(--text-main);">${p.ictIndex.toFixed(1)}</td>`).join('')}
+                </tr>
+                <tr>
+                    <td style="font-weight: 600; color: var(--text-muted);">Games Started</td>
+                    ${players.map(p => `<td style="text-align: center; color: var(--text-main);">${p.GS}</td>`).join('')}
+                </tr>
+                <tr>
+                    <td style="font-weight: 600; color: var(--text-muted);">Avg Minutes Per Game</td>
+                    ${players.map(p => `<td style="text-align: center; color: var(--text-main);">${p.MPPG.toFixed(1)}</td>`).join('')}
+                </tr>
+            </tbody>
+        `;
+        statsTable.innerHTML = tableHtml;
+
+        // Generate AI analysis report content
+        const reportHtml = generateAiComparisonReport(players, state);
+        aiAnalysisCard.innerHTML = reportHtml;
+
+        resultsSection.style.display = 'flex';
+        lucide.createIcons();
+    });
+
+    // Auto-run comparison on load with Palmer and Haaland
+    runCompareBtn.click();
+}
+
+// Logic-based FPL Analyzer for comparing up to 5 players
+function generateAiComparisonReport(players, state) {
+    // 1. Identify the top stats performers
+    const sortedByGwXp = [...players].sort((a, b) => {
+        const predA = (a.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 }).pts;
+        const predB = (b.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 }).pts;
+        return predB - predA;
+    });
+
+    const sortedByXp10 = [...players].sort((a, b) => b.xp10 - a.xp10);
+    const sortedByValue = [...players].sort((a, b) => (b.xp10 / b.price) - (a.xp10 / a.price));
+    const sortedByXg = [...players].sort((a, b) => b.xG - a.xG);
+
+    // Compute dynamic scores
+    const scoredPlayers = players.map(p => {
+        const gwXp = (p.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 }).pts;
+        const valueRatio = p.xp10 / p.price; // points per million
+        const optaScore = p.xGI + (p.shots * 0.05);
+
+        // Overall score logic: 40% 10-GW expectation + 30% value + 20% immediate GW projection + 10% underlying OPTA strength
+        const score = (p.xp10 * 0.40) + (valueRatio * 5.0) + (gwXp * 0.20) + (optaScore * 0.20);
+        return { player: p, score: score, gwXp: gwXp, valueRatio: valueRatio };
+    });
+
+    scoredPlayers.sort((a, b) => b.score - a.score);
+
+    const recommended = scoredPlayers[0].player;
+    const runnerUp = scoredPlayers.length > 1 ? scoredPlayers[1].player : null;
+
+    // Format analysis bullet points dynamically
+    return `
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 12px; flex-wrap: wrap; gap: 12px;">
+                <h3 style="font-family: var(--font-heading); margin: 0; font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                    <i data-lucide="sparkles" style="color: var(--secondary); width: 18px; height: 18px;"></i> FPL AI Advisor Recommendation
+                </h3>
+                <span class="logo-badge" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #000; font-weight: 800; padding: 4px 12px; border-radius: 20px; font-size: 11px;">
+                    AI PICK: ${recommended.name}
+                </span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px; font-size: 13.5px; line-height: 1.6; color: var(--text-main);">
+                <!-- Recommended Pick Header -->
+                <p>
+                    Based on an algorithmic evaluation of expected points, price configurations, and underlying OPTA threat metrics, we recommend recruiting 
+                    <strong style="color: var(--primary);">${recommended.name}</strong> (${recommended.position} • ${recommended.team}) as your primary target.
+                </p>
+
+                <!-- Comparative Highlights -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-top: 8px;">
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 12px; border-radius: 8px;">
+                        <strong style="color: var(--secondary); font-size: 12px; display: block; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">👑 Projections King</strong>
+                        <span style="font-size: 13px;">
+                            <strong>${sortedByXp10[0].name}</strong> leads long-term projections with a total expected output of 
+                            <strong style="color: var(--primary);">${sortedByXp10[0].xp10.toFixed(1)} Expected Points</strong> over the next 10 gameweeks.
+                        </span>
+                    </div>
+
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 12px; border-radius: 8px;">
+                        <strong style="color: var(--accent-purple); font-size: 12px; display: block; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">💎 Value Engine</strong>
+                        <span style="font-size: 13px;">
+                            <strong>${sortedByValue[0].name}</strong> offers the best value-for-money, generating 
+                            <strong style="color: var(--primary);">${(sortedByValue[0].xp10 / sortedByValue[0].price).toFixed(2)} XP per million</strong> spent.
+                        </span>
+                    </div>
+
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 12px; border-radius: 8px;">
+                        <strong style="color: #fbbf24; font-size: 12px; display: block; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">⚽ Underlying Goal Threat</strong>
+                        <span style="font-size: 13px;">
+                            <strong>${sortedByXg[0].name}</strong> is generating the highest shot quality, accumulating 
+                            <strong style="color: var(--primary);">${sortedByXg[0].xG.toFixed(2)} Expected Goals (xG)</strong> over the current season.
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Final Advisor Verdict -->
+                <div style="margin-top: 8px; border-left: 3px solid var(--primary); padding-left: 12px; background: rgba(0, 255, 136, 0.02); padding-top: 8px; padding-bottom: 8px; border-radius: 0 8px 8px 0;">
+                    <strong>Advisor Verdict:</strong>
+                    <span style="color: var(--text-muted); font-size: 13px;">
+                        If you have budget to spare, <strong>${sortedByXp10[0].name}</strong> remains the absolute best pick for raw expected output. However, taking squad value and structural flexibility into account, 
+                        <strong>${recommended.name}</strong> scores the highest overall rating of <strong>${(scoredPlayers[0].score).toFixed(1)}/100</strong>. 
+                        ${runnerUp ? `If you are looking for a cheaper differential option, consider <strong>${runnerUp.player.name}</strong> who scored the second highest rating with ${(scoredPlayers[1].score).toFixed(1)}/100.` : ''}
+                    </span>
+                </div>
+            </div>
+        </div>
+    `;
 }
