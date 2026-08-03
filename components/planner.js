@@ -204,33 +204,27 @@ function get5GwXp(player, currentGw) {
 
 function renderPitchFixtures(player, currentGw) {
     let html = '';
-    for (let gw = currentGw; gw < currentGw + 3; gw++) {
+    for (let gw = currentGw; gw < currentGw + 5; gw++) {
         if (gw > 10) break;
         const pr = player.predictions.find(p => p.gw === gw);
         if (pr) {
             const oppText = pr.opp !== 'BYE' ? `${pr.opp} (${pr.loc})` : 'BYE';
             const fdrColor = getFdrColor(pr.diff);
             
-            // Resolve XP or actual points
-            const ptsVal = pr.actualPts !== undefined && pr.actualPts !== null ? pr.actualPts : pr.pts;
-            const ptsText = ptsVal.toFixed(1).endsWith('.0') ? Math.round(ptsVal) : ptsVal.toFixed(1);
-            
-            // Format opponent name: lowercase for Away, uppercase for Home
+            // Format opponent name as OPP(loc)
             const teamNameText = pr.opp !== 'BYE' 
-                ? (pr.loc === 'A' ? pr.opp.toLowerCase() : pr.opp.toUpperCase()) 
-                : 'bye';
+                ? `${pr.opp}(${pr.loc})` 
+                : 'BYE';
                 
             html += `
-                <div class="pitch-fixture-column" title="GW${gw}: ${oppText} - FDR ${pr.diff} (XP: ${pr.pts.toFixed(1)})" style="background-color: ${fdrColor};">
-                    <span class="pitch-fixture-xp">${ptsText}</span>
-                    <span class="pitch-fixture-team">${teamNameText}</span>
+                <div class="pitch-fixture-badge" title="GW${gw}: ${oppText} - FDR ${pr.diff} (XP: ${pr.pts.toFixed(1)})" style="background-color: ${fdrColor}; color: #0f172a; padding: 2px 1px; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-weight: 800; flex: 1; min-width: 0; text-align: center; font-family: var(--font-body);">
+                    <span style="font-size: 7.5px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%;">${teamNameText}</span>
                 </div>
             `;
         } else {
             html += `
-                <div class="pitch-fixture-column" title="GW${gw}: BYE" style="background-color: #334155;">
-                    <span class="pitch-fixture-xp">0</span>
-                    <span class="pitch-fixture-team">bye</span>
+                <div class="pitch-fixture-badge" title="GW${gw}: BYE" style="background-color: #334155; color: #94a3b8; padding: 2px 1px; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-weight: 800; flex: 1; min-width: 0; text-align: center; font-family: var(--font-body);">
+                    <span style="font-size: 7.5px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%;">BYE</span>
                 </div>
             `;
         }
@@ -367,12 +361,16 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
                     ${designationBadge}
                     ${player.transferredThisSeason ? `<div class="pitch-transfer-icon" title="Transferred from ${player.oldTeam}">⇆</div>` : ''}
                 </div>
-                <div class="player-card-info" style="padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; border-radius: 8px;">
-                    <div style="background: rgba(0, 0, 0, 0.45); padding: 5px 8px; display: flex; justify-content: space-between; align-items: baseline; gap: 4px; border-bottom: 1px solid rgba(255,255,255,0.06); width: 100%; box-sizing: border-box;">
-                        <span class="player-pitch-name" style="font-size: 11px; font-weight: 700; color: #fff; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; margin: 0;">${actions.getWebName(player.name)}</span>
-                        <span style="font-size: 10px; color: #94a3b8; font-weight: 500; flex-shrink: 0;">${player.price.toFixed(1)}m</span>
+                <div class="player-card-info">
+                    <div class="player-pitch-name">${actions.getWebName(player.name)}</div>
+                    <div class="player-pitch-points">
+                        £${player.price.toFixed(1)}m • 
+                        ${prediction.actualPts !== undefined && prediction.actualPts !== null ? 
+                            `<strong style="color: var(--primary);">${prediction.actualPts} pts</strong> <span class="player-xp-subtext">(${prediction.pts.toFixed(1)} XP)</span>` : 
+                            `${prediction.pts.toFixed(1)} XP`
+                        }
                     </div>
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; border-radius: 0 0 8px 8px; overflow: hidden; gap: 0;">
+                    <div style="display: flex; gap: 2px; justify-content: center; margin-top: 5px; width: 100%;">
                         ${renderPitchFixtures(player, currentGw)}
                     </div>
                 </div>
@@ -427,12 +425,16 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions) {
                         ${designationBadge}
                         ${player.transferredThisSeason ? `<div class="pitch-transfer-icon" title="Transferred from ${player.oldTeam}">⇆</div>` : ''}
                     </div>
-                    <div class="player-card-info" style="padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; border-radius: 8px;">
-                        <div style="background: rgba(0, 0, 0, 0.45); padding: 5px 8px; display: flex; justify-content: space-between; align-items: baseline; gap: 4px; border-bottom: 1px solid rgba(255,255,255,0.06); width: 100%; box-sizing: border-box;">
-                            <span class="player-pitch-name" style="font-size: 11px; font-weight: 700; color: #fff; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; margin: 0;">${actions.getWebName(player.name)}</span>
-                            <span style="font-size: 10px; color: #94a3b8; font-weight: 500; flex-shrink: 0;">${player.price.toFixed(1)}m</span>
+                    <div class="player-card-info">
+                        <div class="player-pitch-name">${actions.getWebName(player.name)}</div>
+                        <div class="player-pitch-points">
+                            £${player.price.toFixed(1)}m • 
+                            ${prediction.actualPts !== undefined && prediction.actualPts !== null ? 
+                                `<strong style="color: var(--primary);">${prediction.actualPts} pts</strong> <span class="player-xp-subtext">(${prediction.pts.toFixed(1)} XP)</span>` : 
+                                `${prediction.pts.toFixed(1)} XP`
+                            }
                         </div>
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; border-radius: 0 0 8px 8px; overflow: hidden; gap: 0;">
+                        <div style="display: flex; gap: 2px; justify-content: center; margin-top: 5px; width: 100%;">
                             ${renderPitchFixtures(player, currentGw)}
                         </div>
                     </div>
