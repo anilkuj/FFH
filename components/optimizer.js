@@ -1623,6 +1623,12 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
         }
 
         // --- FIND BEST 2-TRANSFER OPTION ---
+        // IMPORTANT: The double transfer must be coherent with the single transfer.
+        // We must NOT suggest selling a player we just recommended buying (single IN),
+        // and we must NOT suggest buying back a player we just recommended selling (single OUT).
+        const single1TxInId  = best1Tx ? best1Tx.in.id  : null; // player recommended to BUY in single
+        const single1TxOutId = best1Tx ? best1Tx.out.id : null; // player recommended to SELL in single
+
         let best2Tx = null;
         let maxGain2 = -999;
 
@@ -1632,12 +1638,17 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                 const s2 = PLAYERS.find(p => p.id === currentSquadIds[j]);
                 if (!s1 || !s2) continue;
 
+                // Cannot sell a player who is the single-transfer "buy" recommendation
+                // (they're not in the squad yet — this would be incoherent)
+                if (s1.id === single1TxInId || s2.id === single1TxInId) continue;
+
                 const sellBudget = s1.price + s2.price + bank;
 
                 let candidates1 = PLAYERS.filter(p => 
                     p.position === s1.position && 
                     !currentSquadIds.includes(p.id) &&
-                    !state.mustExclude.includes(p.id)
+                    !state.mustExclude.includes(p.id) &&
+                    p.id !== single1TxOutId  // Don't buy back who the single says to sell
                 );
                 const g1 = candidates1.filter(isGuaranteedStart);
                 if (g1.length > 0) candidates1 = g1;
@@ -1653,7 +1664,8 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                 let candidates2 = PLAYERS.filter(p => 
                     p.position === s2.position && 
                     !currentSquadIds.includes(p.id) &&
-                    !state.mustExclude.includes(p.id)
+                    !state.mustExclude.includes(p.id) &&
+                    p.id !== single1TxOutId  // Don't buy back who the single says to sell
                 );
                 const g2 = candidates2.filter(isGuaranteedStart);
                 if (g2.length > 0) candidates2 = g2;
@@ -1695,6 +1707,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
                 }
             }
         }
+
 
         // Calculate 1-GW expected points gains for display comparison
         let best1Tx1GwGain = 0;
