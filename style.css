@@ -669,7 +669,7 @@ body {
     border-radius: 16px;
     height: 580px; /* Default desktop height */
     flex: 1;
-    max-height: calc(100% - 110px);
+    max-height: none;
     min-height: 480px;
     position: relative;
     padding: 8px 0 32px 0;
@@ -2485,6 +2485,7 @@ body {
         height: auto !important;
         max-height: none !important;
         padding: 16px !important;
+        overflow: visible !important;
     }
     
     .football-pitch {
@@ -2576,6 +2577,7 @@ body {
     .pitch-container {
         padding: 10px !important;
         gap: 10px !important;
+        overflow: visible !important;
     }
 
     .football-pitch {
@@ -2756,6 +2758,7 @@ body {
     .pitch-container {
         padding: 8px !important;
         gap: 8px !important;
+        overflow: visible !important;
     }
 
     /* Mobile scaling of the football pitch slots to fit 100% width cleanly */
