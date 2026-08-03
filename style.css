@@ -2828,10 +2828,23 @@ html.light-theme .stats-table td:first-child {
     .player-card-info {
         padding: 3px 1px !important;
         border-radius: 4px !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
 
     .player-pitch-name {
         font-size: 8px !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        display: block !important;
+        text-align: center !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        box-sizing: border-box !important;
     }
 
     .player-pitch-points {
