@@ -205,7 +205,7 @@
                         <div class="player-pitch-name">${i.getWebName(f.name)}</div>
                         <div class="player-pitch-points">
                             £${f.price.toFixed(1)}m • 
-                            ${o.actualPts!==void 0&&o.actualPts!==null?`<strong style="color: var(--primary);">${o.actualPts} pts</strong> <span class="player-xp-subtext">(${Ot(f,a).toFixed(1)} XP)</span>`:`${Ot(f,a).toFixed(1)} XP`}
+                            ${o.actualPts!==void 0&&o.actualPts!==null?`<strong style="color: var(--primary);">${o.actualPts} pts</strong> <span class="player-xp-subtext">(5 GW: ${Ot(f,a).toFixed(1)} XP)</span>`:`5 GW: ${Ot(f,a).toFixed(1)} XP`}
                         </div>
                     </div>
                     <div class="pitch-card-fixtures-grid">
@@ -242,7 +242,7 @@
                             <div class="player-pitch-name">${s.getWebName(o.name)}</div>
                             <div class="player-pitch-points">
                                 £${o.price.toFixed(1)}m • 
-                                ${x.actualPts!==void 0&&x.actualPts!==null?`<strong style="color: var(--primary);">${x.actualPts} pts</strong> <span class="player-xp-subtext">(${Ot(o,t).toFixed(1)} XP)</span>`:`${Ot(o,t).toFixed(1)} XP`}
+                                ${x.actualPts!==void 0&&x.actualPts!==null?`<strong style="color: var(--primary);">${x.actualPts} pts</strong> <span class="player-xp-subtext">(5 GW: ${Ot(o,t).toFixed(1)} XP)</span>`:`5 GW: ${Ot(o,t).toFixed(1)} XP`}
                             </div>
                         </div>
                         <div class="pitch-card-fixtures-grid">
