@@ -5,9 +5,11 @@ export function renderTransferPlanner(container, state, actions) {
     const squadInfo = state.getSquadForGw(state.currentGw);
     const bank = squadInfo.bank;
     
-    // Determine context-aware default transfers based on available Free Transfers
+    // Determine context-aware default transfers based on available Free Transfers or active chips
     let defaultNumTransfers = squadInfo.freeTransfers;
-    if (defaultNumTransfers === 0 || isNaN(defaultNumTransfers)) {
+    if (state.currentGw === 1 || state.chips.wildcard) {
+        defaultNumTransfers = 15; // Preseason or Wildcard unlimited
+    } else if (defaultNumTransfers === 0 || isNaN(defaultNumTransfers)) {
         defaultNumTransfers = 1;
     }
 
@@ -447,13 +449,25 @@ export function renderTransferPlanner(container, state, actions) {
                             </div>
 
                             <div style="display:flex; flex-direction:column; gap:6px;">
-                                <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Number of Transfers (1-5)</label>
+                                <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Number of Transfers</label>
                                 <select id="tpNumTransfers" class="settings-select" style="width:100%;">
+                                    ${state.currentGw === 1 ? `
+                                        <option value="15" ${numTransfers === 15 ? 'selected' : ''}>Unlimited (Preseason)</option>
+                                    ` : ''}
                                     <option value="1" ${numTransfers === 1 ? 'selected' : ''}>1 Transfer</option>
                                     <option value="2" ${numTransfers === 2 ? 'selected' : ''}>2 Transfers</option>
                                     <option value="3" ${numTransfers === 3 ? 'selected' : ''}>3 Transfers</option>
                                     <option value="4" ${numTransfers === 4 ? 'selected' : ''}>4 Transfers</option>
                                     <option value="5" ${numTransfers === 5 ? 'selected' : ''}>5 Transfers</option>
+                                </select>
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:6px;">
+                                <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Active Chip</label>
+                                <select id="tpActiveChip" class="settings-select" style="width:100%;">
+                                    <option value="none" ${!state.chips.wildcard && !state.chips.benchBoost && !state.chips.tripleCaptain ? 'selected' : ''}>None</option>
+                                    <option value="wildcard" ${state.chips.wildcard ? 'selected' : ''}>Wildcard</option>
+                                    <option value="benchBoost" ${state.chips.benchBoost ? 'selected' : ''}>Bench Boost</option>
+                                    <option value="tripleCaptain" ${state.chips.tripleCaptain ? 'selected' : ''}>Triple Captain</option>
                                 </select>
                             </div>
                             <div style="display:flex; flex-direction:column; gap:6px;">
@@ -663,6 +677,25 @@ export function renderTransferPlanner(container, state, actions) {
             tpImportBtn.disabled = false;
         }
     });
+
+    const tpActiveChip = container.querySelector('#tpActiveChip');
+    if (tpActiveChip) {
+        tpActiveChip.addEventListener('change', (e) => {
+            const chosen = e.target.value;
+            state.chips.wildcard = false;
+            state.chips.benchBoost = false;
+            state.chips.tripleCaptain = false;
+            if (chosen !== 'none') {
+                state.chips[chosen] = true;
+            }
+            state.saveState();
+            
+            // Re-run optimization automatically
+            numTransfers = parseInt(tpNumTransfers.value);
+            horizon = parseInt(tpHorizon.value);
+            runTransferPlannerOptimization(tpResultsGrid, state, actions, numTransfers, horizon);
+        });
+    }
 
     runTpBtn.addEventListener('click', () => {
         numTransfers = parseInt(tpNumTransfers.value);
@@ -928,6 +961,16 @@ export function renderTransferPlanner(container, state, actions) {
         let sequence = [];
         let totalGain = 0;
 
+        const isGuaranteedStart = (player) => {
+            if (state.mustInclude && state.mustInclude.includes(player.id)) return true;
+            const minMins = state.guaranteedStart || 0;
+            if (minMins === 0) return true;
+            const mppg = player.MPPG || 0;
+            if (mppg >= minMins) return true;
+            if (mppg === 0 && player.price >= 5.0) return true;
+            return false;
+        };
+
         const checkTeamConstraints = (slots, soldId, boughtId) => {
             const tempIds = slots.map(s => s.playerId).filter(id => id !== null && id !== soldId);
             tempIds.push(boughtId);
@@ -945,12 +988,27 @@ export function renderTransferPlanner(container, state, actions) {
         const getSquadExpectedPts = (slots) => {
             let expectedPoints = 0;
             const starters = slots.filter(s => s.isStarting && s.playerId !== null).map(s => s.playerId);
-            
+            if (starters.length === 0) return 0;
+
+            // Dynamically optimize captaincy choice to maximize squad return
+            let bestCapId = starters[0];
+            let maxCapXP = -999;
+            starters.forEach(id => {
+                const player = PLAYERS.find(p => p.id === id);
+                if (player) {
+                    const xp = getExpectedPts(player, horizon);
+                    if (xp > maxCapXP) {
+                        maxCapXP = xp;
+                        bestCapId = id;
+                    }
+                }
+            });
+
             starters.forEach(id => {
                 const player = PLAYERS.find(p => p.id === id);
                 if (player) {
                     let multiplier = 1;
-                    if (id === activeCap) {
+                    if (id === bestCapId) {
                         multiplier = state.chips.tripleCaptain ? 3 : 2;
                     }
                     expectedPoints += getExpectedPts(player, horizon) * multiplier;
@@ -961,7 +1019,8 @@ export function renderTransferPlanner(container, state, actions) {
             bench.forEach(id => {
                 const player = PLAYERS.find(p => p.id === id);
                 if (player) {
-                    expectedPoints += getExpectedPts(player, horizon) * 0.10;
+                    const benchWeight = state.chips.benchBoost ? 1.0 : 0.10;
+                    expectedPoints += getExpectedPts(player, horizon) * benchWeight;
                 }
             });
 
@@ -983,7 +1042,8 @@ export function renderTransferPlanner(container, state, actions) {
                     p.position === soldPlayer.position && 
                     !currentSquadIds.includes(p.id) &&
                     p.price <= sellBudget &&
-                    !state.mustExclude.includes(p.id)
+                    !state.mustExclude.includes(p.id) &&
+                    (!state.chips.benchBoost || isGuaranteedStart(p))
                 );
 
                 for (const boughtPlayer of candidates) {
@@ -1016,7 +1076,8 @@ export function renderTransferPlanner(container, state, actions) {
                     p.position === soldPlayer.position && 
                     !currentSquadIds.includes(p.id) &&
                     p.price <= sellBudget &&
-                    !state.mustExclude.includes(p.id)
+                    !state.mustExclude.includes(p.id) &&
+                    (!state.chips.benchBoost || isGuaranteedStart(p))
                 );
 
                 const optionsList = [];
