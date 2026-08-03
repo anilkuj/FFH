@@ -3911,3 +3911,28 @@ html.light-theme .rating-badge-na {
         border-top: none !important;
     }
 }
+
+/* Responsive Vertical Heights to prevent vertical cropping on square screens (Foldables, iPads) */
+@media (max-height: 850px) {
+    .football-pitch {
+        height: 420px !important;
+        min-height: auto !important;
+    }
+}
+@media (max-height: 768px) {
+    .football-pitch {
+        height: 380px !important;
+        min-height: auto !important;
+    }
+}
+@media (max-height: 640px) {
+    .football-pitch {
+        height: 300px !important;
+        min-height: auto !important;
+    }
+    .bench-container {
+        padding: 4px !important;
+        margin-top: 6px !important;
+    }
+}
+
