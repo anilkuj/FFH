@@ -727,10 +727,12 @@ Enter target draft slot number (1-10):`,m=prompt(i);if(m===null)return;const N=p
                             <div class="setting-group">
                                 <label for="gwHorizon">Gameweek Horizon</label>
                                 <select id="gwHorizon" class="settings-select">
-                                    <option value="1">1 Gameweek (Short-term)</option>
-                                    <option value="3">3 Gameweeks (Recommended)</option>
-                                    <option value="5" selected>5 Gameweeks (Long-term)</option>
+                                    <option value="1" ${t.horizon===1?"selected":""}>1 Gameweek (Short-term)</option>
+                                    <option value="3" ${t.horizon===3?"selected":""}>3 Gameweeks (Recommended)</option>
+                                    <option value="5" ${!t.horizon||t.horizon===5?"selected":""}>5 Gameweeks (Medium-term)</option>
+                                    <option value="10" ${t.horizon===10?"selected":""}>10 Gameweeks (Extended Horizon)</option>
                                 </select>
+
                                 <span class="setting-help">Analyze fixtures and expected points over this horizon.</span>
                             </div>
 
@@ -912,7 +914,7 @@ Enter target draft slot number (1-10):`,k=prompt(H);if(k===null)return;const j=p
             <span class="opt-collapsed-pill"><i data-lucide="calendar" style="width:12px;height:12px;"></i> ${rt}</span>
             <span class="opt-collapsed-pill"><i data-lucide="layout-grid" style="width:12px;height:12px;"></i> ${j}</span>
             <span class="opt-collapsed-pill"><i data-lucide="tag" style="width:12px;height:12px;"></i> ${Y}</span>
-        `,z.style.display="flex",lucide.createIcons()},Q=I=>{(I!==void 0?I:!et.classList.contains("is-collapsed"))?(et.classList.add("is-collapsed"),F&&(F.textContent="Change Settings"),U&&U.setAttribute("data-lucide","settings-2")):(et.classList.remove("is-collapsed"),F&&(F.textContent="Collapse Settings"),U&&U.setAttribute("data-lucide","chevron-up")),lucide.createIcons()};it&&it.addEventListener("click",()=>Q());const _=()=>{f.innerHTML='<i data-lucide="loader" class="animate-spin" style="margin-right: 8px;"></i> Running AI Solver...',$&&($.innerHTML='<i data-lucide="loader" class="animate-spin" style="margin-right: 8px;"></i> Running AI Solver...'),lucide.createIcons();const I=parseInt(l.querySelector("#gwHorizon").value),H=g.value;setTimeout(()=>{p.classList.remove("hidden"),_t(p,t,a,I,H),f.innerHTML='<i data-lucide="play-circle"></i> Re-run Analysis',$&&($.innerHTML='<i data-lucide="play-circle"></i> Re-run Analysis'),lucide.createIcons(),at(I,H),Q(!0),setTimeout(()=>p.scrollIntoView({behavior:"smooth",block:"start"}),100)},1200)};f.addEventListener("click",_),$&&$.addEventListener("click",_)}function Vl(l,t){l.innerHTML=`
+        `,z.style.display="flex",lucide.createIcons()},Q=I=>{(I!==void 0?I:!et.classList.contains("is-collapsed"))?(et.classList.add("is-collapsed"),F&&(F.textContent="Change Settings"),U&&U.setAttribute("data-lucide","settings-2")):(et.classList.remove("is-collapsed"),F&&(F.textContent="Collapse Settings"),U&&U.setAttribute("data-lucide","chevron-up")),lucide.createIcons()};it&&it.addEventListener("click",()=>Q());const _=()=>{f.innerHTML='<i data-lucide="loader" class="animate-spin" style="margin-right: 8px;"></i> Running AI Solver...',$&&($.innerHTML='<i data-lucide="loader" class="animate-spin" style="margin-right: 8px;"></i> Running AI Solver...'),lucide.createIcons();const I=parseInt(l.querySelector("#gwHorizon").value);t.horizon=I,t.saveState();const H=g.value;setTimeout(()=>{p.classList.remove("hidden"),_t(p,t,a,I,H),f.innerHTML='<i data-lucide="play-circle"></i> Re-run Analysis',$&&($.innerHTML='<i data-lucide="play-circle"></i> Re-run Analysis'),lucide.createIcons(),at(I,H),Q(!0),setTimeout(()=>p.scrollIntoView({behavior:"smooth",block:"start"}),100)},1200)};f.addEventListener("click",_),$&&$.addEventListener("click",_)}function Vl(l,t){l.innerHTML=`
         <div class="premium-overlay-container">
             <div class="premium-lock-overlay">
                 <div class="lock-card">
