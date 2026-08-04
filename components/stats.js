@@ -67,6 +67,20 @@ export function renderStats(container, state, actions) {
         };
     };
 
+    function formatPlayerShortName(fullName) {
+        if (!fullName) return '';
+        if (fullName.length <= 18) return fullName;
+        const parts = fullName.trim().split(/\s+/);
+        if (parts.length === 1) {
+            return fullName.substring(0, 16) + '…';
+        }
+        const firstInitial = parts[0].charAt(0) + '.';
+        const lastName = parts.slice(-2).join(' ');
+        const formatted = `${firstInitial} ${lastName}`;
+        if (formatted.length <= 20) return formatted;
+        return `${firstInitial} ${parts[parts.length - 1]}`;
+    }
+
     const renderTable = () => {
         let filtered = PLAYERS.filter(player => {
             const matchesPos = positionFilter === 'ALL' || player.position === positionFilter;
@@ -99,12 +113,13 @@ export function renderStats(container, state, actions) {
 
         tableBody.innerHTML = filtered.map(player => {
             const st = getComputedStats(player);
+            const displayName = formatPlayerShortName(player.name);
             return `
                 <tr>
-                    <td class="col-grp-info cell-player-name" style="text-align: left; padding-left: 10px; min-width: 150px; white-space: nowrap;">
-                        <div style="display: flex; align-items: center; gap: 6px;">
-                            <strong style="font-weight: 700; font-size: 12.5px; white-space: nowrap;" title="${player.name}">${player.name}</strong>
-                            <span class="cell-team-tag" style="font-size: 10px; font-weight: 700; color: var(--text-muted); flex-shrink: 0; padding: 1px 4px; background: rgba(0,0,0,0.06); border-radius: 3px;">${player.team}</span>
+                    <td class="col-grp-info cell-player-name" style="text-align: left; padding-left: 10px; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${player.name}">
+                        <div style="display: flex; align-items: center; gap: 4px; overflow: hidden;">
+                            <strong style="font-weight: 700; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100px;">${displayName}</strong>
+                            <span class="cell-team-tag" style="font-size: 9.5px; font-weight: 700; color: var(--text-muted); flex-shrink: 0;">${player.team}</span>
                             ${renderSetPieceBadges(player)}
                         </div>
                     </td>
@@ -203,26 +218,26 @@ export function renderStats(container, state, actions) {
                             <th colspan="2" class="cat-header cat-passing">Passing</th>
                         </tr>
                         <tr class="stats-columns-row">
-                            <th data-col="name" style="text-align: left; padding-left: 12px;">Player ${getSortArrow('name', sortColumn, sortAsc)}</th>
-                            <th data-col="position">Pos ${getSortArrow('position', sortColumn, sortAsc)}</th>
-                            <th data-col="price">Price ${getSortArrow('price', sortColumn, sortAsc)}</th>
-                            <th data-col="ownership">Owned % ${getSortArrow('ownership', sortColumn, sortAsc)}</th>
-                            <th data-col="points">Points ${getSortArrow('points', sortColumn, sortAsc)}</th>
-                            <th data-col="goals">Goals ${getSortArrow('goals', sortColumn, sortAsc)}</th>
-                            <th data-col="assists">Assists ${getSortArrow('assists', sortColumn, sortAsc)}</th>
-                            <th data-col="ga">G + A ${getSortArrow('ga', sortColumn, sortAsc)}</th>
-                            <th data-col="goalPerf">Goal Perf ${getSortArrow('goalPerf', sortColumn, sortAsc)}</th>
-                            <th data-col="shots">Shots ${getSortArrow('shots', sortColumn, sortAsc)}</th>
-                            <th data-col="bigChancesCreated">Big Ch. Created ${getSortArrow('bigChancesCreated', sortColumn, sortAsc)}</th>
-                            <th data-col="bigChancesMissed">Big Ch. Missed ${getSortArrow('bigChancesMissed', sortColumn, sortAsc)}</th>
-                            <th data-col="xG">xG ${getSortArrow('xG', sortColumn, sortAsc)}</th>
-                            <th data-col="xA">xA ${getSortArrow('xA', sortColumn, sortAsc)}</th>
-                            <th data-col="xGI">xGI ${getSortArrow('xGI', sortColumn, sortAsc)}</th>
-                            <th data-col="defCon">DefCon ${getSortArrow('defCon', sortColumn, sortAsc)}</th>
-                            <th data-col="defConPts">DefCon Pts ${getSortArrow('defConPts', sortColumn, sortAsc)}</th>
-                            <th data-col="recoveries">Recoveries ${getSortArrow('recoveries', sortColumn, sortAsc)}</th>
-                            <th data-col="keyPasses">Key Passes ${getSortArrow('keyPasses', sortColumn, sortAsc)}</th>
-                            <th data-col="crosses">Crosses ${getSortArrow('crosses', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-info" data-col="name" style="text-align: left; padding-left: 10px;">Player ${getSortArrow('name', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-info" data-col="position">Pos ${getSortArrow('position', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-info" data-col="price">Price ${getSortArrow('price', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-core" data-col="ownership">Owned % ${getSortArrow('ownership', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-core" data-col="points">Points ${getSortArrow('points', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-attack" data-col="goals">Goals ${getSortArrow('goals', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-attack" data-col="assists">Assists ${getSortArrow('assists', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-attack" data-col="ga">G + A ${getSortArrow('ga', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-attack" data-col="goalPerf">Goal Perf ${getSortArrow('goalPerf', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-attack" data-col="shots">Shots ${getSortArrow('shots', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-attack" data-col="bigChancesCreated">Big Ch. Created ${getSortArrow('bigChancesCreated', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-attack" data-col="bigChancesMissed">Big Ch. Missed ${getSortArrow('bigChancesMissed', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-expected" data-col="xG">xG ${getSortArrow('xG', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-expected" data-col="xA">xA ${getSortArrow('xA', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-expected" data-col="xGI">xGI ${getSortArrow('xGI', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-defence" data-col="defCon">DefCon ${getSortArrow('defCon', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-defence" data-col="defConPts">DefCon Pts ${getSortArrow('defConPts', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-defence" data-col="recoveries">Recoveries ${getSortArrow('recoveries', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-passing" data-col="keyPasses">Key Passes ${getSortArrow('keyPasses', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-passing" data-col="crosses">Crosses ${getSortArrow('crosses', sortColumn, sortAsc)}</th>
                         </tr>
                     </thead>
                     <tbody id="statsTableBody">
@@ -235,6 +250,7 @@ export function renderStats(container, state, actions) {
 
     lucide.createIcons();
     renderTable();
+
 
     // Event Hookups
     const searchField = container.querySelector('#statsSearchInput');
