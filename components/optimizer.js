@@ -1246,11 +1246,11 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 slot.playerId = cheapest ? cheapest.id : null;
             }
         }
-        // Initialize bench slots (with cheapest, trying to respect guaranteed start if possible) if they are not locked
+        // Initialize bench slots (with cheapest budget enablers) if they are not locked
         for (const idx of benchIndices) {
             const slot = optimizedSquadSlots[idx];
             if (!slot.locked && slot.playerId === null) {
-                const cheapest = getCheapestPlayersList(slot.position, 1, initUsedIds, true)[0];
+                const cheapest = getCheapestPlayersList(slot.position, 1, initUsedIds, false)[0];
                 slot.playerId = cheapest ? cheapest.id : null;
             }
         }
@@ -1472,6 +1472,86 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 if (bestCandidate) {
                     currentSlot.playerId = bestCandidate.id;
                     benchImproved = true;
+                }
+            }
+        }
+
+        // --- HARD BENCH BUDGET SAFETY ENFORCER ---
+        let currentBenchCost = benchIndices.reduce((sum, bIdx) => {
+            const pId = optimizedSquadSlots[bIdx].playerId;
+            const p = pId !== null ? PLAYERS.find(pl => pl.id === pId) : null;
+            return sum + (p ? p.price : 0);
+        }, 0);
+
+        if (currentBenchCost > maxBenchBudget + 0.001) {
+            let benchTrimIter = 0;
+            while (currentBenchCost > maxBenchBudget + 0.001 && benchTrimIter < 20) {
+                benchTrimIter++;
+                let bestDowngrade = null;
+                let minPtsLoss = 9999;
+                let targetBenchIdx = -1;
+
+                const startingIds = startingIndices.map(sIdx => optimizedSquadSlots[sIdx].playerId).filter(id => id !== null);
+                const benchIds = benchIndices.map(bIdx => optimizedSquadSlots[bIdx].playerId).filter(id => id !== null);
+
+                for (const bIdx of benchIndices) {
+                    const slot = optimizedSquadSlots[bIdx];
+                    if (slot.locked) continue;
+
+                    const player = slot.playerId !== null ? PLAYERS.find(p => p.id === slot.playerId) : null;
+                    if (!player) continue;
+
+                    const cheaperCandidates = PLAYERS.filter(p =>
+                        p.position === slot.position &&
+                        p.price < player.price &&
+                        !startingIds.includes(p.id) &&
+                        !benchIds.includes(p.id) &&
+                        !state.mustExclude.includes(p.id) &&
+                        passesMinFwd(p)
+                    );
+
+                    const currentPts = getSquadExpectedPts(optimizedSquadSlots);
+
+                    for (const cand of cheaperCandidates) {
+                        const tempBenchIds = benchIds.filter(id => id !== slot.playerId);
+                        tempBenchIds.push(cand.id);
+
+                        const tempSquadIds = [...startingIds, ...tempBenchIds];
+                        const teamCounts = {};
+                        let ok = true;
+                        for (const id of tempSquadIds) {
+                            const pl = PLAYERS.find(p => p.id === id);
+                            if (pl) {
+                                teamCounts[pl.team] = (teamCounts[pl.team] || 0) + 1;
+                                if (teamCounts[pl.team] > 3) { ok = false; break; }
+                            }
+                        }
+
+                        if (ok) {
+                            const oldId = slot.playerId;
+                            slot.playerId = cand.id;
+                            const newPts = getSquadExpectedPts(optimizedSquadSlots);
+                            slot.playerId = oldId;
+
+                            const ptsLoss = currentPts - newPts;
+                            if (ptsLoss < minPtsLoss) {
+                                minPtsLoss = ptsLoss;
+                                bestDowngrade = cand;
+                                targetBenchIdx = bIdx;
+                            }
+                        }
+                    }
+                }
+
+                if (bestDowngrade && targetBenchIdx !== -1) {
+                    optimizedSquadSlots[targetBenchIdx].playerId = bestDowngrade.id;
+                    currentBenchCost = benchIndices.reduce((sum, bIdx) => {
+                        const pId = optimizedSquadSlots[bIdx].playerId;
+                        const p = pId !== null ? PLAYERS.find(pl => pl.id === pId) : null;
+                        return sum + (p ? p.price : 0);
+                    }, 0);
+                } else {
+                    break;
                 }
             }
         }
