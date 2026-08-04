@@ -197,19 +197,29 @@ export function renderOptimizer(container, state, actions) {
                                 <span class="setting-help">Select draft to read & save recommendations.</span>
                             </div>
 
+                            <!-- Ignore Bench Checkbox -->
+                            <div class="setting-group" id="ignoreBenchGroup" style="display: flex; flex-direction: column; justify-content: space-between;">
+                                <label for="ignoreBenchCheckbox" style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12px; font-weight: 700; color: var(--text-main); line-height: 1.3;">
+                                    <input type="checkbox" id="ignoreBenchCheckbox" ${state.ignoreBench ? 'checked' : ''} style="width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0;">
+                                    Ignore Bench (Optimize Starters Only)
+                                </label>
+                                <span class="setting-help">Frees 100% of budget to spend maximizing starting 11. Bench kept as cheap fillers.</span>
+                            </div>
+
                             <!-- Bench Budget Slider -->
-                            <div class="setting-group" id="benchBudgetGroup">
+                            <div class="setting-group" id="benchBudgetGroup" style="${state.ignoreBench ? 'opacity: 0.4; pointer-events: none;' : ''}">
                                 <label for="benchBudgetRange">
                                     Reserved Bench Budget
                                     <span class="opt-slider-value" id="benchBudgetValue">£${state.benchBudget.toFixed(1)}m</span>
                                 </label>
                                 <div class="opt-slider-container">
                                     <span class="opt-slider-bound">£17m</span>
-                                    <input type="range" id="benchBudgetRange" min="17.0" max="25.0" step="0.5" value="${state.benchBudget}" class="opt-range-input">
+                                    <input type="range" id="benchBudgetRange" min="17.0" max="25.0" step="0.5" value="${state.benchBudget}" class="opt-range-input" ${state.ignoreBench ? 'disabled' : ''}>
                                     <span class="opt-slider-bound">£25m</span>
                                 </div>
                                 <span class="setting-help">Budget reserved for 4 bench slots.</span>
                             </div>
+
 
                             <!-- Guaranteed Start Slider -->
                             <div class="setting-group" id="guaranteedStartGroup">
@@ -322,6 +332,30 @@ export function renderOptimizer(container, state, actions) {
     phaseSelect.addEventListener('change', updateHelpText);
     updateHelpText();
 
+    // Wire ignore bench checkbox listener
+    const ignoreBenchCheckbox = container.querySelector('#ignoreBenchCheckbox');
+    if (ignoreBenchCheckbox) {
+        ignoreBenchCheckbox.addEventListener('change', (e) => {
+            const isChecked = e.target.checked;
+            state.ignoreBench = isChecked;
+            state.saveState();
+            
+            const benchBudgetGroup = container.querySelector('#benchBudgetGroup');
+            const benchBudgetRange = container.querySelector('#benchBudgetRange');
+            if (benchBudgetGroup && benchBudgetRange) {
+                if (isChecked) {
+                    benchBudgetGroup.style.opacity = '0.4';
+                    benchBudgetGroup.style.pointerEvents = 'none';
+                    benchBudgetRange.disabled = true;
+                } else {
+                    benchBudgetGroup.style.opacity = '1.0';
+                    benchBudgetGroup.style.pointerEvents = 'auto';
+                    benchBudgetRange.disabled = false;
+                }
+            }
+        });
+    }
+
     // Wire bench budget slider listeners
     const benchSlider = container.querySelector('#benchBudgetRange');
     const benchValueDisplay = container.querySelector('#benchBudgetValue');
@@ -333,6 +367,7 @@ export function renderOptimizer(container, state, actions) {
             state.saveState();
         });
     }
+
 
     // Wire guaranteed start slider listeners
     const startSlider = container.querySelector('#guaranteedStartRange');
@@ -638,7 +673,9 @@ export function renderOptimizer(container, state, actions) {
             <span class="opt-collapsed-pill"><i data-lucide="calendar" style="width:12px;height:12px;"></i> ${horizonLabel}</span>
             <span class="opt-collapsed-pill"><i data-lucide="layout-grid" style="width:12px;height:12px;"></i> ${formationLabel}</span>
             <span class="opt-collapsed-pill"><i data-lucide="tag" style="width:12px;height:12px;"></i> ${minFwdLabel}</span>
+            ${state.ignoreBench ? `<span class="opt-collapsed-pill" style="border-color: rgba(0, 242, 254, 0.3); color: var(--secondary);"><i data-lucide="user-x" style="width:12px;height:12px;"></i> Starters Only (Bench Ignored)</span>` : ''}
         `;
+
         activePills.style.display = 'flex';
         lucide.createIcons();
     };
@@ -1463,9 +1500,10 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         const remainingForBench = totalValue - startingCost;
         const benchBudget = Math.min(maxBenchBudget, remainingForBench);
 
-        let benchImproved = true;
+        let benchImproved = !state.ignoreBench;
         let benchIter = 0;
         while (benchImproved && benchIter < 20) {
+
             benchImproved = false;
             benchIter++;
 
@@ -1650,7 +1688,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 if (slot.locked) continue;
 
                 const isBenchSlot = !slot.isStarting;
+                if (state.ignoreBench && isBenchSlot) continue; // Skip bench upgrades when Ignore Bench is checked
                 const player = slot.playerId !== null ? PLAYERS.find(p => p.id === slot.playerId) : null;
+
                 const playerPrice = player ? player.price : 0;
 
                 let currentBenchCost = 0;
