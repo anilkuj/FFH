@@ -821,15 +821,19 @@ function _scoreOptimizationForFormation(state, horizon, mode) {
         const p = PLAYERS.find(pl => pl.id === s.playerId);
         return sum + (p ? p.price : 0);
     }, 0) + bank;
-    const maxStartingBudget = totalValue - minBenchBudget;
+    const activeBenchIds = state.ignoreBench
+        ? activeSquadSlots.filter(s => !s.isStarting && s.playerId !== null).map(s => s.playerId)
+        : [];
 
     const minFwd = state.minFwdPrice ?? 6.0;
     const candidatePool = (pos) => PLAYERS.filter(p =>
         p.position === pos &&
         !state.mustExclude.includes(p.id) &&
+        (!state.ignoreBench || !activeBenchIds.includes(p.id)) &&
         (pos !== 'FWD' || p.price >= minFwd || (state.mustInclude && state.mustInclude.includes(p.id))) &&
         getSolverScore(p) > 0
     ).sort((a, b) => getSolverScore(b) - getSolverScore(a));
+
 
     const pick = (pos, count, budget) => {
         const pool = candidatePool(pos);
@@ -1314,12 +1318,16 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         const minFwd = state.minFwdPrice ?? 6.0;
         const passesMinFwd = (p) => p.position !== 'FWD' || p.price >= minFwd || (state.mustInclude && state.mustInclude.includes(p.id));
 
-        // Cheapest players for fallback and initialization (excluding mustExclude)
-        const cheapestGKPs = PLAYERS.filter(p => p.position === 'GKP' && !state.mustExclude.includes(p.id)).sort((a, b) => a.price - b.price);
-        const cheapestDEFs = PLAYERS.filter(p => p.position === 'DEF' && !state.mustExclude.includes(p.id)).sort((a, b) => a.price - b.price);
-        const cheapestMIDs = PLAYERS.filter(p => p.position === 'MID' && !state.mustExclude.includes(p.id)).sort((a, b) => a.price - b.price);
-        const cheapestFWDsFiltered = PLAYERS.filter(p => p.position === 'FWD' && !state.mustExclude.includes(p.id) && passesMinFwd(p)).sort((a, b) => a.price - b.price);
-        const cheapestFWDs = cheapestFWDsFiltered.length > 0 ? cheapestFWDsFiltered : PLAYERS.filter(p => p.position === 'FWD' && !state.mustExclude.includes(p.id)).sort((a, b) => a.price - b.price);
+        const activeBenchIds = state.ignoreBench
+            ? activeSquadSlots.filter(s => !s.isStarting && s.playerId !== null).map(s => s.playerId)
+            : [];
+
+        // Cheapest players for fallback and initialization (excluding mustExclude & activeBenchIds if ignoreBench)
+        const cheapestGKPs = PLAYERS.filter(p => p.position === 'GKP' && !state.mustExclude.includes(p.id) && (!state.ignoreBench || !activeBenchIds.includes(p.id))).sort((a, b) => a.price - b.price);
+        const cheapestDEFs = PLAYERS.filter(p => p.position === 'DEF' && !state.mustExclude.includes(p.id) && (!state.ignoreBench || !activeBenchIds.includes(p.id))).sort((a, b) => a.price - b.price);
+        const cheapestMIDs = PLAYERS.filter(p => p.position === 'MID' && !state.mustExclude.includes(p.id) && (!state.ignoreBench || !activeBenchIds.includes(p.id))).sort((a, b) => a.price - b.price);
+        const cheapestFWDsFiltered = PLAYERS.filter(p => p.position === 'FWD' && !state.mustExclude.includes(p.id) && (!state.ignoreBench || !activeBenchIds.includes(p.id)) && passesMinFwd(p)).sort((a, b) => a.price - b.price);
+        const cheapestFWDs = cheapestFWDsFiltered.length > 0 ? cheapestFWDsFiltered : PLAYERS.filter(p => p.position === 'FWD' && !state.mustExclude.includes(p.id) && (!state.ignoreBench || !activeBenchIds.includes(p.id))).sort((a, b) => a.price - b.price);
 
         const getCheapestPlayersList = (pos, count, usedIds, forceGuaranteed = false) => {
             const list = pos === 'GKP' ? cheapestGKPs : (pos === 'DEF' ? cheapestDEFs : (pos === 'MID' ? cheapestMIDs : cheapestFWDs));
@@ -1443,10 +1451,12 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 let candidates = PLAYERS.filter(p => 
                     p.position === currentSlot.position && 
                     !usedStartingIds.includes(p.id) && 
+                    (!state.ignoreBench || !activeBenchIds.includes(p.id)) &&
                     p.price <= maxBudgetForSlot &&
                     !state.mustExclude.includes(p.id) &&
                     passesMinFwd(p)
                 );
+
 
                 const guaranteedCandidates = candidates.filter(isGuaranteedStart);
                 if (guaranteedCandidates.length > 0) {
