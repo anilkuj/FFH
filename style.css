@@ -2514,6 +2514,37 @@ html.light-theme .stats-table td:first-child {
 }
 
 @media (max-width: 768px) {
+    html, body {
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        height: auto !important;
+        min-height: 100dvh !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    .app-container {
+        height: auto !important;
+        min-height: 100dvh !important;
+        overflow: visible !important;
+    }
+
+    .main-content {
+        height: auto !important;
+        min-height: 100dvh !important;
+        overflow: visible !important;
+        flex: none !important;
+    }
+
+    #viewContainer,
+    .view-container {
+        height: auto !important;
+        min-height: auto !important;
+        overflow-y: visible !important;
+        overflow-x: hidden !important;
+        padding: 8px 8px 40px 8px !important;
+        box-sizing: border-box !important;
+    }
+
     .modal-backdrop {
         align-items: flex-start !important;
         overflow-y: auto !important;
@@ -2590,26 +2621,30 @@ html.light-theme .stats-table td:first-child {
         padding: 4px 8px !important;
     }
 
-    /* Fluid Pitch Container - No scaling */
+    /* Pitch & Bench Container - Prevents Squad overlapping Bench */
     .pitch-container {
-        padding: 8px 6px !important;
-        gap: 6px !important;
+        padding: 4px 2px !important;
+        gap: 16px !important;
         overflow: visible !important;
         width: 100% !important;
         max-width: 100% !important;
         margin: 0 auto !important;
         box-sizing: border-box !important;
-    }
-
-    /* Fixed compact height on mobile to fit the viewport without scrolling */
-    .football-pitch {
-        padding: 8px 4px 32px 4px !important;
-        height: 390px !important;
-        min-height: 370px !important;
         display: flex !important;
         flex-direction: column !important;
-        justify-content: space-around !important;
+    }
+
+    .football-pitch {
+        padding: 10px 4px 24px 4px !important;
+        height: auto !important;
+        min-height: 460px !important;
+        max-height: none !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
         box-sizing: border-box !important;
+        flex: none !important;
+        margin-bottom: 0 !important;
     }
 
     .sidebar {
@@ -4551,5 +4586,108 @@ html.light-theme .rating-badge-na {
     #reRunOptBtn {
         flex: 1;
         justify-content: center;
+    }
+}
+
+/* ==========================================================================
+   COMPREHENSIVE MOBILE VIEWPORT & SCROLLING OVERRIDES (OVERRIDE MAX-HEIGHT SQUEEZING)
+   ========================================================================== */
+@media (max-width: 768px) {
+    /* Ensure page viewport scrolls naturally on all mobile browsers */
+    html, body {
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        height: auto !important;
+        min-height: 100dvh !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    .app-container {
+        height: auto !important;
+        min-height: 100dvh !important;
+        overflow: visible !important;
+    }
+
+    .main-content {
+        height: auto !important;
+        min-height: 100dvh !important;
+        overflow: visible !important;
+        flex: none !important;
+    }
+
+    #viewContainer,
+    .view-container {
+        height: auto !important;
+        min-height: auto !important;
+        overflow-y: visible !important;
+        overflow-x: hidden !important;
+        padding: 8px 8px 40px 8px !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Team Planner & Transfer Planner Pitch & Bench Layout - Fix Squad overlapping Bench */
+    .pitch-container {
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        padding: 4px 2px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 20px !important;
+    }
+
+    .football-pitch {
+        height: auto !important;
+        min-height: 460px !important;
+        max-height: none !important;
+        padding: 12px 6px 24px 6px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        box-sizing: border-box !important;
+        flex: none !important;
+        margin-bottom: 0 !important;
+    }
+
+    .bench-container {
+        margin-top: 20px !important;
+        position: relative !important;
+        z-index: 10 !important;
+        clear: both !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 8px 6px !important;
+    }
+
+    /* Transfer Planner Mobile Layout & Scroll Fix */
+    .tp-outer-container,
+    .tp-main-grid,
+    .tp-left-col,
+    .tp-right-col {
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    .tp-main-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+    }
+
+    #tpResultsGrid {
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    /* AI Optimizer Mobile Layout & Scroll Fix */
+    #optimizerContainer,
+    .optimizer-view-container,
+    .opt-card,
+    .opt-settings-body,
+    .optimization-results-grid {
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
     }
 }
