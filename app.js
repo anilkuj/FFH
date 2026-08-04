@@ -106,6 +106,8 @@ class AppState {
         this.userProfile = savedProfile ? JSON.parse(savedProfile) : null;
 
         this.loadUserDrafts();
+        this.loadCloudDrafts();
+
 
 
         // Active chips
@@ -287,37 +289,78 @@ class AppState {
         if (!this.userProfile || !this.userProfile.sub) return;
 
         try {
-            const existingCloudId = localStorage.getItem(`fpl_hub_cloud_id_${this.userProfile.sub}`);
+            const cloudKey = `fpl_cloud_drafts_${this.userProfile.sub}`;
+            let existingCloudId = localStorage.getItem(`fpl_hub_cloud_id_${this.userProfile.sub}`);
+            let cloudData = null;
+
+            // 1. Direct fetch if cloud ID is known locally
             if (existingCloudId) {
-                const res = await fetch(`https://api.restful-api.dev/objects/${existingCloudId}`);
-                if (res.ok) {
+                const res = await fetch(`https://api.restful-api.dev/objects/${existingCloudId}`).catch(() => null);
+                if (res && res.ok) {
                     const cloudRes = await res.json();
                     if (cloudRes && cloudRes.data && Array.isArray(cloudRes.data.drafts)) {
-                        this.drafts = cloudRes.data.drafts;
-                        this.activeDraftIndex = typeof cloudRes.data.activeDraftIndex === 'number' ? cloudRes.data.activeDraftIndex : 0;
-                        
-                        const activeDraft = this.drafts[this.activeDraftIndex];
-                        if (activeDraft && activeDraft.squadSlots) {
-                            this.squadSlots = JSON.parse(JSON.stringify(activeDraft.squadSlots));
-                            this.captain = activeDraft.captain;
-                            this.vice = activeDraft.vice;
-                            this.formation = activeDraft.formation;
-                        }
-                        
-                        // Save locally
-                        localStorage.setItem(this.getDraftsStorageKey(), JSON.stringify(this.drafts));
-                        localStorage.setItem(this.getActiveDraftIdxStorageKey(), this.activeDraftIndex.toString());
-                        
-                        if (typeof actions !== 'undefined' && actions.showToast) {
-                            actions.showToast("☁️ Synced drafts across devices via Google Account!", "success");
+                        cloudData = cloudRes.data;
+                    }
+                }
+            }
+
+            // 2. Multi-device discovery fallback: If new device (mobile), query objects by Google ID
+            if (!cloudData) {
+                const searchRes = await fetch('https://api.restful-api.dev/objects').catch(() => null);
+                if (searchRes && searchRes.ok) {
+                    const allObjs = await searchRes.json();
+                    if (Array.isArray(allObjs)) {
+                        const userObj = allObjs.find(o => o.name === cloudKey || (o.data && o.data.sub === this.userProfile.sub));
+                        if (userObj && userObj.data && Array.isArray(userObj.data.drafts)) {
+                            cloudData = userObj.data;
+                            if (userObj.id) {
+                                localStorage.setItem(`fpl_hub_cloud_id_${this.userProfile.sub}`, userObj.id);
+                            }
                         }
                     }
+                }
+            }
+
+            // 3. Fallback to local account cache if cloud is offline
+            if (!cloudData) {
+                const cached = localStorage.getItem(cloudKey);
+                if (cached) {
+                    try {
+                        const parsed = JSON.parse(cached);
+                        if (parsed && Array.isArray(parsed.drafts)) cloudData = parsed;
+                    } catch (e) {}
+                }
+            }
+
+            // 4. Apply cloud drafts to application state
+            if (cloudData && Array.isArray(cloudData.drafts)) {
+                this.drafts = cloudData.drafts;
+                this.activeDraftIndex = typeof cloudData.activeDraftIndex === 'number' ? cloudData.activeDraftIndex : 0;
+                
+                const activeDraft = this.drafts[this.activeDraftIndex];
+                if (activeDraft && activeDraft.squadSlots) {
+                    this.squadSlots = JSON.parse(JSON.stringify(activeDraft.squadSlots));
+                    this.captain = activeDraft.captain;
+                    this.vice = activeDraft.vice;
+                    this.formation = activeDraft.formation;
+                }
+                
+                // Persist to local storage
+                localStorage.setItem(this.getDraftsStorageKey(), JSON.stringify(this.drafts));
+                localStorage.setItem(this.getActiveDraftIdxStorageKey(), this.activeDraftIndex.toString());
+                
+                if (typeof actions !== 'undefined' && actions.renderActiveView) {
+                    actions.renderActiveView();
+                }
+                if (typeof actions !== 'undefined' && actions.showToast) {
+                    actions.showToast("☁️ Synced draft squads & names across devices!", "success");
                 }
             }
         } catch (e) {
             console.warn("Cloud draft load warning:", e);
         }
     }
+
 
 
     optimizeCaptaincy() {
