@@ -1023,77 +1023,131 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         const outFdr = outPlayer ? parseFloat(getAvgFDR(outPlayer)) : 5.0;
         const inFdr = parseFloat(getAvgFDR(inPlayer));
 
-        const outCs = outPlayer ? getCleanSheetOdds(outPlayer) : null;
+        const outCs = outPlayer ? getCleanSheetOdds(outPlayer) : '0%';
         const inCs = getCleanSheetOdds(inPlayer);
 
-        const outRet = outPlayer ? getProjectedReturns(outPlayer) : null;
+        const outRet = outPlayer ? getProjectedReturns(outPlayer) : '0.0';
         const inRet = getProjectedReturns(inPlayer);
 
-        let reasons = [];
-        let warnings = [];
-
-        // Rotation & Starts Warnings
-        if (inPlayer.MPPG > 0 && inPlayer.MPPG < 60) {
-            warnings.push(`<i data-lucide="alert-triangle" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px; color:#f59e0b;"></i> <strong>Rotation Risk:</strong> ${inPlayer.name} averages only ${inPlayer.MPPG.toFixed(0)} minutes per game.`);
-        } else if (inPlayer.MPPG === 0) {
-            warnings.push(`<i data-lucide="alert-circle" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px; color:#ef4444;"></i> <strong>Non-Starter Risk:</strong> ${inPlayer.name} has played 0 minutes this season.`);
-        }
-
-        if (inPlayer.GS > 0 && inPlayer.GS < 15) {
-            warnings.push(`<i data-lucide="alert-triangle" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px; color:#f59e0b;"></i> <strong>Limited Starts:</strong> ${inPlayer.name} started only ${inPlayer.GS} games last season.`);
-        }
-
-        // 1. Fixture difficulty comparison
-        if (inFdr < outFdr) {
-            reasons.push(`<strong>Fixtures Upgrade:</strong> Opponent difficulty decreases from FDR ${outFdr} to FDR ${inFdr}.`);
-        } else if (inFdr === outFdr && outPlayer) {
-            reasons.push(`<strong>Comparable Fixtures:</strong> Opponent difficulty is similar, but ${inPlayer.name} has superior output.`);
-        }
-
-        // 2. Goal threat/assist threat comparison
-        if (inRet !== null) {
-            const outRVal = outRet ? parseFloat(outRet) : 0;
-            const inRVal = parseFloat(inRet);
-            if (inRVal > outRVal) {
-                reasons.push(`<strong>Higher Goal Threat:</strong> Attacking projected returns increase from Proj xGI ${outRVal} to ${inRet}.`);
-            }
-        }
-
-        // 3. Clean sheet comparison (for gk/def)
-        if (inCs !== null) {
-            const outCVal = outCs ? parseInt(outCs) : 0;
-            const inCVal = parseInt(inCs);
-            if (inCVal > outCVal) {
-                reasons.push(`<strong>Better Clean Sheet Potential:</strong> Defensive clean sheet odds jump from ${outCs || '0%'} to ${inCs}.`);
-            }
-        }
-
-        // 4. Budget
-        if (outPlayer && inPlayer.price < outPlayer.price) {
-            reasons.push(`<strong>Budget Enabler:</strong> Frees up £${(outPlayer.price - inPlayer.price).toFixed(1)}m in capital value.`);
-        }
-
-        // 5. Rating Efficiency
         const outEff = outPlayer ? getPlayerEfficiency(outPlayer, state.currentGw) : 0;
         const inEff = getPlayerEfficiency(inPlayer, state.currentGw);
-        if (inEff > outEff) {
-            reasons.push(`<strong>Higher Efficiency:</strong> Value-for-money rating efficiency improves from ${outEff.toFixed(2)} to ${inEff.toFixed(2)}.`);
+
+        const outMins = outPlayer && typeof outPlayer.MPPG === 'number' ? outPlayer.MPPG.toFixed(0) : '0';
+        const inMins = typeof inPlayer.MPPG === 'number' ? inPlayer.MPPG.toFixed(0) : '0';
+        const outStarts = outPlayer && typeof outPlayer.GS === 'number' ? outPlayer.GS : 0;
+        const inStarts = typeof inPlayer.GS === 'number' ? inPlayer.GS : 0;
+
+        const isBudgetEnabler = outPlayer && inPlayer.price < outPlayer.price;
+        const freedPrice = outPlayer ? (outPlayer.price - inPlayer.price).toFixed(1) : '0.0';
+
+        // 1. OUTGOING PLAYER EXIT RATIONALE
+        let exitReasons = [];
+        if (outPlayer) {
+            if (outFdr >= 3.2) {
+                exitReasons.push(`Facing tough upcoming fixtures (Avg FDR ${outFdr}).`);
+            }
+            if (outPlayer.MPPG > 0 && outPlayer.MPPG < 65) {
+                exitReasons.push(`Rotation risk under manager (${outMins}m avg mins per match).`);
+            } else if (outPlayer.status && outPlayer.status !== 'a') {
+                exitReasons.push(`Availability/injury flag (${outPlayer.news || 'Flagged'}).`);
+            }
+            if (isBudgetEnabler) {
+                exitReasons.push(`High price tag (£${outPlayer.price.toFixed(1)}m) ties up capital needed for starting XI talismans.`);
+            } else if (gain > 0) {
+                exitReasons.push(`Lower points output (${outPts.toFixed(1)} XP over ${horizon} GWs) compared to top target.`);
+            }
+            if (exitReasons.length === 0) {
+                exitReasons.push(`Sub-optimal points efficiency (${outEff.toFixed(2)} rating score) for upcoming fixture run.`);
+            }
         }
 
-        // Fallback
-        if (reasons.length === 0) {
-            reasons.push(`<strong>Overall Expected Value:</strong> ${inPlayer.name} shows a higher expected value (+${gain.toFixed(1)} XP) for this window.`);
+        // 2. INCOMING PLAYER SCOUTING & TACTICAL FIT
+        let entryReasons = [];
+        if (inFdr < outFdr) {
+            entryReasons.push(`Favorable fixture swing (Avg FDR ${inFdr} vs FDR ${outFdr}).`);
+        } else if (inFdr <= 2.8) {
+            entryReasons.push(`Strong fixture schedule (Avg FDR ${inFdr}).`);
+        }
+        if (inPlayer.position === 'FWD' || inPlayer.position === 'MID') {
+            if (parseFloat(inRet) > 0.3) {
+                entryReasons.push(`High attacking threat (Proj xGI ${inRet} over ${horizon} GWs).`);
+            }
+        }
+        if (inPlayer.position === 'DEF' || inPlayer.position === 'GKP') {
+            if (parseInt(inCs) >= 30) {
+                entryReasons.push(`Strong clean sheet odds (${inCs} CS probability).`);
+            }
+        }
+        if (isBudgetEnabler) {
+            entryReasons.push(`Key Budget Release: Frees up £${freedPrice}m in capital value to fund high-value upgrades elsewhere.`);
+        }
+        if (inEff > outEff) {
+            entryReasons.push(`Superior Points-per-Million efficiency (${inEff.toFixed(2)} rating score).`);
+        }
+        if (entryReasons.length === 0) {
+            entryReasons.push(`Higher predicted points output (${inPts.toFixed(1)} XP over ${horizon} GWs).`);
+        }
+
+        // 3. WARNINGS & COACH TACTICS
+        let warnings = [];
+        if (inPlayer.MPPG > 0 && inPlayer.MPPG < 60) {
+            warnings.push(`<strong>Rotation Warning:</strong> ${inPlayer.name} averages ${inMins}m per match under manager.`);
+        } else if (inPlayer.MPPG === 0) {
+            warnings.push(`<strong>Non-Starter Warning:</strong> ${inPlayer.name} has played 0 minutes this season.`);
+        }
+        if (inPlayer.status && inPlayer.status !== 'a') {
+            warnings.push(`<strong>Availability Flag:</strong> ${inPlayer.name} is currently flagged (${inPlayer.news || 'Uncertain'}).`);
         }
 
         return `
-            <div class="rec-explanation-box">
-                <h4><i data-lucide="info" style="width:13px; height:13px; vertical-align:middle; margin-right:4px;"></i> Swapping Rationale:</h4>
-                <ul class="rec-explanation-list">
-                    ${reasons.map(r => `<li>${r}</li>`).join('')}
-                </ul>
+            <div class="rec-explanation-box" style="margin-top: 12px; padding: 14px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 8px; font-size: 11px;">
+                <div style="font-family: var(--font-heading); font-size: 12px; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 6px; margin-bottom: 10px;">
+                    <i data-lucide="brain-circuit" style="width: 14px; height: 14px;"></i> AI Tactical Scouting & Transfer Rationale
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 10px;">
+                    ${outPlayer ? `
+                        <div style="background: rgba(239, 68, 68, 0.04); border-left: 3px solid #ef4444; padding: 8px 10px; border-radius: 4px;">
+                            <div style="font-weight: 700; color: #ef4444; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
+                                <i data-lucide="log-out" style="width: 12px; height: 12px;"></i> Exit Rationale (${outPlayer.name}):
+                            </div>
+                            <ul style="margin: 0; padding-left: 14px; color: var(--text-muted); line-height: 1.4;">
+                                ${exitReasons.map(r => `<li>${r}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+
+                    <div style="background: rgba(0, 255, 136, 0.04); border-left: 3px solid var(--primary); padding: 8px 10px; border-radius: 4px;">
+                        <div style="font-weight: 700; color: var(--primary); margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
+                            <i data-lucide="log-in" style="width: 12px; height: 12px;"></i> Tactical Acquisition (${inPlayer.name}):
+                        </div>
+                        <ul style="margin: 0; padding-left: 14px; color: var(--text-main); line-height: 1.4;">
+                            ${entryReasons.map(r => `<li>${r}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Coach Strategy & Expected Minutes Bar -->
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 6px; margin-top: 6px; font-size: 10.5px;">
+                    ${outPlayer ? `
+                        <div>
+                            <span style="color: var(--text-muted);">OUT Mins / Starts:</span>
+                            <strong style="color: var(--text-main);">${outMins}m avg (${outStarts} starts)</strong>
+                        </div>
+                    ` : ''}
+                    <div>
+                        <span style="color: var(--text-muted);">IN Mins / Starts:</span>
+                        <strong style="color: var(--primary);">${inMins}m avg (${inStarts} starts)</strong>
+                    </div>
+                    <div>
+                        <span style="color: var(--text-muted);">PPM Value Rating:</span>
+                        <strong style="color: var(--secondary);">${inEff.toFixed(2)} rating score</strong>
+                    </div>
+                </div>
+
                 ${warnings.length > 0 ? `
-                    <div class="rec-warning-box" style="margin-top: 12px; padding: 10px; background: rgba(245, 158, 11, 0.05); border: 1px solid rgba(245, 158, 11, 0.25); border-left: 3px solid #f59e0b; border-radius: 6px; font-size: 11px; display: flex; flex-direction: column; gap: 6px; color: var(--text-main);">
-                        ${warnings.map(w => `<div style="display:flex; align-items:center; gap:4px; line-height: 1.4;">${w}</div>`).join('')}
+                    <div style="margin-top: 8px; padding: 8px; background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 6px; color: #f59e0b; font-size: 10.5px;">
+                        ${warnings.map(w => `<div style="display:flex; align-items:center; gap:4px;">${w}</div>`).join('')}
                     </div>
                 ` : ''}
             </div>
@@ -1851,14 +1905,14 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                                     let badgeBg, badgeBorder, badgeColor, badgeLabel;
                                     let cardBg, cardBorder, cardLeftBorder;
 
-                                    if (isDowngrade && isNextDowngrade) {
-                                        badgeBg = 'rgba(239, 68, 68, 0.08)';
-                                        badgeBorder = 'rgba(239, 68, 68, 0.2)';
-                                        badgeColor = '#ef4444';
-                                        badgeLabel = 'BUDGET DOWNGRADED';
-                                        cardBg = 'rgba(239, 68, 68, 0.02)';
-                                        cardBorder = 'rgba(239, 68, 68, 0.15)';
-                                        cardLeftBorder = '#ef4444';
+                                    if (isDowngrade) {
+                                        badgeBg = 'rgba(0, 242, 254, 0.1)';
+                                        badgeBorder = 'rgba(0, 242, 254, 0.3)';
+                                        badgeColor = 'var(--secondary)';
+                                        badgeLabel = '💰 CAPITAL RELEASE ENABLER';
+                                        cardBg = 'rgba(0, 242, 254, 0.02)';
+                                        cardBorder = 'rgba(0, 242, 254, 0.15)';
+                                        cardLeftBorder = 'var(--secondary)';
                                     } else if (!isDowngrade && !isNextDowngrade) {
                                         badgeBg = 'rgba(0, 255, 136, 0.1)';
                                         badgeBorder = 'rgba(0, 255, 136, 0.2)';
@@ -1871,7 +1925,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                                         badgeBg = 'rgba(245, 158, 11, 0.08)';
                                         badgeBorder = 'rgba(245, 158, 11, 0.2)';
                                         badgeColor = '#f59e0b';
-                                        badgeLabel = isDowngrade ? 'BUDGET RELEASE' : 'POINTS UPGRADE (NEXT DROP)';
+                                        badgeLabel = 'POINTS UPGRADE (NEXT DROP)';
                                         cardBg = 'rgba(245, 158, 11, 0.02)';
                                         cardBorder = 'rgba(245, 158, 11, 0.15)';
                                         cardLeftBorder = '#f59e0b';
@@ -1891,11 +1945,11 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                                                 <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding-top:12px;">
                                                     <i data-lucide="chevrons-right" class="transfer-arrow-icon" style="margin: 0 0 6px 0;"></i>
                                                     <span class="pill-value" style="font-size:10px; background:${badgeBg}; border: 1px solid ${badgeBorder}; padding: 4px 8px; border-radius: 4px; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px;">
-                                                        <span style="color: ${isDowngrade ? '#ef4444' : 'var(--primary)'}; font-weight: 800;">
+                                                        <span style="color: ${isDowngrade ? 'var(--secondary)' : 'var(--primary)'}; font-weight: 800;">
                                                             ${up.gain >= 0 ? '+' : ''}${up.gain.toFixed(1)} (${horizon}G)
                                                         </span>
                                                         <span style="color: var(--text-muted);">•</span>
-                                                        <span style="color: ${isNextDowngrade ? '#ef4444' : 'var(--primary)'}; font-weight: 800;">
+                                                        <span style="color: ${isNextDowngrade ? 'var(--secondary)' : 'var(--primary)'}; font-weight: 800;">
                                                             ${up.gain1Gw >= 0 ? '+' : ''}${up.gain1Gw.toFixed(1)} (Next)
                                                         </span>
                                                     </span>
@@ -1910,9 +1964,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                                             </div>
                                             
                                             ${isDowngrade ? `
-                                                <div style="font-size: 10px; color: var(--text-muted); margin-top: 8px; text-align: center;">
-                                                    <i data-lucide="info" style="width:11px; height:11px; display:inline-block; vertical-align:middle; margin-right:3px;"></i>
-                                                    Budget release: Frees up <strong>£${(up.out.price - up.in.price).toFixed(1)}m</strong> for upgrades.
+                                                <div style="font-size: 11px; color: var(--secondary); background: rgba(0, 242, 254, 0.05); padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(0, 242, 254, 0.2); margin-top: 8px; text-align: left; display: flex; align-items: center; gap: 6px;">
+                                                    <i data-lucide="coins" style="width:13px; height:13px;"></i>
+                                                    <span><strong>Capital Release Enabler:</strong> Frees up <strong>£${(up.out.price - up.in.price).toFixed(1)}m</strong> in budget to fund high-value talisman upgrades elsewhere in your squad.</span>
                                                 </div>
                                             ` : ''}
 
