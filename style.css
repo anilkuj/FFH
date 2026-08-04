@@ -1078,9 +1078,16 @@ html, body {
     border: 1px solid var(--border-color);
     border-radius: 8px;
     padding: 10px 12px 10px 38px;
-    color: #fff;
+    color: var(--text-main);
+    font-family: inherit;
+    font-size: 13px;
     outline: none;
     transition: border-color var(--transition-fast);
+}
+
+.search-field::placeholder {
+    color: var(--text-muted);
+    opacity: 0.8;
 }
 
 .search-field:focus {
