@@ -828,9 +828,11 @@ function _scoreOptimizationForFormation(state, horizon, mode) {
         const p = PLAYERS.find(pl => pl.id === s.playerId);
         return sum + (p ? p.price : 0);
     }, 0) + bank;
+    const maxStartingBudget = totalValue - minBenchBudget;
     const activeBenchIds = state.ignoreBench
         ? activeSquadSlots.filter(s => !s.isStarting && s.playerId !== null).map(s => s.playerId)
         : [];
+
 
     const minFwd = state.minFwdPrice ?? 6.0;
     const candidatePool = (pos) => PLAYERS.filter(p =>
@@ -1346,7 +1348,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             return sum + (p ? p.price : 0);
         }, 0);
         const reservedBenchBudget = Math.max(minBenchBudget, initialBenchCost);
+        const maxStartingBudget = Math.max(0, totalValue - reservedBenchBudget);
         const minFwd = state.minFwdPrice ?? 6.0;
+
         const passesMinFwd = (p) => p.position !== 'FWD' || p.price >= minFwd || (state.mustInclude && state.mustInclude.includes(p.id));
 
         // Cheapest players for fallback and initialization
