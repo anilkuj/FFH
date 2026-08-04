@@ -1,6 +1,135 @@
 import { PLAYERS, TEAMS, getPlayerRatings, getPlayerEfficiency } from '../data.js';
 import { getFormationConstraints } from './formation.js';
 
+const SET_PIECE_DUTIES = {
+    // Manchester City
+    "Erling Haaland": { pk: true, fk: false, ck: false },
+    "Kevin De Bruyne": { pk: true, fk: true, ck: true },
+    "Phil Foden": { pk: false, fk: true, ck: true },
+    "Ilkay Gündogan": { pk: false, fk: true, ck: false },
+
+    // Arsenal
+    "Bukayo Saka": { pk: true, fk: true, ck: true },
+    "Declan Rice": { pk: false, fk: true, ck: true },
+    "Martin Ødegaard": { pk: false, fk: true, ck: true },
+    "Kai Havertz": { pk: false, fk: false, ck: false },
+
+    // Chelsea
+    "Cole Palmer": { pk: true, fk: true, ck: true },
+    "Enzo Fernández": { pk: false, fk: true, ck: true },
+    "Christopher Nkunku": { pk: true, fk: false, ck: false },
+    "Pedro Neto": { pk: false, fk: true, ck: true },
+
+    // Liverpool
+    "Mohamed Salah": { pk: true, fk: false, ck: false },
+    "Trent Alexander-Arnold": { pk: false, fk: true, ck: true },
+    "Dominik Szoboszlai": { pk: false, fk: true, ck: true },
+    "Alexis Mac Allister": { pk: true, fk: true, ck: true },
+    "Andrew Robertson": { pk: false, fk: false, ck: true },
+
+    // Manchester United
+    "Bruno Fernandes": { pk: true, fk: true, ck: true },
+    "Marcus Rashford": { pk: true, fk: true, ck: false },
+
+    // Tottenham Hotspur
+    "Son Heung-min": { pk: true, fk: true, ck: true },
+    "James Maddison": { pk: false, fk: true, ck: true },
+    "Dominic Solanke": { pk: true, fk: false, ck: false },
+    "Pedro Porro": { pk: false, fk: true, ck: true },
+
+    // Newcastle United
+    "Alexander Isak": { pk: true, fk: false, ck: false },
+    "Kieran Trippier": { pk: false, fk: true, ck: true },
+    "Anthony Gordon": { pk: true, fk: true, ck: true },
+    "Bruno Guimarães": { pk: false, fk: true, ck: true },
+
+    // Aston Villa
+    "Ollie Watkins": { pk: true, fk: false, ck: false },
+    "Youri Tielemans": { pk: true, fk: true, ck: true },
+    "Lucas Digne": { pk: false, fk: true, ck: true },
+
+    // Crystal Palace
+    "Eberechi Eze": { pk: true, fk: true, ck: true },
+    "Jean-Philippe Mateta": { pk: true, fk: false, ck: false },
+
+    // West Ham United
+    "James Ward-Prowse": { pk: true, fk: true, ck: true },
+    "Jarrod Bowen": { pk: true, fk: true, ck: true },
+
+    // Brighton & Hove Albion
+    "João Pedro": { pk: true, fk: false, ck: false },
+    "Danny Welbeck": { pk: true, fk: false, ck: false },
+
+    // Brentford
+    "Bryan Mbeumo": { pk: true, fk: true, ck: true },
+    "Yoane Wissa": { pk: true, fk: false, ck: false },
+
+    // Nottingham Forest
+    "Chris Wood": { pk: true, fk: false, ck: false },
+    "Morgan Gibbs-White": { pk: true, fk: true, ck: true },
+
+    // Everton
+    "Dominic Calvert-Lewin": { pk: true, fk: false, ck: false },
+    "Dwight McNeil": { pk: false, fk: true, ck: true },
+
+    // Fulham
+    "Andreas Pereira": { pk: true, fk: true, ck: true },
+    "Raúl Jiménez": { pk: true, fk: false, ck: false },
+
+    // Bournemouth
+    "Evanilson": { pk: true, fk: false, ck: false },
+    "Justin Kluivert": { pk: true, fk: true, ck: true },
+
+    // Wolves
+    "Matheus Cunha": { pk: true, fk: true, ck: true }
+};
+
+function getPlayerSetPieceDuty(player) {
+    if (!player || !player.name) return { pk: false, fk: false, ck: false, duties: [], label: '', hasDuty: false };
+    let info = SET_PIECE_DUTIES[player.name];
+    if (!info) {
+        const parts = player.name.split(' ');
+        const surname = parts[parts.length - 1].toLowerCase();
+        for (const [name, d] of Object.entries(SET_PIECE_DUTIES)) {
+            if (name.toLowerCase().includes(surname)) {
+                info = d;
+                break;
+            }
+        }
+    }
+    if (!info) return { pk: false, fk: false, ck: false, duties: [], label: '', hasDuty: false };
+
+    const duties = [];
+    if (info.pk) duties.push('Penalties (PK)');
+    if (info.fk) duties.push('Free Kicks (FK)');
+    if (info.ck) duties.push('Corners (CK)');
+
+    let label = '';
+    if (info.pk && info.fk && info.ck) label = 'All Set Pieces (PK, FK, CK)';
+    else if (duties.length > 0) label = duties.join(', ');
+
+    return {
+        pk: !!info.pk,
+        fk: !!info.fk,
+        ck: !!info.ck,
+        duties,
+        label,
+        hasDuty: duties.length > 0
+    };
+}
+
+function renderSetPieceBadges(player) {
+    const duty = getPlayerSetPieceDuty(player);
+    if (!duty.hasDuty) return '';
+    let html = '<div style="margin-top: 3px; display: flex; gap: 4px; align-items: center; flex-wrap: wrap;">';
+    if (duty.pk) html += `<span class="set-piece-badge pk" title="Primary Penalty Taker"><i data-lucide="crosshair" style="width:10px;height:10px;"></i> PK</span>`;
+    if (duty.fk) html += `<span class="set-piece-badge fk" title="Direct Free Kick Taker"><i data-lucide="zap" style="width:10px;height:10px;"></i> FK</span>`;
+    if (duty.ck) html += `<span class="set-piece-badge ck" title="Corner Taker"><i data-lucide="flag" style="width:10px;height:10px;"></i> CK</span>`;
+    html += '</div>';
+    return html;
+}
+
+
 function getFdrColor(diff) {
     switch (diff) {
         case 1:
@@ -935,12 +1064,20 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         if (player.status === 'i' || player.status === 's' || player.status === 'u') {
             return 0;
         }
+
+        const duty = getPlayerSetPieceDuty(player);
+        let setPieceBonus = 0;
+        if (duty.pk) setPieceBonus += 0.8;
+        if (duty.fk) setPieceBonus += 0.4;
+        if (duty.ck) setPieceBonus += 0.35;
+
         if (objective === 'efficiency') {
-            return getPlayerEfficiency(player, state.currentGw) * 10;
+            return (getPlayerEfficiency(player, state.currentGw) * 10) + setPieceBonus;
         } else {
-            return getExpectedPts(player);
+            return getExpectedPts(player) + (setPieceBonus * horizon);
         }
     };
+
 
     const getSquadPointsForHorizon = (slots, h) => {
         let total = 0;
@@ -1128,6 +1265,10 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
 
         // 2. INCOMING PLAYER SCOUTING & TACTICAL FIT
         let entryReasons = [];
+        const inDuty = getPlayerSetPieceDuty(inPlayer);
+        if (inDuty.hasDuty) {
+            entryReasons.push(`🎯 <strong>Set-Piece Specialist:</strong> Designated taker for ${inDuty.label}, providing high-floor expected points from penalty goals and set-piece assists.`);
+        }
         if (inFdr < outFdr) {
             entryReasons.push(`Favorable fixture swing (Avg FDR ${inFdr} vs FDR ${outFdr}).`);
         } else if (inFdr <= 2.8) {
@@ -1152,6 +1293,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         if (entryReasons.length === 0) {
             entryReasons.push(`Higher predicted points output (${inPts.toFixed(1)} XP over ${horizon} GWs).`);
         }
+
 
         // 3. WARNINGS & COACH TACTICS
         let warnings = [];
@@ -2120,6 +2262,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                                                 <div class="transfer-player-card player-card-out" style="flex:1;">
                                                     <span class="player-name-main">${up.out ? up.out.name : 'Empty Slot'}</span>
                                                     <span class="player-team-sub">${up.out ? `${up.out.team} • £${up.out.price.toFixed(1)}m` : 'N/A'}</span>
+                                                    ${up.out ? renderSetPieceBadges(up.out) : ''}
                                                     ${up.out ? renderPlayerStatsBreakdown(up.out) : ''}
                                                     ${up.out ? renderFdrFixtures(up.out, state.currentGw) : ''}
                                                 </div>
@@ -2139,6 +2282,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                                                 <div class="transfer-player-card player-card-in" style="flex:1;">
                                                     <span class="player-name-main">${up.in.name}</span>
                                                     <span class="player-team-sub">${up.in.team} • £${up.in.price.toFixed(1)}m</span>
+                                                    ${renderSetPieceBadges(up.in)}
                                                     ${renderPlayerStatsBreakdown(up.in)}
                                                     ${renderFdrFixtures(up.in, state.currentGw)}
                                                 </div>
@@ -2776,6 +2920,7 @@ Here is why each of your squad players is recommended by our optimization model:
 `;
 
     squadPlayers.forEach(p => {
+        const duty = getPlayerSetPieceDuty(p);
         let blurb = '';
         if (p.price >= 11.0) {
             blurb = `Elite premium asset and reliable captaincy choice. Has projected stats of ${p.predictions.find(pr=>pr.gw===state.currentGw)?.pts.toFixed(1)} expected points for the opening match.`;
@@ -2786,14 +2931,23 @@ Here is why each of your squad players is recommended by our optimization model:
         } else {
             blurb = `Core mid-priced selection with strong fixtures and high xGI numbers.`;
         }
+        if (duty.hasDuty) {
+            blurb += ` 🎯 Designated set-piece taker (${duty.label}).`;
+        }
         markdown += `- **${p.name}** (${p.position}, £${p.price.toFixed(1)}m): ${blurb}\n`;
     });
 
+    const setPieceTakersInSquad = squadPlayers.map(p => ({ player: p, duty: getPlayerSetPieceDuty(p) })).filter(item => item.duty.hasDuty);
+
     markdown += `
-#### 2. Remaining Budget in Bank
+#### 2. Set-Piece Specialists & Penalty Takers
+Set-piece takers carry an immense point floor and ceiling due to penalties, direct free-kick threat, and corner assist returns. The optimization algorithm prioritized the following designated set-piece specialists for your team:
+${setPieceTakersInSquad.length > 0 ? setPieceTakersInSquad.map(item => `- 🎯 **${item.player.name}** (${item.player.team}, £${item.player.price.toFixed(1)}m): Primary taker for **${item.duty.label}**.`).join('\n') : '- No primary set-piece takers designated.'}
+
+#### 3. Remaining Budget in Bank
 - **Bank Balance:** **£${bank.toFixed(1)}m** remains in the bank. This capital is reserved to facilitate quick transfers or capture future price rises.
 
-#### 3. Recommended Starting XI
+#### 4. Recommended Starting XI
 Your strongest starting 11 based on mathematically projected points for Gameweek ${state.currentGw}:
 - **Goalkeeper:** ${starters.filter(p=>p.position==='GKP').map(p=>p.name).join(', ')}
 - **Defenders:** ${starters.filter(p=>p.position==='DEF').map(p=>p.name).join(', ')}

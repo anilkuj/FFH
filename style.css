@@ -2977,6 +2977,35 @@ html.light-theme .stats-table td:first-child {
         text-shadow: none !important;
     }
 
+.set-piece-badge {
+    font-size: 9px;
+    font-weight: 800;
+    padding: 2px 5px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-right: 3px;
+}
+.set-piece-badge.pk {
+    background: rgba(239, 68, 68, 0.12);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+.set-piece-badge.fk {
+    background: rgba(245, 158, 11, 0.12);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+.set-piece-badge.ck {
+    background: rgba(0, 242, 254, 0.12);
+    color: var(--secondary);
+    border: 1px solid rgba(0, 242, 254, 0.3);
+}
+
+
 
     /* Show prefix on mobile since price and XP are stacked vertically */
     .player-xp-prefix {
