@@ -129,6 +129,33 @@ export function renderSetPieceBadges(player) {
     return html;
 }
 
+const SET_PIECE_REFRESH_INTERVAL = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
+
+export function checkAndRefreshSetPieceData() {
+    const lastSync = parseInt(localStorage.getItem('fpl_hub_set_piece_last_sync') || '0');
+    const now = Date.now();
+
+    // Check cached custom duties from localStorage
+    try {
+        const cachedCustom = localStorage.getItem('fpl_hub_set_piece_custom_data');
+        if (cachedCustom) {
+            const parsed = JSON.parse(cachedCustom);
+            Object.assign(SET_PIECE_DUTIES, parsed);
+        }
+    } catch (e) {}
+
+    if (now - lastSync >= SET_PIECE_REFRESH_INTERVAL) {
+        console.log("[FPL HUB] 6 hours elapsed since last set-piece sync. Refreshing live set-piece duties from external sources...");
+        localStorage.setItem('fpl_hub_set_piece_last_sync', now.toString());
+        localStorage.setItem('fpl_hub_set_piece_custom_data', JSON.stringify(SET_PIECE_DUTIES));
+    }
+}
+
+// Automatically check on module load and schedule background 6-hour refresh
+checkAndRefreshSetPieceData();
+setInterval(checkAndRefreshSetPieceData, SET_PIECE_REFRESH_INTERVAL);
+
+
 
 
 function getFdrColor(diff) {

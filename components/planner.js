@@ -1719,8 +1719,10 @@ function renderModalPlayerRows(players, bank, state) {
                 <div class="player-info-left" style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0;">
                     <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 6px;">
                         <span class="player-name-main" style="font-weight: 600; color: var(--text-main); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;">${player.name}</span>
+                        ${renderSetPieceBadges(player)}
                         ${badgesHtml}
                     </div>
+
                     ${renderFdrFixtures(player, state.currentGw)}
                     <span class="player-team-sub" style="font-size: 11px; color: var(--text-muted);">${player.team} • £${player.price.toFixed(1)}m • Owned: ${player.ownership.toFixed(1)}%</span>
                     <span class="player-team-sub" style="font-size: 10px; color: var(--text-muted); opacity: 0.85;">Matches last year: ${player.GS} • Avg Min: ${player.MPPG.toFixed(0)}m</span>
