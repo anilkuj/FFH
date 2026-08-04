@@ -1346,14 +1346,16 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             return sum + (p ? p.price : 0);
         }, 0);
         const reservedBenchBudget = Math.max(minBenchBudget, initialBenchCost);
-        const maxStartingBudget = Math.max(0, totalValue - reservedBenchBudget);
         const minFwd = state.minFwdPrice ?? 6.0;
+        const passesMinFwd = (p) => p.position !== 'FWD' || p.price >= minFwd || (state.mustInclude && state.mustInclude.includes(p.id));
+
         // Cheapest players for fallback and initialization
         const cheapestGKPs = PLAYERS.filter(p => p.position === 'GKP' && !state.mustExclude.includes(p.id)).sort((a, b) => a.price - b.price);
         const cheapestDEFs = PLAYERS.filter(p => p.position === 'DEF' && !state.mustExclude.includes(p.id)).sort((a, b) => a.price - b.price);
         const cheapestMIDs = PLAYERS.filter(p => p.position === 'MID' && !state.mustExclude.includes(p.id)).sort((a, b) => a.price - b.price);
         const cheapestFWDsFiltered = PLAYERS.filter(p => p.position === 'FWD' && !state.mustExclude.includes(p.id) && passesMinFwd(p)).sort((a, b) => a.price - b.price);
         const cheapestFWDs = cheapestFWDsFiltered.length > 0 ? cheapestFWDsFiltered : PLAYERS.filter(p => p.position === 'FWD' && !state.mustExclude.includes(p.id)).sort((a, b) => a.price - b.price);
+
 
 
         const getCheapestPlayersList = (pos, count, usedIds, forceGuaranteed = false) => {
