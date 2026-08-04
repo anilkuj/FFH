@@ -334,7 +334,17 @@ class AppState {
         const draftsKey = this.getDraftsStorageKey();
         const activeIdxKey = this.getActiveDraftIdxStorageKey();
 
-        const savedDrafts = localStorage.getItem(draftsKey);
+        let savedDrafts = localStorage.getItem(draftsKey);
+
+        // Auto-migrate Guest drafts to Google Account if Google Account drafts key is empty
+        if (!savedDrafts && this.userProfile && this.userProfile.sub) {
+            const guestDrafts = localStorage.getItem('fpl_hub_drafts');
+            if (guestDrafts) {
+                savedDrafts = guestDrafts;
+                localStorage.setItem(draftsKey, guestDrafts);
+            }
+        }
+
         this.drafts = savedDrafts ? JSON.parse(savedDrafts) : Array.from({ length: 10 }, (_, i) => ({
             name: `Draft ${i + 1}`,
             squadSlots: null,
@@ -353,8 +363,16 @@ class AppState {
             this.captain = activeDraft.captain;
             this.vice = activeDraft.vice;
             this.formation = activeDraft.formation;
+        } else if (this.squadSlots) {
+            // Auto-preserve in-memory squad into active draft
+            this.drafts[this.activeDraftIndex].squadSlots = JSON.parse(JSON.stringify(this.squadSlots));
+            this.drafts[this.activeDraftIndex].captain = this.captain;
+            this.drafts[this.activeDraftIndex].vice = this.vice;
+            this.drafts[this.activeDraftIndex].formation = this.formation;
+            this.saveState();
         }
     }
+
 
     createDefaultSquadSlots() {
         const gkps = DEFAULT_SQUAD.filter(id => PLAYERS.find(p => p.id === id)?.position === 'GKP');
