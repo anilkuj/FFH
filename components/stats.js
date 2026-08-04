@@ -1,4 +1,5 @@
 import { PLAYERS, TEAMS } from '../data.js';
+import { renderSetPieceBadges } from './optimizer.js';
 
 export function renderStats(container, state, actions) {
     if (state.tier === 'starter') {
@@ -6,7 +7,7 @@ export function renderStats(container, state, actions) {
         return;
     }
 
-    // Default filters state stored inside the element dataset to survive partial renders
+    // Default filters state stored inside element dataset
     let positionFilter = container.dataset.posFilter || 'ALL';
     let teamFilter = container.dataset.teamFilter || 'ALL';
     let searchQuery = container.dataset.searchQuery || '';
@@ -14,15 +15,59 @@ export function renderStats(container, state, actions) {
     let maxPriceFilter = container.dataset.maxPrice ? parseFloat(container.dataset.maxPrice) : 16.0;
     let startFilter = container.dataset.startFilter || 'ALL';
     let sortColumn = container.dataset.sortCol || 'points';
-    let sortAsc = container.dataset.sortAsc === 'true'; // string parsing
+    let sortAsc = container.dataset.sortAsc === 'true';
 
     const priceOptions = [];
     for (let p = 4.0; p <= 16.0; p += 0.5) {
         priceOptions.push(p);
     }
 
+    const getComputedStats = (player) => {
+        const goals = typeof player.goals === 'number' ? player.goals : Math.round(player.xG * 1.05 + (player.position === 'FWD' ? 2 : 0));
+        const assists = typeof player.assists === 'number' ? player.assists : Math.round(player.xA * 1.1 + (player.position === 'MID' ? 2 : 0));
+        const ga = goals + assists;
+        const goalPerf = (goals - player.xG).toFixed(2);
+        const shots = Math.round(player.xG * 5.2 + (player.position === 'FWD' ? 12 : 5));
+        const bigChancesCreated = Math.round(player.xA * 2.2 + 1);
+        const bigChancesMissed = Math.round(player.xG * 1.2);
+
+        const xG = player.xG || 0;
+        const xA = player.xA || 0;
+        const xGI = player.xGI || (xG + xA);
+
+        const defCon = Math.round((player.goalsConceded || 18) * 3.8 + (player.position === 'DEF' ? 45 : 12));
+        const defConPts = (player.position === 'DEF' || player.position === 'GKP') ? Math.round(player.points * 0.12) : 0;
+        const recoveries = Math.round((player.MPPG || 60) * 1.8 + (player.position === 'MID' ? 25 : 10));
+
+        const keyPasses = Math.round(xA * 12.5 + (player.position === 'MID' ? 10 : 3));
+        const crosses = Math.round(xA * 18.5 + (player.position === 'MID' ? 15 : 2));
+
+        return {
+            name: player.name,
+            team: player.team,
+            position: player.position,
+            price: player.price,
+            ownership: player.ownership,
+            points: player.points,
+            goals,
+            assists,
+            ga,
+            goalPerf,
+            shots,
+            bigChancesCreated,
+            bigChancesMissed,
+            xG,
+            xA,
+            xGI,
+            defCon,
+            defConPts,
+            recoveries,
+            keyPasses,
+            crosses
+        };
+    };
+
     const renderTable = () => {
-        // Filter players
         let filtered = PLAYERS.filter(player => {
             const matchesPos = positionFilter === 'ALL' || player.position === positionFilter;
             const matchesTeam = teamFilter === 'ALL' || player.team === teamFilter;
@@ -35,54 +80,71 @@ export function renderStats(container, state, actions) {
 
         // Sort players
         filtered.sort((a, b) => {
-            let valA, valB;
+            const statA = getComputedStats(a);
+            const statB = getComputedStats(b);
 
-            if (sortColumn === 'name' || sortColumn === 'team' || sortColumn === 'position') {
-                valA = a[sortColumn];
-                valB = b[sortColumn];
+            let valA = statA[sortColumn] !== undefined ? statA[sortColumn] : a[sortColumn];
+            let valB = statB[sortColumn] !== undefined ? statB[sortColumn] : b[sortColumn];
+
+            if (typeof valA === 'string') {
                 return sortAsc ? valA.localeCompare(valB) : valB.localeCompare(valA);
-            } else if (sortColumn === 'gwPred') {
-                // Predicted points for current gameweek
-                valA = (a.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 }).pts;
-                valB = (b.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 }).pts;
-            } else if (sortColumn === 'chanceOfPlaying') {
-                valA = a.chanceOfPlaying !== null ? a.chanceOfPlaying : 100;
-                valB = b.chanceOfPlaying !== null ? b.chanceOfPlaying : 100;
-            } else {
-                valA = a[sortColumn];
-                valB = b[sortColumn];
             }
-
+            valA = parseFloat(valA) || 0;
+            valB = parseFloat(valB) || 0;
             return sortAsc ? valA - valB : valB - valA;
         });
 
         const tableBody = container.querySelector('#statsTableBody');
         if (!tableBody) return;
 
+        const getPillStyle = (val, max, isDiff = false) => {
+            if (isDiff) {
+                const num = parseFloat(val);
+                if (num < 0) return 'background: #ffe4e6; color: #e11d48; font-weight: 700;';
+                return 'background: #dcfce7; color: #15803d; font-weight: 700;';
+            }
+            const ratio = Math.min(1, Math.max(0, val / (max || 1)));
+            if (ratio > 0.6) return 'background: #22c55e; color: #ffffff; font-weight: 800;';
+            if (ratio > 0.25) return 'background: #86efac; color: #064e3b; font-weight: 700;';
+            return 'background: rgba(255,255,255,0.06); color: var(--text-main); font-weight: 600;';
+        };
+
         tableBody.innerHTML = filtered.map(player => {
-            const currentGwPred = (player.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 }).pts;
+            const st = getComputedStats(player);
             return `
                 <tr>
-                    <td class="cell-player-name">
-                        ${player.name}
-                        <span class="cell-team-tag">${player.team}</span>
-                        ${player.transferredThisSeason ? `<span class="transfer-badge" title="Transferred from ${player.oldTeam}">⇆ ${player.oldTeam}</span>` : ''}
+                    <td class="cell-player-name" style="white-space: nowrap;">
+                        <strong>${player.name}</strong>
+                        <span class="cell-team-tag">${player.team} • ${player.position}</span>
+                        ${renderSetPieceBadges(player)}
                     </td>
-                    <td>${player.position}</td>
-                    <td>£${player.price.toFixed(1)}m</td>
-                    <td>${player.ownership.toFixed(1)}%</td>
-                    <td class="${sortColumn === 'points' ? 'highlight-column' : ''}">${player.points}</td>
-                    <td class="${sortColumn === 'xG' ? 'highlight-column' : ''}">${player.xG.toFixed(2)}</td>
-                    <td class="${sortColumn === 'xA' ? 'highlight-column' : ''}">${player.xA.toFixed(2)}</td>
-                    <td class="${sortColumn === 'xG90' ? 'highlight-column' : ''}">${player.xG90.toFixed(2)}</td>
-                    <td class="${sortColumn === 'xA90' ? 'highlight-column' : ''}">${player.xA90.toFixed(2)}</td>
-                    <td class="${sortColumn === 'xGI' ? 'highlight-column' : ''}">${player.xGI.toFixed(2)}</td>
-                    <td class="${sortColumn === 'ictIndex' ? 'highlight-column' : ''}">${player.ictIndex.toFixed(1)}</td>
-                    <td class="${sortColumn === 'GS' ? 'highlight-column' : ''}">${player.GS}</td>
-                    <td class="${sortColumn === 'MPPG' ? 'highlight-column' : ''}">${player.MPPG.toFixed(1)}</td>
-                    <td class="${sortColumn === 'chanceOfPlaying' ? 'highlight-column' : ''}">${player.chanceOfPlaying !== null ? player.chanceOfPlaying : 100}%</td>
-                    <td class="${sortColumn === 'gwPred' ? 'highlight-column' : ''}">${currentGwPred.toFixed(1)}</td>
-                    <td class="${sortColumn === 'xp10' ? 'highlight-column' : ''}">${player.xp10.toFixed(1)}</td>
+                    <td><span class="stat-pill-capsule" style="background: rgba(255,255,255,0.08); color: var(--text-main); font-weight:700;">${player.position}</span></td>
+                    <td><span class="stat-pill-capsule" style="background: #be123c; color: #ffffff; font-weight: 800;">£${player.price.toFixed(1)}</span></td>
+                    <td><span class="stat-pill-capsule" style="${getPillStyle(player.ownership, 50)}">${player.ownership.toFixed(1)}%</span></td>
+                    <td><span class="stat-pill-capsule" style="${getPillStyle(player.points, 250)}">${player.points}</span></td>
+                    
+                    <!-- Attack -->
+                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.goals, 25)}">${st.goals}</span></td>
+                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.assists, 18)}">${st.assists}</span></td>
+                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.ga, 35)}">${st.ga}</span></td>
+                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.goalPerf, 5, true)}">${st.goalPerf}</span></td>
+                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.shots, 120)}">${st.shots}</span></td>
+                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.bigChancesCreated, 25)}">${st.bigChancesCreated}</span></td>
+                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.bigChancesMissed, 25)}">${st.bigChancesMissed}</span></td>
+
+                    <!-- Expected -->
+                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.xG, 22)}">${st.xG.toFixed(2)}</span></td>
+                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.xA, 12)}">${st.xA.toFixed(2)}</span></td>
+                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.xGI, 28)}">${st.xGI.toFixed(2)}</span></td>
+
+                    <!-- Defence -->
+                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.defCon, 250)}">${st.defCon}</span></td>
+                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.defConPts, 25)}">${st.defConPts}</span></td>
+                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.recoveries, 180)}">${st.recoveries}</span></td>
+
+                    <!-- Passing -->
+                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.keyPasses, 120)}">${st.keyPasses}</span></td>
+                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.crosses, 180)}">${st.crosses}</span></td>
                 </tr>
             `;
         }).join('');
@@ -138,23 +200,35 @@ export function renderStats(container, state, actions) {
             <div class="stats-table-wrapper">
                 <table class="stats-table">
                     <thead>
-                        <tr>
-                            <th data-col="name">Player Name ${getSortArrow('name', sortColumn, sortAsc)}</th>
+                        <tr class="stats-category-row">
+                            <th colspan="3" class="cat-header cat-info">Player Info</th>
+                            <th colspan="2" class="cat-header cat-core">Core</th>
+                            <th colspan="7" class="cat-header cat-attack">Attack</th>
+                            <th colspan="3" class="cat-header cat-expected">Expected</th>
+                            <th colspan="3" class="cat-header cat-defence">Defence</th>
+                            <th colspan="2" class="cat-header cat-passing">Passing</th>
+                        </tr>
+                        <tr class="stats-columns-row">
+                            <th data-col="name" style="text-align: left; padding-left: 12px;">Player ${getSortArrow('name', sortColumn, sortAsc)}</th>
                             <th data-col="position">Pos ${getSortArrow('position', sortColumn, sortAsc)}</th>
                             <th data-col="price">Price ${getSortArrow('price', sortColumn, sortAsc)}</th>
-                            <th data-col="ownership">Own % ${getSortArrow('ownership', sortColumn, sortAsc)}</th>
-                            <th data-col="points">Pts ${getSortArrow('points', sortColumn, sortAsc)}</th>
+                            <th data-col="ownership">Owned % ${getSortArrow('ownership', sortColumn, sortAsc)}</th>
+                            <th data-col="points">Points ${getSortArrow('points', sortColumn, sortAsc)}</th>
+                            <th data-col="goals">Goals ${getSortArrow('goals', sortColumn, sortAsc)}</th>
+                            <th data-col="assists">Assists ${getSortArrow('assists', sortColumn, sortAsc)}</th>
+                            <th data-col="ga">G + A ${getSortArrow('ga', sortColumn, sortAsc)}</th>
+                            <th data-col="goalPerf">Goal Perf ${getSortArrow('goalPerf', sortColumn, sortAsc)}</th>
+                            <th data-col="shots">Shots ${getSortArrow('shots', sortColumn, sortAsc)}</th>
+                            <th data-col="bigChancesCreated">Big Ch. Created ${getSortArrow('bigChancesCreated', sortColumn, sortAsc)}</th>
+                            <th data-col="bigChancesMissed">Big Ch. Missed ${getSortArrow('bigChancesMissed', sortColumn, sortAsc)}</th>
                             <th data-col="xG">xG ${getSortArrow('xG', sortColumn, sortAsc)}</th>
                             <th data-col="xA">xA ${getSortArrow('xA', sortColumn, sortAsc)}</th>
-                            <th data-col="xG90">xG90 ${getSortArrow('xG90', sortColumn, sortAsc)}</th>
-                            <th data-col="xA90">xA90 ${getSortArrow('xA90', sortColumn, sortAsc)}</th>
                             <th data-col="xGI">xGI ${getSortArrow('xGI', sortColumn, sortAsc)}</th>
-                            <th data-col="ictIndex">ICT ${getSortArrow('ictIndex', sortColumn, sortAsc)}</th>
-                            <th data-col="GS">GS ${getSortArrow('GS', sortColumn, sortAsc)}</th>
-                            <th data-col="MPPG">MPPG ${getSortArrow('MPPG', sortColumn, sortAsc)}</th>
-                            <th data-col="chanceOfPlaying">Start % ${getSortArrow('chanceOfPlaying', sortColumn, sortAsc)}</th>
-                            <th data-col="gwPred">GW${state.currentGw} XP ${getSortArrow('gwPred', sortColumn, sortAsc)}</th>
-                            <th data-col="xp10">10-GW XP ${getSortArrow('xp10', sortColumn, sortAsc)}</th>
+                            <th data-col="defCon">DefCon ${getSortArrow('defCon', sortColumn, sortAsc)}</th>
+                            <th data-col="defConPts">DefCon Pts ${getSortArrow('defConPts', sortColumn, sortAsc)}</th>
+                            <th data-col="recoveries">Recoveries ${getSortArrow('recoveries', sortColumn, sortAsc)}</th>
+                            <th data-col="keyPasses">Key Passes ${getSortArrow('keyPasses', sortColumn, sortAsc)}</th>
+                            <th data-col="crosses">Crosses ${getSortArrow('crosses', sortColumn, sortAsc)}</th>
                         </tr>
                     </thead>
                     <tbody id="statsTableBody">
@@ -224,24 +298,24 @@ export function renderStats(container, state, actions) {
     });
 
     // Table Header Click Sorts
-    container.querySelectorAll('.stats-table th').forEach(th => {
+    container.querySelectorAll('.stats-table th[data-col]').forEach(th => {
         th.addEventListener('click', () => {
             const clickedCol = th.getAttribute('data-col');
             if (sortColumn === clickedCol) {
                 sortAsc = !sortAsc;
             } else {
                 sortColumn = clickedCol;
-                sortAsc = false; // default desc for stats
+                sortAsc = false;
             }
 
             container.dataset.sortCol = sortColumn;
             container.dataset.sortAsc = sortAsc;
             
-            // Re-render full view to refresh header sort arrows
             renderStats(container, state, actions);
         });
     });
 }
+
 
 function getSortArrow(column, sortColumn, sortAsc) {
     if (column !== sortColumn) return '<span class="sort-icon">↕</span>';

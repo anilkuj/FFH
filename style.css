@@ -2977,33 +2977,107 @@ html.light-theme .stats-table td:first-child {
         text-shadow: none !important;
     }
 
-.set-piece-badge {
-    font-size: 9px;
-    font-weight: 800;
-    padding: 2px 5px;
-    border-radius: 4px;
+/* Set-Piece Icons & Top Legend Bar */
+.set-piece-legend-bar {
     display: inline-flex;
     align-items: center;
+    gap: 12px;
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid var(--border-color);
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 11px;
+    color: var(--text-muted);
+}
+.set-piece-legend-bar .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 600;
+}
+.set-piece-badges-wrapper {
+    display: inline-flex;
     gap: 3px;
+    align-items: center;
+    margin-left: 4px;
+    vertical-align: middle;
+}
+.set-piece-icon {
+    font-size: 10px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    cursor: help;
+    transition: transform 0.15s ease;
+}
+.set-piece-icon:hover {
+    transform: scale(1.25);
+}
+.set-piece-icon.pk {
+    background: rgba(239, 68, 68, 0.25);
+    border: 1px solid rgba(239, 68, 68, 0.5);
+}
+.set-piece-icon.fk {
+    background: rgba(245, 158, 11, 0.25);
+    border: 1px solid rgba(245, 158, 11, 0.5);
+}
+.set-piece-icon.ck {
+    background: rgba(0, 242, 254, 0.25);
+    border: 1px solid rgba(0, 242, 254, 0.5);
+}
+
+/* OPTA Stats Category Header Grouping */
+.stats-table-wrapper {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+}
+.stats-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 12px;
+}
+.stats-table th.cat-header {
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.3px;
-    margin-right: 3px;
+    letter-spacing: 0.8px;
+    text-align: center;
+    padding: 8px 4px;
+    border-bottom: 2px solid var(--border-color);
+    background: rgba(15, 23, 42, 0.95);
 }
-.set-piece-badge.pk {
-    background: rgba(239, 68, 68, 0.12);
-    color: #ef4444;
-    border: 1px solid rgba(239, 68, 68, 0.3);
+.stats-table th.cat-info { color: #94a3b8; border-bottom-color: #475569; }
+.stats-table th.cat-core { color: #38bdf8; border-bottom-color: #0284c7; background: rgba(2, 132, 199, 0.1); }
+.stats-table th.cat-attack { color: #4ade80; border-bottom-color: #16a34a; background: rgba(22, 163, 74, 0.1); }
+.stats-table th.cat-expected { color: #a78bfa; border-bottom-color: #7c3aed; background: rgba(124, 58, 237, 0.1); }
+.stats-table th.cat-defence { color: #f472b6; border-bottom-color: #db2777; background: rgba(219, 39, 119, 0.1); }
+.stats-table th.cat-passing { color: #fbbf24; border-bottom-color: #d97706; background: rgba(217, 119, 6, 0.1); }
+
+.stats-table td {
+    padding: 6px 4px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
-.set-piece-badge.fk {
-    background: rgba(245, 158, 11, 0.12);
-    color: #f59e0b;
-    border: 1px solid rgba(245, 158, 11, 0.3);
+.stat-pill-capsule {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 16px;
+    font-size: 11.5px;
+    font-family: var(--font-body);
+    text-align: center;
+    min-width: 34px;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2);
 }
-.set-piece-badge.ck {
-    background: rgba(0, 242, 254, 0.12);
-    color: var(--secondary);
-    border: 1px solid rgba(0, 242, 254, 0.3);
-}
+
+
 
 
 

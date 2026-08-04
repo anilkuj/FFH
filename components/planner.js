@@ -1,5 +1,6 @@
 import { PLAYERS, TEAMS, getPlayerRatings } from '../data.js';
-import { renderSetPieceBadges } from './optimizer.js';
+import { renderSetPieceBadges, renderSetPieceLegend } from './optimizer.js';
+
 
 
 export function renderPlanner(container, state, actions) {
@@ -180,7 +181,10 @@ export function renderPlanner(container, state, actions) {
                     <button class="pitch-btn" id="importDraftsBtn" title="Import Drafts from File" style="height: 32px; width: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); cursor: pointer;"><i data-lucide="upload" style="width: 14px; height: 14px;"></i></button>
                     <input type="file" id="importDraftsInput" accept=".json" style="display: none;" />
                     
+                    ${renderSetPieceLegend()}
+
                     <!-- Lock / Unlock Button -->
+
                     <button class="pitch-btn" id="toggleLockBtn" title="${state.isSquadUnlocked ? 'Lock Squad' : 'Unlock Squad to Remove Players'}" style="height: 32px; padding: 0 10px; display: flex; align-items: center; gap: 6px; border-radius: 6px; background: ${state.isSquadUnlocked ? 'rgba(239, 68, 68, 0.15)' : 'rgba(255, 255, 255, 0.02)'}; border: 1px solid ${state.isSquadUnlocked ? 'rgba(239, 68, 68, 0.4)' : 'var(--border-color)'}; color: ${state.isSquadUnlocked ? '#ef4444' : 'var(--text-main)'}; cursor: pointer; font-size: 12px; font-weight: 600; margin-left: auto; flex-shrink: 0;">
                         <i data-lucide="${state.isSquadUnlocked ? 'unlock' : 'lock'}" style="width: 14px; height: 14px;"></i>
                         <span>${state.isSquadUnlocked ? 'Unlocked' : 'Locked'}</span>

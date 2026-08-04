@@ -121,13 +121,24 @@ export function getPlayerSetPieceDuty(player) {
 export function renderSetPieceBadges(player) {
     const duty = getPlayerSetPieceDuty(player);
     if (!duty.hasDuty) return '';
-    let html = '<div class="set-piece-badges-wrapper" style="margin-top: 3px; display: flex; gap: 4px; align-items: center; flex-wrap: wrap;">';
-    if (duty.pk) html += `<span class="set-piece-badge pk" title="Primary Penalty Taker"><i data-lucide="crosshair" style="width:10px;height:10px;"></i> PK</span>`;
-    if (duty.fk) html += `<span class="set-piece-badge fk" title="Direct Free Kick Taker"><i data-lucide="zap" style="width:10px;height:10px;"></i> FK</span>`;
-    if (duty.ck) html += `<span class="set-piece-badge ck" title="Corner Taker"><i data-lucide="flag" style="width:10px;height:10px;"></i> CK</span>`;
-    html += '</div>';
+    let html = '<span class="set-piece-badges-wrapper" title="' + duty.label + '">';
+    if (duty.pk) html += `<span class="set-piece-icon pk" title="Primary Penalty Taker">🎯</span>`;
+    if (duty.fk) html += `<span class="set-piece-icon fk" title="Direct Free-Kick Taker">⚡</span>`;
+    if (duty.ck) html += `<span class="set-piece-icon ck" title="Corner Taker">🚩</span>`;
+    html += '</span>';
     return html;
 }
+
+export function renderSetPieceLegend() {
+    return `
+        <div class="set-piece-legend-bar" title="Set-Piece Duty Legend">
+            <span class="legend-item"><span class="set-piece-icon pk">🎯</span> Penalty Taker</span>
+            <span class="legend-item"><span class="set-piece-icon fk">⚡</span> Free Kick Taker</span>
+            <span class="legend-item"><span class="set-piece-icon ck">🚩</span> Corner Taker</span>
+        </div>
+    `;
+}
+
 
 const SET_PIECE_REFRESH_INTERVAL = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
 
