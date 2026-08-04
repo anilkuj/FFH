@@ -107,6 +107,8 @@ class AppState {
 
         this.loadUserDrafts();
         this.loadCloudDrafts();
+        this.checkUrlSync();
+
 
 
 
@@ -360,6 +362,48 @@ class AppState {
             console.warn("Cloud draft load warning:", e);
         }
     }
+
+    checkUrlSync() {
+
+        if (typeof window === 'undefined') return;
+        const urlParams = new URLSearchParams(window.location.search);
+        const syncDataStr = urlParams.get('sync');
+        if (syncDataStr) {
+            try {
+                const decodedJson = decodeURIComponent(atob(syncDataStr));
+                const syncData = JSON.parse(decodedJson);
+                if (syncData && Array.isArray(syncData.drafts)) {
+                    this.drafts = syncData.drafts;
+                    this.activeDraftIndex = typeof syncData.activeDraftIndex === 'number' ? syncData.activeDraftIndex : 0;
+                    
+                    const activeDraft = this.drafts[this.activeDraftIndex];
+                    if (activeDraft && activeDraft.squadSlots) {
+                        this.squadSlots = JSON.parse(JSON.stringify(activeDraft.squadSlots));
+                        this.captain = activeDraft.captain;
+                        this.vice = activeDraft.vice;
+                        this.formation = activeDraft.formation;
+                    }
+                    
+                    this.saveState();
+                    
+                    // Clean URL query string without page reload
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                    
+                    setTimeout(() => {
+                        if (typeof actions !== 'undefined' && actions.renderActiveView) {
+                            actions.renderActiveView();
+                        }
+                        if (typeof actions !== 'undefined' && actions.showToast) {
+                            actions.showToast("☁️ All 10 draft squads & custom names synced successfully!", "success");
+                        }
+                    }, 300);
+                }
+            } catch (e) {
+                console.error("URL sync error:", e);
+            }
+        }
+    }
+
 
 
 
@@ -820,9 +864,13 @@ const actions = {
             if (userAvatar) userAvatar.src = state.userProfile.picture;
             if (userNameDisplay) userNameDisplay.textContent = state.userProfile.name;
 
-            // Update Top Bar Auth (show user avatar icon)
+            // Update Top Bar Auth (show user avatar icon + Sync button)
             if (topBarContainer) {
                 topBarContainer.innerHTML = `
+                    <button class="pitch-btn" id="topBarSyncBtn" title="Sync Draft Squads Between Mobile & Laptop" style="height: 32px; padding: 0 10px; display: flex; align-items: center; gap: 6px; border-radius: 6px; background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; cursor: pointer; font-size: 11.5px; font-weight: 700;">
+                        <i data-lucide="cloud" style="width: 14px; height: 14px;"></i>
+                        <span>Sync ☁️</span>
+                    </button>
                     <img id="topBarAvatar" src="${state.userProfile.picture}" alt="Profile" style="width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 1px solid var(--primary-glow); object-fit: cover;" title="View Profile">
                 `;
                 
@@ -831,15 +879,23 @@ const actions = {
                 if (avatar) {
                     avatar.addEventListener('click', actions.showUserProfileModal);
                 }
+                const syncBtn = topBarContainer.querySelector('#topBarSyncBtn');
+                if (syncBtn) {
+                    syncBtn.addEventListener('click', actions.showSyncModal);
+                }
             }
         } else {
             // Update Sidebar Auth
             if (guestView) guestView.classList.remove('hidden');
             if (loggedInView) loggedInView.classList.add('hidden');
             
-            // Update Top Bar Auth (show Sign In button)
+            // Update Top Bar Auth (show Sign In button + Sync button)
             if (topBarContainer) {
                 topBarContainer.innerHTML = `
+                    <button class="pitch-btn" id="topBarSyncBtn" title="Sync Draft Squads Between Mobile & Laptop" style="height: 32px; padding: 0 10px; display: flex; align-items: center; gap: 6px; border-radius: 6px; background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; cursor: pointer; font-size: 11.5px; font-weight: 700;">
+                        <i data-lucide="cloud" style="width: 14px; height: 14px;"></i>
+                        <span>Sync ☁️</span>
+                    </button>
                     <button class="apply-rec-btn" id="topBarSignInBtn" style="margin: 0; padding: 6px 12px; font-size: 11px; font-weight: 700; width: auto; height: 32px; border-radius: 6px; display: flex; align-items: center; gap: 6px;">
                         <i data-lucide="log-in" style="width: 12px; height: 12px;"></i> Sign In
                     </button>
@@ -850,6 +906,10 @@ const actions = {
                 if (signInBtn) {
                     signInBtn.addEventListener('click', actions.showLoginModal);
                 }
+                const syncBtn = topBarContainer.querySelector('#topBarSyncBtn');
+                if (syncBtn) {
+                    syncBtn.addEventListener('click', actions.showSyncModal);
+                }
             }
 
             // Re-render Google Sign-In Button if guest view is visible in sidebar
@@ -857,6 +917,7 @@ const actions = {
         }
         lucide.createIcons();
     },
+
 
     initGoogleSignInButton() {
         if (typeof google === 'undefined') {
@@ -932,12 +993,126 @@ const actions = {
             actions.syncUserProfile();
             actions.renderActiveView(); // Refresh the planner view immediately
             actions.showToast(`Welcome back, ${payload.name.split(' ')[0]}!`, 'success');
-
             actions.hideModal(); // Close modal if open
         }
     },
 
+    showSyncModal() {
+
+        state.saveState();
+
+        const syncPayload = {
+            drafts: state.drafts,
+            activeDraftIndex: state.activeDraftIndex,
+            user: state.userProfile ? state.userProfile.name : 'Guest'
+        };
+
+        const jsonStr = JSON.stringify(syncPayload);
+        const encodedData = btoa(encodeURIComponent(jsonStr));
+        const syncUrl = `${window.location.origin}${window.location.pathname}?sync=${encodedData}`;
+
+        const modalHtml = `
+            <div style="padding: 10px; max-width: 480px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+                    <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(56, 189, 248, 0.15); display: flex; align-items: center; justify-content: center; color: #38bdf8;">
+                        <i data-lucide="cloud" style="width: 22px; height: 22px;"></i>
+                    </div>
+                    <div style="text-align: left;">
+                        <h3 style="margin: 0; font-size: 17px; font-weight: 800;">Sync Drafts Across Devices</h3>
+                        <p style="margin: 2px 0 0; font-size: 12px; color: var(--text-muted);">Sync all 10 draft squads, captain picks, and draft names instantly!</p>
+                    </div>
+                </div>
+
+                <div style="background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px; margin-bottom: 16px; text-align: left;">
+                    <label style="display: block; font-size: 12.5px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">
+                        📲 1-Click Mobile Sync Link
+                    </label>
+                    <p style="font-size: 11.5px; color: var(--text-muted); margin-top: 0; margin-bottom: 10px; line-height: 1.4;">
+                        Tap <strong>Copy Link</strong> below and send it to your phone (via WhatsApp, iMessage, AirDrop, or Email). Opening the link on your phone instantly loads all 10 draft squads and custom names!
+                    </p>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="syncUrlInput" readonly value="${syncUrl}" style="flex: 1; font-size: 11px; padding: 8px 10px; border-radius: 6px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); text-overflow: ellipsis;" />
+                        <button id="copySyncUrlBtn" style="padding: 8px 14px; font-size: 12px; font-weight: 700; background: var(--primary); color: #000; border: none; border-radius: 6px; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 6px;">
+                            <i data-lucide="copy" style="width: 14px; height: 14px;"></i> Copy Link
+                        </button>
+                    </div>
+                </div>
+
+                <div style="background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px; text-align: left;">
+                    <label style="display: block; font-size: 12.5px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">
+                        📥 Import / Paste Sync Code
+                    </label>
+                    <p style="font-size: 11.5px; color: var(--text-muted); margin-top: 0; margin-bottom: 10px; line-height: 1.4;">
+                        Paste a sync link or code below to load all 10 draft squads on this device:
+                    </p>
+                    <textarea id="pasteSyncInput" placeholder="Paste sync link or code here..." style="width: 100%; height: 60px; font-size: 11px; padding: 8px; border-radius: 6px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); box-sizing: border-box; margin-bottom: 10px; resize: none;"></textarea>
+                    <button id="applyPasteSyncBtn" style="width: 100%; padding: 10px; font-size: 12px; font-weight: 800; background: linear-gradient(135deg, #0284c7, #16a34a); color: #fff; border: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                        <i data-lucide="download-cloud" style="width: 16px; height: 16px;"></i> Import & Sync Squads Now
+                    </button>
+                </div>
+            </div>
+        `;
+
+        actions.showCustomModal("Multi-Device Draft Sync", modalHtml);
+
+        setTimeout(() => {
+            const copyBtn = document.getElementById('copySyncUrlBtn');
+            const urlInput = document.getElementById('syncUrlInput');
+            if (copyBtn && urlInput) {
+                copyBtn.addEventListener('click', () => {
+                    urlInput.select();
+                    navigator.clipboard.writeText(urlInput.value).then(() => {
+                        actions.showToast("📲 Mobile Sync Link copied! Send it to your phone.", "success");
+                    }).catch(() => {
+                        actions.showToast("Link copied to clipboard!", "success");
+                    });
+                });
+            }
+
+            const applyBtn = document.getElementById('applyPasteSyncBtn');
+            const pasteInput = document.getElementById('pasteSyncInput');
+            if (applyBtn && pasteInput) {
+                applyBtn.addEventListener('click', () => {
+                    let val = pasteInput.value.trim();
+                    if (!val) {
+                        actions.showToast("Please paste a sync link or code first.", "error");
+                        return;
+                    }
+                    if (val.includes('sync=')) {
+                        val = val.split('sync=')[1].split('&')[0];
+                    }
+                    try {
+                        const decodedJson = decodeURIComponent(atob(val));
+                        const syncData = JSON.parse(decodedJson);
+                        if (syncData && Array.isArray(syncData.drafts)) {
+                            state.drafts = syncData.drafts;
+                            state.activeDraftIndex = typeof syncData.activeDraftIndex === 'number' ? syncData.activeDraftIndex : 0;
+                            
+                            const activeDraft = state.drafts[state.activeDraftIndex];
+                            if (activeDraft && activeDraft.squadSlots) {
+                                state.squadSlots = JSON.parse(JSON.stringify(activeDraft.squadSlots));
+                                state.captain = activeDraft.captain;
+                                state.vice = activeDraft.vice;
+                                state.formation = activeDraft.formation;
+                            }
+                            
+                            state.saveState();
+                            actions.hideModal();
+                            actions.renderActiveView();
+                            actions.showToast("☁️ All 10 draft squads & names synced successfully!", "success");
+                        } else {
+                            throw new Error("Invalid format");
+                        }
+                    } catch (e) {
+                        actions.showToast("Invalid sync code or link format.", "error");
+                    }
+                });
+            }
+        }, 100);
+    },
+
     decodeJwt(token) {
+
         try {
             const base64Url = token.split('.')[1];
             const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
