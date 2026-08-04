@@ -3045,37 +3045,48 @@ html.light-theme .stats-table td:first-child {
 }
 .stats-table th.cat-header {
     font-family: var(--font-heading);
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.8px;
     text-align: center;
-    padding: 8px 4px;
+    padding: 6px 4px;
     border-bottom: 2px solid var(--border-color);
-    background: rgba(15, 23, 42, 0.95);
 }
-.stats-table th.cat-info { color: #94a3b8; border-bottom-color: #475569; }
-.stats-table th.cat-core { color: #38bdf8; border-bottom-color: #0284c7; background: rgba(2, 132, 199, 0.1); }
-.stats-table th.cat-attack { color: #4ade80; border-bottom-color: #16a34a; background: rgba(22, 163, 74, 0.1); }
-.stats-table th.cat-expected { color: #a78bfa; border-bottom-color: #7c3aed; background: rgba(124, 58, 237, 0.1); }
-.stats-table th.cat-defence { color: #f472b6; border-bottom-color: #db2777; background: rgba(219, 39, 119, 0.1); }
-.stats-table th.cat-passing { color: #fbbf24; border-bottom-color: #d97706; background: rgba(217, 119, 6, 0.1); }
+.stats-table th.cat-info { color: #94a3b8; border-bottom-color: #475569; background: rgba(15, 23, 42, 0.95); }
+.stats-table th.cat-core { color: #38bdf8; border-bottom-color: #0284c7; background: rgba(14, 165, 233, 0.12); border-left: 1px solid rgba(14, 165, 233, 0.2); }
+.stats-table th.cat-attack { color: #4ade80; border-bottom-color: #16a34a; background: rgba(16, 185, 129, 0.12); border-left: 1px solid rgba(16, 185, 129, 0.2); }
+.stats-table th.cat-expected { color: #a78bfa; border-bottom-color: #7c3aed; background: rgba(139, 92, 246, 0.12); border-left: 1px solid rgba(139, 92, 246, 0.2); }
+.stats-table th.cat-defence { color: #f472b6; border-bottom-color: #db2777; background: rgba(244, 63, 94, 0.12); border-left: 1px solid rgba(244, 63, 94, 0.2); }
+.stats-table th.cat-passing { color: #fbbf24; border-bottom-color: #d97706; background: rgba(245, 158, 11, 0.12); border-left: 1px solid rgba(245, 158, 11, 0.2); }
 
 .stats-table td {
     padding: 6px 4px;
-    text-align: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-}
-.stat-pill-capsule {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 16px;
     font-size: 11.5px;
-    font-family: var(--font-body);
     text-align: center;
-    min-width: 34px;
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
 }
+
+/* Group Cell Backgrounds */
+.stats-table td.col-grp-info { background: rgba(15, 23, 42, 0.4); }
+.stats-table td.col-grp-core { background: rgba(14, 165, 233, 0.03); }
+.stats-table td.col-grp-attack { background: rgba(16, 185, 129, 0.03); }
+.stats-table td.col-grp-expected { background: rgba(139, 92, 246, 0.03); }
+.stats-table td.col-grp-defence { background: rgba(244, 63, 94, 0.03); }
+.stats-table td.col-grp-passing { background: rgba(245, 158, 11, 0.03); }
+
+/* Left Borders for Group Separation */
+.stats-table td.col-grp-core:first-of-type { border-left: 1px solid rgba(14, 165, 233, 0.15); }
+.stats-table td.col-grp-attack:first-of-type { border-left: 1px solid rgba(16, 185, 129, 0.15); }
+.stats-table td.col-grp-expected:first-of-type { border-left: 1px solid rgba(139, 92, 246, 0.15); }
+.stats-table td.col-grp-defence:first-of-type { border-left: 1px solid rgba(244, 63, 94, 0.15); }
+.stats-table td.col-grp-passing:first-of-type { border-left: 1px solid rgba(245, 158, 11, 0.15); }
+
+.stats-table .text-positive { color: #4ade80; font-weight: 700; }
+.stats-table .text-negative { color: #f43f5e; font-weight: 700; }
+.stats-table .font-weight-700 { font-weight: 700; }
+.stats-table .font-weight-800 { font-weight: 800; }
+
 
 
 

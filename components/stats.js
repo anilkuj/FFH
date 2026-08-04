@@ -97,58 +97,51 @@ export function renderStats(container, state, actions) {
         const tableBody = container.querySelector('#statsTableBody');
         if (!tableBody) return;
 
-        const getPillStyle = (val, max, isDiff = false) => {
-            if (isDiff) {
-                const num = parseFloat(val);
-                if (num < 0) return 'background: #ffe4e6; color: #e11d48; font-weight: 700;';
-                return 'background: #dcfce7; color: #15803d; font-weight: 700;';
-            }
-            const ratio = Math.min(1, Math.max(0, val / (max || 1)));
-            if (ratio > 0.6) return 'background: #22c55e; color: #ffffff; font-weight: 800;';
-            if (ratio > 0.25) return 'background: #86efac; color: #064e3b; font-weight: 700;';
-            return 'background: rgba(255,255,255,0.06); color: var(--text-main); font-weight: 600;';
-        };
-
         tableBody.innerHTML = filtered.map(player => {
             const st = getComputedStats(player);
             return `
                 <tr>
-                    <td class="cell-player-name" style="white-space: nowrap;">
-                        <strong>${player.name}</strong>
-                        <span class="cell-team-tag">${player.team} • ${player.position}</span>
-                        ${renderSetPieceBadges(player)}
+                    <td class="col-grp-info cell-player-name" style="text-align: left; padding-left: 10px; max-width: 130px; overflow: hidden; text-overflow: ellipsis;">
+                        <div style="display: flex; align-items: center; gap: 4px; overflow: hidden;">
+                            <strong style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 85px;" title="${player.name}">${player.name}</strong>
+                            <span class="cell-team-tag" style="font-size: 10px; color: var(--text-muted); flex-shrink: 0;">${player.team}</span>
+                            ${renderSetPieceBadges(player)}
+                        </div>
                     </td>
-                    <td><span class="stat-pill-capsule" style="background: rgba(255,255,255,0.08); color: var(--text-main); font-weight:700;">${player.position}</span></td>
-                    <td><span class="stat-pill-capsule" style="background: #be123c; color: #ffffff; font-weight: 800;">£${player.price.toFixed(1)}</span></td>
-                    <td><span class="stat-pill-capsule" style="${getPillStyle(player.ownership, 50)}">${player.ownership.toFixed(1)}%</span></td>
-                    <td><span class="stat-pill-capsule" style="${getPillStyle(player.points, 250)}">${player.points}</span></td>
+                    <td class="col-grp-info font-weight-700">${player.position}</td>
+                    <td class="col-grp-info font-weight-800" style="color: var(--primary);">£${player.price.toFixed(1)}</td>
+
+                    <!-- Core -->
+                    <td class="col-grp-core">${player.ownership.toFixed(1)}%</td>
+                    <td class="col-grp-core font-weight-800">${player.points}</td>
                     
                     <!-- Attack -->
-                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.goals, 25)}">${st.goals}</span></td>
-                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.assists, 18)}">${st.assists}</span></td>
-                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.ga, 35)}">${st.ga}</span></td>
-                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.goalPerf, 5, true)}">${st.goalPerf}</span></td>
-                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.shots, 120)}">${st.shots}</span></td>
-                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.bigChancesCreated, 25)}">${st.bigChancesCreated}</span></td>
-                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.bigChancesMissed, 25)}">${st.bigChancesMissed}</span></td>
+                    <td class="col-grp-attack">${st.goals}</td>
+                    <td class="col-grp-attack">${st.assists}</td>
+                    <td class="col-grp-attack font-weight-700">${st.ga}</td>
+                    <td class="col-grp-attack ${parseFloat(st.goalPerf) < 0 ? 'text-negative' : 'text-positive'}">${st.goalPerf}</td>
+                    <td class="col-grp-attack">${st.shots}</td>
+                    <td class="col-grp-attack">${st.bigChancesCreated}</td>
+                    <td class="col-grp-attack">${st.bigChancesMissed}</td>
 
                     <!-- Expected -->
-                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.xG, 22)}">${st.xG.toFixed(2)}</span></td>
-                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.xA, 12)}">${st.xA.toFixed(2)}</span></td>
-                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.xGI, 28)}">${st.xGI.toFixed(2)}</span></td>
+                    <td class="col-grp-expected">${st.xG.toFixed(2)}</td>
+                    <td class="col-grp-expected">${st.xA.toFixed(2)}</td>
+                    <td class="col-grp-expected font-weight-700">${st.xGI.toFixed(2)}</td>
 
                     <!-- Defence -->
-                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.defCon, 250)}">${st.defCon}</span></td>
-                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.defConPts, 25)}">${st.defConPts}</span></td>
-                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.recoveries, 180)}">${st.recoveries}</span></td>
+                    <td class="col-grp-defence">${st.defCon}</td>
+                    <td class="col-grp-defence">${st.defConPts}</td>
+                    <td class="col-grp-defence">${st.recoveries}</td>
 
                     <!-- Passing -->
-                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.keyPasses, 120)}">${st.keyPasses}</span></td>
-                    <td><span class="stat-pill-capsule" style="${getPillStyle(st.crosses, 180)}">${st.crosses}</span></td>
+                    <td class="col-grp-passing">${st.keyPasses}</td>
+                    <td class="col-grp-passing">${st.crosses}</td>
                 </tr>
             `;
         }).join('');
     };
+
 
     container.innerHTML = `
         <div class="stats-view-container">
