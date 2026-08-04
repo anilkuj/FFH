@@ -69,15 +69,15 @@ export function renderStats(container, state, actions) {
 
     function formatPlayerShortName(fullName) {
         if (!fullName) return '';
-        if (fullName.length <= 18) return fullName;
+        if (fullName.length <= 22) return fullName;
         const parts = fullName.trim().split(/\s+/);
         if (parts.length === 1) {
-            return fullName.substring(0, 16) + '…';
+            return fullName.substring(0, 18) + '…';
         }
         const firstInitial = parts[0].charAt(0) + '.';
         const lastName = parts.slice(-2).join(' ');
         const formatted = `${firstInitial} ${lastName}`;
-        if (formatted.length <= 20) return formatted;
+        if (formatted.length <= 22) return formatted;
         return `${firstInitial} ${parts[parts.length - 1]}`;
     }
 
@@ -116,13 +116,14 @@ export function renderStats(container, state, actions) {
             const displayName = formatPlayerShortName(player.name);
             return `
                 <tr>
-                    <td class="col-grp-info cell-player-name" style="text-align: left; padding-left: 10px; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${player.name}">
-                        <div style="display: flex; align-items: center; gap: 4px; overflow: hidden;">
-                            <strong style="font-weight: 700; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100px;">${displayName}</strong>
-                            <span class="cell-team-tag" style="font-size: 9.5px; font-weight: 700; color: var(--text-muted); flex-shrink: 0;">${player.team}</span>
+                    <td class="col-grp-info cell-player-name" style="text-align: left; padding-left: 8px; min-width: 175px; max-width: 220px; white-space: nowrap; cursor: pointer;" title="${player.name}">
+                        <div style="display: flex; align-items: center; gap: 5px; overflow: visible;">
+                            <strong style="font-weight: 700; font-size: 12.5px; white-space: nowrap;" title="${player.name}">${displayName}</strong>
+                            <span class="cell-team-tag" style="font-size: 10px; font-weight: 700; color: var(--text-muted); flex-shrink: 0; padding: 1px 4px; background: rgba(0,0,0,0.06); border-radius: 3px;">${player.team}</span>
                             ${renderSetPieceBadges(player)}
                         </div>
                     </td>
+
 
                     <td class="col-grp-info font-weight-700">${player.position}</td>
                     <td class="col-grp-info font-weight-800" style="color: var(--primary);">£${player.price.toFixed(1)}</td>
