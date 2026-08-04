@@ -34,6 +34,42 @@ export function renderPlanner(container, state, actions) {
         });
     }
 
+    // Calculate total squad predicted points over horizons
+    const getSquadXPForHorizon = (numGws) => {
+        let total = 0;
+        for (let gw = state.currentGw; gw < state.currentGw + numGws; gw++) {
+            if (gw > 10) break;
+            let gwTotal = 0;
+            starters.forEach(id => {
+                const player = PLAYERS.find(p => p.id === id);
+                if (player) {
+                    const pred = player.predictions.find(pr => pr.gw === gw) || { pts: 0 };
+                    let multiplier = 1;
+                    if (id === state.captain) {
+                        multiplier = (gw === state.currentGw && state.chips.tripleCaptain) ? 3 : 2;
+                    }
+                    gwTotal += pred.pts * multiplier;
+                }
+            });
+            if (gw === state.currentGw && state.chips.benchBoost) {
+                bench.forEach(id => {
+                    const player = PLAYERS.find(p => p.id === id);
+                    if (player) {
+                        const pred = player.predictions.find(pr => pr.gw === gw) || { pts: 0 };
+                        gwTotal += pred.pts;
+                    }
+                });
+            }
+            total += gwTotal;
+        }
+        return total;
+    };
+
+    const gw1XP = expectedPoints;
+    const gw3XP = getSquadXPForHorizon(3);
+    const gw5XP = getSquadXPForHorizon(5);
+    const gw10XP = getSquadXPForHorizon(10);
+
     // Deactivate Wildcard if we are in preseason (GW 1)
     if (state.currentGw === 1 && state.chips.wildcard) {
         state.chips.wildcard = false;
@@ -68,14 +104,42 @@ export function renderPlanner(container, state, actions) {
                 <div class="pitch-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
                     <div class="pitch-title-area" style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
                         <h2 style="margin: 0;">Squad Selection</h2>
-                        <div class="header-rating-badge" style="display: flex; align-items: center; gap: 12px; background: rgba(0, 255, 136, 0.05); border: 1px solid var(--primary-glow); padding: 4px 12px; border-radius: 20px; flex-wrap: nowrap;">
-                            <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Rating:</span>
-                            <strong class="highlight-transfers" style="font-size: 14px; font-weight: 800;">${ratingScore}/100</strong>
-                            <span style="height: 12px; width: 1px; background: rgba(255,255,255,0.1);"></span>
-                            <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">GW${state.currentGw} XP:</span>
-                            <strong class="highlight-bank" style="font-size: 14px; font-weight: 800;">${expectedPoints.toFixed(1)}</strong>
+                        <div class="header-rating-badge" style="display: flex; align-items: center; gap: 10px; background: rgba(0, 255, 136, 0.05); border: 1px solid var(--primary-glow); padding: 5px 14px; border-radius: 20px; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 4px;">
+                                <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">RATING:</span>
+                                <strong class="highlight-transfers" style="font-size: 13.5px; font-weight: 800; color: var(--secondary);">${ratingScore}/100</strong>
+                            </div>
+
+                            <span style="height: 12px; width: 1px; background: rgba(255,255,255,0.15);"></span>
+
+                            <div style="display: flex; align-items: center; gap: 4px;" title="GW${state.currentGw} Expected Points">
+                                <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">GW1 XP:</span>
+                                <strong class="highlight-bank" style="font-size: 13.5px; font-weight: 800; color: var(--primary);">${gw1XP.toFixed(1)}</strong>
+                            </div>
+
+                            <span style="height: 12px; width: 1px; background: rgba(255,255,255,0.15);"></span>
+
+                            <div style="display: flex; align-items: center; gap: 4px;" title="Cumulative XP over 3 Gameweeks">
+                                <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">GW3 XP:</span>
+                                <strong style="font-size: 13.5px; font-weight: 800; color: #00f2fe;">${gw3XP.toFixed(1)}</strong>
+                            </div>
+
+                            <span style="height: 12px; width: 1px; background: rgba(255,255,255,0.15);"></span>
+
+                            <div style="display: flex; align-items: center; gap: 4px;" title="Cumulative XP over 5 Gameweeks">
+                                <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">GW5 XP:</span>
+                                <strong style="font-size: 13.5px; font-weight: 800; color: #38bdf8;">${gw5XP.toFixed(1)}</strong>
+                            </div>
+
+                            <span style="height: 12px; width: 1px; background: rgba(255,255,255,0.15);"></span>
+
+                            <div style="display: flex; align-items: center; gap: 4px;" title="Cumulative XP over 10 Gameweeks">
+                                <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">GW10 XP:</span>
+                                <strong style="font-size: 13.5px; font-weight: 800; color: #a78bfa;">${gw10XP.toFixed(1)}</strong>
+                            </div>
                         </div>
                     </div>
+
                     <div class="pitch-actions" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end;">
                         <button class="pitch-btn" id="captainAnalyzerBtn" title="Captaincy Analyzer" style="flex: 0 0 auto; padding: 6px; border-radius: 6px; background: rgba(255, 255, 255, 0.02); display: flex; align-items: center; justify-content: center; height: 32px; width: 32px; margin-right: 4px;">
                             <i data-lucide="award" style="width: 14px; height: 14px; color: #fbbf24;"></i>
