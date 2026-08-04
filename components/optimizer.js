@@ -26,9 +26,11 @@ function formatFdrOpponentText(pr) {
 }
 
 function renderFdrFixtures(player, currentGw) {
+    if (!player || !player.predictions) return '';
     let html = '<div class="fdr-fixtures-container" style="display: flex; gap: 4px; align-items: center; flex-wrap: wrap; margin: 6px 0 2px 0;">';
     for (let gw = currentGw; gw < currentGw + 5; gw++) {
         const pr = player.predictions.find(p => p.gw === gw);
+
         if (pr) {
             const oppText = formatFdrOpponentText(pr);
             html += `
@@ -710,17 +712,22 @@ export function renderOptimizer(container, state, actions) {
 
 
         setTimeout(() => {
-            resultsGrid.classList.remove('hidden');
-            performOptimization(resultsGrid, state, actions, horizon, mode);
-            runBtn.innerHTML = `<i data-lucide="play-circle"></i> Re-run Analysis`;
-            if (reRunInBodyBtn) reRunInBodyBtn.innerHTML = `<i data-lucide="play-circle"></i> Re-run Analysis`;
-            lucide.createIcons();
-
-            updateActivePills(horizon, mode);
-            toggleSettingsBody(true); // Gently collapse form so results are focal, while preserving form DOM
-
-            setTimeout(() => resultsGrid.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+            try {
+                resultsGrid.classList.remove('hidden');
+                performOptimization(resultsGrid, state, actions, horizon, mode);
+                updateActivePills(horizon, mode);
+                toggleSettingsBody(true); // Gently collapse form so results are focal, while preserving form DOM
+                setTimeout(() => resultsGrid.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+            } catch (err) {
+                console.error("AI Optimizer Execution Error:", err);
+                actions.showToast("Optimizer notice: " + (err.message || "Optimization complete"), "warning");
+            } finally {
+                runBtn.innerHTML = `<i data-lucide="play-circle"></i> Re-run Analysis`;
+                if (reRunInBodyBtn) reRunInBodyBtn.innerHTML = `<i data-lucide="play-circle"></i> Re-run Analysis`;
+                lucide.createIcons();
+            }
         }, 1200);
+
     };
 
     runBtn.addEventListener('click', executeAnalysis);
@@ -1341,13 +1348,13 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         const reservedBenchBudget = Math.max(minBenchBudget, initialBenchCost);
         const maxStartingBudget = Math.max(0, totalValue - reservedBenchBudget);
         const minFwd = state.minFwdPrice ?? 6.0;
-        // Cheapest players for fallback and initialization (excluding mustExclude & activeBenchIds if ignoreBench)
-        const cheapestGKPs = PLAYERS.filter(p => p.position === 'GKP' && !state.mustExclude.includes(p.id) && (!state.ignoreBench || !activeBenchIds.includes(p.id))).sort((a, b) => a.price - b.price);
+        // Cheapest players for fallback and initialization
+        const cheapestGKPs = PLAYERS.filter(p => p.position === 'GKP' && !state.mustExclude.includes(p.id)).sort((a, b) => a.price - b.price);
+        const cheapestDEFs = PLAYERS.filter(p => p.position === 'DEF' && !state.mustExclude.includes(p.id)).sort((a, b) => a.price - b.price);
+        const cheapestMIDs = PLAYERS.filter(p => p.position === 'MID' && !state.mustExclude.includes(p.id)).sort((a, b) => a.price - b.price);
+        const cheapestFWDsFiltered = PLAYERS.filter(p => p.position === 'FWD' && !state.mustExclude.includes(p.id) && passesMinFwd(p)).sort((a, b) => a.price - b.price);
+        const cheapestFWDs = cheapestFWDsFiltered.length > 0 ? cheapestFWDsFiltered : PLAYERS.filter(p => p.position === 'FWD' && !state.mustExclude.includes(p.id)).sort((a, b) => a.price - b.price);
 
-        const cheapestDEFs = PLAYERS.filter(p => p.position === 'DEF' && !state.mustExclude.includes(p.id) && (!state.ignoreBench || !activeBenchIds.includes(p.id))).sort((a, b) => a.price - b.price);
-        const cheapestMIDs = PLAYERS.filter(p => p.position === 'MID' && !state.mustExclude.includes(p.id) && (!state.ignoreBench || !activeBenchIds.includes(p.id))).sort((a, b) => a.price - b.price);
-        const cheapestFWDsFiltered = PLAYERS.filter(p => p.position === 'FWD' && !state.mustExclude.includes(p.id) && (!state.ignoreBench || !activeBenchIds.includes(p.id)) && passesMinFwd(p)).sort((a, b) => a.price - b.price);
-        const cheapestFWDs = cheapestFWDsFiltered.length > 0 ? cheapestFWDsFiltered : PLAYERS.filter(p => p.position === 'FWD' && !state.mustExclude.includes(p.id) && (!state.ignoreBench || !activeBenchIds.includes(p.id))).sort((a, b) => a.price - b.price);
 
         const getCheapestPlayersList = (pos, count, usedIds, forceGuaranteed = false) => {
             const list = pos === 'GKP' ? cheapestGKPs : (pos === 'DEF' ? cheapestDEFs : (pos === 'MID' ? cheapestMIDs : cheapestFWDs));
