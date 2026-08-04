@@ -256,8 +256,36 @@ export function renderStats(container, state, actions) {
                         </tr>
                         <tr class="stats-columns-row">
                             <th class="col-grp-info" data-col="name" style="${headerStyles.info} text-align: left; padding-left: 10px;">Player ${getSortArrow('name', sortColumn, sortAsc)}</th>
-                            <th class="col-grp-info" data-col="position" style="${headerStyles.info}">Pos ${getSortArrow('position', sortColumn, sortAsc)}</th>
-                            <th class="col-grp-info" data-col="price" style="${headerStyles.info}">Price ${getSortArrow('price', sortColumn, sortAsc)}</th>
+                            
+                            <!-- Position Header Filter -->
+                            <th class="col-grp-info" style="${headerStyles.info}">
+                                <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
+                                    <span data-col="position" style="cursor: pointer;">Pos ${getSortArrow('position', sortColumn, sortAsc)}</span>
+                                    <select id="thPosFilterSelect" style="background: rgba(0,0,0,0.18); border: 1px solid rgba(255,255,255,0.25); color: inherit; font-size: 10.5px; font-weight: 700; border-radius: 4px; padding: 1px 3px; cursor: pointer; text-transform: uppercase; outline: none;" title="Filter Position">
+                                        <option value="ALL" ${positionFilter === 'ALL' ? 'selected' : ''}>All</option>
+                                        <option value="GKP" ${positionFilter === 'GKP' ? 'selected' : ''}>GK</option>
+                                        <option value="DEF" ${positionFilter === 'DEF' ? 'selected' : ''}>DEF</option>
+                                        <option value="MID" ${positionFilter === 'MID' ? 'selected' : ''}>MID</option>
+                                        <option value="FWD" ${positionFilter === 'FWD' ? 'selected' : ''}>FWD</option>
+                                    </select>
+                                </div>
+                            </th>
+
+                            <!-- Price Header Filter -->
+                            <th class="col-grp-info" style="${headerStyles.info}">
+                                <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
+                                    <span data-col="price" style="cursor: pointer;">Price ${getSortArrow('price', sortColumn, sortAsc)}</span>
+                                    <select id="thMaxPriceSelect" style="background: rgba(0,0,0,0.18); border: 1px solid rgba(255,255,255,0.25); color: inherit; font-size: 10.5px; font-weight: 700; border-radius: 4px; padding: 1px 3px; cursor: pointer; outline: none;" title="Filter Max Price">
+                                        <option value="16.0" ${maxPriceFilter === 16.0 ? 'selected' : ''}>All</option>
+                                        <option value="4.5" ${maxPriceFilter === 4.5 ? 'selected' : ''}>≤ 4.5m</option>
+                                        <option value="6.0" ${maxPriceFilter === 6.0 ? 'selected' : ''}>≤ 6.0m</option>
+                                        <option value="8.0" ${maxPriceFilter === 8.0 ? 'selected' : ''}>≤ 8.0m</option>
+                                        <option value="10.0" ${maxPriceFilter === 10.0 ? 'selected' : ''}>≤ 10.0m</option>
+                                        <option value="12.0" ${maxPriceFilter === 12.0 ? 'selected' : ''}>≤ 12.0m</option>
+                                    </select>
+                                </div>
+                            </th>
+
                             <th class="col-grp-core" data-col="ownership" style="${headerStyles.core}">Owned % ${getSortArrow('ownership', sortColumn, sortAsc)}</th>
                             <th class="col-grp-core" data-col="points" style="${headerStyles.core}">Points ${getSortArrow('points', sortColumn, sortAsc)}</th>
                             
@@ -305,11 +333,17 @@ export function renderStats(container, state, actions) {
     });
 
     const posSelect = container.querySelector('#posFilterSelect');
-    posSelect.addEventListener('change', e => {
-        positionFilter = e.target.value;
+    const thPosSelect = container.querySelector('#thPosFilterSelect');
+    const handlePosChange = (val) => {
+        positionFilter = val;
         container.dataset.posFilter = positionFilter;
+        if (posSelect && posSelect.value !== val) posSelect.value = val;
+        if (thPosSelect && thPosSelect.value !== val) thPosSelect.value = val;
         renderTable();
-    });
+    };
+
+    if (posSelect) posSelect.addEventListener('change', e => handlePosChange(e.target.value));
+    if (thPosSelect) thPosSelect.addEventListener('change', e => handlePosChange(e.target.value));
 
     const teamSelect = container.querySelector('#teamFilterSelect');
     teamSelect.addEventListener('change', e => {
@@ -327,13 +361,16 @@ export function renderStats(container, state, actions) {
             container.dataset.maxPrice = maxPriceFilter;
             const maxPriceSelectEl = container.querySelector('#maxPriceSelect');
             if (maxPriceSelectEl) maxPriceSelectEl.value = maxPriceFilter.toFixed(1);
+            const thMaxPriceSelectEl = container.querySelector('#thMaxPriceSelect');
+            if (thMaxPriceSelectEl) thMaxPriceSelectEl.value = maxPriceFilter.toFixed(1);
         }
         renderTable();
     });
 
     const maxPriceSelect = container.querySelector('#maxPriceSelect');
-    maxPriceSelect.addEventListener('change', e => {
-        maxPriceFilter = parseFloat(e.target.value);
+    const thMaxPriceSelect = container.querySelector('#thMaxPriceSelect');
+    const handleMaxPriceChange = (valStr) => {
+        maxPriceFilter = parseFloat(valStr);
         container.dataset.maxPrice = maxPriceFilter;
         if (maxPriceFilter < minPriceFilter) {
             minPriceFilter = maxPriceFilter;
@@ -341,8 +378,13 @@ export function renderStats(container, state, actions) {
             const minPriceSelectEl = container.querySelector('#minPriceSelect');
             if (minPriceSelectEl) minPriceSelectEl.value = minPriceFilter.toFixed(1);
         }
+        if (maxPriceSelect && maxPriceSelect.value !== valStr) maxPriceSelect.value = parseFloat(valStr).toFixed(1);
+        if (thMaxPriceSelect && thMaxPriceSelect.value !== valStr) thMaxPriceSelect.value = valStr;
         renderTable();
-    });
+    };
+
+    if (maxPriceSelect) maxPriceSelect.addEventListener('change', e => handleMaxPriceChange(e.target.value));
+    if (thMaxPriceSelect) thMaxPriceSelect.addEventListener('change', e => handleMaxPriceChange(e.target.value));
 
     const startSelect = container.querySelector('#startFilterSelect');
     startSelect.addEventListener('change', e => {
@@ -351,10 +393,14 @@ export function renderStats(container, state, actions) {
         renderTable();
     });
 
-    // Table Header Click Sorts
-    container.querySelectorAll('.stats-table th[data-col]').forEach(th => {
-        th.addEventListener('click', () => {
-            const clickedCol = th.getAttribute('data-col');
+    // Table Header Click Sorts (Ignore click if inside select element)
+    container.querySelectorAll('.stats-table th[data-col], .stats-table span[data-col]').forEach(el => {
+        el.addEventListener('click', (e) => {
+            if (e.target.tagName === 'SELECT' || e.target.closest('select')) return;
+            e.stopPropagation();
+            const clickedCol = el.getAttribute('data-col');
+            if (!clickedCol) return;
+            
             if (sortColumn === clickedCol) {
                 sortAsc = !sortAsc;
             } else {
@@ -368,6 +414,7 @@ export function renderStats(container, state, actions) {
             renderStats(container, state, actions);
         });
     });
+
 }
 
 function getSortArrow(column, sortColumn, sortAsc) {
