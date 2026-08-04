@@ -198,23 +198,28 @@ function get5GwXp(player, currentGw) {
     return sum;
 }
 
+function formatFdrOpponentText(pr) {
+    if (!pr || !pr.opp || pr.opp === 'BYE') return 'BYE';
+    const rawOpp = pr.opp.replace(/\s*\([haHA]\)$/, '').trim().toUpperCase();
+    const loc = pr.loc ? pr.loc.toUpperCase() : (pr.opp.toLowerCase().includes('(a)') ? 'A' : 'H');
+    return `${rawOpp} (${loc})`;
+}
+
 function renderPitchFixtures(player, currentGw) {
     let html = '';
     for (let gw = currentGw; gw < currentGw + 3; gw++) {
         if (gw > 10) break;
         const pr = player.predictions.find(p => p.gw === gw);
         if (pr) {
-            const oppText = pr.opp !== 'BYE' ? `${pr.opp} (${pr.loc})` : 'BYE';
+            const oppText = formatFdrOpponentText(pr);
             const fdrColor = getFdrColor(pr.diff);
             
             // Resolve XP or actual points
             const ptsVal = pr.actualPts !== undefined && pr.actualPts !== null ? pr.actualPts : pr.pts;
             const ptsText = ptsVal.toFixed(1).endsWith('.0') ? Math.round(ptsVal) : ptsVal.toFixed(1);
             
-            // Format opponent name: lowercase for Away, uppercase for Home
-            const teamNameText = pr.opp !== 'BYE' 
-                ? (pr.loc === 'A' ? pr.opp.toLowerCase() : pr.opp.toUpperCase()) 
-                : 'bye';
+            // Uppercase opponent team name with (H) or (A)
+            const teamNameText = formatFdrOpponentText(pr);
             
             // Dynamic text color for accessibility contrast
             const isDarkBg = pr.diff === 4 || pr.diff === 5;
@@ -226,14 +231,14 @@ function renderPitchFixtures(player, currentGw) {
             html += `
                 <div class="pitch-fixture-badge" title="GW${gw}: ${oppText} - FDR ${pr.diff} (XP: ${pr.pts.toFixed(1)})" style="background-color: ${fdrColor}; color: ${textColor}; padding: 4px 1px; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; font-weight: 800; text-align: center; font-family: var(--font-body); width: 100%; box-sizing: border-box;">
                     <span class="pitch-fixture-badge-xp" style="font-size: 10.5px; font-weight: 800; display: block; text-shadow: ${textShadow}; color: ${textColor};">${ptsText}</span>
-                    <span class="pitch-fixture-badge-team" style="font-size: 8.5px; font-weight: 700; opacity: ${isDarkBg ? '0.95' : '0.85'}; display: block; margin-top: 1px; text-transform: none; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: ${textColor}; text-shadow: ${textShadow};">${teamNameText}</span>
+                    <span class="pitch-fixture-badge-team" style="font-size: 10px; font-weight: 800; opacity: ${isDarkBg ? '0.95' : '0.9'}; display: block; margin-top: 1px; text-transform: uppercase; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: ${textColor}; text-shadow: ${textShadow};">${teamNameText}</span>
                 </div>
             `;
         } else {
             html += `
                 <div class="pitch-fixture-badge" title="GW${gw}: BYE" style="background-color: #334155; color: #ffffff; padding: 4px 1px; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; font-weight: 800; text-align: center; font-family: var(--font-body); width: 100%; box-sizing: border-box;">
                     <span class="pitch-fixture-badge-xp" style="font-size: 10.5px; font-weight: 800; display: block; color: #ffffff; text-shadow: 0 0.5px 1px rgba(0,0,0,0.5);">0</span>
-                    <span class="pitch-fixture-badge-team" style="font-size: 8.5px; font-weight: 700; opacity: 0.9; display: block; margin-top: 1px; color: #94a3b8; text-shadow: 0 0.5px 1px rgba(0,0,0,0.5);">bye</span>
+                    <span class="pitch-fixture-badge-team" style="font-size: 10px; font-weight: 800; opacity: 0.9; display: block; margin-top: 1px; color: #94a3b8; text-shadow: 0 0.5px 1px rgba(0,0,0,0.5);">BYE</span>
                 </div>
             `;
         }
@@ -246,34 +251,34 @@ function renderFdrFixtures(player, currentGw) {
     for (let gw = currentGw; gw < currentGw + 5; gw++) {
         const pr = player.predictions.find(p => p.gw === gw);
         if (pr) {
-            const oppText = pr.opp !== 'BYE' ? `${pr.opp} (${pr.loc})` : 'BYE';
+            const oppText = formatFdrOpponentText(pr);
             const fdrColor = getFdrColor(pr.diff);
             html += `
                 <span class="fdr-fixture-badge diff-${pr.diff}" title="GW${gw}: ${oppText} (FDR ${pr.diff})" style="
-                    font-size: 8.5px;
+                    font-size: 10px;
                     font-weight: 800;
-                    padding: 2px 4px;
+                    padding: 3px 6px;
                     border-radius: 4px;
                     text-transform: uppercase;
                     display: inline-block;
-                    min-width: 42px;
+                    min-width: 52px;
                     text-align: center;
                     box-shadow: 0 1px 2px rgba(0,0,0,0.15);
                 ">
-                    ${pr.opp}${pr.opp !== 'BYE' ? `(${pr.loc})` : ''}
+                    ${oppText}
                 </span>
             `;
         } else {
             html += `
                 <span class="fdr-fixture-badge" title="GW${gw}: BYE" style="
-                    font-size: 8.5px;
+                    font-size: 10px;
                     font-weight: 800;
                     color: #fff;
                     background-color: #334155;
-                    padding: 2px 4px;
+                    padding: 3px 6px;
                     border-radius: 4px;
                     display: inline-block;
-                    min-width: 42px;
+                    min-width: 52px;
                     text-align: center;
                 ">
                     BYE
@@ -284,6 +289,7 @@ function renderFdrFixtures(player, currentGw) {
     html += '</div>';
     return html;
 }
+
 
 function renderPlayerTooltip(player, currentGw) {
     const ratings = getPlayerRatings(player, currentGw);

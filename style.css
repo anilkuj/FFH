@@ -2970,10 +2970,13 @@ html.light-theme .stats-table td:first-child {
 
     .pitch-fixture-badge-team {
         display: block !important;
-        font-size: 6.5px !important;
+        font-size: 8px !important;
+        font-weight: 800 !important;
+        text-transform: uppercase !important;
         margin-top: 1px !important;
         text-shadow: none !important;
     }
+
 
     /* Show prefix on mobile since price and XP are stacked vertically */
     .player-xp-prefix {
@@ -4198,9 +4201,12 @@ html.light-theme .rating-badge-na {
         font-size: 8px !important;
     }
     .pitch-fixture-badge-team {
-        font-size: 6.5px !important;
+        font-size: 8px !important;
+        font-weight: 800 !important;
+        text-transform: uppercase !important;
         margin-top: 1px !important;
     }
+
     .pitch-card-info-header {
         padding: 4px 2px !important;
         gap: 1px !important;

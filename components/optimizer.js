@@ -18,38 +18,45 @@ function getFdrColor(diff) {
     }
 }
 
+function formatFdrOpponentText(pr) {
+    if (!pr || !pr.opp || pr.opp === 'BYE') return 'BYE';
+    const rawOpp = pr.opp.replace(/\s*\([haHA]\)$/, '').trim().toUpperCase();
+    const loc = pr.loc ? pr.loc.toUpperCase() : (pr.opp.toLowerCase().includes('(a)') ? 'A' : 'H');
+    return `${rawOpp} (${loc})`;
+}
+
 function renderFdrFixtures(player, currentGw) {
     let html = '<div class="fdr-fixtures-container" style="display: flex; gap: 4px; align-items: center; flex-wrap: wrap; margin: 6px 0 2px 0;">';
     for (let gw = currentGw; gw < currentGw + 5; gw++) {
         const pr = player.predictions.find(p => p.gw === gw);
         if (pr) {
-            const oppText = pr.opp !== 'BYE' ? `${pr.opp} (${pr.loc})` : 'BYE';
+            const oppText = formatFdrOpponentText(pr);
             html += `
                 <span class="fdr-fixture-badge diff-${pr.diff}" title="GW${gw}: ${oppText} (FDR ${pr.diff})" style="
-                    font-size: 8.5px;
+                    font-size: 10px;
                     font-weight: 800;
-                    padding: 2px 4px;
+                    padding: 3px 6px;
                     border-radius: 4px;
                     text-transform: uppercase;
                     display: inline-block;
-                    min-width: 42px;
+                    min-width: 52px;
                     text-align: center;
                     box-shadow: 0 1px 2px rgba(0,0,0,0.15);
                 ">
-                    ${pr.opp}${pr.opp !== 'BYE' ? `(${pr.loc})` : ''}
+                    ${oppText}
                 </span>
             `;
         } else {
             html += `
                 <span class="fdr-fixture-badge" title="GW${gw}: BYE" style="
-                    font-size: 8.5px;
+                    font-size: 10px;
                     font-weight: 800;
                     color: #fff;
                     background-color: #334155;
-                    padding: 2px 4px;
+                    padding: 3px 6px;
                     border-radius: 4px;
                     display: inline-block;
-                    min-width: 42px;
+                    min-width: 52px;
                     text-align: center;
                 ">
                     BYE
@@ -60,6 +67,7 @@ function renderFdrFixtures(player, currentGw) {
     html += '</div>';
     return html;
 }
+
 
 export function renderOptimizer(container, state, actions) {
     // Premium Lock Check

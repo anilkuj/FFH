@@ -76,6 +76,13 @@ export function renderTransferPlanner(container, state, actions) {
         return '#ef4444';
     };
 
+    const formatFdrOpponentText = (pr) => {
+        if (!pr || !pr.opp || pr.opp === 'BYE') return 'BYE';
+        const rawOpp = pr.opp.replace(/\s*\([haHA]\)$/, '').trim().toUpperCase();
+        const loc = pr.loc ? pr.loc.toUpperCase() : (pr.opp.toLowerCase().includes('(a)') ? 'A' : 'H');
+        return `${rawOpp} (${loc})`;
+    };
+
     const renderFdrFixtures = (player) => {
         let fixturesHtml = '';
         for (let gw = state.currentGw; gw < state.currentGw + 5; gw++) {
@@ -83,15 +90,17 @@ export function renderTransferPlanner(container, state, actions) {
             const pred = player.predictions.find(p => p.gw === gw);
             if (pred) {
                 const color = getFdrColor(pred.diff);
+                const oppText = formatFdrOpponentText(pred);
                 fixturesHtml += `
-                    <div style="background:${color}; color:#111; padding:2px 4px; border-radius:4px; font-size:9px; font-weight:800; min-width:24px; text-align:center;" title="GW${gw}: ${pred.opp} (${pred.loc}) - FDR ${pred.diff}">
-                        ${pred.opp.substring(0, 3)}${pred.loc}
+                    <div style="background:${color}; color:#111; padding:3px 6px; border-radius:4px; font-size:10px; font-weight:800; min-width:48px; text-align:center; text-transform:uppercase;" title="GW${gw}: ${oppText} - FDR ${pred.diff}">
+                        ${oppText}
                     </div>
                 `;
             }
         }
-        return `<div style="display:flex; gap:3px; margin-top:4px; flex-wrap:wrap;">${fixturesHtml}</div>`;
+        return `<div style="display:flex; gap:4px; margin-top:4px; flex-wrap:wrap;">${fixturesHtml}</div>`;
     };
+
 
     const renderPlayerStats = (player) => {
         const starts = typeof player.GS === 'number' ? player.GS : 0;
