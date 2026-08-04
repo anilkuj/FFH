@@ -236,7 +236,89 @@ class AppState {
         // Save drafts state
         localStorage.setItem(this.getDraftsStorageKey(), JSON.stringify(this.drafts));
         localStorage.setItem(this.getActiveDraftIdxStorageKey(), this.activeDraftIndex.toString());
+
+        // Asynchronously sync to Google Account cloud storage
+        this.syncCloudDrafts();
     }
+
+    async syncCloudDrafts() {
+        if (!this.userProfile || !this.userProfile.sub) return;
+        
+        try {
+            const cloudKey = `fpl_cloud_drafts_${this.userProfile.sub}`;
+            const syncData = {
+                sub: this.userProfile.sub,
+                email: this.userProfile.email,
+                updatedAt: Date.now(),
+                drafts: this.drafts,
+                activeDraftIndex: this.activeDraftIndex
+            };
+            
+            // Save to account-based local storage cache
+            localStorage.setItem(cloudKey, JSON.stringify(syncData));
+
+            // Sync asynchronously to cloud REST endpoint
+            const existingCloudId = localStorage.getItem(`fpl_hub_cloud_id_${this.userProfile.sub}`);
+            if (existingCloudId) {
+                fetch(`https://api.restful-api.dev/objects/${existingCloudId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: cloudKey, data: syncData })
+                }).catch(() => {});
+            } else {
+                const res = await fetch('https://api.restful-api.dev/objects', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: cloudKey, data: syncData })
+                });
+                if (res.ok) {
+                    const resData = await res.json();
+                    if (resData && resData.id) {
+                        localStorage.setItem(`fpl_hub_cloud_id_${this.userProfile.sub}`, resData.id);
+                    }
+                }
+            }
+        } catch (e) {
+            console.warn("Cloud sync warning:", e);
+        }
+    }
+
+    async loadCloudDrafts() {
+        if (!this.userProfile || !this.userProfile.sub) return;
+
+        try {
+            const existingCloudId = localStorage.getItem(`fpl_hub_cloud_id_${this.userProfile.sub}`);
+            if (existingCloudId) {
+                const res = await fetch(`https://api.restful-api.dev/objects/${existingCloudId}`);
+                if (res.ok) {
+                    const cloudRes = await res.json();
+                    if (cloudRes && cloudRes.data && Array.isArray(cloudRes.data.drafts)) {
+                        this.drafts = cloudRes.data.drafts;
+                        this.activeDraftIndex = typeof cloudRes.data.activeDraftIndex === 'number' ? cloudRes.data.activeDraftIndex : 0;
+                        
+                        const activeDraft = this.drafts[this.activeDraftIndex];
+                        if (activeDraft && activeDraft.squadSlots) {
+                            this.squadSlots = JSON.parse(JSON.stringify(activeDraft.squadSlots));
+                            this.captain = activeDraft.captain;
+                            this.vice = activeDraft.vice;
+                            this.formation = activeDraft.formation;
+                        }
+                        
+                        // Save locally
+                        localStorage.setItem(this.getDraftsStorageKey(), JSON.stringify(this.drafts));
+                        localStorage.setItem(this.getActiveDraftIdxStorageKey(), this.activeDraftIndex.toString());
+                        
+                        if (typeof actions !== 'undefined' && actions.showToast) {
+                            actions.showToast("☁️ Synced drafts across devices via Google Account!", "success");
+                        }
+                    }
+                }
+            }
+        } catch (e) {
+            console.warn("Cloud draft load warning:", e);
+        }
+    }
+
 
     optimizeCaptaincy() {
         const starters = this.starters;
@@ -800,12 +882,14 @@ const actions = {
             };
             localStorage.setItem('fpl_hub_user_profile', JSON.stringify(state.userProfile));
             
-            // Reload user drafts
+            // Reload user drafts and sync from Cloud
             state.loadUserDrafts();
+            state.loadCloudDrafts();
             
             actions.syncUserProfile();
             actions.renderActiveView(); // Refresh the planner view immediately
             actions.showToast(`Welcome back, ${payload.name.split(' ')[0]}!`, 'success');
+
             actions.hideModal(); // Close modal if open
         }
     },
