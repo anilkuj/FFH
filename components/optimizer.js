@@ -914,15 +914,17 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
 
     // Helper: guaranteed start filter
     const isGuaranteedStart = (player) => {
+        if (!player) return false;
         if (state.mustInclude && state.mustInclude.includes(player.id)) return true;
+        if (player.price >= 5.5) return true; // Premium and key players are always valid starting candidates
         const minMins = state.guaranteedStart || 0;
         if (minMins === 0) return true;
         const mppg = player.MPPG || 0;
         if (mppg >= minMins) return true;
-        // Exception: new or highly priced signings with 0 mins might still be starting players (e.g. price >= 5.0m)
-        if (mppg === 0 && player.price >= 5.0) return true;
+        if (mppg === 0 && player.price >= 4.5) return true;
         return false;
     };
+
 
 
 
@@ -1764,9 +1766,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 const guaranteedCandidates = candidates.filter(isGuaranteedStart);
                 if (guaranteedCandidates.length > 0) {
                     candidates = guaranteedCandidates;
-                } else if (!isBenchSlot) {
-                    candidates = [];
                 }
+                candidates.sort((a, b) => getSolverScore(b) - getSolverScore(a));
+
 
                 const currentSquadPts = getSquadExpectedPts(optimizedSquadSlots);
 
@@ -1821,6 +1823,77 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 squadImproved = true;
             }
         }
+
+        // --- AGGRESSIVE BANK BALANCE EXHAUSTION PASS ---
+        // If there is any remaining bank balance (e.g. > £0.5m), exhaustively upgrade starting XI slots
+        // to higher-priced/higher-scoring players until no further upgrades fit in the bank.
+        let bankExhaustIter = 0;
+        while (bankExhaustIter < 15) {
+            bankExhaustIter++;
+            let squadCost = optimizedSquadSlots.reduce((sum, slot) => {
+                if (slot.playerId === null) return sum;
+                const p = PLAYERS.find(pl => pl.id === slot.playerId);
+                return sum + (p ? p.price : 0);
+            }, 0);
+            let remBank = totalValue - squadCost;
+            if (remBank < 0.2) break;
+
+            let bestAggressiveUpgrade = null;
+            let maxScoreGain = -0.001;
+            let targetIdx = -1;
+            const currentSquadIds = optimizedSquadSlots.map(s => s.playerId).filter(Boolean);
+
+            for (const sIdx of startingIndices) {
+                const slot = optimizedSquadSlots[sIdx];
+                if (slot.locked) continue;
+                const pOld = PLAYERS.find(pl => pl.id === slot.playerId);
+                if (!pOld) continue;
+
+                const candidates = PLAYERS.filter(p =>
+                    p.position === slot.position &&
+                    !currentSquadIds.includes(p.id) &&
+                    p.price > pOld.price &&
+                    p.price <= pOld.price + remBank &&
+                    !state.mustExclude.includes(p.id) &&
+                    passesMinFwd(p)
+                );
+
+                for (const cand of candidates) {
+                    const tempSquadIds = currentSquadIds.filter(id => id !== pOld.id);
+                    tempSquadIds.push(cand.id);
+                    const teamCounts = {};
+                    let ok = true;
+                    for (const id of tempSquadIds) {
+                        const pl = PLAYERS.find(p => p.id === id);
+                        if (pl) {
+                            teamCounts[pl.team] = (teamCounts[pl.team] || 0) + 1;
+                            if (teamCounts[pl.team] > 3) { ok = false; break; }
+                        }
+                    }
+
+                    if (ok) {
+                        const oldId = slot.playerId;
+                        slot.playerId = cand.id;
+                        const newPts = getSquadExpectedPts(optimizedSquadSlots);
+                        slot.playerId = oldId;
+
+                        const gain = newPts - getSquadExpectedPts(optimizedSquadSlots);
+                        if (gain >= maxScoreGain) {
+                            maxScoreGain = gain;
+                            bestAggressiveUpgrade = cand;
+                            targetIdx = sIdx;
+                        }
+                    }
+                }
+            }
+
+            if (bestAggressiveUpgrade && targetIdx !== -1) {
+                optimizedSquadSlots[targetIdx].playerId = bestAggressiveUpgrade.id;
+            } else {
+                break;
+            }
+        }
+
 
         // --- HARD SAFETY ENFORCER: GUARANTEE SQUAD NEVER EXCEEDS TOTAL BUDGET ---
         let finalSquadCost = optimizedSquadSlots.reduce((sum, slot) => {
