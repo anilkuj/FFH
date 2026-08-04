@@ -1124,8 +1124,6 @@ html, body {
     max-height: calc(100vh - 200px);
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
-    transform: translateZ(0);
-    contain: layout paint;
     box-shadow: var(--shadow-md);
 }
 
@@ -1137,23 +1135,17 @@ html, body {
     text-align: center;
 }
 
+/* Single Sticky Header Block - Guaranteed NO Overlapping */
+.stats-table thead {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 30 !important;
+}
+
 .stats-table th, .stats-table td {
     padding: 8px 10px;
     border-bottom: 1px solid var(--border-color);
     white-space: nowrap;
-}
-
-/* Sticky Category & Column Headers on Vertical Scroll */
-.stats-table thead tr.stats-category-row th {
-    position: sticky !important;
-    top: 0 !important;
-    z-index: 25 !important;
-}
-
-.stats-table thead tr.stats-columns-row th {
-    position: sticky !important;
-    top: 31px !important;
-    z-index: 25 !important;
 }
 
 /* Sticky First Column on Horizontal Scroll */
@@ -1168,17 +1160,14 @@ html, body {
 }
 
 /* Top Left Corner Sticky Intersection */
-.stats-table thead tr.stats-category-row th:first-child {
+.stats-table thead th:first-child {
     z-index: 35 !important;
 }
-.stats-table thead tr.stats-columns-row th:first-child {
-    z-index: 35 !important;
-}
-
 
 .stats-table tr:hover td:first-child {
     opacity: 0.95;
 }
+
 
 
 
