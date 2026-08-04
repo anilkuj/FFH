@@ -20,7 +20,7 @@ export function renderStats(container, state, actions) {
     const isLight = document.documentElement.classList.contains('light-theme');
 
     // Rich, solid group colors for 100% guaranteed rendering across all laptops, desktops & browsers
-    const bgStyles = {
+    const groupStyles = {
         info: isLight ? 'background-color: #f1f5f9 !important; color: #0f172a !important;' : 'background-color: #1e293b !important; color: #f8fafc !important;',
         core: isLight ? 'background-color: #e0f2fe !important; color: #0369a1 !important;' : 'background-color: rgba(2, 132, 199, 0.18) !important; color: #38bdf8 !important;',
         attack: isLight ? 'background-color: #dcfce7 !important; color: #15803d !important;' : 'background-color: rgba(22, 163, 74, 0.18) !important; color: #4ade80 !important;',
