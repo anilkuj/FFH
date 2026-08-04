@@ -1234,6 +1234,11 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             else if (slot.position === 'FWD' && assignedFWD < cons.FWD) { slot.isStarting = true; assignedFWD++; }
         });
 
+        const activeBenchIds = state.ignoreBench
+            ? activeSquadSlots.filter(s => !s.isStarting && s.playerId !== null).map(s => s.playerId)
+            : [];
+        const activeBenchPlayers = activeBenchIds.map(id => PLAYERS.find(p => p.id === id)).filter(Boolean);
+
         const startingIndices = [];
         const benchIndices = [];
         for (let i = 0; i < optimizedSquadSlots.length; i++) {
@@ -1241,8 +1246,27 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 startingIndices.push(i);
             } else {
                 benchIndices.push(i);
-                if (state.ignoreBench && activeSquadSlots[i]) {
-                    optimizedSquadSlots[i].playerId = activeSquadSlots[i].playerId;
+            }
+        }
+
+        if (state.ignoreBench) {
+            const usedBenchPlayerIds = new Set();
+            for (const bIdx of benchIndices) {
+                const slot = optimizedSquadSlots[bIdx];
+                const match = activeBenchPlayers.find(p => p.position === slot.position && !usedBenchPlayerIds.has(p.id));
+                if (match) {
+                    slot.playerId = match.id;
+                    usedBenchPlayerIds.add(match.id);
+                }
+            }
+            for (const bIdx of benchIndices) {
+                const slot = optimizedSquadSlots[bIdx];
+                if (slot.playerId === null) {
+                    const match = activeBenchPlayers.find(p => !usedBenchPlayerIds.has(p.id));
+                    if (match) {
+                        slot.playerId = match.id;
+                        usedBenchPlayerIds.add(match.id);
+                    }
                 }
             }
         }
@@ -1253,6 +1277,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 initUsedIds.push(s.playerId);
             }
         });
+
 
         // 1. Assign must-include players to slots first and lock them
         if (state.mustInclude && state.mustInclude.length > 0) {
@@ -1316,14 +1341,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         const reservedBenchBudget = Math.max(minBenchBudget, initialBenchCost);
         const maxStartingBudget = Math.max(0, totalValue - reservedBenchBudget);
         const minFwd = state.minFwdPrice ?? 6.0;
-        const passesMinFwd = (p) => p.position !== 'FWD' || p.price >= minFwd || (state.mustInclude && state.mustInclude.includes(p.id));
-
-        const activeBenchIds = state.ignoreBench
-            ? activeSquadSlots.filter(s => !s.isStarting && s.playerId !== null).map(s => s.playerId)
-            : [];
-
         // Cheapest players for fallback and initialization (excluding mustExclude & activeBenchIds if ignoreBench)
         const cheapestGKPs = PLAYERS.filter(p => p.position === 'GKP' && !state.mustExclude.includes(p.id) && (!state.ignoreBench || !activeBenchIds.includes(p.id))).sort((a, b) => a.price - b.price);
+
         const cheapestDEFs = PLAYERS.filter(p => p.position === 'DEF' && !state.mustExclude.includes(p.id) && (!state.ignoreBench || !activeBenchIds.includes(p.id))).sort((a, b) => a.price - b.price);
         const cheapestMIDs = PLAYERS.filter(p => p.position === 'MID' && !state.mustExclude.includes(p.id) && (!state.ignoreBench || !activeBenchIds.includes(p.id))).sort((a, b) => a.price - b.price);
         const cheapestFWDsFiltered = PLAYERS.filter(p => p.position === 'FWD' && !state.mustExclude.includes(p.id) && (!state.ignoreBench || !activeBenchIds.includes(p.id)) && passesMinFwd(p)).sort((a, b) => a.price - b.price);
@@ -1877,12 +1897,18 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         const originalIds = activeSquadSlots.map(s => s.playerId).filter(id => id !== null);
         const optimizedIds = optimizedSquadSlots.map(s => s.playerId).filter(id => id !== null);
 
-        const removedIds = originalIds.filter(id => !optimizedIds.includes(id));
-        const addedIds   = optimizedIds.filter(id => !originalIds.includes(id));
+        let removedIds = originalIds.filter(id => !optimizedIds.includes(id));
+        let addedIds   = optimizedIds.filter(id => !originalIds.includes(id));
+
+        if (state.ignoreBench) {
+            const activeBenchIds = activeSquadSlots.filter(s => !s.isStarting && s.playerId !== null).map(s => s.playerId);
+            removedIds = removedIds.filter(id => !activeBenchIds.includes(id));
+        }
 
         // Match removed → added players by position to form logical swap pairs
         const upgrades = [];
         const removedPlayers = removedIds.map(id => PLAYERS.find(p => p.id === id)).filter(Boolean);
+
         const addedPlayers   = addedIds.map(id => PLAYERS.find(p => p.id === id)).filter(Boolean);
 
         // Pair by position, highest gain first
