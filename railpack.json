@@ -3,11 +3,11 @@
   "steps": {
     "build": {
       "commands": [
-        "echo 'Bypassing build on server. Serving precompiled dist folder.'"
+        "npm run build"
       ]
     }
   },
   "deploy": {
-    "startCommand": "sirv dist --port $PORT --host 0.0.0.0 --single --nocache"
+    "startCommand": "node server.js"
   }
 }
