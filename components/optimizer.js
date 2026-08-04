@@ -1195,7 +1195,15 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         // Budget boundaries based on user selection
         const minBenchBudget = state.benchBudget || 17.0;
         const maxBenchBudget = minBenchBudget;
-        const maxStartingBudget = totalValue - minBenchBudget; // remaining budget for starting 11
+        
+        // Initial bench cost after initial slot assignment
+        const initialBenchCost = benchIndices.reduce((sum, bIdx) => {
+            const pId = optimizedSquadSlots[bIdx].playerId;
+            const p = pId !== null ? PLAYERS.find(pl => pl.id === pId) : null;
+            return sum + (p ? p.price : 0);
+        }, 0);
+        const reservedBenchBudget = Math.max(minBenchBudget, initialBenchCost);
+        const maxStartingBudget = Math.max(0, totalValue - reservedBenchBudget);
         const minFwd = state.minFwdPrice ?? 6.0;
         const passesMinFwd = (p) => p.position !== 'FWD' || p.price >= minFwd || (state.mustInclude && state.mustInclude.includes(p.id));
 
@@ -1575,6 +1583,88 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             if (bestUpgrade && targetSlotIdx !== -1) {
                 optimizedSquadSlots[targetSlotIdx].playerId = bestUpgrade.id;
                 squadImproved = true;
+            }
+        }
+
+        // --- HARD SAFETY ENFORCER: GUARANTEE SQUAD NEVER EXCEEDS TOTAL BUDGET ---
+        let finalSquadCost = optimizedSquadSlots.reduce((sum, slot) => {
+            if (slot.playerId === null) return sum;
+            const p = PLAYERS.find(pl => pl.id === slot.playerId);
+            return sum + (p ? p.price : 0);
+        }, 0);
+
+        if (finalSquadCost > totalValue + 0.001) {
+            let overBudgetIter = 0;
+            while (finalSquadCost > totalValue + 0.001 && overBudgetIter < 30) {
+                overBudgetIter++;
+                let bestDowngrade = null;
+                let minPtsLoss = 9999;
+                let targetSlotIdx = -1;
+
+                const currentSquadIds = optimizedSquadSlots.map(s => s.playerId).filter(id => id !== null);
+
+                for (let i = 0; i < optimizedSquadSlots.length; i++) {
+                    const slot = optimizedSquadSlots[i];
+                    if (slot.locked) continue; // Do not replace force-included locked players
+
+                    const player = slot.playerId !== null ? PLAYERS.find(p => p.id === slot.playerId) : null;
+                    if (!player) continue;
+
+                    // Search for cheaper valid replacement for this position
+                    const cheaperCandidates = PLAYERS.filter(p => 
+                        p.position === slot.position &&
+                        p.price < player.price &&
+                        !currentSquadIds.includes(p.id) &&
+                        !state.mustExclude.includes(p.id) &&
+                        passesMinFwd(p)
+                    );
+
+                    const currentPts = getSquadExpectedPts(optimizedSquadSlots);
+
+                    for (const cand of cheaperCandidates) {
+                        const tempSquadIds = currentSquadIds.filter(id => id !== slot.playerId);
+                        tempSquadIds.push(cand.id);
+                        
+                        // Check team limit max 3/team
+                        const teamCounts = {};
+                        let ok = true;
+                        for (const id of tempSquadIds) {
+                            const pl = PLAYERS.find(p => p.id === id);
+                            if (pl) {
+                                teamCounts[pl.team] = (teamCounts[pl.team] || 0) + 1;
+                                if (teamCounts[pl.team] > 3) {
+                                    ok = false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (ok) {
+                            const oldId = slot.playerId;
+                            slot.playerId = cand.id;
+                            const newPts = getSquadExpectedPts(optimizedSquadSlots);
+                            slot.playerId = oldId; // Swap back
+
+                            const ptsLoss = currentPts - newPts;
+                            if (ptsLoss < minPtsLoss) {
+                                minPtsLoss = ptsLoss;
+                                bestDowngrade = cand;
+                                targetSlotIdx = i;
+                            }
+                        }
+                    }
+                }
+
+                if (bestDowngrade && targetSlotIdx !== -1) {
+                    optimizedSquadSlots[targetSlotIdx].playerId = bestDowngrade.id;
+                    finalSquadCost = optimizedSquadSlots.reduce((sum, slot) => {
+                        if (slot.playerId === null) return sum;
+                        const p = PLAYERS.find(pl => pl.id === slot.playerId);
+                        return sum + (p ? p.price : 0);
+                    }, 0);
+                } else {
+                    break;
+                }
             }
         }
 
