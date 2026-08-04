@@ -1237,6 +1237,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 startingIndices.push(i);
             } else {
                 benchIndices.push(i);
+                if (state.ignoreBench && activeSquadSlots[i]) {
+                    optimizedSquadSlots[i].playerId = activeSquadSlots[i].playerId;
+                }
             }
         }
 
@@ -1261,7 +1264,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                         break;
                     }
                 }
-                if (targetSlotIndex === -1) {
+                if (targetSlotIndex === -1 && !state.ignoreBench) {
                     for (const idx of benchIndices) {
                         if (optimizedSquadSlots[idx].position === player.position && optimizedSquadSlots[idx].playerId === null && !optimizedSquadSlots[idx].locked) {
                             targetSlotIndex = idx;
@@ -1279,7 +1282,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                         }
                     }
                 }
-                if (targetSlotIndex === -1) {
+                if (targetSlotIndex === -1 && !state.ignoreBench) {
                     for (const idx of benchIndices) {
                         if (optimizedSquadSlots[idx].position === player.position && !optimizedSquadSlots[idx].locked) {
                             targetSlotIndex = idx;
@@ -1350,14 +1353,17 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 slot.playerId = cheapest ? cheapest.id : null;
             }
         }
-        // Initialize bench slots (with cheapest budget enablers) if they are not locked
-        for (const idx of benchIndices) {
-            const slot = optimizedSquadSlots[idx];
-            if (!slot.locked && slot.playerId === null) {
-                const cheapest = getCheapestPlayersList(slot.position, 1, initUsedIds, false)[0];
-                slot.playerId = cheapest ? cheapest.id : null;
+        // Initialize bench slots (with cheapest budget enablers if not ignoreBench) if they are not locked
+        if (!state.ignoreBench) {
+            for (const idx of benchIndices) {
+                const slot = optimizedSquadSlots[idx];
+                if (!slot.locked && slot.playerId === null) {
+                    const cheapest = getCheapestPlayersList(slot.position, 1, initUsedIds, false)[0];
+                    slot.playerId = cheapest ? cheapest.id : null;
+                }
             }
         }
+
 
         // Duplicates and team-limit resolution helper for bench
         const resolveBenchDuplicates = () => {
@@ -2139,9 +2145,14 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         let best1Tx = null;
         let maxGain1 = -999;
 
-        for (const soldId of currentSquadIds) {
+        const candidateSoldIds = state.ignoreBench
+            ? activeSquadSlots.filter(s => s.isStarting && s.playerId !== null).map(s => s.playerId)
+            : currentSquadIds;
+
+        for (const soldId of candidateSoldIds) {
             const soldPlayer = PLAYERS.find(p => p.id === soldId);
             if (!soldPlayer) continue;
+
 
             const sellBudget = soldPlayer.price + bank;
 
@@ -2198,10 +2209,11 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         let best2Tx = null;
         let maxGain2 = -999;
 
-        for (let i = 0; i < currentSquadIds.length; i++) {
-            for (let j = i + 1; j < currentSquadIds.length; j++) {
-                const s1 = PLAYERS.find(p => p.id === currentSquadIds[i]);
-                const s2 = PLAYERS.find(p => p.id === currentSquadIds[j]);
+        for (let i = 0; i < candidateSoldIds.length; i++) {
+            for (let j = i + 1; j < candidateSoldIds.length; j++) {
+                const s1 = PLAYERS.find(p => p.id === candidateSoldIds[i]);
+                const s2 = PLAYERS.find(p => p.id === candidateSoldIds[j]);
+
                 if (!s1 || !s2) continue;
 
                 // Cannot sell a player who is the single-transfer "buy" recommendation
