@@ -1,4 +1,6 @@
 import { PLAYERS, TEAMS, getPlayerRatings } from '../data.js';
+import { renderSetPieceBadges } from './optimizer.js';
+
 
 export function renderPlanner(container, state, actions) {
     if (state.isSquadUnlocked === undefined) {
@@ -471,8 +473,12 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
                 </div>
                 <div class="player-card-info" style="padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; border-radius: 8px;">
                     <div class="pitch-card-info-header">
-                        <div class="player-pitch-name">${actions.getWebName(player.name)}</div>
+                        <div class="player-pitch-name" style="display:flex; align-items:center; justify-content:center; gap:4px; flex-wrap:wrap;">
+                            <span>${actions.getWebName(player.name)}</span>
+                            ${renderSetPieceBadges(player)}
+                        </div>
                         <div class="player-pitch-points">
+
                             <span class="player-pitch-price">£${player.price.toFixed(1)}m</span>
                             <span class="player-pitch-sep"> • </span>
                             <span class="player-pitch-xp">
@@ -540,8 +546,12 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions, is
                     </div>
                     <div class="player-card-info" style="padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; border-radius: 8px;">
                         <div class="pitch-card-info-header">
-                            <div class="player-pitch-name">${actions.getWebName(player.name)}</div>
+                            <div class="player-pitch-name" style="display:flex; align-items:center; justify-content:center; gap:4px; flex-wrap:wrap;">
+                                <span>${actions.getWebName(player.name)}</span>
+                                ${renderSetPieceBadges(player)}
+                            </div>
                             <div class="player-pitch-points">
+
                                 <span class="player-pitch-price">£${player.price.toFixed(1)}m</span>
                                 <span class="player-pitch-sep"> • </span>
                                 <span class="player-pitch-xp">

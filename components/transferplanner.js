@@ -1,5 +1,7 @@
 import { PLAYERS, TEAMS } from '../data.js';
 import { getShirtSVG, renderPlayerRow, renderBenchRow } from './planner.js';
+import { renderSetPieceBadges } from './optimizer.js';
+
 
 export function renderTransferPlanner(container, state, actions) {
     const squadInfo = state.getSquadForGw(state.currentGw);
@@ -794,10 +796,11 @@ export function renderTransferPlanner(container, state, actions) {
                         return `
                             <div class="buy-option-row" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px; padding:10px; display:flex; flex-direction:column; gap:8px;">
                                 <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
-                                    <div style="display:flex; align-items:center; gap:6px; min-width:0;">
+                                    <div style="display:flex; align-items:center; gap:6px; min-width:0; flex-wrap:wrap;">
                                         <span style="font-size:10px; font-weight:800; background:var(--primary); color:#000; padding:1px 5px; border-radius:4px; flex-shrink:0;">#${optIdx + 1}</span>
                                         <span style="font-weight:700; color:var(--text-main); font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${pOpt.name}</span>
                                         <span style="color:var(--text-muted); font-size:11px; flex-shrink:0;">${pOpt.team} • £${pOpt.price.toFixed(1)}m</span>
+                                        ${renderSetPieceBadges(pOpt)}
                                     </div>
                                     <span style="font-size:11px; font-weight:800; color:${opt.gain >= 0 ? 'var(--primary)' : '#f43f5e'}; flex-shrink:0;">${gainText} XP</span>
                                 </div>
@@ -834,6 +837,7 @@ export function renderTransferPlanner(container, state, actions) {
                                 <div>
                                     <span class="player-name-main" style="font-size:14px; font-weight:700;">${tx.out.name}</span>
                                     <span class="player-team-sub">${tx.out.team} • £${tx.out.price.toFixed(1)}m</span>
+                                    ${renderSetPieceBadges(tx.out)}
                                     ${renderPlayerStats(tx.out)}
                                 </div>
                                 <div style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 6px;">

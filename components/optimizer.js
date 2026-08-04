@@ -84,7 +84,7 @@ const SET_PIECE_DUTIES = {
     "Matheus Cunha": { pk: true, fk: true, ck: true }
 };
 
-function getPlayerSetPieceDuty(player) {
+export function getPlayerSetPieceDuty(player) {
     if (!player || !player.name) return { pk: false, fk: false, ck: false, duties: [], label: '', hasDuty: false };
     let info = SET_PIECE_DUTIES[player.name];
     if (!info) {
@@ -118,16 +118,17 @@ function getPlayerSetPieceDuty(player) {
     };
 }
 
-function renderSetPieceBadges(player) {
+export function renderSetPieceBadges(player) {
     const duty = getPlayerSetPieceDuty(player);
     if (!duty.hasDuty) return '';
-    let html = '<div style="margin-top: 3px; display: flex; gap: 4px; align-items: center; flex-wrap: wrap;">';
+    let html = '<div class="set-piece-badges-wrapper" style="margin-top: 3px; display: flex; gap: 4px; align-items: center; flex-wrap: wrap;">';
     if (duty.pk) html += `<span class="set-piece-badge pk" title="Primary Penalty Taker"><i data-lucide="crosshair" style="width:10px;height:10px;"></i> PK</span>`;
     if (duty.fk) html += `<span class="set-piece-badge fk" title="Direct Free Kick Taker"><i data-lucide="zap" style="width:10px;height:10px;"></i> FK</span>`;
     if (duty.ck) html += `<span class="set-piece-badge ck" title="Corner Taker"><i data-lucide="flag" style="width:10px;height:10px;"></i> CK</span>`;
     html += '</div>';
     return html;
 }
+
 
 
 function getFdrColor(diff) {
