@@ -152,45 +152,45 @@ export function renderStats(container, state, actions) {
             const displayName = formatPlayerShortName(player.name);
             return `
                 <tr>
-                    <td class="col-grp-info cell-player-name" style="${groupStyles.info} text-align: left; padding-left: 8px; min-width: 175px; max-width: 220px; white-space: nowrap; cursor: pointer;" title="${player.name}">
+                    <td class="col-grp-info cell-player-name" style="text-align: left; padding-left: 8px; cursor: pointer;" title="${player.name}">
                         <div style="display: flex; align-items: center; gap: 5px; overflow: visible;">
                             <strong style="font-weight: 700; font-size: 12.5px; white-space: nowrap;" title="${player.name}">${displayName}</strong>
                             <span class="cell-team-tag" style="font-size: 10px; font-weight: 700; color: var(--text-muted); flex-shrink: 0; padding: 1px 4px; background: rgba(0,0,0,0.06); border-radius: 3px;">${player.team}</span>
                         </div>
                     </td>
 
-                    <td class="col-grp-info font-weight-700" style="${groupStyles.info}">${player.position}</td>
-                    <td class="col-grp-info font-weight-800" style="${groupStyles.info} color: var(--primary);">£${player.price.toFixed(1)}</td>
+                    <td class="col-grp-info font-weight-700">${player.position}</td>
+                    <td class="col-grp-info font-weight-800" style="color: var(--primary);">£${player.price.toFixed(1)}</td>
 
                     <!-- Core -->
-                    <td class="col-grp-core" style="${groupStyles.core}">${player.ownership.toFixed(1)}%</td>
-                    <td class="col-grp-core font-weight-800" style="${groupStyles.core}">${player.points}</td>
+                    <td class="col-grp-core">${player.ownership.toFixed(1)}%</td>
+                    <td class="col-grp-core font-weight-800">${player.points}</td>
                     
                     <!-- Attack (Includes Set Pieces) -->
-                    <td class="col-grp-attack" style="${groupStyles.attack}">${renderYesNoBadge(st.pk, '#ef4444')}</td>
-                    <td class="col-grp-attack" style="${groupStyles.attack}">${renderYesNoBadge(st.fk, '#f59e0b')}</td>
-                    <td class="col-grp-attack" style="${groupStyles.attack}">${renderYesNoBadge(st.ck, '#0284c7')}</td>
-                    <td class="col-grp-attack" style="${groupStyles.attack}">${st.goals}</td>
-                    <td class="col-grp-attack" style="${groupStyles.attack}">${st.assists}</td>
-                    <td class="col-grp-attack font-weight-700" style="${groupStyles.attack}">${st.ga}</td>
-                    <td class="col-grp-attack ${parseFloat(st.goalPerf) < 0 ? 'text-negative' : 'text-positive'}" style="${groupStyles.attack}">${st.goalPerf}</td>
-                    <td class="col-grp-attack" style="${groupStyles.attack}">${st.shots}</td>
-                    <td class="col-grp-attack" style="${groupStyles.attack}">${st.bigChancesCreated}</td>
-                    <td class="col-grp-attack" style="${groupStyles.attack}">${st.bigChancesMissed}</td>
+                    <td class="col-grp-attack">${renderYesNoBadge(st.pk, '#ef4444')}</td>
+                    <td class="col-grp-attack">${renderYesNoBadge(st.fk, '#f59e0b')}</td>
+                    <td class="col-grp-attack">${renderYesNoBadge(st.ck, '#0284c7')}</td>
+                    <td class="col-grp-attack">${st.goals}</td>
+                    <td class="col-grp-attack">${st.assists}</td>
+                    <td class="col-grp-attack font-weight-700">${st.ga}</td>
+                    <td class="col-grp-attack ${parseFloat(st.goalPerf) < 0 ? 'text-negative' : 'text-positive'}">${st.goalPerf}</td>
+                    <td class="col-grp-attack">${st.shots}</td>
+                    <td class="col-grp-attack">${st.bigChancesCreated}</td>
+                    <td class="col-grp-attack">${st.bigChancesMissed}</td>
 
                     <!-- Expected -->
-                    <td class="col-grp-expected" style="${groupStyles.expected}">${st.xG.toFixed(2)}</td>
-                    <td class="col-grp-expected" style="${groupStyles.expected}">${st.xA.toFixed(2)}</td>
-                    <td class="col-grp-expected font-weight-700" style="${groupStyles.expected}">${st.xGI.toFixed(2)}</td>
+                    <td class="col-grp-expected">${st.xG.toFixed(2)}</td>
+                    <td class="col-grp-expected">${st.xA.toFixed(2)}</td>
+                    <td class="col-grp-expected font-weight-700">${st.xGI.toFixed(2)}</td>
 
                     <!-- Defence -->
-                    <td class="col-grp-defence" style="${groupStyles.defence}">${st.defCon}</td>
-                    <td class="col-grp-defence" style="${groupStyles.defence}">${st.defConPts}</td>
-                    <td class="col-grp-defence" style="${groupStyles.defence}">${st.recoveries}</td>
+                    <td class="col-grp-defence">${st.defCon}</td>
+                    <td class="col-grp-defence">${st.defConPts}</td>
+                    <td class="col-grp-defence">${st.recoveries}</td>
 
                     <!-- Passing -->
-                    <td class="col-grp-passing" style="${groupStyles.passing}">${st.keyPasses}</td>
-                    <td class="col-grp-passing" style="${groupStyles.passing}">${st.crosses}</td>
+                    <td class="col-grp-passing">${st.keyPasses}</td>
+                    <td class="col-grp-passing">${st.crosses}</td>
                 </tr>
             `;
         }).join('');
@@ -247,42 +247,43 @@ export function renderStats(container, state, actions) {
                 <table class="stats-table">
                     <thead>
                         <tr class="stats-category-row">
-                            <th colspan="3" class="cat-header cat-info" style="${headerStyles.info}">Player Info</th>
-                            <th colspan="2" class="cat-header cat-core" style="${headerStyles.core}">Core</th>
-                            <th colspan="10" class="cat-header cat-attack" style="${headerStyles.attack}">Attack</th>
-                            <th colspan="3" class="cat-header cat-expected" style="${headerStyles.expected}">Expected</th>
-                            <th colspan="3" class="cat-header cat-defence" style="${headerStyles.defence}">Defence</th>
-                            <th colspan="2" class="cat-header cat-passing" style="${headerStyles.passing}">Passing</th>
+                            <th colspan="3" class="cat-header cat-info">Player Info</th>
+                            <th colspan="2" class="cat-header cat-core">Core</th>
+                            <th colspan="10" class="cat-header cat-attack">Attack</th>
+                            <th colspan="3" class="cat-header cat-expected">Expected</th>
+                            <th colspan="3" class="cat-header cat-defence">Defence</th>
+                            <th colspan="2" class="cat-header cat-passing">Passing</th>
                         </tr>
                         <tr class="stats-columns-row">
-                            <th class="col-grp-info" data-col="name" style="${headerStyles.info} text-align: left; padding-left: 10px;">Player ${getSortArrow('name', sortColumn, sortAsc)}</th>
-                            <th class="col-grp-info" data-col="position" style="${headerStyles.info}">Pos ${getSortArrow('position', sortColumn, sortAsc)}</th>
-                            <th class="col-grp-info" data-col="price" style="${headerStyles.info}">Price ${getSortArrow('price', sortColumn, sortAsc)}</th>
-                            <th class="col-grp-core" data-col="ownership" style="${headerStyles.core}">Owned % ${getSortArrow('ownership', sortColumn, sortAsc)}</th>
-                            <th class="col-grp-core" data-col="points" style="${headerStyles.core}">Points ${getSortArrow('points', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-info" data-col="name" style="text-align: left; padding-left: 10px;">Player ${getSortArrow('name', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-info" data-col="position">Pos ${getSortArrow('position', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-info" data-col="price">Price ${getSortArrow('price', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-core" data-col="ownership">Owned % ${getSortArrow('ownership', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-core" data-col="points">Points ${getSortArrow('points', sortColumn, sortAsc)}</th>
                             
                             <!-- Attack Column Headers (Includes Set Pieces) -->
-                            <th class="col-grp-attack" data-col="pk" style="${headerStyles.attack}">Penalty ${getSortArrow('pk', sortColumn, sortAsc)}</th>
-                            <th class="col-grp-attack" data-col="fk" style="${headerStyles.attack}">Free Kick ${getSortArrow('fk', sortColumn, sortAsc)}</th>
-                            <th class="col-grp-attack" data-col="ck" style="${headerStyles.attack}">Corner ${getSortArrow('ck', sortColumn, sortAsc)}</th>
-                            <th class="col-grp-attack" data-col="goals" style="${headerStyles.attack}">Goals ${getSortArrow('goals', sortColumn, sortAsc)}</th>
-                            <th class="col-grp-attack" data-col="assists" style="${headerStyles.attack}">Assists ${getSortArrow('assists', sortColumn, sortAsc)}</th>
-                            <th class="col-grp-attack" data-col="ga" style="${headerStyles.attack}">G + A ${getSortArrow('ga', sortColumn, sortAsc)}</th>
-                            <th class="col-grp-attack" data-col="goalPerf" style="${headerStyles.attack}">Goal Perf ${getSortArrow('goalPerf', sortColumn, sortAsc)}</th>
-                            <th class="col-grp-attack" data-col="shots" style="${headerStyles.attack}">Shots ${getSortArrow('shots', sortColumn, sortAsc)}</th>
-                            <th class="col-grp-attack" data-col="bigChancesCreated" style="${headerStyles.attack}">Big Ch. Created ${getSortArrow('bigChancesCreated', sortColumn, sortAsc)}</th>
-                            <th class="col-grp-attack" data-col="bigChancesMissed" style="${headerStyles.attack}">Big Ch. Missed ${getSortArrow('bigChancesMissed', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-attack" data-col="pk">Penalty ${getSortArrow('pk', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-attack" data-col="fk">Free Kick ${getSortArrow('fk', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-attack" data-col="ck">Corner ${getSortArrow('ck', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-attack" data-col="goals">Goals ${getSortArrow('goals', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-attack" data-col="assists">Assists ${getSortArrow('assists', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-attack" data-col="ga">G + A ${getSortArrow('ga', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-attack" data-col="goalPerf">Goal Perf ${getSortArrow('goalPerf', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-attack" data-col="shots">Shots ${getSortArrow('shots', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-attack" data-col="bigChancesCreated">Big Ch. Created ${getSortArrow('bigChancesCreated', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-attack" data-col="bigChancesMissed">Big Ch. Missed ${getSortArrow('bigChancesMissed', sortColumn, sortAsc)}</th>
                             
-                            <th class="col-grp-expected" data-col="xG" style="${headerStyles.expected}">xG ${getSortArrow('xG', sortColumn, sortAsc)}</th>
-                            <th class="col-grp-expected" data-col="xA" style="${headerStyles.expected}">xA ${getSortArrow('xA', sortColumn, sortAsc)}</th>
-                            <th class="col-grp-expected" data-col="xGI" style="${headerStyles.expected}">xGI ${getSortArrow('xGI', sortColumn, sortAsc)}</th>
-                            <th class="col-grp-defence" data-col="defCon" style="${headerStyles.defence}">DefCon ${getSortArrow('defCon', sortColumn, sortAsc)}</th>
-                            <th class="col-grp-defence" data-col="defConPts" style="${headerStyles.defence}">DefCon Pts ${getSortArrow('defConPts', sortColumn, sortAsc)}</th>
-                            <th class="col-grp-defence" data-col="recoveries" style="${headerStyles.defence}">Recoveries ${getSortArrow('recoveries', sortColumn, sortAsc)}</th>
-                            <th class="col-grp-passing" data-col="keyPasses" style="${headerStyles.passing}">Key Passes ${getSortArrow('keyPasses', sortColumn, sortAsc)}</th>
-                            <th class="col-grp-passing" data-col="crosses" style="${headerStyles.passing}">Crosses ${getSortArrow('crosses', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-expected" data-col="xG">xG ${getSortArrow('xG', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-expected" data-col="xA">xA ${getSortArrow('xA', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-expected" data-col="xGI">xGI ${getSortArrow('xGI', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-defence" data-col="defCon">DefCon ${getSortArrow('defCon', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-defence" data-col="defConPts">DefCon Pts ${getSortArrow('defConPts', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-defence" data-col="recoveries">Recoveries ${getSortArrow('recoveries', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-passing" data-col="keyPasses">Key Passes ${getSortArrow('keyPasses', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-passing" data-col="crosses">Crosses ${getSortArrow('crosses', sortColumn, sortAsc)}</th>
                         </tr>
                     </thead>
+
                     <tbody id="statsTableBody">
                         <!-- Populated by JS -->
                     </tbody>
