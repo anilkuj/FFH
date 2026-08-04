@@ -101,13 +101,14 @@ export function renderStats(container, state, actions) {
             const st = getComputedStats(player);
             return `
                 <tr>
-                    <td class="col-grp-info cell-player-name" style="text-align: left; padding-left: 10px; max-width: 130px; overflow: hidden; text-overflow: ellipsis;">
-                        <div style="display: flex; align-items: center; gap: 4px; overflow: hidden;">
-                            <strong style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 85px;" title="${player.name}">${player.name}</strong>
-                            <span class="cell-team-tag" style="font-size: 10px; color: var(--text-muted); flex-shrink: 0;">${player.team}</span>
+                    <td class="col-grp-info cell-player-name" style="text-align: left; padding-left: 10px; min-width: 150px; white-space: nowrap;">
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <strong style="font-weight: 700; font-size: 12.5px; white-space: nowrap;" title="${player.name}">${player.name}</strong>
+                            <span class="cell-team-tag" style="font-size: 10px; font-weight: 700; color: var(--text-muted); flex-shrink: 0; padding: 1px 4px; background: rgba(0,0,0,0.06); border-radius: 3px;">${player.team}</span>
                             ${renderSetPieceBadges(player)}
                         </div>
                     </td>
+
                     <td class="col-grp-info font-weight-700">${player.position}</td>
                     <td class="col-grp-info font-weight-800" style="color: var(--primary);">£${player.price.toFixed(1)}</td>
 

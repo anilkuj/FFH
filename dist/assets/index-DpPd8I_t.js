@@ -1399,13 +1399,14 @@ Enter target draft slot number (1-10):`,H=prompt(n);if(H===null)return;const T=p
                 </div>
             `),a}function Il(l,t,a){if(t.tier==="starter"){Jl(l,a);return}let s=l.dataset.posFilter||"ALL",e=l.dataset.teamFilter||"ALL",i=l.dataset.searchQuery||"",d=l.dataset.minPrice?parseFloat(l.dataset.minPrice):4,p=l.dataset.maxPrice?parseFloat(l.dataset.maxPrice):16,u=l.dataset.startFilter||"ALL",P=l.dataset.sortCol||"points",c=l.dataset.sortAsc==="true";const r=[];for(let x=4;x<=16;x+=.5)r.push(x);const o=x=>{const m=typeof x.goals=="number"?x.goals:Math.round(x.xG*1.05+(x.position==="FWD"?2:0)),L=typeof x.assists=="number"?x.assists:Math.round(x.xA*1.1+(x.position==="MID"?2:0)),V=m+L,lt=(m-x.xG).toFixed(2),pt=Math.round(x.xG*5.2+(x.position==="FWD"?12:5)),M=Math.round(x.xA*2.2+1),n=Math.round(x.xG*1.2),H=x.xG||0,T=x.xA||0,S=x.xGI||H+T,N=Math.round((x.goalsConceded||18)*3.8+(x.position==="DEF"?45:12)),q=x.position==="DEF"||x.position==="GKP"?Math.round(x.points*.12):0,k=Math.round((x.MPPG||60)*1.8+(x.position==="MID"?25:10)),Q=Math.round(T*12.5+(x.position==="MID"?10:3)),W=Math.round(T*18.5+(x.position==="MID"?15:2));return{name:x.name,team:x.team,position:x.position,price:x.price,ownership:x.ownership,points:x.points,goals:m,assists:L,ga:V,goalPerf:lt,shots:pt,bigChancesCreated:M,bigChancesMissed:n,xG:H,xA:T,xGI:S,defCon:N,defConPts:q,recoveries:k,keyPasses:Q,crosses:W}},f=()=>{let x=C.filter(L=>{const V=s==="ALL"||L.position===s,lt=e==="ALL"||L.team===e,pt=L.name.toLowerCase().includes(i.toLowerCase()),M=L.price>=d&&L.price<=p,n=L.chanceOfPlaying!==null?L.chanceOfPlaying:100,H=u==="ALL"||n>=parseFloat(u);return V&&lt&&pt&&M&&H});x.sort((L,V)=>{const lt=o(L),pt=o(V);let M=lt[P]!==void 0?lt[P]:L[P],n=pt[P]!==void 0?pt[P]:V[P];return typeof M=="string"?c?M.localeCompare(n):n.localeCompare(M):(M=parseFloat(M)||0,n=parseFloat(n)||0,c?M-n:n-M)});const m=l.querySelector("#statsTableBody");m&&(m.innerHTML=x.map(L=>{const V=o(L);return`
                 <tr>
-                    <td class="col-grp-info cell-player-name" style="text-align: left; padding-left: 10px; max-width: 130px; overflow: hidden; text-overflow: ellipsis;">
-                        <div style="display: flex; align-items: center; gap: 4px; overflow: hidden;">
-                            <strong style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 85px;" title="${L.name}">${L.name}</strong>
-                            <span class="cell-team-tag" style="font-size: 10px; color: var(--text-muted); flex-shrink: 0;">${L.team}</span>
+                    <td class="col-grp-info cell-player-name" style="text-align: left; padding-left: 10px; min-width: 150px; white-space: nowrap;">
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <strong style="font-weight: 700; font-size: 12.5px; white-space: nowrap;" title="${L.name}">${L.name}</strong>
+                            <span class="cell-team-tag" style="font-size: 10px; font-weight: 700; color: var(--text-muted); flex-shrink: 0; padding: 1px 4px; background: rgba(0,0,0,0.06); border-radius: 3px;">${L.team}</span>
                             ${Vt(L)}
                         </div>
                     </td>
+
                     <td class="col-grp-info font-weight-700">${L.position}</td>
                     <td class="col-grp-info font-weight-800" style="color: var(--primary);">£${L.price.toFixed(1)}</td>
 
