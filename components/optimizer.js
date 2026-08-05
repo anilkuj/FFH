@@ -427,18 +427,19 @@ export function renderOptimizer(container, state, actions) {
                                     <input type="checkbox" id="planBenchBoostCheckbox" ${state.planBenchBoost ? 'checked' : ''} style="width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0;">
                                     ⚡ Plan Bench Boost Chip
                                 </label>
-                                <div id="benchBoostTargetGwRow" style="display: ${state.planBenchBoost ? 'flex' : 'none'}; align-items: center; gap: 8px; margin-top: 6px;">
-                                    <span style="font-size: 11px; color: var(--text-muted);">Target Gameweek:</span>
-                                    <select id="benchBoostTargetGwSelect" class="settings-select" style="padding: 3px 8px; font-size: 12px;">
+                                <div id="benchBoostTargetGwRow" style="display: flex; align-items: center; gap: 8px; margin-top: 8px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 8px 12px; border-radius: 8px;">
+                                    <span style="font-size: 12px; font-weight: 700; color: var(--secondary);">Target Bench Boost Gameweek:</span>
+                                    <select id="benchBoostTargetGwSelect" class="settings-select" style="padding: 4px 10px; font-size: 12px; font-weight: 700; color: var(--primary); background: var(--bg-dark); border: 1px solid var(--primary-glow);">
                                         ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(gw => `
-                                            <option value="${gw}" ${(state.benchBoostTargetGw || state.currentGw) === gw ? 'selected' : ''}>GW ${gw}</option>
+                                            <option value="${gw}" ${(state.benchBoostTargetGw || state.currentGw) === gw ? 'selected' : ''}>Gameweek ${gw}</option>
                                         `).join('')}
                                     </select>
                                 </div>
-                                <span class="setting-help">Optimizes all 15 squad players for maximum points, easy FDR (&le;2), and Home fixtures in target GW.</span>
+                                <span class="setting-help">Optimizes all 15 squad players for maximum points, easy FDR (&le;2), and Home fixtures in your target Gameweek.</span>
                             </div>
                         </div>
                     </div>
+
 
 
                     <!-- Solver Constraints Section -->
@@ -582,6 +583,29 @@ export function renderOptimizer(container, state, actions) {
             state.saveState();
         });
     }
+
+    // Wire Plan Bench Boost listeners
+    const planBbCheckbox = container.querySelector('#planBenchBoostCheckbox');
+    const bbTargetSelect = container.querySelector('#benchBoostTargetGwSelect');
+
+    if (planBbCheckbox) {
+        planBbCheckbox.addEventListener('change', (e) => {
+            const isChecked = e.target.checked;
+            state.planBenchBoost = isChecked;
+            localStorage.setItem('fpl_hub_plan_bench_boost', isChecked ? 'true' : 'false');
+            state.saveState();
+        });
+    }
+
+    if (bbTargetSelect) {
+        bbTargetSelect.addEventListener('change', (e) => {
+            const gw = parseInt(e.target.value);
+            state.benchBoostTargetGw = gw;
+            localStorage.setItem('fpl_hub_bench_boost_target_gw', gw.toString());
+            state.saveState();
+        });
+    }
+
 
     const formationSelect = container.querySelector('#optimizerFormationSelect');
     const formationHelpText = container.querySelector('#formationHelpText');
