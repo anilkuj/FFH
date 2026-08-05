@@ -1058,8 +1058,16 @@ function _scoreOptimizationForFormation(state, horizon, mode) {
     // Captain bonus
     const maxScore = allPicked.reduce((best, p) => Math.max(best, getSolverScore(p)), 0);
     totalScore += maxScore;
+
+    // Tactical formation preference: High-scoring midfield & balanced FPL formations (3-5-2, 3-4-3, 4-4-2, 4-5-1)
+    // receive a +2.5 xP weighting bonus over 5-defender formations (5-2-3, 5-3-2, 5-4-1) due to goal/clean-sheet floor
+    if (state.formation === '3-5-2' || state.formation === '3-4-3' || state.formation === '4-4-2' || state.formation === '4-5-1') {
+        totalScore += 2.5;
+    }
+
     return totalScore;
 }
+
 
 /**
  * Full optimizer render function. chosenFormation is set when 'optimum' mode selects the best formation.
@@ -1695,11 +1703,14 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 );
 
 
-                const guaranteedCandidates = candidates.filter(isGuaranteedStart);
+                const guaranteedCandidates = candidates.filter(p => isGuaranteedStart(p) || p.chanceOfPlaying >= 75);
                 if (guaranteedCandidates.length > 0) {
                     candidates = guaranteedCandidates;
+                } else {
+                    candidates = candidates.filter(p => p.chanceOfPlaying >= 50);
                 }
                 candidates.sort((a, b) => getSolverScore(b) - getSolverScore(a));
+
 
                 let bestCandidate = null;
                 let bestPts = currentSquadPts;
