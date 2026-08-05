@@ -1679,15 +1679,17 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         }
 
         // Initialize bench slots (with cheapest budget enablers if not ignoreBench) if they are not locked
-        if (!state.ignoreBench) {
+        if (!state.ignoreBench || state.planBenchBoost) {
+            const forceBenchGuaranteed = state.planBenchBoost ? true : false;
             for (const idx of benchIndices) {
                 const slot = optimizedSquadSlots[idx];
                 if (!slot.locked && slot.playerId === null) {
-                    const cheapest = getCheapestPlayersList(slot.position, 1, initUsedIds, false)[0];
+                    const cheapest = getCheapestPlayersList(slot.position, 1, initUsedIds, forceBenchGuaranteed)[0];
                     slot.playerId = cheapest ? cheapest.id : null;
                 }
             }
         }
+
 
         // --- MANDATORY STARTER PRICE FLOOR SANITIZER ---
         // Forcefully ensure NO starting XI slot holds a non-starter, player below starter price floor, or team limit > 3
@@ -1735,7 +1737,19 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                     }
                 }
 
+                if (invalidSlotIdx === -1 && state.planBenchBoost) {
+                    for (const bIdx of benchIndices) {
+                        const slot = optimizedSquadSlots[bIdx];
+                        const p = PLAYERS.find(pl => pl.id === slot.playerId);
+                        if (!p || (slot.position === 'GKP' && p.price < 4.5) || (slot.position === 'DEF' && p.price < 4.5) || (slot.position === 'FWD' && p.price < 5.5) || !isGuaranteedStart(p, state)) {
+                            invalidSlotIdx = bIdx;
+                            break;
+                        }
+                    }
+                }
+
                 if (invalidSlotIdx === -1) break; // All slots 100% valid!
+
 
 
                 const invSlot = optimizedSquadSlots[invalidSlotIdx];
@@ -2253,12 +2267,13 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 const currentSquadPts = getSquadExpectedPts(optimizedSquadSlots);
 
                 for (const cand of candidates) {
-                    if (isBenchSlot) {
+                    if (isBenchSlot && !state.planBenchBoost) {
                         const newBenchCost = currentBenchCost - playerPrice + cand.price;
-                        if (newBenchCost > minBenchBudget) {
-                            continue; // Skip this candidate, it exceeds the reserved bench budget!
+                        if (newBenchCost > maxBenchBudget) {
+                            continue; // Skip this candidate if it exceeds reserved bench budget (when NOT Bench Boost)
                         }
                     }
+
 
                     // Check team limit (max 3 per team)
                     const tempSquadIds = currentSquadIds.filter(id => id !== slot.playerId);
