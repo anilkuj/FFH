@@ -1029,17 +1029,29 @@ function _scoreOptimizationForFormation(state, horizon, mode) {
         return { players: picked, spent };
     };
 
-    // Budget split: GKP gets ~4.5m bench, rest proportional
+    // Budget split: ensure every position gets at least minimum viable budget
     const gkpBudget = 9.5; // 1 start + 1 bench
     const fieldBudget = maxStartingBudget - gkpBudget;
-    const defBudget = (cons.DEF / 10) * fieldBudget * 1.2;
-    const midBudget = (cons.MID / 10) * fieldBudget;
-    const fwdBudget = fieldBudget - defBudget - midBudget;
+    
+    const minFwdBudget = cons.FWD * 4.5;
+    const minDefBudget = cons.DEF * 4.0;
+    const minMidBudget = cons.MID * 4.5;
+    const remFieldBudget = Math.max(0, fieldBudget - minFwdBudget - minDefBudget - minMidBudget);
+    
+    const totalPosCount = cons.DEF + cons.MID + cons.FWD;
+    const defShare = cons.DEF / totalPosCount;
+    const midShare = cons.MID / totalPosCount;
+    const fwdShare = cons.FWD / totalPosCount;
+    
+    const defBudget = minDefBudget + (remFieldBudget * defShare);
+    const midBudget = minMidBudget + (remFieldBudget * midShare);
+    const fwdBudget = minFwdBudget + (remFieldBudget * fwdShare);
 
     const gkps = pick('GKP', cons.GKP, gkpBudget);
     const defs = pick('DEF', cons.DEF, defBudget);
     const mids = pick('MID', cons.MID, midBudget);
     const fwds = pick('FWD', cons.FWD, fwdBudget);
+
 
     const allPicked = [...gkps.players, ...defs.players, ...mids.players, ...fwds.players];
     let totalScore = allPicked.reduce((sum, p) => sum + getSolverScore(p), 0);
@@ -2061,19 +2073,22 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                         }
                     }
 
-                    if (ok) {
+                        const currentPts = getSquadExpectedPts(optimizedSquadSlots);
                         const oldId = slot.playerId;
                         slot.playerId = cand.id;
                         const newPts = getSquadExpectedPts(optimizedSquadSlots);
                         slot.playerId = oldId;
 
-                        const gain = newPts - getSquadExpectedPts(optimizedSquadSlots);
-                        if (gain >= maxScoreGain) {
+                        const gain = newPts - currentPts;
+                        const isBetterPts = gain > maxScoreGain + 0.001;
+                        const isSamePtsMoreExpensive = Math.abs(gain - maxScoreGain) <= 0.001 && (!bestAggressiveUpgrade || cand.price > bestAggressiveUpgrade.price);
+
+                        if (isBetterPts || isSamePtsMoreExpensive) {
                             maxScoreGain = gain;
                             bestAggressiveUpgrade = cand;
                             targetIdx = sIdx;
                         }
-                    }
+
                 }
             }
 
