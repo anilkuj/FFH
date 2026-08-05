@@ -2114,13 +2114,14 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
 
         if (finalSquadCost > totalValue + 0.001) {
             let overBudgetIter = 0;
-            while (finalSquadCost > totalValue + 0.001 && overBudgetIter < 30) {
+            while (finalSquadCost > totalValue + 0.001 && overBudgetIter < 50) {
                 overBudgetIter++;
                 let bestDowngrade = null;
-                let minPtsLoss = 9999;
+                let minPtsLossPerMillion = 99999;
                 let targetSlotIdx = -1;
 
                 const currentSquadIds = optimizedSquadSlots.map(s => s.playerId).filter(id => id !== null);
+                const currentPts = getSquadExpectedPts(optimizedSquadSlots);
 
                 for (let i = 0; i < optimizedSquadSlots.length; i++) {
                     const slot = optimizedSquadSlots[i];
@@ -2138,9 +2139,10 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                         passesMinFwd(p)
                     );
 
-                    const currentPts = getSquadExpectedPts(optimizedSquadSlots);
-
                     for (const cand of cheaperCandidates) {
+                        const priceDiff = player.price - cand.price;
+                        if (priceDiff <= 0.01) continue;
+
                         const tempSquadIds = currentSquadIds.filter(id => id !== slot.playerId);
                         tempSquadIds.push(cand.id);
                         
@@ -2164,9 +2166,11 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                             const newPts = getSquadExpectedPts(optimizedSquadSlots);
                             slot.playerId = oldId; // Swap back
 
-                            const ptsLoss = currentPts - newPts;
-                            if (ptsLoss < minPtsLoss) {
-                                minPtsLoss = ptsLoss;
+                            const ptsLoss = Math.max(0, currentPts - newPts);
+                            const lossRatio = ptsLoss / priceDiff;
+
+                            if (lossRatio < minPtsLossPerMillion) {
+                                minPtsLossPerMillion = lossRatio;
                                 bestDowngrade = cand;
                                 targetSlotIdx = i;
                             }
@@ -2182,10 +2186,36 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                         return sum + (p ? p.price : 0);
                     }, 0);
                 } else {
-                    break;
+                    // Emergency fallback: downgrade highest priced unlocked starting XI player to cheapest valid option
+                    let emergencyTrimmed = false;
+                    for (let i = 0; i < optimizedSquadSlots.length; i++) {
+                        const slot = optimizedSquadSlots[i];
+                        if (slot.locked || !slot.isStarting) continue;
+                        const player = PLAYERS.find(p => p.id === slot.playerId);
+                        if (!player) continue;
+
+                        const cheapestFallback = PLAYERS.filter(p =>
+                            p.position === slot.position &&
+                            p.price < player.price &&
+                            !currentSquadIds.includes(p.id) &&
+                            (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 50)
+                        ).sort((a, b) => a.price - b.price)[0];
+
+                        if (cheapestFallback) {
+                            slot.playerId = cheapestFallback.id;
+                            emergencyTrimmed = true;
+                            finalSquadCost = optimizedSquadSlots.reduce((sum, s) => {
+                                const p = PLAYERS.find(pl => pl.id === s.playerId);
+                                return sum + (p ? p.price : 0);
+                            }, 0);
+                            break;
+                        }
+                    }
+                    if (!emergencyTrimmed) break;
                 }
             }
         }
+
 
         // Compare original and optimized squads by player ID SETS — not slot-by-slot.
         // Slot-by-slot comparison shows intermediate iteration swaps (A→B then B→C displayed
