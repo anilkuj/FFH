@@ -18,11 +18,12 @@ export function renderPlanner(container, state, actions) {
         const player = PLAYERS.find(p => p.id === id);
         if (player) {
             const pred = player.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 };
+            const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
             let multiplier = 1;
             if (id === state.captain) {
                 multiplier = state.chips.tripleCaptain ? 3 : 2;
             }
-            expectedPoints += pred.pts * multiplier;
+            expectedPoints += (pred.pts * factor) * multiplier;
         }
     });
 
@@ -32,7 +33,8 @@ export function renderPlanner(container, state, actions) {
             const player = PLAYERS.find(p => p.id === id);
             if (player) {
                 const pred = player.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 };
-                expectedPoints += pred.pts;
+                const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
+                expectedPoints += (pred.pts * factor);
             }
         });
     }
@@ -47,11 +49,12 @@ export function renderPlanner(container, state, actions) {
                 const player = PLAYERS.find(p => p.id === id);
                 if (player) {
                     const pred = player.predictions.find(pr => pr.gw === gw) || { pts: 0 };
+                    const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
                     let multiplier = 1;
                     if (id === state.captain) {
                         multiplier = (gw === state.currentGw && state.chips.tripleCaptain) ? 3 : 2;
                     }
-                    gwTotal += pred.pts * multiplier;
+                    gwTotal += (pred.pts * factor) * multiplier;
                 }
             });
             if (gw === state.currentGw && state.chips.benchBoost) {
@@ -59,7 +62,8 @@ export function renderPlanner(container, state, actions) {
                     const player = PLAYERS.find(p => p.id === id);
                     if (player) {
                         const pred = player.predictions.find(pr => pr.gw === gw) || { pts: 0 };
-                        gwTotal += pred.pts;
+                        const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
+                        gwTotal += (pred.pts * factor);
                     }
                 });
             }
@@ -67,6 +71,7 @@ export function renderPlanner(container, state, actions) {
         }
         return total;
     };
+
 
     const gw1XP = expectedPoints;
     const gw3XP = getSquadXPForHorizon(3);
