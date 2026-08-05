@@ -1799,7 +1799,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                     p.position === currentSlot.position && 
                     !usedStartingIds.includes(p.id) && 
                     (!state.ignoreBench || !activeBenchIds.includes(p.id)) &&
-                    p.price <= maxBudgetForSlot &&
+                    p.price <= (currentSlot.position === 'GKP' ? 5.5 : maxBudgetForSlot) &&
                     !state.mustExclude.includes(p.id) &&
                     passesMinFwd(p)
                 );
@@ -1830,6 +1830,58 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 let bestPts = currentSquadPts;
 
                 for (const cand of candidates) {
+                    // If candidate price exceeds maxBudgetForSlot (e.g. Donnarumma/Raya 5.5m GKP), attempt a donor swap from outfield starters
+                    if (cand.price > maxBudgetForSlot + 0.001) {
+                        const neededExtra = cand.price - maxBudgetForSlot;
+                        for (const donorIdx of startingIndices) {
+                            if (donorIdx === idx) continue;
+                            const donorSlot = optimizedSquadSlots[donorIdx];
+                            if (donorSlot.locked) continue;
+                            const donorPlayer = PLAYERS.find(p => p.id === donorSlot.playerId);
+                            if (!donorPlayer) continue;
+
+                            const maxDonorPrice = donorPlayer.price - neededExtra;
+                            const donorFloor = donorSlot.position === 'GKP' ? 4.5 : (donorSlot.position === 'DEF' ? 4.5 : (donorSlot.position === 'FWD' && cons.FWD >= 2 ? 5.5 : 5.0));
+
+                            if (maxDonorPrice >= donorFloor) {
+                                const donorReplacement = PLAYERS.filter(p =>
+                                    p.position === donorSlot.position &&
+                                    p.price >= donorFloor &&
+                                    p.price <= maxDonorPrice &&
+                                    !usedStartingIds.includes(p.id) &&
+                                    p.id !== cand.id &&
+                                    (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 75)
+                                ).sort((a, b) => getSolverScore(b) - getSolverScore(a))[0];
+
+                                if (donorReplacement) {
+                                    const oldGkpId = currentSlot.playerId;
+                                    const oldDonorId = donorSlot.playerId;
+
+                                    currentSlot.playerId = cand.id;
+                                    donorSlot.playerId = donorReplacement.id;
+
+                                    const newPts = getSquadExpectedPts(optimizedSquadSlots);
+
+                                    // Swap back for evaluation
+                                    currentSlot.playerId = oldGkpId;
+                                    donorSlot.playerId = oldDonorId;
+
+                                    if (newPts > bestPts + 0.05) {
+                                        bestPts = newPts;
+                                        bestCandidate = cand;
+                                        // Execute swap immediately
+                                        currentSlot.playerId = cand.id;
+                                        donorSlot.playerId = donorReplacement.id;
+                                        startingImproved = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if (startingImproved) break;
+                        continue;
+                    }
+
                     // Check max 3 players per team constraint for starting 11
                     const tempStartingIds = [...usedStartingIds, cand.id];
                     const teamCounts = {};
@@ -1851,14 +1903,14 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                         const newSquadPts = getSquadExpectedPts(optimizedSquadSlots);
                         currentSlot.playerId = oldId; // Swap back
 
-                        if (newSquadPts > bestPts) {
+                        if (newSquadPts > bestPts + 0.05) {
                             bestPts = newSquadPts;
                             bestCandidate = cand;
                         }
                     }
                 }
 
-                if (bestCandidate) {
+                if (bestCandidate && !startingImproved) {
                     currentSlot.playerId = bestCandidate.id;
                     startingImproved = true;
                 }
