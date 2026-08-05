@@ -28,7 +28,31 @@ window.getPlayerMinutesFactor = function(player) {
     return chance * minutesRatio;
 };
 
+// Universal dataset-wide minutes & rotation risk discounting for all 700+ players
+window.applyUniversalMinutesDiscount = function() {
+    if (typeof PLAYERS === 'undefined' || !Array.isArray(PLAYERS)) return;
+    PLAYERS.forEach(player => {
+        const factor = window.getPlayerMinutesFactor(player);
+        if (player.predictions && Array.isArray(player.predictions)) {
+            player.predictions.forEach(pr => {
+                if (pr._rawPts === undefined) {
+                    pr._rawPts = pr.pts;
+                }
+                pr.pts = Math.round(pr._rawPts * factor * 10) / 10;
+            });
+        }
+        if (player.predictions && player.predictions.length >= 10) {
+            const sum10 = player.predictions.slice(0, 10).reduce((acc, p) => acc + p.pts, 0);
+            player.xp10 = Math.round(sum10 * 10) / 10;
+        }
+    });
+};
+
+// Run universal minutes discounting across all 700+ players immediately on startup
+window.applyUniversalMinutesDiscount();
+
 // Application State class
+
 
 class AppState {
     constructor() {
