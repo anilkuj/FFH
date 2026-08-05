@@ -1598,12 +1598,30 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             return result;
         };
 
-        // Initialize starting slots first (with cheapest playing) if they are not locked
+        const getTopPlayersList = (pos, count, usedIds) => {
+            const pool = PLAYERS.filter(p => 
+                p.position === pos && 
+                !state.mustExclude.includes(p.id) &&
+                !usedIds.includes(p.id) &&
+                passesMinFwd(p) &&
+                (isGuaranteedStart(p) || p.chanceOfPlaying >= 75)
+            ).sort((a, b) => getSolverScore(b) - getSolverScore(a));
+            
+            const result = [];
+            for (const p of pool) {
+                result.push(p);
+                usedIds.push(p.id);
+                if (result.length === count) break;
+            }
+            return result;
+        };
+
+        // Initialize starting slots with top-scoring guaranteed starters
         for (const idx of startingIndices) {
             const slot = optimizedSquadSlots[idx];
             if (!slot.locked && slot.playerId === null) {
-                const cheapest = getCheapestPlayersList(slot.position, 1, initUsedIds, true)[0];
-                slot.playerId = cheapest ? cheapest.id : null;
+                const top = getTopPlayersList(slot.position, 1, initUsedIds)[0];
+                slot.playerId = top ? top.id : null;
             }
         }
         // Initialize bench slots (with cheapest budget enablers if not ignoreBench) if they are not locked
@@ -1616,6 +1634,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 }
             }
         }
+
 
 
         // Duplicates and team-limit resolution helper for bench
