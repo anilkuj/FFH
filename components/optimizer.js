@@ -420,8 +420,26 @@ export function renderOptimizer(container, state, actions) {
                                 </div>
                                 <span class="setting-help">Min price for FWDs (default £6.0m).</span>
                             </div>
+
+                            <!-- Plan Bench Boost Control -->
+                            <div class="setting-group" id="benchBoostGroup">
+                                <label for="planBenchBoostCheckbox" style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12px; font-weight: 700; color: var(--text-main); line-height: 1.3;">
+                                    <input type="checkbox" id="planBenchBoostCheckbox" ${state.planBenchBoost ? 'checked' : ''} style="width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0;">
+                                    ⚡ Plan Bench Boost Chip
+                                </label>
+                                <div id="benchBoostTargetGwRow" style="display: ${state.planBenchBoost ? 'flex' : 'none'}; align-items: center; gap: 8px; margin-top: 6px;">
+                                    <span style="font-size: 11px; color: var(--text-muted);">Target Gameweek:</span>
+                                    <select id="benchBoostTargetGwSelect" class="settings-select" style="padding: 3px 8px; font-size: 12px;">
+                                        ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(gw => `
+                                            <option value="${gw}" ${(state.benchBoostTargetGw || state.currentGw) === gw ? 'selected' : ''}>GW ${gw}</option>
+                                        `).join('')}
+                                    </select>
+                                </div>
+                                <span class="setting-help">Optimizes all 15 squad players for maximum points, easy FDR (&le;2), and Home fixtures in target GW.</span>
+                            </div>
                         </div>
                     </div>
+
 
                     <!-- Solver Constraints Section -->
                     <div class="opt-settings-section">
@@ -2524,6 +2542,15 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                         <span style="color:var(--text-muted); font-weight:400;">— Best formation for maximum predicted points across ${horizon} GW${horizon > 1 ? 's' : ''}</span>
                     </div>
                 ` : ''}
+                ${state.planBenchBoost ? `
+                    <div style="display:inline-flex; align-items:center; gap:8px; margin-top:10px; margin-left:6px; padding:8px 14px; background:linear-gradient(135deg, rgba(245,158,11,0.1), rgba(251,191,36,0.07)); border:1px solid rgba(245,158,11,0.3); border-radius:10px; font-size:12px; font-weight:600;">
+                        <i data-lucide="shield-check" style="width:14px;height:14px;color:#f59e0b;"></i>
+                        <span style="color:#f59e0b;">Bench Boost Target:</span>
+                        <span style="color:var(--text-main); font-family:var(--font-heading); font-size:14px; font-weight:800;">GW ${state.benchBoostTargetGw || state.currentGw}</span>
+                        <span style="color:var(--text-muted); font-weight:400;">— All 15 squad players optimized for Home & Easy Fixtures in GW${state.benchBoostTargetGw || state.currentGw}</span>
+                    </div>
+                ` : ''}
+
                 <div class="recommendations-list" style="margin-top: 16px;">
                     ${upgrades.length > 0 ? `
                         <div class="rec-option-box">

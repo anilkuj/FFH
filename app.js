@@ -141,7 +141,14 @@ class AppState {
         const savedMinFwdPrice = localStorage.getItem('fpl_hub_min_fwd_price');
         this.minFwdPrice = savedMinFwdPrice ? parseFloat(savedMinFwdPrice) : 6.0;
 
+        const savedPlanBenchBoost = localStorage.getItem('fpl_hub_plan_bench_boost');
+        this.planBenchBoost = savedPlanBenchBoost ? (savedPlanBenchBoost === 'true') : false;
+
+        const savedBenchBoostTargetGw = localStorage.getItem('fpl_hub_bench_boost_target_gw');
+        this.benchBoostTargetGw = savedBenchBoostTargetGw ? parseInt(savedBenchBoostTargetGw) : 1;
+
         this.optimizerObjective = localStorage.getItem('fpl_hub_optimizer_objective') || 'xp';
+
 
         const savedProfile = localStorage.getItem('fpl_hub_user_profile');
         this.userProfile = savedProfile ? JSON.parse(savedProfile) : null;
