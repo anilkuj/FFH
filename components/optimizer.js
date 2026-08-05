@@ -1578,8 +1578,20 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
 
         // Initialize starting slots with budget-constrained top-scoring guaranteed starters
         let runningStartingCost = 0;
-        const unassignedStartingCount = startingIndices.filter(idx => optimizedSquadSlots[idx].playerId === null).length;
+        const runningTeamCounts = {};
         
+        // Track pre-locked starting slots team counts
+        for (const idx of startingIndices) {
+            const slot = optimizedSquadSlots[idx];
+            if (slot.playerId !== null) {
+                const p = PLAYERS.find(pl => pl.id === slot.playerId);
+                if (p) {
+                    runningTeamCounts[p.team] = (runningTeamCounts[p.team] || 0) + 1;
+                    runningStartingCost += p.price;
+                }
+            }
+        }
+
         for (let i = 0; i < startingIndices.length; i++) {
             const idx = startingIndices[i];
             const slot = optimizedSquadSlots[idx];
@@ -1599,22 +1611,20 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                     p.position === slot.position && 
                     !state.mustExclude.includes(p.id) &&
                     !initUsedIds.includes(p.id) &&
+                    (runningTeamCounts[p.team] || 0) < 3 &&
                     p.price <= Math.max(4.5, maxAllowedPrice) &&
                     isStarterPriceFloorInit(p, slot.position) &&
                     passesMinFwd(p) &&
                     (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 75)
                 ).sort((a, b) => getExpectedPtsOverHorizon(b, state.currentGw, horizon) - getExpectedPtsOverHorizon(a, state.currentGw, horizon));
                 
-                const chosen = pool[0] || PLAYERS.filter(p => p.position === slot.position && isStarterPriceFloorInit(p, slot.position) && !initUsedIds.includes(p.id)).sort((a, b) => getExpectedPtsOverHorizon(b, state.currentGw, horizon) - getExpectedPtsOverHorizon(a, state.currentGw, horizon))[0] || getCheapestPlayersList(slot.position, 1, initUsedIds, true)[0];
+                const chosen = pool[0] || PLAYERS.filter(p => p.position === slot.position && isStarterPriceFloorInit(p, slot.position) && !initUsedIds.includes(p.id) && (runningTeamCounts[p.team] || 0) < 3).sort((a, b) => getExpectedPtsOverHorizon(b, state.currentGw, horizon) - getExpectedPtsOverHorizon(a, state.currentGw, horizon))[0] || getCheapestPlayersList(slot.position, 1, initUsedIds, true)[0];
                 if (chosen) {
                     slot.playerId = chosen.id;
                     initUsedIds.push(chosen.id);
                     runningStartingCost += chosen.price;
+                    runningTeamCounts[chosen.team] = (runningTeamCounts[chosen.team] || 0) + 1;
                 }
-
-            } else if (slot.playerId !== null) {
-                const p = PLAYERS.find(pl => pl.id === slot.playerId);
-                if (p) runningStartingCost += p.price;
             }
         }
 
@@ -1630,22 +1640,53 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         }
 
         // --- MANDATORY STARTER PRICE FLOOR SANITIZER ---
-        // Forcefully ensure NO starting XI slot holds a non-starter or player below starter price floor (GKP >= 4.5, DEF >= 4.5, FWD >= 5.5)
+        // Forcefully ensure NO starting XI slot holds a non-starter, player below starter price floor, or team limit > 3
         const sanitizeStartingXIStarterFloors = () => {
             let iter = 0;
             while (iter < 20) {
                 iter++;
                 let invalidSlotIdx = -1;
-                for (const sIdx of startingIndices) {
-                    const slot = optimizedSquadSlots[sIdx];
-                    const p = PLAYERS.find(pl => pl.id === slot.playerId);
-                    if (!p || (slot.position === 'GKP' && p.price < 4.5) || (slot.position === 'DEF' && p.price < 4.5) || (slot.position === 'FWD' && cons.FWD >= 2 && p.price < 5.5) || !isGuaranteedStart(p, state)) {
-                        invalidSlotIdx = sIdx;
-                        break;
+
+                // Check team limit max 3 per team first
+                const squadTeamCounts = {};
+                let overLimitTeam = null;
+                for (const slot of optimizedSquadSlots) {
+                    if (slot.playerId !== null) {
+                        const p = PLAYERS.find(pl => pl.id === slot.playerId);
+                        if (p) {
+                            squadTeamCounts[p.team] = (squadTeamCounts[p.team] || 0) + 1;
+                            if (squadTeamCounts[p.team] > 3) {
+                                overLimitTeam = p.team;
+                            }
+                        }
                     }
                 }
 
-                if (invalidSlotIdx === -1) break; // All 11 starting XI slots are 100% verified starters above floor!
+                if (overLimitTeam) {
+                    for (const sIdx of startingIndices) {
+                        const slot = optimizedSquadSlots[sIdx];
+                        if (slot.locked) continue;
+                        const p = PLAYERS.find(pl => pl.id === slot.playerId);
+                        if (p && p.team === overLimitTeam) {
+                            invalidSlotIdx = sIdx;
+                            break;
+                        }
+                    }
+                }
+
+                if (invalidSlotIdx === -1) {
+                    for (const sIdx of startingIndices) {
+                        const slot = optimizedSquadSlots[sIdx];
+                        const p = PLAYERS.find(pl => pl.id === slot.playerId);
+                        if (!p || (slot.position === 'GKP' && p.price < 4.5) || (slot.position === 'DEF' && p.price < 4.5) || (slot.position === 'FWD' && cons.FWD >= 2 && p.price < 5.5) || !isGuaranteedStart(p, state)) {
+                            invalidSlotIdx = sIdx;
+                            break;
+                        }
+                    }
+                }
+
+                if (invalidSlotIdx === -1) break; // All slots 100% valid!
+
 
                 const invSlot = optimizedSquadSlots[invalidSlotIdx];
                 const invPos = invSlot.position;
