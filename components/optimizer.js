@@ -2045,6 +2045,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                         }
                     }
 
+                    if (ok) {
                         const currentPts = getSquadExpectedPts(optimizedSquadSlots);
                         const oldId = slot.playerId;
                         slot.playerId = cand.id;
@@ -2060,8 +2061,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                             bestAggressiveUpgrade = cand;
                             targetIdx = sIdx;
                         }
-
+                    }
                 }
+
             }
 
             if (bestAggressiveUpgrade && targetIdx !== -1) {
