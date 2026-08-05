@@ -963,19 +963,19 @@ function isGuaranteedStart(player, state) {
     // Injured, suspended, or unavailable players are NEVER guaranteed starters
     if (player.status === 'i' || player.status === 's' || player.status === 'u') return false;
     
-    // Players with low start chance (<50%) or 0 starts with low chance are NEVER guaranteed starters
-    if (player.chanceOfPlaying !== undefined && player.chanceOfPlaying !== null && player.chanceOfPlaying < 50) return false;
-    if (typeof player.GS === 'number' && player.GS === 0 && (player.chanceOfPlaying === undefined || player.chanceOfPlaying < 75)) return false;
+    const chance = (player.chanceOfPlaying !== undefined && player.chanceOfPlaying !== null) ? player.chanceOfPlaying : 100;
+    // Rotation risks (<75% chance AND (<60 MPPG OR <15 GS)) or low chance (<50%) are NEVER guaranteed starters
+    if (chance < 75 && (mppg < 60 || (typeof player.GS === 'number' && player.GS < 15))) return false;
+    if (chance < 50) return false;
+    if (typeof player.GS === 'number' && player.GS === 0 && chance < 75) return false;
+
 
     const minMins = (state && state.guaranteedStart) || 0;
     if (minMins === 0) return true;
     
-    const expectedMins = typeof player.MPPG === 'number' && player.MPPG > 0 
-        ? player.MPPG 
-        : ((player.chanceOfPlaying !== undefined && player.chanceOfPlaying !== null) ? player.chanceOfPlaying * 0.85 : 85);
-        
-    return expectedMins >= minMins;
+    return mppg >= minMins;
 }
+
 
 
 /**
