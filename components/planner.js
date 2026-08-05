@@ -1494,6 +1494,13 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
         priceOptions += `<option value="${p.toFixed(1)}">Max: £${p.toFixed(1)}m</option>`;
     }
 
+    // Generate Team Options sorted alphabetically
+    const sortedTeams = TEAMS.slice().sort((a, b) => a.name.localeCompare(b.name));
+    let teamOptions = '<option value="">All Teams (20)</option>';
+    sortedTeams.forEach(t => {
+        teamOptions += `<option value="${t.shortName}">${t.name} (${t.shortName})</option>`;
+    });
+
     const modalHTML = `
         <div class="modal-header-section">
             <h3 style="display: flex; align-items: center; gap: 8px;">
@@ -1510,6 +1517,9 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
                 </div>
                 <div style="display: flex; gap: 8px; width: 100%; flex-wrap: wrap;">
                     <input type="text" class="transfer-search-field" id="modalSearchField" placeholder="Search by name or team..." style="flex: 2; min-width: 150px; font-size: 12px; padding: 8px; background: var(--bg-card); color:var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;" />
+                    <select class="panel-price-select" id="modalTeamSelect" style="flex: 1; min-width: 110px; font-size: 12px; padding: 8px; background: var(--bg-card); color:var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
+                        ${teamOptions}
+                    </select>
                     <select class="panel-price-select" id="modalPriceSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-card); color:var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
                         ${priceOptions}
                     </select>
@@ -1556,6 +1566,7 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
         if (closeBtn) closeBtn.addEventListener('click', actions.hideModal);
 
         const searchField = document.getElementById('modalSearchField');
+        const teamSelect = document.getElementById('modalTeamSelect');
         const priceSelect = document.getElementById('modalPriceSelect');
         const attSelect = document.getElementById('modalAttSelect');
         const defconSelect = document.getElementById('modalDefconSelect');
@@ -1566,6 +1577,7 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
         const applyFilters = () => {
             try {
                 const query = searchField ? searchField.value.trim().toLowerCase() : "";
+                const selectedTeam = teamSelect ? teamSelect.value : "";
                 const maxPriceStr = priceSelect ? priceSelect.value : "";
                 const maxPrice = maxPriceStr ? parseFloat(maxPriceStr) : Infinity;
                 
@@ -1581,6 +1593,7 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
                 const gradeScores = { 'A': 5, 'B': 4, 'C': 3, 'D': 2, 'E': 1, 'N/A': 0 };
      
                 const filtered = buyablePlayers.filter(p => {
+                    if (selectedTeam && p.team !== selectedTeam) return false;
                     if (p.price > maxPrice) return false;
                     if (minMins > 0 && (p.MPPG || 0) < minMins) return false;
                     if (minGs > 0 && (p.GS || 0) < minGs) return false;
@@ -1629,7 +1642,7 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
                     return false;
                 });
                 
-                console.log("[FPL HUB] Filters applied. Count:", filtered.length, "Query:", query, "Price:", maxPrice, "Att:", minAttGrade, "Defcon:", minDefconGrade);
+                console.log("[FPL HUB] Filters applied. Count:", filtered.length, "Query:", query, "Team:", selectedTeam, "Price:", maxPrice, "Att:", minAttGrade, "Defcon:", minDefconGrade);
                 
                 const filterCountLabel = document.getElementById('modalFilterCount');
                 if (filterCountLabel) {
@@ -1646,11 +1659,13 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
         };
  
         if (searchField) searchField.addEventListener('input', applyFilters);
+        if (teamSelect) teamSelect.addEventListener('change', applyFilters);
         if (priceSelect) priceSelect.addEventListener('change', applyFilters);
         if (attSelect) attSelect.addEventListener('change', applyFilters);
         if (defconSelect) defconSelect.addEventListener('change', applyFilters);
         if (mppgSelect) mppgSelect.addEventListener('change', applyFilters);
         if (gsSelect) gsSelect.addEventListener('change', applyFilters);
+
 
         const wireAddButtons = () => {
             listContainer.querySelectorAll('.add-player-action-btn').forEach(btn => {
