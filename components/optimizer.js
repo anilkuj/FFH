@@ -85,13 +85,14 @@ const SET_PIECE_DUTIES = {
 };
 
 export function getPlayerSetPieceDuty(player) {
-    if (!player || !player.name) return { pk: false, fk: false, ck: false, duties: [], label: '', hasDuty: false };
+    if (!player || !player.name || player.position === 'GKP') {
+        return { pk: false, fk: false, ck: false, duties: [], label: '', hasDuty: false };
+    }
     let info = SET_PIECE_DUTIES[player.name];
     if (!info) {
-        const parts = player.name.split(' ');
-        const surname = parts[parts.length - 1].toLowerCase();
+        // Strict case-insensitive exact name lookup (prevents surname collision like Alex Palmer matching Cole Palmer)
         for (const [name, d] of Object.entries(SET_PIECE_DUTIES)) {
-            if (name.toLowerCase().includes(surname)) {
+            if (player.name.toLowerCase().trim() === name.toLowerCase().trim()) {
                 info = d;
                 break;
             }
@@ -117,6 +118,7 @@ export function getPlayerSetPieceDuty(player) {
         hasDuty: duties.length > 0
     };
 }
+
 
 export function renderSetPieceBadges(player) {
     const duty = getPlayerSetPieceDuty(player);
