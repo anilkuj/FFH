@@ -1617,6 +1617,104 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             }
         }
 
+        // --- MANDATORY STARTER PRICE FLOOR SANITIZER ---
+        // Forcefully ensure NO starting XI slot holds a non-starter or player below starter price floor (GKP >= 4.5, DEF >= 4.5, FWD >= 5.5)
+        const sanitizeStartingXIStarterFloors = () => {
+            let iter = 0;
+            while (iter < 20) {
+                iter++;
+                let invalidSlotIdx = -1;
+                for (const sIdx of startingIndices) {
+                    const slot = optimizedSquadSlots[sIdx];
+                    const p = PLAYERS.find(pl => pl.id === slot.playerId);
+                    if (!p || (slot.position === 'GKP' && p.price < 4.5) || (slot.position === 'DEF' && p.price < 4.5) || (slot.position === 'FWD' && cons.FWD >= 2 && p.price < 5.5) || !isGuaranteedStart(p, state)) {
+                        invalidSlotIdx = sIdx;
+                        break;
+                    }
+                }
+
+                if (invalidSlotIdx === -1) break; // All 11 starting XI slots are 100% verified starters above floor!
+
+                const invSlot = optimizedSquadSlots[invalidSlotIdx];
+                const invPos = invSlot.position;
+                const minReqPrice = invPos === 'GKP' ? 4.5 : (invPos === 'DEF' ? 4.5 : 5.5);
+
+                const currentSquadIds = optimizedSquadSlots.map(s => s.playerId).filter(Boolean);
+
+                const validStarterCand = PLAYERS.filter(p =>
+                    p.position === invPos &&
+                    p.price >= minReqPrice &&
+                    !currentSquadIds.includes(p.id) &&
+                    !state.mustExclude.includes(p.id) &&
+                    (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 75)
+                ).sort((a, b) => a.price - b.price)[0];
+
+                if (!validStarterCand) break;
+
+                const currentInvPlayer = PLAYERS.find(p => p.id === invSlot.playerId);
+                const neededExtraBudget = validStarterCand.price - (currentInvPlayer ? currentInvPlayer.price : 0);
+
+                let funded = false;
+                for (const donorIdx of startingIndices) {
+                    if (donorIdx === invalidSlotIdx) continue;
+                    const donorSlot = optimizedSquadSlots[donorIdx];
+                    if (donorSlot.locked) continue;
+
+                    const donorPlayer = PLAYERS.find(p => p.id === donorSlot.playerId);
+                    if (!donorPlayer) continue;
+
+                    const donorTargetPrice = donorPlayer.price - neededExtraBudget;
+                    const donorMinFloor = donorSlot.position === 'GKP' ? 4.5 : (donorSlot.position === 'DEF' ? 4.5 : (donorSlot.position === 'FWD' && cons.FWD >= 2 ? 5.5 : 5.0));
+
+                    if (donorTargetPrice >= donorMinFloor) {
+                        const donorReplacement = PLAYERS.filter(p =>
+                            p.position === donorSlot.position &&
+                            p.price >= donorMinFloor &&
+                            p.price <= donorTargetPrice &&
+                            !currentSquadIds.includes(p.id) &&
+                            (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 75)
+                        ).sort((a, b) => getSolverScore(b) - getSolverScore(a))[0];
+
+                        if (donorReplacement) {
+                            donorSlot.playerId = donorReplacement.id;
+                            invSlot.playerId = validStarterCand.id;
+                            funded = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!funded) {
+                    for (const donorIdx of startingIndices) {
+                        if (donorIdx === invalidSlotIdx) continue;
+                        const donorSlot = optimizedSquadSlots[donorIdx];
+                        if (donorSlot.locked) continue;
+                        const donorPlayer = PLAYERS.find(p => p.id === donorSlot.playerId);
+                        if (!donorPlayer || donorPlayer.price <= 5.5) continue;
+
+                        const cheaperDonor = PLAYERS.filter(p =>
+                            p.position === donorSlot.position &&
+                            p.price >= 5.0 &&
+                            p.price < donorPlayer.price &&
+                            !currentSquadIds.includes(p.id) &&
+                            (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 75)
+                        ).sort((a, b) => getSolverScore(b) - getSolverScore(a))[0];
+
+                        if (cheaperDonor) {
+                            donorSlot.playerId = cheaperDonor.id;
+                            invSlot.playerId = validStarterCand.id;
+                            funded = true;
+                            break;
+                        }
+                    }
+                    if (!funded) break;
+                }
+            }
+        };
+
+        sanitizeStartingXIStarterFloors();
+
+
 
 
 
