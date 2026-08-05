@@ -959,6 +959,14 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
 function isGuaranteedStart(player, state) {
     if (!player) return false;
     if (state && state.mustInclude && state.mustInclude.includes(player.id)) return true;
+    
+    // Injured, suspended, or unavailable players are NEVER guaranteed starters
+    if (player.status === 'i' || player.status === 's' || player.status === 'u') return false;
+    
+    // Players with low start chance (<50%) or 0 starts with low chance are NEVER guaranteed starters
+    if (player.chanceOfPlaying !== undefined && player.chanceOfPlaying !== null && player.chanceOfPlaying < 50) return false;
+    if (typeof player.GS === 'number' && player.GS === 0 && (player.chanceOfPlaying === undefined || player.chanceOfPlaying < 75)) return false;
+
     const minMins = (state && state.guaranteedStart) || 0;
     if (minMins === 0) return true;
     
@@ -968,6 +976,7 @@ function isGuaranteedStart(player, state) {
         
     return expectedMins >= minMins;
 }
+
 
 /**
  * Helper: Expected points over selected horizon
@@ -1529,14 +1538,14 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             const result = [];
             for (const p of list) {
                 if (!usedIds.includes(p.id)) {
-                    if (forceGuaranteed && !isGuaranteedStart(p)) continue;
+                    if (forceGuaranteed && !isGuaranteedStart(p, state)) continue;
                     result.push(p);
                     usedIds.push(p.id);
                     if (result.length === count) break;
                 }
             }
-            // Fallback: if we didn't find enough players matching the guaranteed start criteria, grab from the list without checking it
-            if (result.length < count) {
+            // Fallback for bench slots: if we didn't find enough players and forceGuaranteed is false, grab from the list
+            if (result.length < count && !forceGuaranteed) {
                 for (const p of list) {
                     if (!usedIds.includes(p.id)) {
                         result.push(p);
@@ -1547,6 +1556,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             }
             return result;
         };
+
 
         const getTopPlayersList = (pos, count, usedIds) => {
             const pool = PLAYERS.filter(p => 
