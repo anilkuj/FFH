@@ -476,10 +476,11 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
             <div class="player-pitch-card" data-id="${player.id}" data-type="starter">
                 <button class="pitch-sell-btn" data-id="${player.id}" title="Remove Player" style="display: ${isSquadUnlocked ? 'flex' : 'none'} !important; opacity: 1 !important;">&times;</button>
                 <div class="shirt-icon-wrapper">
-                    ${getShirtSVG(teamObj.color, player.team)}
+                    ${getShirtSVG(teamObj.color, player.team, player.position)}
                     ${designationBadge}
                     ${player.transferredThisSeason ? `<div class="pitch-transfer-icon" title="Transferred from ${player.oldTeam}">⇆</div>` : ''}
                 </div>
+
                 <div class="player-card-info" style="padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; border-radius: 8px;">
                     <div class="pitch-card-info-header">
                         <div class="player-pitch-name" style="display:flex; align-items:center; justify-content:center; gap:4px; flex-wrap:wrap;">
@@ -549,10 +550,11 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions, is
                 <div class="player-pitch-card" data-id="${player.id}" data-type="bench" data-index="${index}" style="width: 100%;">
                     <button class="pitch-sell-btn" data-id="${player.id}" title="Remove Player" style="display: ${isSquadUnlocked ? 'flex' : 'none'} !important; opacity: 1 !important;">&times;</button>
                     <div class="shirt-icon-wrapper">
-                        ${getShirtSVG(teamObj.color, player.team)}
+                        ${getShirtSVG(teamObj.color, player.team, player.position)}
                         ${designationBadge}
                         ${player.transferredThisSeason ? `<div class="pitch-transfer-icon" title="Transferred from ${player.oldTeam}">⇆</div>` : ''}
                     </div>
+
                     <div class="player-card-info" style="padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; border-radius: 8px;">
                         <div class="pitch-card-info-header">
                             <div class="player-pitch-name" style="display:flex; align-items:center; justify-content:center; gap:4px; flex-wrap:wrap;">
@@ -1790,34 +1792,269 @@ function openResetModal(state, actions) {
     });
 }
 
-// Utility SVG generator for jerseys
-export function getShirtSVG(color, teamShortName = '') {
-    return `
-        <svg viewBox="0 0 100 100" class="shirt-svg">
-            <!-- Sleeves -->
-            <path d="M 10,25 L 30,10 L 40,25 L 30,35 Z" fill="${color}" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
-            <path d="M 90,25 L 70,10 L 60,25 L 70,35 Z" fill="${color}" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
-            <!-- Body -->
-            <path d="M 30,20 L 70,20 L 75,85 L 25,85 Z" fill="${color}" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
-            <!-- Collar -->
-            <path d="M 40,20 Q 50,30 60,20 Z" fill="#111" />
-            <!-- Design Stripe (Subtle detail) -->
-            <rect x="47" y="25" width="6" height="55" fill="rgba(255,255,255,0.2)" rx="2"/>
-            <!-- Team Name overlay -->
-            ${teamShortName ? `
-                <text x="50" y="55" 
-                      text-anchor="middle" 
-                      fill="#ffffff" 
-                      font-size="12px" 
-                      font-weight="900" 
-                      font-family="sans-serif"
-                      style="text-shadow: 0px 1px 3px rgba(0,0,0,0.8), 0px 0px 1px rgba(0,0,0,0.9); font-stretch: condensed; letter-spacing: 0.5px;">
-                    ${teamShortName}
-                </text>
-            ` : ''}
-        </svg>
-    `;
+// Authentic Real Premier League Kit SVG Generator
+export function getShirtSVG(color, teamShortName = '', position = 'MID') {
+    // If Goalkeeper (GKP), render official goalkeeper jersey pattern
+    if (position === 'GKP') {
+        const gkColor = (color && color !== '#ffffff' && color !== '#FFFFFF') ? color : '#00e676';
+        return `
+            <svg viewBox="0 0 100 100" class="shirt-svg" style="filter: drop-shadow(0px 3px 6px rgba(0,0,0,0.5));">
+                <defs>
+                    <linearGradient id="gkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="${gkColor}" />
+                        <stop offset="100%" stop-color="#00a152" />
+                    </linearGradient>
+                </defs>
+                <path d="M 8,25 L 28,10 L 40,25 L 30,38 Z" fill="url(#gkGrad)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+                <path d="M 92,25 L 72,10 L 60,25 L 70,38 Z" fill="url(#gkGrad)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+                <path d="M 28,18 L 72,18 L 77,85 L 23,85 Z" fill="url(#gkGrad)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+                <polygon points="50,22 65,35 50,48 35,35" fill="rgba(0,0,0,0.15)"/>
+                <polygon points="50,48 65,61 50,74 35,61" fill="rgba(255,255,255,0.15)"/>
+                <path d="M 38,18 Q 50,28 62,18 Z" fill="#111" />
+                <circle cx="36" cy="30" r="4" fill="#ffd700" />
+                ${teamShortName ? `
+                    <text x="50" y="60" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9); letter-spacing: 0.5px;">${teamShortName}</text>
+                ` : ''}
+            </svg>
+        `;
+    }
+
+    switch (teamShortName) {
+        case 'ARS': // Arsenal: Red body, White sleeves, Navy/Gold trim
+            return `
+                <svg viewBox="0 0 100 100" class="shirt-svg">
+                    <path d="M 8,25 L 28,10 L 40,25 L 30,38 Z" fill="#ffffff" stroke="rgba(0,0,0,0.1)" stroke-width="1"/>
+                    <path d="M 92,25 L 72,10 L 60,25 L 70,38 Z" fill="#ffffff" stroke="rgba(0,0,0,0.1)" stroke-width="1"/>
+                    <path d="M 28,18 L 72,18 L 77,85 L 23,85 Z" fill="#EF0107" stroke="rgba(0,0,0,0.2)" stroke-width="1.5"/>
+                    <path d="M 38,18 Q 50,28 62,18 Z" fill="#132257" />
+                    <rect x="48" y="24" width="4" height="58" fill="rgba(255,255,255,0.15)" rx="1"/>
+                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">ARS</text>
+                </svg>
+            `;
+        case 'AVL': // Aston Villa: Claret body, Sky Blue sleeves
+            return `
+                <svg viewBox="0 0 100 100" class="shirt-svg">
+                    <path d="M 8,25 L 28,10 L 40,25 L 30,38 Z" fill="#95BFE5" stroke="rgba(0,0,0,0.1)" stroke-width="1"/>
+                    <path d="M 92,25 L 72,10 L 60,25 L 70,38 Z" fill="#95BFE5" stroke="rgba(0,0,0,0.1)" stroke-width="1"/>
+                    <path d="M 28,18 L 72,18 L 77,85 L 23,85 Z" fill="#7A003C" stroke="rgba(0,0,0,0.2)" stroke-width="1.5"/>
+                    <path d="M 38,18 Q 50,28 62,18 Z" fill="#F0C239" />
+                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">AVL</text>
+                </svg>
+            `;
+        case 'BOU': // Bournemouth: Red & Black Vertical Stripes
+            return `
+                <svg viewBox="0 0 100 100" class="shirt-svg">
+                    <path d="M 8,25 L 28,10 L 40,25 L 30,38 Z" fill="#111111" />
+                    <path d="M 92,25 L 72,10 L 60,25 L 70,38 Z" fill="#111111" />
+                    <path d="M 28,18 L 72,18 L 77,85 L 23,85 Z" fill="#DA291C" />
+                    <rect x="36" y="18" width="9" height="67" fill="#111111" />
+                    <rect x="55" y="18" width="9" height="67" fill="#111111" />
+                    <path d="M 38,18 Q 50,28 62,18 Z" fill="#DA291C" />
+                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">BOU</text>
+                </svg>
+            `;
+        case 'BRE': // Brentford: Red & White Vertical Stripes
+            return `
+                <svg viewBox="0 0 100 100" class="shirt-svg">
+                    <path d="M 8,25 L 28,10 L 40,25 L 30,38 Z" fill="#E30613" />
+                    <path d="M 92,25 L 72,10 L 60,25 L 70,38 Z" fill="#E30613" />
+                    <path d="M 28,18 L 72,18 L 77,85 L 23,85 Z" fill="#E30613" />
+                    <rect x="36" y="18" width="9" height="67" fill="#FFFFFF" />
+                    <rect x="55" y="18" width="9" height="67" fill="#FFFFFF" />
+                    <path d="M 38,18 Q 50,28 62,18 Z" fill="#111111" />
+                    <text x="50" y="58" text-anchor="middle" fill="#111111" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 0px 2px #ffffff;">BRE</text>
+                </svg>
+            `;
+        case 'BHA': // Brighton: Blue & White Vertical Stripes
+            return `
+                <svg viewBox="0 0 100 100" class="shirt-svg">
+                    <path d="M 8,25 L 28,10 L 40,25 L 30,38 Z" fill="#0057B8" />
+                    <path d="M 92,25 L 72,10 L 60,25 L 70,38 Z" fill="#0057B8" />
+                    <path d="M 28,18 L 72,18 L 77,85 L 23,85 Z" fill="#0057B8" />
+                    <rect x="36" y="18" width="9" height="67" fill="#FFFFFF" />
+                    <rect x="55" y="18" width="9" height="67" fill="#FFFFFF" />
+                    <path d="M 38,18 Q 50,28 62,18 Z" fill="#FFCD00" />
+                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">BHA</text>
+                </svg>
+            `;
+        case 'CHE': // Chelsea: Royal Blue body, Gold/White trim
+            return `
+                <svg viewBox="0 0 100 100" class="shirt-svg">
+                    <path d="M 8,25 L 28,10 L 40,25 L 30,38 Z" fill="#034694" />
+                    <path d="M 92,25 L 72,10 L 60,25 L 70,38 Z" fill="#034694" />
+                    <path d="M 28,18 L 72,18 L 77,85 L 23,85 Z" fill="#034694" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+                    <path d="M 38,18 Q 50,28 62,18 Z" fill="#DBA111" />
+                    <rect x="47" y="24" width="6" height="58" fill="rgba(255,255,255,0.15)" rx="2"/>
+                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">CHE</text>
+                </svg>
+            `;
+        case 'COV': // Coventry: Sky Blue body with Navy/White trim
+            return `
+                <svg viewBox="0 0 100 100" class="shirt-svg">
+                    <path d="M 8,25 L 28,10 L 40,25 L 30,38 Z" fill="#00A3E0" />
+                    <path d="M 92,25 L 72,10 L 60,25 L 70,38 Z" fill="#00A3E0" />
+                    <path d="M 28,18 L 72,18 L 77,85 L 23,85 Z" fill="#00A3E0" />
+                    <path d="M 38,18 Q 50,28 62,18 Z" fill="#132257" />
+                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">COV</text>
+                </svg>
+            `;
+        case 'CRY': // Crystal Palace: Red & Blue Vertical Stripes
+            return `
+                <svg viewBox="0 0 100 100" class="shirt-svg">
+                    <path d="M 8,25 L 28,10 L 40,25 L 30,38 Z" fill="#1B458F" />
+                    <path d="M 92,25 L 72,10 L 60,25 L 70,38 Z" fill="#1B458F" />
+                    <path d="M 28,18 L 72,18 L 77,85 L 23,85 Z" fill="#C4122E" />
+                    <rect x="36" y="18" width="9" height="67" fill="#1B458F" />
+                    <rect x="55" y="18" width="9" height="67" fill="#1B458F" />
+                    <path d="M 38,18 Q 50,28 62,18 Z" fill="#F0C239" />
+                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">CRY</text>
+                </svg>
+            `;
+        case 'EVE': // Everton: Royal Blue body with White trim
+            return `
+                <svg viewBox="0 0 100 100" class="shirt-svg">
+                    <path d="M 8,25 L 28,10 L 40,25 L 30,38 Z" fill="#003399" />
+                    <path d="M 92,25 L 72,10 L 60,25 L 70,38 Z" fill="#003399" />
+                    <path d="M 28,18 L 72,18 L 77,85 L 23,85 Z" fill="#003399" />
+                    <path d="M 38,18 Q 50,28 62,18 Z" fill="#ffffff" />
+                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">EVE</text>
+                </svg>
+            `;
+        case 'FUL': // Fulham: White body with Black shoulders/collar
+            return `
+                <svg viewBox="0 0 100 100" class="shirt-svg">
+                    <path d="M 8,25 L 28,10 L 40,25 L 30,38 Z" fill="#111111" />
+                    <path d="M 92,25 L 72,10 L 60,25 L 70,38 Z" fill="#111111" />
+                    <path d="M 28,18 L 72,18 L 77,85 L 23,85 Z" fill="#ffffff" stroke="rgba(0,0,0,0.2)" stroke-width="1.5"/>
+                    <path d="M 38,18 Q 50,28 62,18 Z" fill="#111111" />
+                    <text x="50" y="58" text-anchor="middle" fill="#111111" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 0px 2px #ffffff;">FUL</text>
+                </svg>
+            `;
+        case 'HUL': // Hull City: Amber & Black Vertical Stripes
+            return `
+                <svg viewBox="0 0 100 100" class="shirt-svg">
+                    <path d="M 8,25 L 28,10 L 40,25 L 30,38 Z" fill="#111111" />
+                    <path d="M 92,25 L 72,10 L 60,25 L 70,38 Z" fill="#111111" />
+                    <path d="M 28,18 L 72,18 L 77,85 L 23,85 Z" fill="#FF8A00" />
+                    <rect x="36" y="18" width="9" height="67" fill="#111111" />
+                    <rect x="55" y="18" width="9" height="67" fill="#111111" />
+                    <path d="M 38,18 Q 50,28 62,18 Z" fill="#FF8A00" />
+                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">HUL</text>
+                </svg>
+            `;
+        case 'IPS': // Ipswich: Royal Blue body with White collar
+            return `
+                <svg viewBox="0 0 100 100" class="shirt-svg">
+                    <path d="M 8,25 L 28,10 L 40,25 L 30,38 Z" fill="#0000FF" />
+                    <path d="M 92,25 L 72,10 L 60,25 L 70,38 Z" fill="#0000FF" />
+                    <path d="M 28,18 L 72,18 L 77,85 L 23,85 Z" fill="#0000FF" />
+                    <path d="M 38,18 Q 50,28 62,18 Z" fill="#ffffff" />
+                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">IPS</text>
+                </svg>
+            `;
+        case 'LEE': // Leeds: All White body with Yellow/Blue trim
+            return `
+                <svg viewBox="0 0 100 100" class="shirt-svg">
+                    <path d="M 8,25 L 28,10 L 40,25 L 30,38 Z" fill="#ffffff" stroke="rgba(0,0,0,0.1)" />
+                    <path d="M 92,25 L 72,10 L 60,25 L 70,38 Z" fill="#ffffff" stroke="rgba(0,0,0,0.1)" />
+                    <path d="M 28,18 L 72,18 L 77,85 L 23,85 Z" fill="#ffffff" stroke="rgba(0,0,0,0.2)" stroke-width="1.5"/>
+                    <path d="M 38,18 Q 50,28 62,18 Z" fill="#FFCD00" />
+                    <rect x="23" y="45" width="54" height="4" fill="#1D428A" />
+                    <text x="50" y="58" text-anchor="middle" fill="#1D428A" font-size="11px" font-weight="900" font-family="sans-serif">LEE</text>
+                </svg>
+            `;
+        case 'LIV': // Liverpool: Deep All-Red body, White/Gold trim
+            return `
+                <svg viewBox="0 0 100 100" class="shirt-svg">
+                    <path d="M 8,25 L 28,10 L 40,25 L 30,38 Z" fill="#C8102E" />
+                    <path d="M 92,25 L 72,10 L 60,25 L 70,38 Z" fill="#C8102E" />
+                    <path d="M 28,18 L 72,18 L 77,85 L 23,85 Z" fill="#C8102E" />
+                    <path d="M 38,18 Q 50,28 62,18 Z" fill="#F0C239" />
+                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">LIV</text>
+                </svg>
+            `;
+        case 'MCI': // Man City: Sky Blue body, White collar
+            return `
+                <svg viewBox="0 0 100 100" class="shirt-svg">
+                    <path d="M 8,25 L 28,10 L 40,25 L 30,38 Z" fill="#6CABDD" />
+                    <path d="M 92,25 L 72,10 L 60,25 L 70,38 Z" fill="#6CABDD" />
+                    <path d="M 28,18 L 72,18 L 77,85 L 23,85 Z" fill="#6CABDD" />
+                    <path d="M 38,18 Q 50,28 62,18 Z" fill="#ffffff" />
+                    <text x="50" y="58" text-anchor="middle" fill="#1C2C5B" font-size="11px" font-weight="900" font-family="sans-serif">MCI</text>
+                </svg>
+            `;
+        case 'MUN': // Man Utd: Red body, White/Black trim
+            return `
+                <svg viewBox="0 0 100 100" class="shirt-svg">
+                    <path d="M 8,25 L 28,10 L 40,25 L 30,38 Z" fill="#DA291C" />
+                    <path d="M 92,25 L 72,10 L 60,25 L 70,38 Z" fill="#DA291C" />
+                    <path d="M 28,18 L 72,18 L 77,85 L 23,85 Z" fill="#DA291C" />
+                    <path d="M 38,18 Q 50,28 62,18 Z" fill="#111111" />
+                    <line x1="28" y1="20" x2="35" y2="80" stroke="#ffffff" stroke-width="1.5"/>
+                    <line x1="72" y1="20" x2="65" y2="80" stroke="#ffffff" stroke-width="1.5"/>
+                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">MUN</text>
+                </svg>
+            `;
+        case 'NEW': // Newcastle: Black & White Vertical Stripes
+            return `
+                <svg viewBox="0 0 100 100" class="shirt-svg">
+                    <path d="M 8,25 L 28,10 L 40,25 L 30,38 Z" fill="#111111" />
+                    <path d="M 92,25 L 72,10 L 60,25 L 70,38 Z" fill="#111111" />
+                    <path d="M 28,18 L 72,18 L 77,85 L 23,85 Z" fill="#111111" />
+                    <rect x="36" y="18" width="9" height="67" fill="#FFFFFF" />
+                    <rect x="55" y="18" width="9" height="67" fill="#FFFFFF" />
+                    <path d="M 38,18 Q 50,28 62,18 Z" fill="#C8102E" />
+                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 0px 3px #000000, 0px 0px 3px #000000;">NEW</text>
+                </svg>
+            `;
+        case 'NFO': // Nott'm Forest: Garibaldi Red body, White trim
+            return `
+                <svg viewBox="0 0 100 100" class="shirt-svg">
+                    <path d="M 8,25 L 28,10 L 40,25 L 30,38 Z" fill="#DD0000" />
+                    <path d="M 92,25 L 72,10 L 60,25 L 70,38 Z" fill="#DD0000" />
+                    <path d="M 28,18 L 72,18 L 77,85 L 23,85 Z" fill="#DD0000" />
+                    <path d="M 38,18 Q 50,28 62,18 Z" fill="#ffffff" />
+                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">NFO</text>
+                </svg>
+            `;
+        case 'TOT': // Spurs: All White body, Navy collar/trim
+            return `
+                <svg viewBox="0 0 100 100" class="shirt-svg">
+                    <path d="M 8,25 L 28,10 L 40,25 L 30,38 Z" fill="#ffffff" stroke="rgba(0,0,0,0.1)" />
+                    <path d="M 92,25 L 72,10 L 60,25 L 70,38 Z" fill="#ffffff" stroke="rgba(0,0,0,0.1)" />
+                    <path d="M 28,18 L 72,18 L 77,85 L 23,85 Z" fill="#ffffff" stroke="rgba(0,0,0,0.2)" stroke-width="1.5"/>
+                    <path d="M 38,18 Q 50,28 62,18 Z" fill="#132257" />
+                    <text x="50" y="58" text-anchor="middle" fill="#132257" font-size="11px" font-weight="900" font-family="sans-serif">TOT</text>
+                </svg>
+            `;
+        case 'SUN': // Sunderland: Red & White Vertical Stripes
+            return `
+                <svg viewBox="0 0 100 100" class="shirt-svg">
+                    <path d="M 8,25 L 28,10 L 40,25 L 30,38 Z" fill="#FF0000" />
+                    <path d="M 92,25 L 72,10 L 60,25 L 70,38 Z" fill="#FF0000" />
+                    <path d="M 28,18 L 72,18 L 77,85 L 23,85 Z" fill="#FF0000" />
+                    <rect x="36" y="18" width="9" height="67" fill="#FFFFFF" />
+                    <rect x="55" y="18" width="9" height="67" fill="#FFFFFF" />
+                    <path d="M 38,18 Q 50,28 62,18 Z" fill="#111111" />
+                    <text x="50" y="58" text-anchor="middle" fill="#111111" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 0px 2px #ffffff;">SUN</text>
+                </svg>
+            `;
+        default:
+            const c = color || '#00ff88';
+            return `
+                <svg viewBox="0 0 100 100" class="shirt-svg">
+                    <path d="M 8,25 L 28,10 L 40,25 L 30,38 Z" fill="${c}" />
+                    <path d="M 92,25 L 72,10 L 60,25 L 70,38 Z" fill="${c}" />
+                    <path d="M 28,18 L 72,18 L 77,85 L 23,85 Z" fill="${c}" />
+                    <path d="M 38,18 Q 50,28 62,18 Z" fill="#111" />
+                    ${teamShortName ? `
+                        <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">${teamShortName}</text>
+                    ` : ''}
+                </svg>
+            `;
+    }
 }
+
 
 function getPlayerNewsBanner(player, prediction) {
     let html = '';
