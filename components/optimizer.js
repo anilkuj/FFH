@@ -301,10 +301,13 @@ export function renderOptimizer(container, state, actions) {
                                 <label for="gwHorizon">Gameweek Horizon</label>
                                 <select id="gwHorizon" class="settings-select">
                                     <option value="1" ${state.horizon === 1 ? 'selected' : ''}>1 Gameweek (Short-term)</option>
+                                    <option value="2" ${state.horizon === 2 ? 'selected' : ''}>2 Gameweeks (Short-term)</option>
                                     <option value="3" ${state.horizon === 3 ? 'selected' : ''}>3 Gameweeks (Recommended)</option>
+                                    <option value="4" ${state.horizon === 4 ? 'selected' : ''}>4 Gameweeks (Medium-term)</option>
                                     <option value="5" ${!state.horizon || state.horizon === 5 ? 'selected' : ''}>5 Gameweeks (Medium-term)</option>
                                     <option value="10" ${state.horizon === 10 ? 'selected' : ''}>10 Gameweeks (Extended Horizon)</option>
                                 </select>
+
 
                                 <span class="setting-help">Analyze fixtures and expected points over this horizon.</span>
                             </div>
