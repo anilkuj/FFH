@@ -27863,47 +27863,6 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 6.1,
-                "opp": "CRY",
-                "loc": "H",
-                "diff": 3,
-                "actualPts": null
-            },
-            {
-                "gw": 2,
-                "pts": 5.4,
-                "opp": "BOU",
-                "loc": "A",
-                "diff": 3,
-                "actualPts": null
-            },
-            {
-                "gw": 3,
-                "pts": 5.3,
-                "opp": "MUN",
-                "loc": "H",
-                "diff": 4,
-                "actualPts": null
-            },
-            {
-                "gw": 4,
-                "pts": 5.4,
-                "opp": "TOT",
-                "loc": "A",
-                "diff": 3,
-                "actualPts": null
-            },
-            {
-                "gw": 5,
-                "pts": 8.4,
-                "opp": "IPS",
-                "loc": "H",
-                "diff": 2,
-                "actualPts": null
-            },
-            {
-                "gw": 6,
-                "pts": 7.7,
                 "opp": "HUL",
                 "loc": "A",
                 "diff": 2,
