@@ -12,7 +12,24 @@ import { renderLiveRank } from './components/liverank.js';
 import { renderReveals } from './components/reveals.js';
 import { renderTransferPlanner } from './components/transferplanner.js';
 
+window.getPlayerMinutesFactor = function(player) {
+    if (!player) return 1.0;
+    if (player.status === 'i' || player.status === 's' || player.status === 'u') return 0;
+    
+    const chance = (player.chanceOfPlaying !== undefined && player.chanceOfPlaying !== null) 
+        ? (player.chanceOfPlaying / 100) 
+        : 1.0;
+        
+    let minutesRatio = 1.0;
+    if (typeof player.MPPG === 'number' && player.MPPG > 0) {
+        minutesRatio = Math.min(1.0, Math.max(0.15, player.MPPG / 90));
+    }
+    
+    return chance * minutesRatio;
+};
+
 // Application State class
+
 class AppState {
     constructor() {
         this.activeTab = 'planner';
@@ -398,10 +415,14 @@ class AppState {
             let pts = 0;
             if (p) {
                 const pred = p.predictions.find(pr => pr.gw === this.currentGw);
-                if (pred) pts = pred.pts;
+                if (pred) {
+                    const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(p) : 1.0;
+                    pts = pred.pts * factor;
+                }
             }
             return { id, pts };
         });
+
 
         starterPts.sort((a, b) => b.pts - a.pts);
 

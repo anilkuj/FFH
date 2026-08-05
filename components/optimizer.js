@@ -1076,27 +1076,30 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
     // Helper: expected points over horizon
     const getExpectedPts = (player) => {
         if (!player || !player.predictions) return 0;
-        const chance = (player.chanceOfPlaying !== undefined && player.chanceOfPlaying !== null) ? (player.chanceOfPlaying / 100) : 1.0;
+        const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
         let sum = 0;
         for (let gw = state.currentGw; gw < state.currentGw + horizon; gw++) {
             const pred = player.predictions.find(pr => pr.gw === gw);
-            if (pred) sum += (pred.pts * chance);
+            if (pred) sum += (pred.pts * factor);
         }
         return sum;
     };
 
-    // Helper: guaranteed start filter
+    // Helper: guaranteed start filter based on MPPG and start chance
     const isGuaranteedStart = (player) => {
         if (!player) return false;
         if (state.mustInclude && state.mustInclude.includes(player.id)) return true;
-        if (player.price >= 5.5) return true; // Premium and key players are always valid starting candidates
         const minMins = state.guaranteedStart || 0;
         if (minMins === 0) return true;
-        const mppg = player.MPPG || 0;
-        if (mppg >= minMins) return true;
-        if (mppg === 0 && player.price >= 4.5) return true;
-        return false;
+        
+        // Calculate expected minutes per game (MPPG or chance-derived)
+        const expectedMins = typeof player.MPPG === 'number' && player.MPPG > 0 
+            ? player.MPPG 
+            : ((player.chanceOfPlaying !== undefined && player.chanceOfPlaying !== null) ? player.chanceOfPlaying * 0.85 : 85);
+            
+        return expectedMins >= minMins;
     };
+
 
 
 
