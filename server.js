@@ -8,7 +8,13 @@ const __dirname = path.dirname(__filename);
 
 const PORT = process.env.PORT || 3000;
 const DIST_DIR = path.join(__dirname, 'dist');
-const STORAGE_FILE = path.join(__dirname, 'cloud_drafts_store.json');
+let STORAGE_FILE = path.join(__dirname, 'cloud_drafts_store.json');
+try {
+    fs.writeFileSync(STORAGE_FILE + '.test', 'ok');
+    fs.unlinkSync(STORAGE_FILE + '.test');
+} catch (e) {
+    STORAGE_FILE = '/tmp/cloud_drafts_store.json';
+}
 
 // In-memory cache
 let cloudDraftsStore = {};
@@ -28,9 +34,10 @@ function saveStoreToDisk() {
     try {
         fs.writeFileSync(STORAGE_FILE, JSON.stringify(cloudDraftsStore, null, 2));
     } catch (e) {
-        console.error('Failed to write cloud_drafts_store.json:', e);
+        console.warn('Ephemeral storage note: saved in memory, disk write skipped:', e.message);
     }
 }
+
 
 const MIME_TYPES = {
     '.html': 'text/html; charset=utf-8',
@@ -59,7 +66,15 @@ const server = http.createServer((req, res) => {
     const reqUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
     const pathname = reqUrl.pathname;
 
+    // Health Check endpoint for Railway monitoring
+    if (pathname === '/health' || pathname === '/api/health') {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ status: 'ok', uptime: process.uptime(), timestamp: Date.now() }));
+        return;
+    }
+
     // API Route: Save Cloud Drafts
+
     if (req.method === 'POST' && pathname === '/api/sync-drafts') {
         let body = '';
         req.on('data', chunk => body += chunk);
