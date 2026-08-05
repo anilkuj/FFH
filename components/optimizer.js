@@ -976,13 +976,16 @@ function _scoreOptimizationForFormation(state, horizon, mode) {
     })();
 
     const getExpectedPts = (player) => {
+        if (!player || !player.predictions) return 0;
+        const chance = (player.chanceOfPlaying !== undefined && player.chanceOfPlaying !== null) ? (player.chanceOfPlaying / 100) : 1.0;
         let sum = 0;
         for (let gw = state.currentGw; gw < state.currentGw + horizon; gw++) {
             const pred = player.predictions.find(pr => pr.gw === gw);
-            if (pred) sum += pred.pts;
+            if (pred) sum += (pred.pts * chance);
         }
         return sum;
     };
+
 
     const getSolverScore = (player) => {
         if (!player) return 0;
@@ -1072,10 +1075,12 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
 
     // Helper: expected points over horizon
     const getExpectedPts = (player) => {
+        if (!player || !player.predictions) return 0;
+        const chance = (player.chanceOfPlaying !== undefined && player.chanceOfPlaying !== null) ? (player.chanceOfPlaying / 100) : 1.0;
         let sum = 0;
         for (let gw = state.currentGw; gw < state.currentGw + horizon; gw++) {
             const pred = player.predictions.find(pr => pr.gw === gw);
-            if (pred) sum += pred.pts;
+            if (pred) sum += (pred.pts * chance);
         }
         return sum;
     };
@@ -1128,10 +1133,11 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             if (!p) return;
             if (p.status === 'i' || p.status === 's' || p.status === 'u') return;
             
+            const chance = (p.chanceOfPlaying !== undefined && p.chanceOfPlaying !== null) ? (p.chanceOfPlaying / 100) : 1.0;
             let sum = 0;
             for (let gw = state.currentGw; gw < state.currentGw + h; gw++) {
                 const pred = p.predictions.find(pr => pr.gw === gw);
-                if (pred) sum += pred.pts;
+                if (pred) sum += (pred.pts * chance);
             }
             
             const rawScore = objective === 'efficiency' ? getPlayerEfficiency(p, state.currentGw) * 10 : sum;

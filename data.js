@@ -37850,11 +37850,12 @@ export const PLAYERS = [
         "goalsConceded90": 1.37,
         "transferredThisSeason": false,
         "oldTeam": null,
-        "news": "",
+        "news": "Rotation risk in starting XI",
         "status": "a",
-        "chanceOfPlaying": 100,
-        "xp10": 47
+        "chanceOfPlaying": 60,
+        "xp10": 28.2
     },
+
     {
         "id": 336,
         "name": "Noah Okafor",
