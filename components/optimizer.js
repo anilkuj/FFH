@@ -960,21 +960,29 @@ function isGuaranteedStart(player, state) {
     if (!player) return false;
     if (state && state.mustInclude && state.mustInclude.includes(player.id)) return true;
     
-    // Injured, suspended, or unavailable players are NEVER guaranteed starters
+    // Injured, suspended, or unavailable players are NEVER starters for that GW
     if (player.status === 'i' || player.status === 's' || player.status === 'u') return false;
     
     const chance = (player.chanceOfPlaying !== undefined && player.chanceOfPlaying !== null) ? player.chanceOfPlaying : 100;
-    // Rotation risks (<75% chance AND (<60 MPPG OR <15 GS)) or low chance (<50%) are NEVER guaranteed starters
-    if (chance < 75 && (mppg < 60 || (typeof player.GS === 'number' && player.GS < 15))) return false;
+    const mppg = typeof player.MPPG === 'number' ? player.MPPG : 85;
+
+    // DYNAMIC START QUALITY EVALUATION (Driven by Live Data, Not Static Names):
+    // 1. Hard reject if current chance of playing is < 50%
     if (chance < 50) return false;
+    // 2. Reject if player has 0 starts AND < 75% chance of playing
     if (typeof player.GS === 'number' && player.GS === 0 && chance < 75) return false;
+    // 3. Reject rotation risks if chance < 75% AND minutes per game < 60
+    if (chance < 75 && mppg < 60) return false;
 
-
+    // Respect user's custom Guaranteed Start slider threshold if configured
     const minMins = (state && state.guaranteedStart) || 0;
-    if (minMins === 0) return true;
-    
-    return mppg >= minMins;
+    if (minMins > 0) {
+        return mppg >= minMins;
+    }
+
+    return true;
 }
+
 
 
 
