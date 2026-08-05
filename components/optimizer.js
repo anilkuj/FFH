@@ -1575,21 +1575,31 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 const remainingSlotsCount = startingIndices.length - 1 - i;
                 const maxAllowedPrice = maxStartingBudget - runningStartingCost - (remainingSlotsCount * 4.5);
                 
+                const isStarterPriceFloorInit = (player, pos) => {
+                    if (!player) return false;
+                    if (pos === 'GKP' && player.price < 4.5) return false;
+                    if (pos === 'DEF' && player.price < 4.5) return false;
+                    if (pos === 'FWD' && cons.FWD >= 2 && player.price < 5.5) return false;
+                    return true;
+                };
+
                 const pool = PLAYERS.filter(p => 
                     p.position === slot.position && 
                     !state.mustExclude.includes(p.id) &&
                     !initUsedIds.includes(p.id) &&
                     p.price <= Math.max(4.5, maxAllowedPrice) &&
+                    isStarterPriceFloorInit(p, slot.position) &&
                     passesMinFwd(p) &&
                     (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 75)
                 ).sort((a, b) => getExpectedPtsOverHorizon(b, state.currentGw, horizon) - getExpectedPtsOverHorizon(a, state.currentGw, horizon));
                 
-                const chosen = pool[0] || getCheapestPlayersList(slot.position, 1, initUsedIds, true)[0];
+                const chosen = pool[0] || PLAYERS.filter(p => p.position === slot.position && isStarterPriceFloorInit(p, slot.position) && !initUsedIds.includes(p.id)).sort((a, b) => getExpectedPtsOverHorizon(b, state.currentGw, horizon) - getExpectedPtsOverHorizon(a, state.currentGw, horizon))[0] || getCheapestPlayersList(slot.position, 1, initUsedIds, true)[0];
                 if (chosen) {
                     slot.playerId = chosen.id;
                     initUsedIds.push(chosen.id);
                     runningStartingCost += chosen.price;
                 }
+
             } else if (slot.playerId !== null) {
                 const p = PLAYERS.find(pl => pl.id === slot.playerId);
                 if (p) runningStartingCost += p.price;
@@ -1695,13 +1705,25 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 );
 
 
-                const guaranteedCandidates = candidates.filter(p => isGuaranteedStart(p) || p.chanceOfPlaying >= 75);
+                const isStarterPriceFloor = (player, pos) => {
+                    if (!player) return false;
+                    if (pos === 'GKP' && player.price < 4.5) return false;
+                    if (pos === 'DEF' && player.price < 4.5) return false;
+                    if (pos === 'FWD' && cons.FWD >= 2 && player.price < 5.5) return false;
+                    return true;
+                };
+
+                const guaranteedCandidates = candidates.filter(p => 
+                    (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 75) && 
+                    isStarterPriceFloor(p, currentSlot.position)
+                );
                 if (guaranteedCandidates.length > 0) {
                     candidates = guaranteedCandidates;
                 } else {
-                    candidates = candidates.filter(p => p.chanceOfPlaying >= 50);
+                    candidates = candidates.filter(p => (p.chanceOfPlaying >= 50) && isStarterPriceFloor(p, currentSlot.position));
                 }
                 candidates.sort((a, b) => getSolverScore(b) - getSolverScore(a));
+
 
 
                 let bestCandidate = null;
