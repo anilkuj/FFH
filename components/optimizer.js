@@ -952,6 +952,22 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
 }
 
 /**
+ * Helper: guaranteed start filter based on MPPG and start chance
+ */
+function isGuaranteedStart(player, state) {
+    if (!player) return false;
+    if (state && state.mustInclude && state.mustInclude.includes(player.id)) return true;
+    const minMins = (state && state.guaranteedStart) || 0;
+    if (minMins === 0) return true;
+    
+    const expectedMins = typeof player.MPPG === 'number' && player.MPPG > 0 
+        ? player.MPPG 
+        : ((player.chanceOfPlaying !== undefined && player.chanceOfPlaying !== null) ? player.chanceOfPlaying * 0.85 : 85);
+        
+    return expectedMins >= minMins;
+}
+
+/**
  * Helper: Expected points over selected horizon
  */
 function getExpectedPtsOverHorizon(player, currentGw, horizon) {
@@ -979,7 +995,7 @@ function _scoreOptimizationForFormation(state, horizon, mode) {
             p.status === 'a' &&
             !state.mustExclude.includes(p.id) &&
             !initUsedIds.includes(p.id) &&
-            (isGuaranteedStart(p) || p.chanceOfPlaying >= 75)
+            (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 75)
         ).sort((a, b) => getExpectedPtsOverHorizon(b, state.currentGw, horizon) - getExpectedPtsOverHorizon(a, state.currentGw, horizon));
         
         const result = [];
@@ -1008,6 +1024,7 @@ function _scoreOptimizationForFormation(state, horizon, mode) {
 
     return totalScore;
 }
+
 
 
 
@@ -1048,19 +1065,8 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
     };
 
     // Helper: guaranteed start filter based on MPPG and start chance
-    const isGuaranteedStart = (player) => {
-        if (!player) return false;
-        if (state.mustInclude && state.mustInclude.includes(player.id)) return true;
-        const minMins = state.guaranteedStart || 0;
-        if (minMins === 0) return true;
-        
-        // Calculate expected minutes per game (MPPG or chance-derived)
-        const expectedMins = typeof player.MPPG === 'number' && player.MPPG > 0 
-            ? player.MPPG 
-            : ((player.chanceOfPlaying !== undefined && player.chanceOfPlaying !== null) ? player.chanceOfPlaying * 0.85 : 85);
-            
-        return expectedMins >= minMins;
-    };
+    const checkGuaranteedStart = (player) => isGuaranteedStart(player, state);
+
 
 
 
