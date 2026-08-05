@@ -443,7 +443,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 90,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -892,7 +892,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 18.6
     },
     {
@@ -1002,7 +1002,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 49.9
     },
     {
@@ -1112,7 +1112,7 @@ export const PLAYERS = [
         "oldTeam": "Bayer Leverkusen",
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 43.6
     },
     {
@@ -1213,7 +1213,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 9,
-        "MPPG": 77.7,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 6,
@@ -1222,7 +1222,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 50.3
     },
     {
@@ -1323,7 +1323,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 9,
-        "MPPG": 54.8,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 8,
@@ -1332,7 +1332,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 21.7
     },
     {
@@ -1662,7 +1662,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 54.3
     },
     {
@@ -1772,7 +1772,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 49
     },
     {
@@ -1882,7 +1882,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 47.7
     },
     {
@@ -1992,7 +1992,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 44.6
     },
     {
@@ -2093,7 +2093,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 11,
-        "MPPG": 71,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 8,
@@ -2102,7 +2102,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 41.2
     },
     {
@@ -2322,7 +2322,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 22.5
     },
     {
@@ -2423,7 +2423,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 1,
-        "MPPG": 50.5,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 1,
@@ -2432,7 +2432,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18.9
     },
     {
@@ -2542,7 +2542,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 19.2
     },
     {
@@ -2643,7 +2643,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -2652,7 +2652,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 18.6
     },
     {
@@ -2762,7 +2762,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 21.3
     },
     {
@@ -2973,7 +2973,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 7,
-        "MPPG": 82.4,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 4,
@@ -2982,7 +2982,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 55.7
     },
     {
@@ -3092,7 +3092,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 34.1
     },
     {
@@ -3193,7 +3193,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -3202,7 +3202,7 @@ export const PLAYERS = [
         "oldTeam": "Club Brugge",
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 20
     },
     {
@@ -3422,7 +3422,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 28
     },
     {
@@ -3532,7 +3532,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 44.5
     },
     {
@@ -3853,7 +3853,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 15,
-        "MPPG": 88.1,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 23,
@@ -3862,7 +3862,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 31.5
     },
     {
@@ -3963,7 +3963,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 18,
-        "MPPG": 79.7,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 19,
@@ -3972,7 +3972,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 28.8
     },
     {
@@ -4073,7 +4073,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 11,
-        "MPPG": 74.4,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 17,
@@ -4082,7 +4082,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 28.3
     },
     {
@@ -4183,7 +4183,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 17,
-        "MPPG": 79.5,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 27,
@@ -4192,7 +4192,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 25.4
     },
     {
@@ -4293,7 +4293,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 11,
-        "MPPG": 85.6,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 15,
@@ -4302,7 +4302,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 24.6
     },
     {
@@ -4403,7 +4403,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 1,
-        "MPPG": 83,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 3,
@@ -4412,7 +4412,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.1
     },
     {
@@ -4513,7 +4513,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -4522,7 +4522,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.1
     },
     {
@@ -4632,7 +4632,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 49.2
     },
     {
@@ -4742,7 +4742,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 31.8
     },
     {
@@ -4852,7 +4852,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 30.2
     },
     {
@@ -5072,7 +5072,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 32
     },
     {
@@ -5393,7 +5393,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -5402,7 +5402,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18
     },
     {
@@ -5512,7 +5512,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18
     },
     {
@@ -5622,7 +5622,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18.6
     },
     {
@@ -5732,7 +5732,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18.6
     },
     {
@@ -5833,7 +5833,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -5842,7 +5842,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 18
     },
     {
@@ -5952,7 +5952,7 @@ export const PLAYERS = [
         "oldTeam": "WOL",
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 33.8
     },
     {
@@ -6273,7 +6273,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 14,
-        "MPPG": 90.1,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 20,
@@ -6282,7 +6282,7 @@ export const PLAYERS = [
         "oldTeam": "MUN",
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 41.4
     },
     {
@@ -6493,7 +6493,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 10,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -6502,7 +6502,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 26.4
     },
     {
@@ -6603,7 +6603,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 10,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -6612,7 +6612,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 26.4
     },
     {
@@ -6722,7 +6722,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 37
     },
     {
@@ -6933,7 +6933,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 15,
-        "MPPG": 85,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 27,
@@ -6942,7 +6942,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 28.4
     },
     {
@@ -7043,7 +7043,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 4,
-        "MPPG": 91.8,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 6,
@@ -7052,7 +7052,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 19.6
     },
     {
@@ -7153,7 +7153,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 14,
-        "MPPG": 76.6,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 16,
@@ -7162,7 +7162,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 39
     },
     {
@@ -7263,7 +7263,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -7272,7 +7272,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.3
     },
     {
@@ -7382,7 +7382,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.3
     },
     {
@@ -7483,7 +7483,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 13,
-        "MPPG": 85.4,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 10,
@@ -7492,7 +7492,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 52
     },
     {
@@ -7813,7 +7813,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 10,
-        "MPPG": 78.8,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 19,
@@ -7822,7 +7822,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 35
     },
     {
@@ -7923,7 +7923,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 8,
-        "MPPG": 54.5,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 19,
@@ -7932,7 +7932,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 24.8
     },
     {
@@ -8042,7 +8042,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18.9
     },
     {
@@ -8152,7 +8152,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 35.7
     },
     {
@@ -8253,7 +8253,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 13,
-        "MPPG": 84.9,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 20,
@@ -8262,7 +8262,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 43.9
     },
     {
@@ -8473,7 +8473,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 2,
-        "MPPG": 67.5,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 3,
@@ -8482,7 +8482,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18.7
     },
     {
@@ -8592,7 +8592,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 35.9
     },
     {
@@ -8922,7 +8922,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 23.6
     },
     {
@@ -9023,7 +9023,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -9032,7 +9032,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 20.4
     },
     {
@@ -9133,7 +9133,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -9142,7 +9142,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.3
     },
     {
@@ -9362,7 +9362,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 19.6
     },
     {
@@ -9692,7 +9692,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 52.9
     },
     {
@@ -9802,7 +9802,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 36.2
     },
     {
@@ -10013,7 +10013,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 14,
-        "MPPG": 77.8,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 22,
@@ -10022,7 +10022,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 28.8
     },
     {
@@ -10123,7 +10123,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 8,
-        "MPPG": 84.9,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 9,
@@ -10132,7 +10132,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 44.7
     },
     {
@@ -10233,7 +10233,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 4,
-        "MPPG": 79.5,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 5,
@@ -10242,7 +10242,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 17.5
     },
     {
@@ -10343,7 +10343,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -10352,7 +10352,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.1
     },
     {
@@ -10453,7 +10453,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -10462,7 +10462,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.1
     },
     {
@@ -10792,7 +10792,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 47.9
     },
     {
@@ -10902,7 +10902,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 38.1
     },
     {
@@ -11003,7 +11003,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 15,
-        "MPPG": 75.5,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 21,
@@ -11012,7 +11012,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 38.9
     },
     {
@@ -11452,7 +11452,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 28.8
     },
     {
@@ -11553,7 +11553,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -11562,7 +11562,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 18
     },
     {
@@ -11782,7 +11782,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 20.6
     },
     {
@@ -11883,7 +11883,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -11892,7 +11892,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 20.6
     },
     {
@@ -11993,7 +11993,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -12002,7 +12002,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 18
     },
     {
@@ -12213,7 +12213,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 10,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -12222,7 +12222,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 25.6
     },
     {
@@ -12433,7 +12433,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 9,
-        "MPPG": 88.8,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 10,
@@ -12442,7 +12442,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 39.4
     },
     {
@@ -12543,7 +12543,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 17,
-        "MPPG": 82.6,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 23,
@@ -12552,7 +12552,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 45.1
     },
     {
@@ -12763,7 +12763,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 2,
-        "MPPG": 64.3,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 3,
@@ -12772,7 +12772,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 12.3
     },
     {
@@ -12873,7 +12873,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 1,
-        "MPPG": 51.5,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 3,
@@ -12882,7 +12882,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 12.3
     },
     {
@@ -12983,7 +12983,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -12992,7 +12992,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 12.3
     },
     {
@@ -13093,7 +13093,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -13102,7 +13102,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 12.3
     },
     {
@@ -13322,7 +13322,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 40.6
     },
     {
@@ -13432,7 +13432,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 44.3
     },
     {
@@ -13533,7 +13533,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 18,
-        "MPPG": 86.1,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 17,
@@ -13542,7 +13542,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 39.9
     },
     {
@@ -13652,7 +13652,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 42.6
     },
     {
@@ -13753,7 +13753,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 2,
-        "MPPG": 67.3,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 3,
@@ -13762,7 +13762,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 18.4
     },
     {
@@ -13872,7 +13872,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 36.3
     },
     {
@@ -13973,7 +13973,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 1,
-        "MPPG": 81,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 4,
@@ -13982,7 +13982,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 17.8
     },
     {
@@ -14092,7 +14092,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 36
     },
     {
@@ -14202,7 +14202,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 36.5
     },
     {
@@ -14312,7 +14312,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 23
     },
     {
@@ -14413,7 +14413,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 1,
-        "MPPG": 92,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 2,
@@ -14422,7 +14422,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 17.1
     },
     {
@@ -14642,7 +14642,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 17.1
     },
     {
@@ -14743,7 +14743,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -14752,7 +14752,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 17.1
     },
     {
@@ -14972,7 +14972,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 27
     },
     {
@@ -15293,7 +15293,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -15302,7 +15302,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 12.3
     },
     {
@@ -15843,7 +15843,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 3,
-        "MPPG": 47.3,
+        "MPPG": 90,
         "saves": 8,
         "saves90": 1.9,
         "goalsConceded": 5,
@@ -15962,7 +15962,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 39.4
     },
     {
@@ -16182,7 +16182,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 34.8
     },
     {
@@ -16393,7 +16393,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 6,
-        "MPPG": 78.3,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 10,
@@ -16402,7 +16402,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 24.6
     },
     {
@@ -16503,7 +16503,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 8,
-        "MPPG": 71.6,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 14,
@@ -16512,7 +16512,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 28.7
     },
     {
@@ -16613,7 +16613,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 12,
-        "MPPG": 75.9,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 27,
@@ -16622,7 +16622,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 13.9
     },
     {
@@ -16723,7 +16723,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 2,
-        "MPPG": 56.3,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 4,
@@ -16732,7 +16732,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 14.2
     },
     {
@@ -16833,7 +16833,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 1,
-        "MPPG": 50,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 3,
@@ -16842,7 +16842,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.9
     },
     {
@@ -16943,7 +16943,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 8,
-        "MPPG": 82.1,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 13,
@@ -16952,7 +16952,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 46.7
     },
     {
@@ -17053,7 +17053,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -17062,7 +17062,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.9
     },
     {
@@ -17163,7 +17163,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -17172,7 +17172,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.9
     },
     {
@@ -17603,7 +17603,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 12,
-        "MPPG": 69.9,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 11,
@@ -17612,7 +17612,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 49.1
     },
     {
@@ -17713,7 +17713,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 5,
-        "MPPG": 69.4,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 7,
@@ -17722,7 +17722,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 31.6
     },
     {
@@ -17933,7 +17933,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 4,
-        "MPPG": 74.8,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 10,
@@ -17942,7 +17942,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 25.4
     },
     {
@@ -18052,7 +18052,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 17.9
     },
     {
@@ -18373,7 +18373,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -18382,7 +18382,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 20.5
     },
     {
@@ -18483,7 +18483,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 12,
-        "MPPG": 84,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 18,
@@ -18492,7 +18492,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 35.5
     },
     {
@@ -18602,7 +18602,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 22
     },
     {
@@ -18712,7 +18712,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 20.5
     },
     {
@@ -19033,7 +19033,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 10,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -19042,7 +19042,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 26.7
     },
     {
@@ -19143,7 +19143,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -19152,7 +19152,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.9
     },
     {
@@ -19253,7 +19253,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -19262,7 +19262,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 17.9
     },
     {
@@ -19372,7 +19372,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 21.1
     },
     {
@@ -19473,7 +19473,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 10,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -19482,7 +19482,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 28.7
     },
     {
@@ -19583,7 +19583,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 10,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -19592,7 +19592,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 28.7
     },
     {
@@ -19693,7 +19693,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 10,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -19702,7 +19702,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 28.7
     },
     {
@@ -19803,7 +19803,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -19812,7 +19812,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 16.9
     },
     {
@@ -19913,7 +19913,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -19922,7 +19922,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 16.9
     },
     {
@@ -20023,7 +20023,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -20032,7 +20032,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 16.9
     },
     {
@@ -20133,7 +20133,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -20142,7 +20142,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 16.9
     },
     {
@@ -20243,7 +20243,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -20252,7 +20252,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 16.9
     },
     {
@@ -20353,7 +20353,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -20362,7 +20362,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 16.9
     },
     {
@@ -20463,7 +20463,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -20472,7 +20472,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 16.9
     },
     {
@@ -20573,7 +20573,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -20582,7 +20582,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 16.9
     },
     {
@@ -20683,7 +20683,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -20692,7 +20692,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 16.9
     },
     {
@@ -20793,7 +20793,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -20802,7 +20802,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 16.9
     },
     {
@@ -21013,7 +21013,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -21022,7 +21022,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 19.2
     },
     {
@@ -21123,7 +21123,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -21132,7 +21132,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 19.2
     },
     {
@@ -21233,7 +21233,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -21242,7 +21242,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 19.2
     },
     {
@@ -21343,7 +21343,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -21352,7 +21352,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 19.2
     },
     {
@@ -21453,7 +21453,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -21462,7 +21462,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 19.2
     },
     {
@@ -21563,7 +21563,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -21572,7 +21572,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 19.2
     },
     {
@@ -21673,7 +21673,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -21682,7 +21682,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 19.2
     },
     {
@@ -21783,7 +21783,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -21792,7 +21792,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 19.2
     },
     {
@@ -21893,7 +21893,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -21902,7 +21902,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 19.2
     },
     {
@@ -22003,7 +22003,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -22012,7 +22012,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 21.6
     },
     {
@@ -22113,7 +22113,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -22122,7 +22122,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 21.6
     },
     {
@@ -22223,7 +22223,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -22232,7 +22232,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 21.6
     },
     {
@@ -22333,7 +22333,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -22342,7 +22342,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 21.6
     },
     {
@@ -22672,7 +22672,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 27.1
     },
     {
@@ -22993,7 +22993,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 14,
-        "MPPG": 73.9,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 23,
@@ -23002,7 +23002,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 39.7
     },
     {
@@ -23222,7 +23222,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.9
     },
     {
@@ -23323,7 +23323,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 6,
-        "MPPG": 78.6,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 8,
@@ -23332,7 +23332,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 27.5
     },
     {
@@ -23433,7 +23433,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -23442,7 +23442,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.9
     },
     {
@@ -23552,7 +23552,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 48.6
     },
     {
@@ -23653,7 +23653,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 19,
-        "MPPG": 90,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 24,
@@ -23662,7 +23662,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 35.2
     },
     {
@@ -23882,7 +23882,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 31
     },
     {
@@ -23983,7 +23983,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 19,
-        "MPPG": 82.1,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 18,
@@ -23992,7 +23992,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 24.2
     },
     {
@@ -24093,7 +24093,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 18,
-        "MPPG": 74.9,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 25,
@@ -24102,7 +24102,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 31
     },
     {
@@ -24212,7 +24212,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 31.4
     },
     {
@@ -24313,7 +24313,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 7,
-        "MPPG": 52.3,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 15,
@@ -24322,7 +24322,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 24.9
     },
     {
@@ -24432,7 +24432,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18.4
     },
     {
@@ -24533,7 +24533,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -24542,7 +24542,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18.4
     },
     {
@@ -24643,7 +24643,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -24652,7 +24652,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18.4
     },
     {
@@ -24753,7 +24753,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -24762,7 +24762,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18.4
     },
     {
@@ -24863,7 +24863,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 1,
-        "MPPG": 90,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 2,
@@ -24872,7 +24872,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.9
     },
     {
@@ -24982,7 +24982,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18.4
     },
     {
@@ -25092,7 +25092,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 29.9
     },
     {
@@ -25202,7 +25202,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 48.3
     },
     {
@@ -25312,7 +25312,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 31.7
     },
     {
@@ -25523,7 +25523,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 10,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -25532,7 +25532,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 27.1
     },
     {
@@ -25743,7 +25743,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 90,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -25853,7 +25853,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 10,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -25862,7 +25862,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 26.9
     },
     {
@@ -26073,7 +26073,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 7,
-        "MPPG": 75.3,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 9,
@@ -26082,7 +26082,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 34.2
     },
     {
@@ -26513,7 +26513,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 3,
-        "MPPG": 79.3,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 2,
@@ -26522,7 +26522,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 14.9
     },
     {
@@ -26623,7 +26623,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -26632,7 +26632,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 14.1
     },
     {
@@ -27063,7 +27063,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 17,
-        "MPPG": 86.9,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 18,
@@ -27072,7 +27072,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 40
     },
     {
@@ -27173,7 +27173,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 14,
-        "MPPG": 82.9,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 9,
@@ -27182,7 +27182,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 38.4
     },
     {
@@ -27292,7 +27292,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 25.3
     },
     {
@@ -27393,7 +27393,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 6,
-        "MPPG": 52.2,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 10,
@@ -27402,7 +27402,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 23.1
     },
     {
@@ -27503,7 +27503,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 6,
-        "MPPG": 87.3,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 11,
@@ -27512,7 +27512,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 35.9
     },
     {
@@ -27613,7 +27613,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 4,
-        "MPPG": 87.3,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 2,
@@ -27622,7 +27622,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 23.6
     },
     {
@@ -27723,7 +27723,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 6,
-        "MPPG": 51.9,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 13,
@@ -27732,7 +27732,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 28
     },
     {
@@ -27833,7 +27833,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -27842,7 +27842,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 18.1
     },
     {
@@ -27911,7 +27911,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 60.4
     },
     {
@@ -28021,7 +28021,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 47.3
     },
     {
@@ -28232,7 +28232,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 10,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -28241,7 +28241,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 27.5
     },
     {
@@ -28342,7 +28342,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 10,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -28351,7 +28351,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 27.5
     },
     {
@@ -28562,7 +28562,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 17,
-        "MPPG": 87.5,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 19,
@@ -28571,7 +28571,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 38.5
     },
     {
@@ -28672,7 +28672,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 11,
-        "MPPG": 85,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 11,
@@ -28681,7 +28681,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 35.9
     },
     {
@@ -28791,7 +28791,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 38.9
     },
     {
@@ -29011,7 +29011,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 27.5
     },
     {
@@ -29231,7 +29231,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 39.2
     },
     {
@@ -29341,7 +29341,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 26.4
     },
     {
@@ -29442,7 +29442,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 11,
-        "MPPG": 79.2,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 13,
@@ -29451,7 +29451,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 35.2
     },
     {
@@ -29671,7 +29671,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 26.4
     },
     {
@@ -29781,7 +29781,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 35.8
     },
     {
@@ -29882,7 +29882,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 15,
-        "MPPG": 86,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 18,
@@ -29891,7 +29891,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 44.8
     },
     {
@@ -30001,7 +30001,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 45.9
     },
     {
@@ -30102,7 +30102,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 1,
-        "MPPG": 89,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 4,
@@ -30111,7 +30111,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 22.4
     },
     {
@@ -30212,7 +30212,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 10,
-        "MPPG": 70.5,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 13,
@@ -30221,7 +30221,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 28.3
     },
     {
@@ -30331,7 +30331,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 21.7
     },
     {
@@ -30432,7 +30432,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 10,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -30441,7 +30441,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 26.1
     },
     {
@@ -30542,7 +30542,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 10,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -30551,7 +30551,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 26.1
     },
     {
@@ -30762,7 +30762,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 10,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -30771,7 +30771,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 26.1
     },
     {
@@ -30872,7 +30872,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -30881,7 +30881,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.1
     },
     {
@@ -31092,7 +31092,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -31101,7 +31101,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.1
     },
     {
@@ -31202,7 +31202,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -31211,7 +31211,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.1
     },
     {
@@ -31312,7 +31312,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -31321,7 +31321,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.1
     },
     {
@@ -31422,7 +31422,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -31431,7 +31431,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.1
     },
     {
@@ -31642,7 +31642,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -31651,7 +31651,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.1
     },
     {
@@ -31752,7 +31752,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -31761,7 +31761,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.1
     },
     {
@@ -31862,7 +31862,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -31871,7 +31871,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 17.5
     },
     {
@@ -31972,7 +31972,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -31981,7 +31981,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 17.5
     },
     {
@@ -32082,7 +32082,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -32091,7 +32091,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 17.5
     },
     {
@@ -32192,7 +32192,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -32201,7 +32201,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 17.5
     },
     {
@@ -32302,7 +32302,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -32311,7 +32311,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 17.5
     },
     {
@@ -32522,7 +32522,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -32531,7 +32531,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 17.5
     },
     {
@@ -32632,7 +32632,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -32641,7 +32641,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 17.5
     },
     {
@@ -32852,7 +32852,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -32861,7 +32861,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 20.2
     },
     {
@@ -32962,7 +32962,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -32971,7 +32971,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 17.5
     },
     {
@@ -33182,7 +33182,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -33191,7 +33191,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 20.2
     },
     {
@@ -33402,7 +33402,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -33411,7 +33411,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.1
     },
     {
@@ -33512,7 +33512,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -33521,7 +33521,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 17.5
     },
     {
@@ -33622,7 +33622,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 8,
-        "MPPG": 62.5,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 13,
@@ -33631,7 +33631,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 22.5
     },
     {
@@ -33732,7 +33732,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 10,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -33741,7 +33741,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 26.9
     },
     {
@@ -33842,7 +33842,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 90,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -33952,7 +33952,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 10,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -33961,7 +33961,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 26.9
     },
     {
@@ -34062,7 +34062,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -34071,7 +34071,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 14.1
     },
     {
@@ -34172,7 +34172,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -34181,7 +34181,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 14.1
     },
     {
@@ -34282,7 +34282,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -34291,7 +34291,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 14.1
     },
     {
@@ -34392,7 +34392,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -34401,7 +34401,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 14.1
     },
     {
@@ -34502,7 +34502,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -34511,7 +34511,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 14.1
     },
     {
@@ -34612,7 +34612,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -34621,7 +34621,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 14.1
     },
     {
@@ -34722,7 +34722,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -34731,7 +34731,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18.1
     },
     {
@@ -34942,7 +34942,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -34951,7 +34951,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18.1
     },
     {
@@ -35162,7 +35162,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -35171,7 +35171,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 18.1
     },
     {
@@ -35272,7 +35272,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -35281,7 +35281,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18.1
     },
     {
@@ -35382,7 +35382,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -35391,7 +35391,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 18.1
     },
     {
@@ -35492,7 +35492,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -35501,7 +35501,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 20.7
     },
     {
@@ -35602,7 +35602,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -35611,7 +35611,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 20.7
     },
     {
@@ -35712,7 +35712,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -35721,7 +35721,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 18.1
     },
     {
@@ -35822,7 +35822,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -35831,7 +35831,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18.1
     },
     {
@@ -35932,7 +35932,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -35941,7 +35941,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 20.7
     },
     {
@@ -36042,7 +36042,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -36051,7 +36051,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 20.7
     },
     {
@@ -36152,7 +36152,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -36161,7 +36161,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 20.7
     },
     {
@@ -36262,7 +36262,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -36271,7 +36271,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18.1
     },
     {
@@ -36372,7 +36372,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -36381,7 +36381,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18.1
     },
     {
@@ -36482,7 +36482,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 10,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -36491,7 +36491,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 26.9
     },
     {
@@ -36592,7 +36592,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -36601,7 +36601,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 18.1
     },
     {
@@ -36702,7 +36702,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 10,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -36711,7 +36711,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 26.9
     },
     {
@@ -37041,7 +37041,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 43.6
     },
     {
@@ -37481,7 +37481,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 40.9
     },
     {
@@ -37582,7 +37582,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 5,
-        "MPPG": 85.8,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 5,
@@ -37591,7 +37591,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 21.4
     },
     {
@@ -37692,7 +37692,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -37701,7 +37701,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 12.9
     },
     {
@@ -37814,7 +37814,6 @@ export const PLAYERS = [
         "chanceOfPlaying": 60,
         "xp10": 28.2
     },
-
     {
         "id": 336,
         "name": "Noah Okafor",
@@ -37857,7 +37856,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 5.0,
+                "pts": 5,
                 "opp": "NEW",
                 "loc": "H",
                 "diff": 2,
@@ -37913,8 +37912,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 19,
-        "MPPG": 55.0,
-
+        "MPPG": 75,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 26,
@@ -37923,7 +37921,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 55.7
     },
     {
@@ -38244,7 +38242,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 10,
-        "MPPG": 66.9,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 20,
@@ -38253,7 +38251,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 36
     },
     {
@@ -38354,7 +38352,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -38363,7 +38361,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 17.3
     },
     {
@@ -38473,7 +38471,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 25.4
     },
     {
@@ -38684,7 +38682,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 6,
-        "MPPG": 91.2,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 16,
@@ -38693,7 +38691,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 37
     },
     {
@@ -38794,7 +38792,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 15,
-        "MPPG": 87.9,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 23,
@@ -38803,7 +38801,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 35.9
     },
     {
@@ -38904,7 +38902,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 14,
-        "MPPG": 81.7,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 22,
@@ -38913,7 +38911,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 40.1
     },
     {
@@ -39133,7 +39131,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 40
     },
     {
@@ -39234,7 +39232,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 2,
-        "MPPG": 48.8,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 9,
@@ -39243,7 +39241,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 20.1
     },
     {
@@ -39683,7 +39681,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 30.4
     },
     {
@@ -39784,7 +39782,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 10,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -39793,7 +39791,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 27.8
     },
     {
@@ -40004,7 +40002,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 10,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -40013,7 +40011,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 27.8
     },
     {
@@ -40224,7 +40222,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 12,
-        "MPPG": 86,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 13,
@@ -40233,7 +40231,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 53.9
     },
     {
@@ -40343,7 +40341,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 32
     },
     {
@@ -40664,7 +40662,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -40673,7 +40671,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 14.9
     },
     {
@@ -40774,7 +40772,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -40783,7 +40781,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 14.9
     },
     {
@@ -40994,7 +40992,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -41003,7 +41001,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 14.9
     },
     {
@@ -41104,7 +41102,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -41113,7 +41111,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 14.9
     },
     {
@@ -41553,7 +41551,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 47.3
     },
     {
@@ -41663,7 +41661,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 25.8
     },
     {
@@ -41993,7 +41991,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 26.3
     },
     {
@@ -42213,7 +42211,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 26.5
     },
     {
@@ -42424,7 +42422,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -42433,7 +42431,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 20.4
     },
     {
@@ -42534,7 +42532,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -42543,7 +42541,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 19
     },
     {
@@ -42644,7 +42642,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 8,
-        "MPPG": 86.8,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 9,
@@ -42653,7 +42651,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 55.3
     },
     {
@@ -42864,7 +42862,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -42873,7 +42871,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 19
     },
     {
@@ -43093,7 +43091,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 20.2
     },
     {
@@ -43524,7 +43522,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 10,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -43533,7 +43531,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 28.2
     },
     {
@@ -43973,7 +43971,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 49.5
     },
     {
@@ -44074,7 +44072,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 16,
-        "MPPG": 85.6,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 13,
@@ -44083,7 +44081,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 51.5
     },
     {
@@ -44184,7 +44182,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 12,
-        "MPPG": 80.9,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 8,
@@ -44193,7 +44191,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 52.2
     },
     {
@@ -44294,7 +44292,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 15,
-        "MPPG": 75.1,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 13,
@@ -44303,7 +44301,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 36.9
     },
     {
@@ -44404,7 +44402,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 2,
-        "MPPG": 67.5,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 1,
@@ -44413,7 +44411,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 15.1
     },
     {
@@ -44514,7 +44512,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 4,
-        "MPPG": 66.8,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 7,
@@ -44523,7 +44521,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 24.3
     },
     {
@@ -44624,7 +44622,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -44633,7 +44631,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 15.1
     },
     {
@@ -45174,7 +45172,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 8,
-        "MPPG": 86.4,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 5,
@@ -45183,7 +45181,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 76.8
     },
     {
@@ -45403,7 +45401,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 30.9
     },
     {
@@ -45513,7 +45511,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 53.3
     },
     {
@@ -45614,7 +45612,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 17,
-        "MPPG": 82.2,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 18,
@@ -45623,7 +45621,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 35.3
     },
     {
@@ -45733,7 +45731,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 21.6
     },
     {
@@ -45834,7 +45832,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -45843,7 +45841,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 19.2
     },
     {
@@ -45944,7 +45942,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -45953,7 +45951,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 19.2
     },
     {
@@ -46063,7 +46061,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 23.6
     },
     {
@@ -46164,7 +46162,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -46173,7 +46171,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 19.2
     },
     {
@@ -46604,7 +46602,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 13,
-        "MPPG": 73.4,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 18,
@@ -46613,7 +46611,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 28.4
     },
     {
@@ -46943,7 +46941,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 24.4
     },
     {
@@ -47044,7 +47042,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 10,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -47053,7 +47051,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 27
     },
     {
@@ -47163,7 +47161,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 49
     },
     {
@@ -47493,7 +47491,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 46.9
     },
     {
@@ -47704,7 +47702,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 18,
-        "MPPG": 72.1,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 33,
@@ -47713,7 +47711,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 22.5
     },
     {
@@ -47814,7 +47812,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 11,
-        "MPPG": 83.6,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 15,
@@ -47823,7 +47821,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 37.5
     },
     {
@@ -47924,7 +47922,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 11,
-        "MPPG": 88.8,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 10,
@@ -47933,7 +47931,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 47.9
     },
     {
@@ -48144,7 +48142,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -48153,7 +48151,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.9
     },
     {
@@ -48263,7 +48261,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.9
     },
     {
@@ -48694,7 +48692,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -48703,7 +48701,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 19.9
     },
     {
@@ -48804,7 +48802,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 12,
-        "MPPG": 84.2,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 15,
@@ -48813,7 +48811,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 49.8
     },
     {
@@ -48923,7 +48921,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 35
     },
     {
@@ -49033,7 +49031,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 27.4
     },
     {
@@ -49253,7 +49251,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18.4
     },
     {
@@ -49363,7 +49361,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 19.2
     },
     {
@@ -49464,7 +49462,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -49473,7 +49471,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18.4
     },
     {
@@ -49583,7 +49581,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18.4
     },
     {
@@ -49693,7 +49691,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18.4
     },
     {
@@ -49913,7 +49911,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 34.5
     },
     {
@@ -50014,7 +50012,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -50023,7 +50021,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 20.9
     },
     {
@@ -50234,7 +50232,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 10,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -50243,7 +50241,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 27.5
     },
     {
@@ -50344,7 +50342,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 10,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -50353,7 +50351,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 27.5
     },
     {
@@ -50564,7 +50562,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 11,
-        "MPPG": 68.1,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 13,
@@ -50573,7 +50571,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 31.8
     },
     {
@@ -50683,7 +50681,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 43
     },
     {
@@ -50793,7 +50791,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 37.6
     },
     {
@@ -50903,7 +50901,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 31.6
     },
     {
@@ -51123,7 +51121,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 14.7
     },
     {
@@ -51334,7 +51332,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 19,
-        "MPPG": 62.9,
+        "MPPG": 75,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 31,
@@ -51343,7 +51341,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 36.7
     },
     {
@@ -51444,7 +51442,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 14,
-        "MPPG": 81.4,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 28,
@@ -51453,7 +51451,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 31.8
     },
     {
@@ -51554,7 +51552,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 15,
-        "MPPG": 72,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 31,
@@ -51563,7 +51561,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 32.8
     },
     {
@@ -51664,7 +51662,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 19,
-        "MPPG": 84.5,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 20,
@@ -51673,7 +51671,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 45.6
     },
     {
@@ -51994,7 +51992,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 10,
-        "MPPG": 69.4,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 18,
@@ -52003,7 +52001,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 28.6
     },
     {
@@ -52104,7 +52102,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -52113,7 +52111,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 18.8
     },
     {
@@ -52214,7 +52212,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -52223,7 +52221,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18.8
     },
     {
@@ -52333,7 +52331,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 48.2
     },
     {
@@ -52443,7 +52441,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 25.2
     },
     {
@@ -52544,7 +52542,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 8,
-        "MPPG": 67.1,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 14,
@@ -52553,7 +52551,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 67.3
     },
     {
@@ -52663,7 +52661,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 21.8
     },
     {
@@ -52764,7 +52762,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -52773,7 +52771,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18.8
     },
     {
@@ -52874,7 +52872,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 90,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -53103,7 +53101,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 29.6
     },
     {
@@ -53314,7 +53312,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 14,
-        "MPPG": 74.4,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 23,
@@ -53323,7 +53321,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 28.4
     },
     {
@@ -53644,7 +53642,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 18,
-        "MPPG": 88.2,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 19,
@@ -53653,7 +53651,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 35.9
     },
     {
@@ -53754,7 +53752,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 6,
-        "MPPG": 85.7,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 7,
@@ -53763,7 +53761,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 20.2
     },
     {
@@ -53974,7 +53972,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -53983,7 +53981,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.3
     },
     {
@@ -54084,7 +54082,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 2,
-        "MPPG": 82.5,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 4,
@@ -54093,7 +54091,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.3
     },
     {
@@ -54194,7 +54192,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 3,
-        "MPPG": 50.4,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 5,
@@ -54203,7 +54201,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 19.9
     },
     {
@@ -54304,7 +54302,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -54313,7 +54311,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.3
     },
     {
@@ -54634,7 +54632,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 14,
-        "MPPG": 83.4,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 17,
@@ -54643,7 +54641,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 36.8
     },
     {
@@ -54744,7 +54742,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 17,
-        "MPPG": 69.8,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 24,
@@ -54753,7 +54751,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 35.7
     },
     {
@@ -54854,7 +54852,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 6,
-        "MPPG": 91.5,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 10,
@@ -54863,7 +54861,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 44.6
     },
     {
@@ -54973,7 +54971,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 21.4
     },
     {
@@ -55074,7 +55072,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 17,
-        "MPPG": 68.7,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 20,
@@ -55083,7 +55081,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 28.9
     },
     {
@@ -55193,7 +55191,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 36.5
     },
     {
@@ -55303,7 +55301,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18.8
     },
     {
@@ -55404,7 +55402,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 11,
-        "MPPG": 81.5,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 14,
@@ -55413,7 +55411,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 39.9
     },
     {
@@ -55633,7 +55631,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 37.8
     },
     {
@@ -55743,7 +55741,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 22.6
     },
     {
@@ -55844,7 +55842,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -55853,7 +55851,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18.2
     },
     {
@@ -56284,7 +56282,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 10,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -56293,7 +56291,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 27.1
     },
     {
@@ -56843,7 +56841,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 40.7
     },
     {
@@ -56944,7 +56942,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 17,
-        "MPPG": 87.6,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 25,
@@ -56953,7 +56951,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 36.5
     },
     {
@@ -57063,7 +57061,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 26.5
     },
     {
@@ -57283,7 +57281,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 32.9
     },
     {
@@ -57384,7 +57382,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 14,
-        "MPPG": 74.2,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 25,
@@ -57393,7 +57391,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 15.1
     },
     {
@@ -57494,7 +57492,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -57503,7 +57501,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.9
     },
     {
@@ -57604,7 +57602,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 2,
-        "MPPG": 68,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 3,
@@ -57613,7 +57611,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.9
     },
     {
@@ -57723,7 +57721,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.9
     },
     {
@@ -57833,7 +57831,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.9
     },
     {
@@ -57934,7 +57932,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 2,
-        "MPPG": 71,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 3,
@@ -57943,7 +57941,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 13.9
     },
     {
@@ -58273,7 +58271,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 38.8
     },
     {
@@ -58383,7 +58381,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 20.6
     },
     {
@@ -58493,7 +58491,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 37.8
     },
     {
@@ -58713,7 +58711,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 30.2
     },
     {
@@ -58814,7 +58812,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 14,
-        "MPPG": 84.5,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 23,
@@ -58823,7 +58821,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 32.2
     },
     {
@@ -58924,7 +58922,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 11,
-        "MPPG": 86.8,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 18,
@@ -58933,7 +58931,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 45.4
     },
     {
@@ -59144,7 +59142,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 18,
-        "MPPG": 81.7,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 28,
@@ -59153,7 +59151,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 34.4
     },
     {
@@ -59254,7 +59252,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -59263,7 +59261,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18.4
     },
     {
@@ -59373,7 +59371,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 18.4
     },
     {
@@ -59584,7 +59582,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 11,
-        "MPPG": 90.6,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 21,
@@ -59593,7 +59591,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 37.9
     },
     {
@@ -59703,7 +59701,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 44.9
     },
     {
@@ -59813,7 +59811,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 21.1
     },
     {
@@ -60024,7 +60022,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 10,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -60033,7 +60031,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 28.4
     },
     {
@@ -60143,7 +60141,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 10,
         "xp10": 29.9
     },
     {
@@ -60253,7 +60251,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 51
     },
     {
@@ -60693,7 +60691,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 34
     },
     {
@@ -60803,7 +60801,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 16.1
     },
     {
@@ -60904,7 +60902,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -60913,7 +60911,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 16.1
     },
     {
@@ -61014,7 +61012,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 5,
-        "MPPG": 51.4,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 7,
@@ -61023,7 +61021,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 24.8
     },
     {
@@ -61124,7 +61122,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 2,
-        "MPPG": 62.5,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 2,
@@ -61133,7 +61131,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 16.1
     },
     {
@@ -61234,7 +61232,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 0,
-        "MPPG": 0,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 0,
@@ -61243,7 +61241,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 16.1
     },
     {
@@ -61454,7 +61452,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 15,
-        "MPPG": 77.9,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 19,
@@ -61463,7 +61461,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 39.9
     },
     {
@@ -61784,7 +61782,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 9,
-        "MPPG": 72.1,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 8,
@@ -61793,7 +61791,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 41
     },
     {
@@ -61903,7 +61901,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 30.1
     },
     {
@@ -62004,7 +62002,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 11,
-        "MPPG": 68.9,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 11,
@@ -62013,7 +62011,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 35.8
     },
     {
@@ -62114,7 +62112,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 16,
-        "MPPG": 70.6,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 14,
@@ -62123,7 +62121,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 40.9
     },
     {
@@ -62233,7 +62231,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 19.3
     },
     {
@@ -62334,7 +62332,7 @@ export const PLAYERS = [
             }
         ],
         "GS": 5,
-        "MPPG": 80.2,
+        "MPPG": 25,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 6,
@@ -62343,7 +62341,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 35,
         "xp10": 29.7
     },
     {
@@ -62453,7 +62451,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 88,
         "xp10": 46.1
     },
     {
@@ -62563,7 +62561,7 @@ export const PLAYERS = [
         "oldTeam": null,
         "news": "",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 60,
         "xp10": 43.9
     }
 ];
