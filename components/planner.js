@@ -1905,24 +1905,39 @@ export function getShirtSVG(color, teamShortName = '', position = 'MID') {
                 </svg>
             `;
 
-        case 'BRE': // BRENTFORD: Red & White 3D Stripes with Black Cuffs
+        case 'BRE': // BRENTFORD: Authentic 2024/25 Red-to-Black Gradient Hem with Black Raglan Sleeves & Golden Bee Badge
             return `
                 <svg viewBox="0 0 100 100" class="shirt-svg" style="filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.6));">
-                    ${defs}
-                    <path d="M 32 14 C 24 16, 14 22, 6 28 C 4 30, 6 36, 12 40 C 18 43, 26 38, 30 30 C 31 25, 32 18, 32 14 Z" fill="#E30613"/>
-                    <path d="M 68 14 C 76 16, 86 22, 94 28 C 96 30, 94 36, 88 40 C 82 43, 74 38, 70 30 C 69 25, 68 18, 68 14 Z" fill="#E30613"/>
-                    <!-- Black Sleeve Cuffs -->
-                    <path d="M 6 28 L 12 40" stroke="#111111" stroke-width="3"/>
-                    <path d="M 94 28 L 88 40" stroke="#111111" stroke-width="3"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="#E30613"/>
-                    <path d="M 34 16 L 36 84 L 43 84 L 41 16 Z" fill="#FFFFFF"/>
-                    <path d="M 47 16 L 48 84 L 52 84 L 53 16 Z" fill="#FFFFFF"/>
-                    <path d="M 59 16 L 57 84 L 64 84 L 66 16 Z" fill="#FFFFFF"/>
+                    <defs>
+                        ${defs}
+                        <linearGradient id="breGradient_${position}" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#E30613"/>
+                            <stop offset="55%" stop-color="#E30613"/>
+                            <stop offset="90%" stop-color="#111111"/>
+                            <stop offset="100%" stop-color="#000000"/>
+                        </linearGradient>
+                    </defs>
+                    <!-- Solid Black Raglan Sleeves -->
+                    <path d="M 32 14 C 24 16, 14 22, 6 28 C 4 30, 6 36, 12 40 C 18 43, 26 38, 30 30 C 31 25, 32 18, 32 14 Z" fill="#111111"/>
+                    <path d="M 68 14 C 76 16, 86 22, 94 28 C 96 30, 94 36, 88 40 C 82 43, 74 38, 70 30 C 69 25, 68 18, 68 14 Z" fill="#111111"/>
+                    <!-- Red Cuff Ring on Black Sleeves -->
+                    <path d="M 6 28 L 12 40" stroke="#E30613" stroke-width="2.5"/>
+                    <path d="M 94 28 L 88 40" stroke="#E30613" stroke-width="2.5"/>
+                    <!-- Gradient Body (Red top fading to Black bottom) -->
+                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="url(#breGradient_${position})"/>
+                    <!-- White Vertical Stripes fading into lower black hem -->
+                    <path d="M 36 16 L 37 68 L 43 68 L 42 16 Z" fill="#FFFFFF" opacity="0.95"/>
+                    <path d="M 47 16 L 48 68 L 52 68 L 53 16 Z" fill="#FFFFFF" opacity="0.95"/>
+                    <path d="M 58 16 L 57 68 L 63 68 L 64 16 Z" fill="#FFFFFF" opacity="0.95"/>
+                    <!-- Black V-Neck Collar -->
                     <path d="M 38 15 Q 50 25 62 15 Z" fill="#111111"/>
+                    <!-- Golden Bee Badge -->
+                    <circle cx="36" cy="27" r="3" fill="#FDB913"/>
                     <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="url(#fabricShading_${teamShortName}_${position})"/>
-                    <text x="50" y="58" text-anchor="middle" fill="#111111" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 0px 2px #ffffff;">BRE</text>
+                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">BRE</text>
                 </svg>
             `;
+
 
         case 'BHA': // BRIGHTON: Royal Blue & White 3D Stripes with Yellow Trim
             return `
@@ -2173,21 +2188,37 @@ export function getShirtSVG(color, teamShortName = '', position = 'MID') {
                 </svg>
             `;
 
-        case 'SUN': // SUNDERLAND: Red & White 3D Vertical Stripes
+        case 'SUN': // SUNDERLAND: Authentic Fine Red & White Stripes, Hummel White Shoulder Chevrons & Twin Lions Shield Badge
             return `
                 <svg viewBox="0 0 100 100" class="shirt-svg" style="filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.6));">
                     ${defs}
-                    <path d="M 32 14 C 24 16, 14 22, 6 28 C 4 30, 6 36, 12 40 C 18 43, 26 38, 30 30 C 31 25, 32 18, 32 14 Z" fill="#FF0000"/>
-                    <path d="M 68 14 C 76 16, 86 22, 94 28 C 96 30, 94 36, 88 40 C 82 43, 74 38, 70 30 C 69 25, 68 18, 68 14 Z" fill="#FF0000"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="#FF0000"/>
-                    <path d="M 34 16 L 36 84 L 43 84 L 41 16 Z" fill="#FFFFFF"/>
-                    <path d="M 47 16 L 48 84 L 52 84 L 53 16 Z" fill="#FFFFFF"/>
-                    <path d="M 59 16 L 57 84 L 64 84 L 66 16 Z" fill="#FFFFFF"/>
+                    <!-- Red Sleeves with Hummel White Shoulder Chevrons -->
+                    <path d="M 32 14 C 24 16, 14 22, 6 28 C 4 30, 6 36, 12 40 C 18 43, 26 38, 30 30 C 31 25, 32 18, 32 14 Z" fill="#EB1C24"/>
+                    <path d="M 68 14 C 76 16, 86 22, 94 28 C 96 30, 94 36, 88 40 C 82 43, 74 38, 70 30 C 69 25, 68 18, 68 14 Z" fill="#EB1C24"/>
+                    <!-- White Hummel Chevrons on Shoulders -->
+                    <path d="M 28 17 L 18 23 L 20 25 L 29 20 Z" fill="#FFFFFF"/>
+                    <path d="M 72 17 L 82 23 L 80 25 L 71 20 Z" fill="#FFFFFF"/>
+                    <!-- Pure White Sleeve Cuffs with Black Ring -->
+                    <path d="M 6 28 L 12 40" stroke="#FFFFFF" stroke-width="3"/>
+                    <path d="M 94 28 L 88 40" stroke="#FFFFFF" stroke-width="3"/>
+                    <path d="M 7 29 L 11 39" stroke="#111111" stroke-width="1"/>
+                    <path d="M 93 29 L 89 39" stroke="#111111" stroke-width="1"/>
+                    <!-- Pure Red Body with 5 Crisp Fine Stripes -->
+                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="#EB1C24"/>
+                    <path d="M 32 16 L 33 84 L 38 84 L 37 16 Z" fill="#FFFFFF"/>
+                    <path d="M 42 16 L 43 84 L 47 84 L 46 16 Z" fill="#FFFFFF"/>
+                    <path d="M 52 16 L 53 84 L 57 84 L 56 16 Z" fill="#FFFFFF"/>
+                    <path d="M 62 16 L 63 84 L 68 84 L 67 16 Z" fill="#FFFFFF"/>
+                    <!-- Black Crewneck Collar with Inner White Ring -->
                     <path d="M 38 15 Q 50 25 62 15 Z" fill="#111111"/>
+                    <path d="M 41 17 Q 50 24 59 17" stroke="#FFFFFF" stroke-width="1.5" fill="none"/>
+                    <!-- Red & Gold Twin Lions Shield Crest Badge -->
+                    <polygon points="36,25 40,25 38,30" fill="#EB1C24" stroke="#DBA111" stroke-width="0.8"/>
                     <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="url(#fabricShading_${teamShortName}_${position})"/>
-                    <text x="50" y="58" text-anchor="middle" fill="#111111" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 0px 2px #ffffff;">SUN</text>
+                    <text x="50" y="58" text-anchor="middle" fill="#111111" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 0px 3px #ffffff, 0px 0px 3px #ffffff;">SUN</text>
                 </svg>
             `;
+
 
         default:
             const c = color || '#00ff88';
