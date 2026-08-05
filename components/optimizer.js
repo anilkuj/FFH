@@ -1564,14 +1564,38 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             return result;
         };
 
-        // Initialize starting slots with top-scoring guaranteed starters
-        for (const idx of startingIndices) {
+        // Initialize starting slots with budget-constrained top-scoring guaranteed starters
+        let runningStartingCost = 0;
+        const unassignedStartingCount = startingIndices.filter(idx => optimizedSquadSlots[idx].playerId === null).length;
+        
+        for (let i = 0; i < startingIndices.length; i++) {
+            const idx = startingIndices[i];
             const slot = optimizedSquadSlots[idx];
             if (!slot.locked && slot.playerId === null) {
-                const top = getTopPlayersList(slot.position, 1, initUsedIds)[0];
-                slot.playerId = top ? top.id : null;
+                const remainingSlotsCount = startingIndices.length - 1 - i;
+                const maxAllowedPrice = maxStartingBudget - runningStartingCost - (remainingSlotsCount * 4.5);
+                
+                const pool = PLAYERS.filter(p => 
+                    p.position === slot.position && 
+                    !state.mustExclude.includes(p.id) &&
+                    !initUsedIds.includes(p.id) &&
+                    p.price <= Math.max(4.5, maxAllowedPrice) &&
+                    passesMinFwd(p) &&
+                    (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 75)
+                ).sort((a, b) => getExpectedPtsOverHorizon(b, state.currentGw, horizon) - getExpectedPtsOverHorizon(a, state.currentGw, horizon));
+                
+                const chosen = pool[0] || getCheapestPlayersList(slot.position, 1, initUsedIds, true)[0];
+                if (chosen) {
+                    slot.playerId = chosen.id;
+                    initUsedIds.push(chosen.id);
+                    runningStartingCost += chosen.price;
+                }
+            } else if (slot.playerId !== null) {
+                const p = PLAYERS.find(pl => pl.id === slot.playerId);
+                if (p) runningStartingCost += p.price;
             }
         }
+
         // Initialize bench slots (with cheapest budget enablers if not ignoreBench) if they are not locked
         if (!state.ignoreBench) {
             for (const idx of benchIndices) {
@@ -1582,6 +1606,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 }
             }
         }
+
 
 
 
