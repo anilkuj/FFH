@@ -27863,14 +27863,55 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "opp": "HUL",
+                "pts": 3.4,
+                "opp": "CRY",
+                "loc": "H",
+                "diff": 3,
+                "actualPts": null
+            },
+            {
+                "gw": 2,
+                "pts": 3.0,
+                "opp": "BOU",
                 "loc": "A",
+                "diff": 3,
+                "actualPts": null
+            },
+            {
+                "gw": 3,
+                "pts": 2.9,
+                "opp": "MUN",
+                "loc": "H",
+                "diff": 4,
+                "actualPts": null
+            },
+            {
+                "gw": 4,
+                "pts": 3.0,
+                "opp": "TOT",
+                "loc": "A",
+                "diff": 3,
+                "actualPts": null
+            },
+            {
+                "gw": 5,
+                "pts": 4.6,
+                "opp": "IPS",
+                "loc": "H",
                 "diff": 2,
                 "actualPts": null
             },
             {
+                "gw": 6,
+                "pts": 3.2,
+                "opp": "LEI",
+                "loc": "A",
+                "diff": 3,
+                "actualPts": null
+            },
+            {
                 "gw": 7,
-                "pts": 5.3,
+                "pts": 2.9,
                 "opp": "CHE",
                 "loc": "H",
                 "diff": 4,
@@ -27878,7 +27919,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 8,
-                "pts": 3,
+                "pts": 1.6,
                 "opp": "ARS",
                 "loc": "A",
                 "diff": 5,
@@ -27886,7 +27927,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 9,
-                "pts": 5.4,
+                "pts": 3.0,
                 "opp": "NEW",
                 "loc": "A",
                 "diff": 3,
@@ -27894,7 +27935,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 10,
-                "pts": 8.4,
+                "pts": 4.6,
                 "opp": "COV",
                 "loc": "H",
                 "diff": 2,
@@ -27902,18 +27943,19 @@ export const PLAYERS = [
             }
         ],
         "GS": 17,
-        "MPPG": 86.2,
+        "MPPG": 52,
         "saves": 0,
         "saves90": 0,
         "goalsConceded": 19,
         "goalsConceded90": 1.1,
         "transferredThisSeason": false,
         "oldTeam": null,
-        "news": "",
+        "news": "Rotation risk with Calvert-Lewin",
         "status": "a",
-        "chanceOfPlaying": 88,
-        "xp10": 60.4
+        "chanceOfPlaying": 60,
+        "xp10": 32.2
     },
+
     {
         "id": 249,
         "name": "Thierno Barry",
