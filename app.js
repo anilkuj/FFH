@@ -159,13 +159,14 @@ class AppState {
 
         // Real-time automatic background sync listeners
         if (typeof window !== 'undefined') {
-            window.addEventListener('focus', () => this.loadCloudDrafts());
-            setInterval(() => {
-                if (this.userProfile && this.userProfile.sub) {
+            // Load cloud drafts ONCE when user profile initializes or on window focus IF no recent local edits
+            window.addEventListener('focus', () => {
+                if (Date.now() - (this.lastLocalUpdate || 0) > 60000) {
                     this.loadCloudDrafts();
                 }
-            }, 10000);
+            });
         }
+
 
 
 
@@ -300,6 +301,8 @@ class AppState {
         localStorage.setItem(this.getDraftsStorageKey(), JSON.stringify(this.drafts));
         localStorage.setItem(this.getActiveDraftIdxStorageKey(), this.activeDraftIndex.toString());
 
+        this.lastLocalUpdate = Date.now();
+
         // Asynchronously sync to Google Account cloud storage
         this.syncCloudDrafts();
     }
@@ -333,6 +336,13 @@ class AppState {
 
     async loadCloudDrafts() {
         if (!this.userProfile || !this.userProfile.sub) return;
+
+        // NEVER overwrite local state if user has active in-progress edits locally within the last 5 minutes!
+        const timeSinceLocalUpdate = Date.now() - (this.lastLocalUpdate || 0);
+        if (timeSinceLocalUpdate < 300000 && this.lastLocalUpdate !== undefined) {
+            return;
+        }
+
 
         try {
             const cloudKey = `fpl_cloud_drafts_${this.userProfile.sub}`;
