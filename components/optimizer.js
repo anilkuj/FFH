@@ -925,19 +925,16 @@ function renderLockOverlay(container, actions) {
     });
 }
 
-const ALL_FORMATIONS = ['4-3-3', '4-4-2', '3-5-2', '3-4-3', '4-5-1', '5-3-2', '5-4-1', '5-2-3'];
+const ALL_FORMATIONS = ['3-5-2', '3-4-3', '4-4-2', '4-3-3', '4-5-1', '5-3-2', '5-4-1', '5-2-3'];
 
 function performOptimization(resultsGrid, state, actions, horizon, mode) {
-    // If 'optimum' formation: score each formation with the lightweight scorer,
+    // If 'optimum' formation: score each formation with top-starter expected points,
     // then temporarily set state.formation to the winner before running the real solver.
-    // We use the REAL state object (not a clone) so that Apply buttons write to the
-    // correct state and the squad is never lost.
     if (state.formation === 'optimum') {
-        let bestFormation = null;
+        let bestFormation = '3-5-2';
         let bestScore = -Infinity;
 
         for (const formation of ALL_FORMATIONS) {
-            // Temporarily swap formation on the real state for scoring
             state.formation = formation;
             const score = _scoreOptimizationForFormation(state, horizon, mode);
             if (score > bestScore) {
@@ -946,8 +943,6 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
             }
         }
 
-        // Set the winning formation on the real state so all apply-button handlers
-        // use the correct formation and squad slots are saved properly
         state.formation = bestFormation;
         _performOptimizationWithFormation(resultsGrid, state, actions, horizon, mode, bestFormation, true);
         return;
@@ -957,116 +952,63 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
 }
 
 /**
- * Quick scorer: runs a lightweight greedy pass to estimate expected points
- * for a given formation without rendering any UI. Used for optimum-formation picking.
+ * Helper: Expected points over selected horizon
+ */
+function getExpectedPtsOverHorizon(player, currentGw, horizon) {
+    if (!player || !player.predictions) return 0;
+    const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
+    let sum = 0;
+    for (let gw = currentGw; gw < currentGw + horizon; gw++) {
+        const pred = player.predictions.find(pr => pr.gw === gw);
+        if (pred) sum += (pred.pts * factor);
+    }
+    return sum;
+}
+
+/**
+ * Quick scorer: runs top-starter expected points pass for a given formation
+ * to accurately pick the maximum points formation in optimum mode.
  */
 function _scoreOptimizationForFormation(state, horizon, mode) {
-    const squadInfo = state.getSquadForGw(state.currentGw);
-    const { bank } = squadInfo;
-
-    const activeSquadSlots = (() => {
-        let slots = JSON.parse(JSON.stringify(state.squadSlots));
-        for (let gw = 1; gw <= state.currentGw; gw++) {
-            const weeklyTransfers = state.transfers[gw] || [];
-            weeklyTransfers.forEach(tx => {
-                slots.forEach(slot => { if (slot.playerId === tx.out) slot.playerId = tx.in; });
-            });
-        }
-        return slots;
-    })();
-
-    const getExpectedPts = (player) => {
-        if (!player || !player.predictions) return 0;
-        const chance = (player.chanceOfPlaying !== undefined && player.chanceOfPlaying !== null) ? (player.chanceOfPlaying / 100) : 1.0;
-        let sum = 0;
-        for (let gw = state.currentGw; gw < state.currentGw + horizon; gw++) {
-            const pred = player.predictions.find(pr => pr.gw === gw);
-            if (pred) sum += (pred.pts * chance);
-        }
-        return sum;
-    };
-
-
-    const getSolverScore = (player) => {
-        if (!player) return 0;
-        if (player.status === 'i' || player.status === 's' || player.status === 'u') return 0;
-        return getExpectedPts(player);
-    };
-
     const cons = getFormationConstraints(state.formation);
-    const minBenchBudget = state.benchBudget || 17.0;
-    const totalValue = activeSquadSlots.reduce((sum, s) => {
-        const p = PLAYERS.find(pl => pl.id === s.playerId);
-        return sum + (p ? p.price : 0);
-    }, 0) + bank;
-    const maxStartingBudget = totalValue - minBenchBudget;
-    const activeBenchIds = state.ignoreBench
-        ? activeSquadSlots.filter(s => !s.isStarting && s.playerId !== null).map(s => s.playerId)
-        : [];
+    const initUsedIds = [];
 
-
-    const minFwd = state.minFwdPrice ?? 6.0;
-    const candidatePool = (pos) => PLAYERS.filter(p =>
-        p.position === pos &&
-        !state.mustExclude.includes(p.id) &&
-        (!state.ignoreBench || !activeBenchIds.includes(p.id)) &&
-        (pos !== 'FWD' || p.price >= minFwd || (state.mustInclude && state.mustInclude.includes(p.id))) &&
-        getSolverScore(p) > 0
-    ).sort((a, b) => getSolverScore(b) - getSolverScore(a));
-
-
-    const pick = (pos, count, budget) => {
-        const pool = candidatePool(pos);
-        const picked = [];
-        let spent = 0;
+    const getTopList = (pos, count) => {
+        const pool = PLAYERS.filter(p =>
+            p.position === pos &&
+            p.status === 'a' &&
+            !state.mustExclude.includes(p.id) &&
+            !initUsedIds.includes(p.id) &&
+            (isGuaranteedStart(p) || p.chanceOfPlaying >= 75)
+        ).sort((a, b) => getExpectedPtsOverHorizon(b, state.currentGw, horizon) - getExpectedPtsOverHorizon(a, state.currentGw, horizon));
+        
+        const result = [];
         for (const p of pool) {
-            if (picked.length >= count) break;
-            if (spent + p.price <= budget - (count - picked.length - 1) * 4.0) {
-                picked.push(p);
-                spent += p.price;
-            }
+            result.push(p);
+            initUsedIds.push(p.id);
+            if (result.length === count) break;
         }
-        return { players: picked, spent };
+        return result;
     };
 
-    // Budget split: ensure every position gets at least minimum viable budget
-    const gkpBudget = 9.5; // 1 start + 1 bench
-    const fieldBudget = maxStartingBudget - gkpBudget;
-    
-    const minFwdBudget = cons.FWD * 4.5;
-    const minDefBudget = cons.DEF * 4.0;
-    const minMidBudget = cons.MID * 4.5;
-    const remFieldBudget = Math.max(0, fieldBudget - minFwdBudget - minDefBudget - minMidBudget);
-    
-    const totalPosCount = cons.DEF + cons.MID + cons.FWD;
-    const defShare = cons.DEF / totalPosCount;
-    const midShare = cons.MID / totalPosCount;
-    const fwdShare = cons.FWD / totalPosCount;
-    
-    const defBudget = minDefBudget + (remFieldBudget * defShare);
-    const midBudget = minMidBudget + (remFieldBudget * midShare);
-    const fwdBudget = minFwdBudget + (remFieldBudget * fwdShare);
+    const gkps = getTopList('GKP', cons.GKP);
+    const defs = getTopList('DEF', cons.DEF);
+    const mids = getTopList('MID', cons.MID);
+    const fwds = getTopList('FWD', cons.FWD);
 
-    const gkps = pick('GKP', cons.GKP, gkpBudget);
-    const defs = pick('DEF', cons.DEF, defBudget);
-    const mids = pick('MID', cons.MID, midBudget);
-    const fwds = pick('FWD', cons.FWD, fwdBudget);
+    const startingXI = [...gkps, ...defs, ...mids, ...fwds];
+    let totalScore = startingXI.reduce((sum, p) => sum + getExpectedPtsOverHorizon(p, state.currentGw, horizon), 0);
+    const maxScore = startingXI.reduce((best, p) => Math.max(best, getExpectedPtsOverHorizon(p, state.currentGw, horizon)), 0);
+    totalScore += maxScore; // Captain 2x bonus
 
-
-    const allPicked = [...gkps.players, ...defs.players, ...mids.players, ...fwds.players];
-    let totalScore = allPicked.reduce((sum, p) => sum + getSolverScore(p), 0);
-    // Captain bonus
-    const maxScore = allPicked.reduce((best, p) => Math.max(best, getSolverScore(p)), 0);
-    totalScore += maxScore;
-
-    // Tactical formation preference: High-scoring midfield & balanced FPL formations (3-5-2, 3-4-3, 4-4-2, 4-5-1)
-    // receive a +2.5 xP weighting bonus over 5-defender formations (5-2-3, 5-3-2, 5-4-1) due to goal/clean-sheet floor
+    // Midfield & Attack FPL power formation preference (+5.0 xP bonus for 3-5-2, 3-4-3, 4-4-2, 4-5-1)
     if (state.formation === '3-5-2' || state.formation === '3-4-3' || state.formation === '4-4-2' || state.formation === '4-5-1') {
-        totalScore += 2.5;
+        totalScore += 5.0;
     }
 
     return totalScore;
 }
+
 
 
 /**
