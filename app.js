@@ -21,20 +21,32 @@ window.getPlayerMinutesFactor = function(player) {
     const chance = (player.chanceOfPlaying !== undefined && player.chanceOfPlaying !== null) 
         ? (player.chanceOfPlaying / 100) 
         : 1.0;
-        
-    let matchMinutesRatio = 1.0;
-    if (typeof player.MPPG === 'number' && player.MPPG > 0) {
-        matchMinutesRatio = Math.min(1.0, Math.max(0.15, player.MPPG / 90));
-    }
 
     // Do NOT penalize newly promoted teams or new transfers without established PL start history!
     const isPromotedOrNew = (player.team && PROMOTED_TEAMS.includes(player.team)) || 
                             player.transferredThisSeason || 
                             (typeof player.points === 'number' && player.points < 15);
 
+    // Also do NOT heavily penalize premium or highly-owned key players (they are established starters/key players)
+    const isPremiumOrKey = player.price >= 6.0 || 
+                           (player.position === 'DEF' && player.price >= 5.0) ||
+                           (player.ownership && player.ownership > 8.0);
+
+    const isBypassPenalty = isPromotedOrNew || isPremiumOrKey;
+
+    let matchMinutesRatio = 1.0;
+    if (typeof player.MPPG === 'number' && player.MPPG > 0) {
+        matchMinutesRatio = Math.min(1.0, Math.max(isBypassPenalty ? 0.85 : 0.15, player.MPPG / 90));
+    } else if (!isBypassPenalty) {
+        // Only apply the 0.15 floor for established PL players with 0 recorded minutes
+        // (e.g. true bench warmers). Promoted/new/premium players get full 90-min assumption.
+        matchMinutesRatio = 0.15;
+    }
+    // isBypassPenalty with MPPG=0 → matchMinutesRatio stays 1.0 (full starter assumption)
+
     let startRatio = 1.0;
     // Only apply starting frequency (GS) penalty to established PL squad rotation players
-    if (!isPromotedOrNew && typeof player.GS === 'number' && player.GS > 0) {
+    if (!isBypassPenalty && typeof player.GS === 'number' && player.GS > 0) {
         startRatio = Math.min(1.0, Math.max(0.20, player.GS / 28));
     }
 

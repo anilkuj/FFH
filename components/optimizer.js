@@ -1072,7 +1072,10 @@ function getExpectedPtsOverHorizon(player, currentGw, horizon) {
     let sum = 0;
     for (let gw = currentGw; gw < currentGw + horizon; gw++) {
         const pred = player.predictions.find(pr => pr.gw === gw);
-        if (pred) sum += (pred.pts * factor);
+        if (pred) {
+            const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
+            sum += (raw * factor);
+        }
     }
     return sum;
 }
@@ -1155,7 +1158,10 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         let sum = 0;
         for (let gw = state.currentGw; gw < state.currentGw + horizon; gw++) {
             const pred = player.predictions.find(pr => pr.gw === gw);
-            if (pred) sum += (pred.pts * factor);
+            if (pred) {
+                const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
+                sum += (raw * factor);
+            }
         }
         return sum;
     };

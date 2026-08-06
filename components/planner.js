@@ -23,7 +23,8 @@ export function renderPlanner(container, state, actions) {
             if (id === state.captain) {
                 multiplier = state.chips.tripleCaptain ? 3 : 2;
             }
-            expectedPoints += (pred.pts * factor) * multiplier;
+            const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
+            expectedPoints += (raw * factor) * multiplier;
         }
     });
 
@@ -34,7 +35,8 @@ export function renderPlanner(container, state, actions) {
             if (player) {
                 const pred = player.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 };
                 const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
-                expectedPoints += (pred.pts * factor);
+                const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
+                expectedPoints += (raw * factor);
             }
         });
     }
@@ -54,7 +56,8 @@ export function renderPlanner(container, state, actions) {
                     if (id === state.captain) {
                         multiplier = (gw === state.currentGw && state.chips.tripleCaptain) ? 3 : 2;
                     }
-                    gwTotal += (pred.pts * factor) * multiplier;
+                    const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
+                    gwTotal += (raw * factor) * multiplier;
                 }
             });
             if (gw === state.currentGw && state.chips.benchBoost) {
@@ -63,7 +66,8 @@ export function renderPlanner(container, state, actions) {
                     if (player) {
                         const pred = player.predictions.find(pr => pr.gw === gw) || { pts: 0 };
                         const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
-                        gwTotal += (pred.pts * factor);
+                        const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
+                        gwTotal += (raw * factor);
                     }
                 });
             }

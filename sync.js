@@ -38,6 +38,23 @@ https.get(BOOTSTRAP_URL, (res1) => {
 });
 
 function parseAndWriteData(data, fixturesData) {
+    const PROMOTED_TEAMS = ['COV', 'HUL', 'SUN', 'IPS', 'LEE'];
+    
+    // Read existing players list from data.js
+    let existingPlayers = [];
+    try {
+        if (fs.existsSync('data.js')) {
+            const dataContent = fs.readFileSync('data.js', 'utf8');
+            const playersMatch = dataContent.match(/export const PLAYERS = (\[[\s\S]*?\]);/);
+            if (playersMatch) {
+                existingPlayers = JSON.parse(playersMatch[1]);
+                console.log(`Successfully read ${existingPlayers.length} existing players from data.js for historical merge.`);
+            }
+        }
+    } catch (err) {
+        console.warn('Warning: Could not read/parse existing players from data.js: ', err.message);
+    }
+
     const teams = data.teams;
     const elements = data.elements;
 
@@ -135,6 +152,30 @@ function parseAndWriteData(data, fixturesData) {
             "Gianluigi Donnarumma": { oldTeam: "PSG", newTeam: "MCI" },
             "Giorgi Mamardashvili": { oldTeam: "Valencia", newTeam: "LIV" },
             "Senne Lammens": { oldTeam: "Antwerp", newTeam: "MUN" },
+            // Additional Summer 2026 Outfield transfers
+            "Sandro Tonali": { oldTeam: "NEW", newTeam: "TOT" },
+            "Mateus Fernandes": { oldTeam: "WHU", newTeam: "TOT" },
+            "Jan Paul van Hecke": { oldTeam: "BHA", newTeam: "TOT" },
+            "Maxence Lacroix": { oldTeam: "CRY", newTeam: "CHE" },
+            "Marcos Senesi": { oldTeam: "BOU", newTeam: "TOT" },
+            "Andy Robertson": { oldTeam: "LIV", newTeam: "TOT" },
+            "Pascal Struijk": { oldTeam: "LEE", newTeam: "BHA" },
+            "Callum Wilson": { oldTeam: "WHU", newTeam: "BRE" },
+            "Jordan Henderson": { oldTeam: "BRE", newTeam: "CHE" },
+            "Danny Welbeck": { oldTeam: "BHA", newTeam: "CHE" },
+            "Andrey Santos": { oldTeam: "CHE", newTeam: "MUN" },
+            "Tyrique George": { oldTeam: "CHE", newTeam: "EVE" },
+            "Johan Manzambi": { oldTeam: "SC Freiburg", newTeam: "AVL" },
+            "António Silva": { oldTeam: "Benfica", newTeam: "BOU" },
+            "Antonio Silva": { oldTeam: "Benfica", newTeam: "BOU" },
+            "Álvaro Rodríguez": { oldTeam: "Elche", newTeam: "BOU" },
+            "Alvaro Rodriguez": { oldTeam: "Elche", newTeam: "BOU" },
+            "Alex Jiménez": { oldTeam: "AC Milan", newTeam: "BOU" },
+            "Alex Jimenez": { oldTeam: "AC Milan", newTeam: "BOU" },
+            "Oscar Mingueza": { oldTeam: "Celta Vigo", newTeam: "CRY" },
+            "Jeremy Jacquet": { oldTeam: "Rennes", newTeam: "LIV" },
+            "Thomas Meunier": { oldTeam: "Free Agent", newTeam: "SUN" },
+            "Jannik Schuster": { oldTeam: "RB Salzburg", newTeam: "BRE" }
         };
 
         for (const [key, val] of Object.entries(KNOWN_TRANSFERS)) {
@@ -158,16 +199,50 @@ function parseAndWriteData(data, fixturesData) {
         }
         changeTarget = Math.max(-100, Math.min(100, changeTarget));
 
-        const minutes = el.minutes || 0;
-        const starts = el.starts || 0;
+        const existingPlayer = existingPlayers.find(ep => ep.name === playerName);
+        
+        let minutes = el.minutes || 0;
+        let starts = el.starts || 0;
+        let totalPoints = el.total_points || 0;
+        let totalSaves = parseInt(el.saves) || 0;
+        let goalsConceded = parseInt(el.goals_conceded) || 0;
+
+        // Early-season merge logic: if current season minutes are low (e.g. < 900 minutes played this season),
+        // we merge with historical stats from the existing database to avoid overwriting last season's stats.
+        const isEarlySeason = (el.minutes || 0) < 900;
+        if (isEarlySeason && existingPlayer) {
+            starts = existingPlayer.GS !== undefined ? existingPlayer.GS : starts;
+            minutes = (existingPlayer.MPPG !== undefined && existingPlayer.GS !== undefined) 
+                ? Math.round(existingPlayer.MPPG * (existingPlayer.GS || 1)) 
+                : (existingPlayer.MPPG !== undefined ? Math.round(existingPlayer.MPPG * 10) : minutes);
+            totalPoints = existingPlayer.points !== undefined ? existingPlayer.points : totalPoints;
+            totalSaves = existingPlayer.saves !== undefined ? existingPlayer.saves : totalSaves;
+            goalsConceded = existingPlayer.goalsConceded !== undefined ? existingPlayer.goalsConceded : goalsConceded;
+        }
+
+        // If they still have 0 minutes/starts (e.g. newly promoted teams or new signings from abroad not in the old database)
+        const isPromoted = PROMOTED_TEAMS.includes(teamShort);
+        if (minutes === 0 && starts === 0) {
+            const isExpectedStarter = isPromoted 
+                ? (ownership > 2.0 || price > (position === 'GKP' || position === 'DEF' ? 4.0 : 4.5)) 
+                : (price > 6.0 || ownership > 5.0);
+                
+            if (isExpectedStarter) {
+                starts = 25;
+                const defaultMins = (position === 'GKP' || position === 'DEF') ? 90 : 80;
+                minutes = starts * defaultMins;
+                totalPoints = starts * (position === 'GKP' ? 3.0 : (position === 'DEF' ? 2.5 : (position === 'MID' ? 3.0 : 3.5)));
+                totalSaves = position === 'GKP' ? starts * 3 : 0;
+                goalsConceded = (position === 'GKP' || position === 'DEF') ? starts * 1.2 : 0;
+            }
+        }
+
         const xG = parseFloat(el.expected_goals) || 0.0;
         const xA = parseFloat(el.expected_assists) || 0.0;
         const xG90 = minutes > 0 ? (xG / minutes) * 90 : 0.0;
         const xA90 = minutes > 0 ? (xA / minutes) * 90 : 0.0;
 
-        // GK-specific last-season stats
-        const totalSaves = parseInt(el.saves) || 0;
-        const goalsConceded = parseInt(el.goals_conceded) || 0;
+        // GK-specific stats
         const saves90 = minutes > 0 ? (totalSaves / minutes) * 90 : 0.0;
         const goalsConceded90 = minutes > 0 ? (goalsConceded / minutes) * 90 : 0.0;
 
@@ -180,18 +255,14 @@ function parseAndWriteData(data, fixturesData) {
 
         // Calculate a realistic points-per-game baseline
         let basePPG = 0.5;
-        const totalPoints = el.total_points || 0;
         if (minutes > 500 && appearances > 0) {
             basePPG = totalPoints / appearances;
         } else if (minutes > 0 && appearances > 0) {
-            // Scale the default baseline by how much they actually play
+            // Scale the default baseline by how much they play
             const playingRatio = Math.min(1.0, minutes / 500);
             const defaultPPG = (position === 'GKP' ? 3.0 : (position === 'DEF' ? 2.8 : (position === 'MID' ? 3.2 : 3.5)));
             basePPG = 0.5 + (defaultPPG - 0.5) * playingRatio;
         } else {
-            // They have played 0 minutes (e.g. youth players, bench warmers, or new transfers)
-            // If they are expensive, they are likely high-profile transfers, so give them a decent default.
-            // If they are cheap (<= 6.0m), they are likely cheap bench enablers, so give them a low score.
             basePPG = (price > 6.0) ? 2.0 : 0.5;
         }
 
@@ -309,6 +380,13 @@ function parseAndWriteData(data, fixturesData) {
             
             const chance = el.chance_of_playing_next_round !== null ? el.chance_of_playing_next_round / 100 : 1.0;
             pts *= chance;
+            
+            // Floor at 0.8 expected points for expected playing starters to avoid showing 0.0 XP for active fixtures
+            const isExpectedStarter = chance > 0.8 && (mppg >= 45 || starts >= 15);
+            if (isExpectedStarter && fixture.opp !== 'BYE') {
+                pts = Math.max(0.8, pts);
+            }
+            
             pts = Math.max(0, Math.round(pts * 10) / 10);
             
             // Calculate deterministic actual points if the fixture is completed
@@ -418,6 +496,13 @@ function parseAndWriteData(data, fixturesData) {
         "Guglielmo Vicario":    { chanceOfPlaying: 0,   status: "u", news: "Lost starting spot to Kinsky. Unavailable." },
         // LIV: Alisson is #1, Mamardashvili is backup
         "Giorgi Mamardashvili": { chanceOfPlaying: 10,  status: "a", news: "Backup GKP at Liverpool behind Alisson." },
+        // Outfield role overrides
+        "Illan Meslier":        { chanceOfPlaying: 5,   status: "a", news: "Backup GK behind David Raya." },
+        "Marcos Senesi":        { chanceOfPlaying: 40,  status: "a", news: "Rotation option behind van Hecke, Romero, van de Ven." },
+        "Jordan Henderson":     { chanceOfPlaying: 15,  status: "a", news: "Backup/rotation option at Chelsea." },
+        "Danny Welbeck":        { chanceOfPlaying: 20,  status: "a", news: "Backup forward at Chelsea behind Nicolas Jackson." },
+        "Casemiro":             { chanceOfPlaying: 25,  status: "a", news: "Backup midfielder at Man Utd." },
+        "Christian Eriksen":    { chanceOfPlaying: 15,  status: "a", news: "Backup midfielder at Man Utd." }
     };
 
     playersList.forEach(p => {
