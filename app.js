@@ -20,13 +20,21 @@ window.getPlayerMinutesFactor = function(player) {
         ? (player.chanceOfPlaying / 100) 
         : 1.0;
         
-    let minutesRatio = 1.0;
+    let matchMinutesRatio = 1.0;
     if (typeof player.MPPG === 'number' && player.MPPG > 0) {
-        minutesRatio = Math.min(1.0, Math.max(0.15, player.MPPG / 90));
+        matchMinutesRatio = Math.min(1.0, Math.max(0.15, player.MPPG / 90));
     }
-    
-    return chance * minutesRatio;
+
+    // Starting Frequency Factor: penalizes players with low starts (GS < 28 out of 38 games)
+    let startRatio = 1.0;
+    if (typeof player.GS === 'number') {
+        startRatio = Math.min(1.0, Math.max(0.20, player.GS / 28));
+    }
+
+    const combined = chance * startRatio * matchMinutesRatio;
+    return Math.min(1.0, Math.max(0.15, combined));
 };
+
 
 // Universal dataset-wide minutes & rotation risk discounting for all 700+ players
 window.applyUniversalMinutesDiscount = function() {

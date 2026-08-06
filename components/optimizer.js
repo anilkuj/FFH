@@ -1010,23 +1010,27 @@ function isGuaranteedStart(player, state) {
     
     const chance = (player.chanceOfPlaying !== undefined && player.chanceOfPlaying !== null) ? player.chanceOfPlaying : 100;
     const mppg = typeof player.MPPG === 'number' ? player.MPPG : 85;
+    const gs = typeof player.GS === 'number' ? player.GS : 25;
 
-    // DYNAMIC START QUALITY EVALUATION (Driven by Live Data, Not Static Names):
+    // DYNAMIC START QUALITY EVALUATION (Driven by Live Starts & Minutes Data):
     // 1. Hard reject if current chance of playing is < 50%
     if (chance < 50) return false;
-    // 2. Reject if player has 0 starts AND < 75% chance of playing
-    if (typeof player.GS === 'number' && player.GS === 0 && chance < 75) return false;
+    
+    // 2. Reject rotation risks / squad players with low starting frequency (GS < 18 starts out of 38)
+    if (gs < 18) return false;
+
     // 3. Reject rotation risks if chance < 75% AND minutes per game < 60
     if (chance < 75 && mppg < 60) return false;
 
     // Respect user's custom Guaranteed Start slider threshold if configured
     const minMins = (state && state.guaranteedStart) || 0;
     if (minMins > 0) {
-        return mppg >= minMins;
+        return mppg >= minMins && gs >= 18;
     }
 
     return true;
 }
+
 
 
 
