@@ -73,28 +73,30 @@ const server = http.createServer((req, res) => {
         return;
     }
 
-    // API Route: Save Cloud Drafts
-
+    // API Route: Save Cloud Drafts (Google Account & Email)
     if (req.method === 'POST' && pathname === '/api/sync-drafts') {
         let body = '';
         req.on('data', chunk => body += chunk);
         req.on('end', () => {
             try {
                 const data = JSON.parse(body);
-                if (data && data.sub && Array.isArray(data.drafts)) {
-                    cloudDraftsStore[data.sub] = {
-                        sub: data.sub,
-                        email: data.email || '',
+                const identifier = data.sub || (data.email ? data.email.toLowerCase().trim() : null);
+                if (identifier && Array.isArray(data.drafts)) {
+                    const record = {
+                        sub: data.sub || '',
+                        email: data.email ? data.email.toLowerCase().trim() : '',
                         drafts: data.drafts,
                         activeDraftIndex: typeof data.activeDraftIndex === 'number' ? data.activeDraftIndex : 0,
-                        updatedAt: Date.now()
+                        updatedAt: data.updatedAt || Date.now()
                     };
+                    if (data.sub) cloudDraftsStore[data.sub] = record;
+                    if (data.email) cloudDraftsStore[data.email.toLowerCase().trim()] = record;
                     saveStoreToDisk();
                     res.writeHead(200, { 'Content-Type': 'application/json' });
                     res.end(JSON.stringify({ success: true, message: 'Synced to cloud' }));
                 } else {
                     res.writeHead(400, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ error: 'Missing required sub or drafts array' }));
+                    res.end(JSON.stringify({ error: 'Missing required sub/email or drafts array' }));
                 }
             } catch (err) {
                 res.writeHead(500, { 'Content-Type': 'application/json' });
@@ -104,18 +106,66 @@ const server = http.createServer((req, res) => {
         return;
     }
 
-    // API Route: Get Cloud Drafts
+    // API Route: Get Cloud Drafts (by sub or email)
     if (req.method === 'GET' && pathname === '/api/sync-drafts') {
         const sub = reqUrl.searchParams.get('sub');
-        if (sub && cloudDraftsStore[sub]) {
+        const email = reqUrl.searchParams.get('email');
+        const key = sub || (email ? email.toLowerCase().trim() : null);
+        
+        if (key && cloudDraftsStore[key]) {
             res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ success: true, data: cloudDraftsStore[sub] }));
+            res.end(JSON.stringify({ success: true, data: cloudDraftsStore[key] }));
         } else {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ success: false, data: null }));
         }
         return;
     }
+
+    // API Route: Save Room PIN Sync (Instant 6-digit device pairing)
+    if (req.method === 'POST' && pathname === '/api/room-sync') {
+        let body = '';
+        req.on('data', chunk => body += chunk);
+        req.on('end', () => {
+            try {
+                const data = JSON.parse(body);
+                const code = data.code ? data.code.toString().trim() : '';
+                if (code && Array.isArray(data.drafts)) {
+                    cloudDraftsStore['room_' + code] = {
+                        code: code,
+                        drafts: data.drafts,
+                        activeDraftIndex: typeof data.activeDraftIndex === 'number' ? data.activeDraftIndex : 0,
+                        updatedAt: data.updatedAt || Date.now()
+                    };
+                    saveStoreToDisk();
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ success: true, message: `Room ${code} synced` }));
+                } else {
+                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Missing room code or drafts' }));
+                }
+            } catch (err) {
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Invalid payload' }));
+            }
+        });
+        return;
+    }
+
+    // API Route: Get Room PIN Sync Data
+    if (req.method === 'GET' && pathname === '/api/room-sync') {
+        const code = reqUrl.searchParams.get('code') ? reqUrl.searchParams.get('code').toString().trim() : '';
+        const key = 'room_' + code;
+        if (code && cloudDraftsStore[key]) {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: true, data: cloudDraftsStore[key] }));
+        } else {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, data: null }));
+        }
+        return;
+    }
+
 
     // Static File Serving
     let filePath = path.join(DIST_DIR, pathname === '/' ? 'index.html' : pathname);

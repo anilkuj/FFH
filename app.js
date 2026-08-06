@@ -317,28 +317,105 @@ class AppState {
         this.lastLocalUpdate = Date.now();
         localStorage.setItem('fpl_hub_last_local_update', this.lastLocalUpdate.toString());
 
-        // Asynchronously sync to Google Account cloud storage
+        // Asynchronously sync to Google Account & PIN Room Storage
         this.syncCloudDrafts();
+        this.syncRoomSync();
+    }
+
+    getDeviceSyncCode() {
+        let code = localStorage.getItem('fpl_hub_device_pin');
+        if (!code) {
+            code = Math.floor(100000 + Math.random() * 900000).toString();
+            localStorage.setItem('fpl_hub_device_pin', code);
+        }
+        return code;
+    }
+
+    async syncRoomSync() {
+        const code = this.getDeviceSyncCode();
+        const pairedCode = localStorage.getItem('fpl_hub_paired_pin');
+        const targetCodes = [code];
+        if (pairedCode && pairedCode !== code) targetCodes.push(pairedCode);
+
+        targetCodes.forEach(c => {
+            try {
+                fetch('/api/room-sync', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        code: c,
+                        drafts: this.drafts,
+                        activeDraftIndex: this.activeDraftIndex,
+                        updatedAt: Date.now()
+                    })
+                }).catch(() => {});
+            } catch (e) {}
+        });
+    }
+
+    async loadRoomSync(targetCode = null, force = false) {
+        const code = targetCode || localStorage.getItem('fpl_hub_paired_pin');
+        if (!code) return false;
+
+        try {
+            const res = await fetch(`/api/room-sync?code=${code}`).catch(() => null);
+            if (res && res.ok) {
+                const cloudRes = await res.json();
+                if (cloudRes && cloudRes.success && cloudRes.data && Array.isArray(cloudRes.data.drafts)) {
+                    const data = cloudRes.data;
+                    const cloudTime = data.updatedAt || 0;
+                    const localTime = this.lastLocalUpdate || 0;
+
+                    if (force || !localTime || cloudTime > (localTime + 500)) {
+                        this.drafts = data.drafts;
+                        this.activeDraftIndex = typeof data.activeDraftIndex === 'number' ? data.activeDraftIndex : 0;
+                        
+                        const activeDraft = this.drafts[this.activeDraftIndex];
+                        if (activeDraft && activeDraft.squadSlots) {
+                            this.squadSlots = JSON.parse(JSON.stringify(activeDraft.squadSlots));
+                            this.captain = activeDraft.captain;
+                            this.vice = activeDraft.vice;
+                            this.formation = activeDraft.formation;
+                        }
+
+                        this.lastLocalUpdate = cloudTime > 0 ? cloudTime : Date.now();
+                        localStorage.setItem('fpl_hub_last_local_update', this.lastLocalUpdate.toString());
+                        localStorage.setItem('fpl_hub_paired_pin', code);
+                        localStorage.setItem(this.getDraftsStorageKey(), JSON.stringify(this.drafts));
+                        localStorage.setItem(this.getActiveDraftIdxStorageKey(), this.activeDraftIndex.toString());
+
+                        if (typeof actions !== 'undefined' && actions.renderActiveView) {
+                            actions.renderActiveView();
+                        }
+                        if (typeof actions !== 'undefined' && actions.showToast) {
+                            actions.showToast(`⚡ Synced draft squads via Device PIN ${code}!`, "success");
+                        }
+                        return true;
+                    }
+                }
+            }
+        } catch (e) {
+            console.warn("Room sync warning:", e);
+        }
+        return false;
     }
 
     async syncCloudDrafts() {
-        if (!this.userProfile || !this.userProfile.sub) return;
+        if (!this.userProfile || (!this.userProfile.sub && !this.userProfile.email)) return;
         
         try {
             const now = Date.now();
             const syncData = {
-                sub: this.userProfile.sub,
+                sub: this.userProfile.sub || '',
                 email: this.userProfile.email || '',
                 drafts: this.drafts,
                 activeDraftIndex: this.activeDraftIndex,
                 updatedAt: now
             };
             
-            // Save to account-based local storage cache
-            const cloudKey = `fpl_cloud_drafts_${this.userProfile.sub}`;
+            const cloudKey = `fpl_cloud_drafts_${this.userProfile.sub || this.userProfile.email}`;
             localStorage.setItem(cloudKey, JSON.stringify(syncData));
 
-            // Sync automatically to server endpoint
             fetch('/api/sync-drafts', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -350,14 +427,23 @@ class AppState {
     }
 
     async loadCloudDrafts(force = false) {
-        if (!this.userProfile || !this.userProfile.sub) return false;
+        // First try room sync if paired
+        const pairedCode = localStorage.getItem('fpl_hub_paired_pin');
+        if (pairedCode) {
+            const roomSynced = await this.loadRoomSync(pairedCode, force);
+            if (roomSynced) return true;
+        }
+
+        if (!this.userProfile || (!this.userProfile.sub && !this.userProfile.email)) return false;
 
         try {
-            const cloudKey = `fpl_cloud_drafts_${this.userProfile.sub}`;
+            const identifier = this.userProfile.sub || (this.userProfile.email ? this.userProfile.email.toLowerCase().trim() : null);
+            const cloudKey = `fpl_cloud_drafts_${identifier}`;
             let cloudData = null;
 
-            // 1. Fetch from server endpoint
-            const res = await fetch(`/api/sync-drafts?sub=${this.userProfile.sub}`).catch(() => null);
+            // 1. Fetch from server endpoint (by sub or email)
+            const query = this.userProfile.sub ? `sub=${this.userProfile.sub}` : `email=${encodeURIComponent(this.userProfile.email)}`;
+            const res = await fetch(`/api/sync-drafts?${query}`).catch(() => null);
             if (res && res.ok) {
                 const cloudRes = await res.json();
                 if (cloudRes && cloudRes.success && cloudRes.data && Array.isArray(cloudRes.data.drafts)) {
@@ -401,7 +487,6 @@ class AppState {
                     this.lastLocalUpdate = cloudTime > 0 ? cloudTime : Date.now();
                     localStorage.setItem('fpl_hub_last_local_update', this.lastLocalUpdate.toString());
                     
-                    // Persist to local storage
                     localStorage.setItem(this.getDraftsStorageKey(), JSON.stringify(this.drafts));
                     localStorage.setItem(this.getActiveDraftIdxStorageKey(), this.activeDraftIndex.toString());
                     
@@ -414,7 +499,6 @@ class AppState {
                     return true;
                 }
             } else if (localTime > (cloudTime + 2000)) {
-                // Laptop has newer edits, push to cloud!
                 this.syncCloudDrafts();
             }
         } catch (e) {
@@ -422,6 +506,7 @@ class AppState {
         }
         return false;
     }
+
 
 
 
@@ -1086,6 +1171,19 @@ const actions = {
                     <div style="text-align: left;">
                         <h3 style="margin: 0; font-size: 17px; font-weight: 800;">Sync Drafts Across Devices</h3>
                         <p style="margin: 2px 0 0; font-size: 12px; color: var(--text-muted);">Sync all 10 draft squads, captain picks, and draft names instantly!</p>
+                                  <!-- Section 0: Instant 6-Digit Device Pairing PIN -->
+                <div style="background: rgba(0, 255, 136, 0.08); border: 1px solid var(--primary-glow); border-radius: 10px; padding: 14px; margin-bottom: 16px; text-align: left;">
+                    <label style="display: block; font-size: 13px; font-weight: 800; color: var(--primary); margin-bottom: 6px;">
+                        ⚡ Instant 6-Digit Device Pairing PIN
+                    </label>
+                    <p style="font-size: 11.5px; color: var(--text-muted); margin-top: 0; margin-bottom: 10px; line-height: 1.4;">
+                        This device PIN is <strong style="color: var(--primary); font-size: 15px; font-family: monospace; letter-spacing: 2px;">${state.getDeviceSyncCode()}</strong>. Enter it on your laptop (or enter laptop's PIN below) to sync mobile & laptop in 1 second!
+                    </p>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="pairPinInput" placeholder="Enter 6-digit PIN..." maxlength="6" style="flex: 1; font-size: 13px; font-weight: 800; text-align: center; letter-spacing: 2px; padding: 8px; border-radius: 6px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main);" />
+                        <button id="pairPinBtn" style="padding: 8px 16px; font-size: 12px; font-weight: 800; background: var(--primary); color: #000; border: none; border-radius: 6px; cursor: pointer; white-space: nowrap;">
+                            Pair & Sync ⚡
+                        </button>
                     </div>
                 </div>
 
@@ -1097,8 +1195,8 @@ const actions = {
                     <p style="font-size: 11.5px; color: var(--text-muted); margin-top: 0; margin-bottom: 10px; line-height: 1.4;">
                         ${state.userProfile ? `Signed in as <strong>${state.userProfile.name}</strong> (${state.userProfile.email})` : 'Sign in with Google to automatically sync changes across all your mobile phones, tablets, and laptops.'}
                     </p>
-                    <button id="manualCloudSyncBtn" style="width: 100%; padding: 10px; font-size: 12.5px; font-weight: 800; background: var(--primary); color: #000; border: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
-                        <i data-lucide="cloud-lightning" style="width: 16px; height: 16px;"></i> Fetch & Sync Latest Mobile Edits Now
+                    <button id="manualCloudSyncBtn" style="width: 100%; padding: 10px; font-size: 12.5px; font-weight: 800; background: rgba(255,255,255,0.08); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                        <i data-lucide="cloud-lightning" style="width: 16px; height: 16px;"></i> Fetch & Sync Google Cloud Edits
                     </button>
                 </div>
 
@@ -1131,11 +1229,34 @@ const actions = {
             </div>
         `;
 
-
         actions.showCustomModal("Multi-Device Draft Sync", modalHtml);
 
         setTimeout(() => {
+            const pairPinBtn = document.getElementById('pairPinBtn');
+            const pairPinInput = document.getElementById('pairPinInput');
+            if (pairPinBtn && pairPinInput) {
+                pairPinBtn.addEventListener('click', async () => {
+                    const pin = pairPinInput.value.trim();
+                    if (!pin || pin.length < 6) {
+                        actions.showToast("Please enter a valid 6-digit PIN.", "error");
+                        return;
+                    }
+                    pairPinBtn.innerHTML = `<i data-lucide="loader" class="animate-spin"></i> Pairing...`;
+                    lucide.createIcons();
+                    const success = await state.loadRoomSync(pin, true);
+                    if (success) {
+                        actions.showToast(`⚡ Paired with Device PIN ${pin}! Sync active.`, "success");
+                        actions.hideModal();
+                    } else {
+                        actions.showToast(`Could not find drafts for PIN ${pin}. Make sure mobile app is open!`, "error");
+                        pairPinBtn.innerHTML = `Pair & Sync ⚡`;
+                        lucide.createIcons();
+                    }
+                });
+            }
+
             const cloudSyncBtn = document.getElementById('manualCloudSyncBtn');
+ument.getElementById('manualCloudSyncBtn');
             if (cloudSyncBtn) {
                 cloudSyncBtn.addEventListener('click', async () => {
                     if (!state.userProfile) {
