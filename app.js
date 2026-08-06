@@ -28,8 +28,10 @@ window.getPlayerMinutesFactor = function(player) {
                             (typeof player.points === 'number' && player.points < 15);
 
     // Also do NOT heavily penalize premium or highly-owned key players (they are established starters/key players)
-    const isPremiumOrKey = player.price >= 6.0 || 
+    const isPremiumOrKey = (player.position === 'GKP' && player.price >= 5.0) ||
                            (player.position === 'DEF' && player.price >= 5.0) ||
+                           (player.position === 'MID' && player.price >= 7.0) ||
+                           (player.position === 'FWD' && player.price >= 7.5) ||
                            (player.ownership && player.ownership > 8.0);
 
     const isBypassPenalty = isPromotedOrNew || isPremiumOrKey;
