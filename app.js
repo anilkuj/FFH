@@ -153,19 +153,32 @@ class AppState {
         const savedProfile = localStorage.getItem('fpl_hub_user_profile');
         this.userProfile = savedProfile ? JSON.parse(savedProfile) : null;
 
+        const savedLastLocalUpdate = localStorage.getItem('fpl_hub_last_local_update');
+        this.lastLocalUpdate = savedLastLocalUpdate ? parseInt(savedLastLocalUpdate) : 0;
+
         this.loadUserDrafts();
         this.loadCloudDrafts();
         this.checkUrlSync();
 
-        // Real-time automatic background sync listeners
+        // Real-time automatic background sync listeners for multi-device sync (Mobile <-> Laptop)
         if (typeof window !== 'undefined') {
-            // Load cloud drafts ONCE when user profile initializes or on window focus IF no recent local edits
-            window.addEventListener('focus', () => {
-                if (Date.now() - (this.lastLocalUpdate || 0) > 60000) {
+            const triggerAutoSync = () => {
+                if (this.userProfile && this.userProfile.sub) {
                     this.loadCloudDrafts();
                 }
+            };
+
+            window.addEventListener('focus', triggerAutoSync);
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') {
+                    triggerAutoSync();
+                }
             });
+
+            // Polling interval every 15s to check for mobile updates in background
+            setInterval(triggerAutoSync, 15000);
         }
+
 
 
 
@@ -302,6 +315,7 @@ class AppState {
         localStorage.setItem(this.getActiveDraftIdxStorageKey(), this.activeDraftIndex.toString());
 
         this.lastLocalUpdate = Date.now();
+        localStorage.setItem('fpl_hub_last_local_update', this.lastLocalUpdate.toString());
 
         // Asynchronously sync to Google Account cloud storage
         this.syncCloudDrafts();
@@ -311,12 +325,13 @@ class AppState {
         if (!this.userProfile || !this.userProfile.sub) return;
         
         try {
+            const now = Date.now();
             const syncData = {
                 sub: this.userProfile.sub,
                 email: this.userProfile.email || '',
                 drafts: this.drafts,
                 activeDraftIndex: this.activeDraftIndex,
-                updatedAt: Date.now()
+                updatedAt: now
             };
             
             // Save to account-based local storage cache
@@ -334,15 +349,8 @@ class AppState {
         }
     }
 
-    async loadCloudDrafts() {
-        if (!this.userProfile || !this.userProfile.sub) return;
-
-        // NEVER overwrite local state if user has active in-progress edits locally within the last 5 minutes!
-        const timeSinceLocalUpdate = Date.now() - (this.lastLocalUpdate || 0);
-        if (timeSinceLocalUpdate < 300000 && this.lastLocalUpdate !== undefined) {
-            return;
-        }
-
+    async loadCloudDrafts(force = false) {
+        if (!this.userProfile || !this.userProfile.sub) return false;
 
         try {
             const cloudKey = `fpl_cloud_drafts_${this.userProfile.sub}`;
@@ -368,12 +376,17 @@ class AppState {
                 }
             }
 
-            // 3. Apply cloud drafts to application state
-            if (cloudData && Array.isArray(cloudData.drafts)) {
+            if (!cloudData || !Array.isArray(cloudData.drafts)) return false;
+
+            const cloudTime = cloudData.updatedAt || 0;
+            const localTime = this.lastLocalUpdate || 0;
+
+            // Check if cloud has newer updates OR force sync requested
+            if (force || !localTime || cloudTime > (localTime + 1000)) {
                 const currentStr = JSON.stringify(this.drafts);
                 const cloudStr = JSON.stringify(cloudData.drafts);
                 
-                if (currentStr !== cloudStr || this.activeDraftIndex !== cloudData.activeDraftIndex) {
+                if (force || currentStr !== cloudStr || this.activeDraftIndex !== cloudData.activeDraftIndex) {
                     this.drafts = cloudData.drafts;
                     this.activeDraftIndex = typeof cloudData.activeDraftIndex === 'number' ? cloudData.activeDraftIndex : 0;
                     
@@ -384,6 +397,9 @@ class AppState {
                         this.vice = activeDraft.vice;
                         this.formation = activeDraft.formation;
                     }
+
+                    this.lastLocalUpdate = cloudTime > 0 ? cloudTime : Date.now();
+                    localStorage.setItem('fpl_hub_last_local_update', this.lastLocalUpdate.toString());
                     
                     // Persist to local storage
                     localStorage.setItem(this.getDraftsStorageKey(), JSON.stringify(this.drafts));
@@ -393,14 +409,20 @@ class AppState {
                         actions.renderActiveView();
                     }
                     if (typeof actions !== 'undefined' && actions.showToast) {
-                        actions.showToast("☁️ Auto-synced draft squads & names with your Google Account!", "success");
+                        actions.showToast("☁️ Synced latest mobile draft squads & picks!", "success");
                     }
+                    return true;
                 }
+            } else if (localTime > (cloudTime + 2000)) {
+                // Laptop has newer edits, push to cloud!
+                this.syncCloudDrafts();
             }
         } catch (e) {
             console.warn("Cloud draft load warning:", e);
         }
+        return false;
     }
+
 
 
     checkUrlSync() {
@@ -1067,29 +1089,41 @@ const actions = {
                     </div>
                 </div>
 
+                <!-- Section 1: Instant Google Account Cloud Refresh -->
                 <div style="background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px; margin-bottom: 16px; text-align: left;">
                     <label style="display: block; font-size: 12.5px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">
-                        📲 1-Click Mobile Sync Link
+                        ☁️ Google Account Auto-Sync
                     </label>
                     <p style="font-size: 11.5px; color: var(--text-muted); margin-top: 0; margin-bottom: 10px; line-height: 1.4;">
-                        Tap <strong>Copy Link</strong> below and send it to your phone (via WhatsApp, iMessage, AirDrop, or Email). Opening the link on your phone instantly loads all 10 draft squads and custom names!
+                        ${state.userProfile ? `Signed in as <strong>${state.userProfile.name}</strong> (${state.userProfile.email})` : 'Sign in with Google to automatically sync changes across all your mobile phones, tablets, and laptops.'}
+                    </p>
+                    <button id="manualCloudSyncBtn" style="width: 100%; padding: 10px; font-size: 12.5px; font-weight: 800; background: var(--primary); color: #000; border: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                        <i data-lucide="cloud-lightning" style="width: 16px; height: 16px;"></i> Fetch & Sync Latest Mobile Edits Now
+                    </button>
+                </div>
+
+                <!-- Section 2: 1-Click Mobile Link -->
+                <div style="background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px; margin-bottom: 16px; text-align: left;">
+                    <label style="display: block; font-size: 12.5px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">
+                        📲 Direct Mobile Sync Link
+                    </label>
+                    <p style="font-size: 11.5px; color: var(--text-muted); margin-top: 0; margin-bottom: 10px; line-height: 1.4;">
+                        Tap <strong>Copy Link</strong> below and send it to your phone (via WhatsApp, iMessage, AirDrop, or Email).
                     </p>
                     <div style="display: flex; gap: 8px;">
                         <input type="text" id="syncUrlInput" readonly value="${syncUrl}" style="flex: 1; font-size: 11px; padding: 8px 10px; border-radius: 6px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); text-overflow: ellipsis;" />
-                        <button id="copySyncUrlBtn" style="padding: 8px 14px; font-size: 12px; font-weight: 700; background: var(--primary); color: #000; border: none; border-radius: 6px; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 6px;">
+                        <button id="copySyncUrlBtn" style="padding: 8px 14px; font-size: 12px; font-weight: 700; background: rgba(255,255,255,0.08); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 6px;">
                             <i data-lucide="copy" style="width: 14px; height: 14px;"></i> Copy Link
                         </button>
                     </div>
                 </div>
 
+                <!-- Section 3: Manual Code Import -->
                 <div style="background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px; text-align: left;">
                     <label style="display: block; font-size: 12.5px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">
                         📥 Import / Paste Sync Code
                     </label>
-                    <p style="font-size: 11.5px; color: var(--text-muted); margin-top: 0; margin-bottom: 10px; line-height: 1.4;">
-                        Paste a sync link or code below to load all 10 draft squads on this device:
-                    </p>
-                    <textarea id="pasteSyncInput" placeholder="Paste sync link or code here..." style="width: 100%; height: 60px; font-size: 11px; padding: 8px; border-radius: 6px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); box-sizing: border-box; margin-bottom: 10px; resize: none;"></textarea>
+                    <textarea id="pasteSyncInput" placeholder="Paste sync link or code here..." style="width: 100%; height: 50px; font-size: 11px; padding: 8px; border-radius: 6px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); box-sizing: border-box; margin-bottom: 10px; resize: none;"></textarea>
                     <button id="applyPasteSyncBtn" style="width: 100%; padding: 10px; font-size: 12px; font-weight: 800; background: linear-gradient(135deg, #0284c7, #16a34a); color: #fff; border: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
                         <i data-lucide="download-cloud" style="width: 16px; height: 16px;"></i> Import & Sync Squads Now
                     </button>
@@ -1097,10 +1131,32 @@ const actions = {
             </div>
         `;
 
+
         actions.showCustomModal("Multi-Device Draft Sync", modalHtml);
 
         setTimeout(() => {
+            const cloudSyncBtn = document.getElementById('manualCloudSyncBtn');
+            if (cloudSyncBtn) {
+                cloudSyncBtn.addEventListener('click', async () => {
+                    if (!state.userProfile) {
+                        actions.hideModal();
+                        actions.showLoginModal();
+                        return;
+                    }
+                    cloudSyncBtn.innerHTML = `<i data-lucide="loader" class="animate-spin" style="width:16px; height:16px;"></i> Fetching mobile edits...`;
+                    lucide.createIcons();
+                    const updated = await state.loadCloudDrafts(true);
+                    cloudSyncBtn.innerHTML = `<i data-lucide="check-circle" style="width:16px; height:16px;"></i> Synced!`;
+                    lucide.createIcons();
+                    if (!updated) {
+                        actions.showToast("☁️ All draft squads are up to date!", "success");
+                    }
+                    setTimeout(() => actions.hideModal(), 800);
+                });
+            }
+
             const copyBtn = document.getElementById('copySyncUrlBtn');
+
             const urlInput = document.getElementById('syncUrlInput');
             if (copyBtn && urlInput) {
                 copyBtn.addEventListener('click', () => {
