@@ -1547,51 +1547,78 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
                     <p style="font-size: 13px; color: var(--text-muted); margin: 0;">Max Budget: <strong class="highlight-bank" style="font-size: 14px;">£${bank.toFixed(1)}m</strong></p>
                     <p style="font-size: 11px; color: var(--text-muted); margin: 0; opacity: 0.85;">Only showing <strong style="color: var(--primary);">${position}s</strong> <span id="modalFilterCount" style="color: var(--secondary); font-weight: 700; margin-left: 4px;"></span>. Search by name or team.</p>
                 </div>
-                <div style="display: flex; gap: 8px; width: 100%; flex-wrap: wrap;">
-                    <input type="text" class="transfer-search-field" id="modalSearchField" placeholder="Search by name or team..." style="flex: 2; min-width: 150px; font-size: 12px; padding: 8px; background: var(--bg-card); color:var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;" />
-                    <select class="panel-price-select" id="modalGwWindowSelect" title="Sort by XP over N gameweeks" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-card); color: var(--primary); border: 1px solid var(--primary); border-radius: 6px; font-weight: 700;">
-                        <option value="1">Sort: 1-GW XP</option>
-                        <option value="2">Sort: 2-GW XP</option>
-                        <option value="3">Sort: 3-GW XP</option>
-                        <option value="4">Sort: 4-GW XP</option>
-                        <option value="5" selected>Sort: 5-GW XP</option>
-                        <option value="10">Sort: 10-GW XP</option>
-                    </select>
-                    <select class="panel-price-select" id="modalTeamSelect" style="flex: 1; min-width: 110px; font-size: 12px; padding: 8px; background: var(--bg-card); color:var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
-                        ${teamOptions}
-                    </select>
-                    <select class="panel-price-select" id="modalPriceSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-card); color:var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
-                        ${priceOptions}
-                    </select>
-                    <select class="panel-price-select" id="modalAttSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-card); color:var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
-                        <option value="">Attacking (Any)</option>
-                        <option value="A">Attacking: A (Excellent)</option>
-                        <option value="B">Attacking: B+</option>
-                        <option value="C">Attacking: C+</option>
-                        <option value="D">Attacking: D+</option>
-                    </select>
-                    <select class="panel-price-select" id="modalDefconSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-card); color:var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
-                        <option value="">Defcon (Any)</option>
-                        <option value="A">Defcon: A (Excellent)</option>
-                        <option value="B">Defcon: B+</option>
-                        <option value="C">Defcon: C+</option>
-                        <option value="D">Defcon: D+</option>
-                    </select>
-                    <select class="panel-price-select" id="modalMppgSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-card); color:var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
-                        <option value="">Avg Mins (Any)</option>
-                        <option value="60">60+ mins/game</option>
-                        <option value="45">45+ mins/game</option>
-                        <option value="30">30+ mins/game</option>
-                        <option value="15">15+ mins/game</option>
-                    </select>
-                    <select class="panel-price-select" id="modalGsSelect" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-card); color:var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
-                        <option value="">Starts (Any)</option>
-                        <option value="30">30+ starts</option>
-                        <option value="20">20+ starts</option>
-                        <option value="10">10+ starts</option>
-                        <option value="5">5+ starts</option>
-                        <option value="1">1+ starts</option>
-                    </select>
+                <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 8px; width: 100%;">
+                    <!-- Row 1: Search | GW Sort | Team | Price -->
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <label style="font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Search</label>
+                        <input type="text" class="transfer-search-field" id="modalSearchField" placeholder="Name or team..." style="width: 100%; box-sizing: border-box; font-size: 12px; padding: 8px 10px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;" />
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <label style="font-size: 10px; font-weight: 600; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px;">Sort by XP</label>
+                        <select class="panel-price-select" id="modalGwWindowSelect" style="width: 100%; box-sizing: border-box; font-size: 12px; padding: 8px 6px; background: var(--bg-card); color: var(--primary); border: 1px solid var(--primary); border-radius: 6px; font-weight: 700;">
+                            <option value="1">1-GW XP</option>
+                            <option value="2">2-GW XP</option>
+                            <option value="3">3-GW XP</option>
+                            <option value="4">4-GW XP</option>
+                            <option value="5" selected>5-GW XP</option>
+                            <option value="10">10-GW XP</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <label style="font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Team</label>
+                        <select class="panel-price-select" id="modalTeamSelect" style="width: 100%; box-sizing: border-box; font-size: 12px; padding: 8px 6px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
+                            ${teamOptions}
+                        </select>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <label style="font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Max Price</label>
+                        <select class="panel-price-select" id="modalPriceSelect" style="width: 100%; box-sizing: border-box; font-size: 12px; padding: 8px 6px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
+                            ${priceOptions}
+                        </select>
+                    </div>
+
+                    <!-- Row 2: Attacking | Defcon | Avg Mins | Starts -->
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <label style="font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Attacking Rating</label>
+                        <select class="panel-price-select" id="modalAttSelect" style="width: 100%; box-sizing: border-box; font-size: 12px; padding: 8px 6px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
+                            <option value="">Any</option>
+                            <option value="A">A — Excellent</option>
+                            <option value="B">B+</option>
+                            <option value="C">C+</option>
+                            <option value="D">D+</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <label style="font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Defcon Rating</label>
+                        <select class="panel-price-select" id="modalDefconSelect" style="width: 100%; box-sizing: border-box; font-size: 12px; padding: 8px 6px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
+                            <option value="">Any</option>
+                            <option value="A">A — Excellent</option>
+                            <option value="B">B+</option>
+                            <option value="C">C+</option>
+                            <option value="D">D+</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <label style="font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Avg Mins / Game</label>
+                        <select class="panel-price-select" id="modalMppgSelect" style="width: 100%; box-sizing: border-box; font-size: 12px; padding: 8px 6px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
+                            <option value="">Any</option>
+                            <option value="60">60+ mins</option>
+                            <option value="45">45+ mins</option>
+                            <option value="30">30+ mins</option>
+                            <option value="15">15+ mins</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <label style="font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Starts (Last Season)</label>
+                        <select class="panel-price-select" id="modalGsSelect" style="width: 100%; box-sizing: border-box; font-size: 12px; padding: 8px 6px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
+                            <option value="">Any</option>
+                            <option value="30">30+ starts</option>
+                            <option value="20">20+ starts</option>
+                            <option value="10">10+ starts</option>
+                            <option value="5">5+ starts</option>
+                            <option value="1">1+ starts</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
