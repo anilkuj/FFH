@@ -92,6 +92,9 @@ export function renderTransferPlanner(container, state, actions) {
     };
 
     const renderFdrFixtures = (player) => {
+        if (!player || !player.predictions) return '';
+        const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
+
         let fixturesHtml = '';
         for (let gw = state.currentGw; gw < state.currentGw + 5; gw++) {
             if (gw > 10) break;
@@ -99,15 +102,28 @@ export function renderTransferPlanner(container, state, actions) {
             if (pred) {
                 const color = getFdrColor(pred.diff);
                 const oppText = formatFdrOpponentText(pred);
+                const ptsVal = pred.actualPts !== undefined && pred.actualPts !== null 
+                    ? pred.actualPts 
+                    : ((pred._rawPts !== undefined ? pred._rawPts : pred.pts) * factor);
+                const ptsText = pred.actualPts !== undefined && pred.actualPts !== null
+                    ? `${Math.round(ptsVal)} pts`
+                    : `${ptsVal.toFixed(1)} XP`;
+
                 fixturesHtml += `
-                    <div style="background:${color}; color:#111; padding:3px 6px; border-radius:4px; font-size:10px; font-weight:800; min-width:48px; text-align:center; text-transform:uppercase;" title="GW${gw}: ${oppText} - FDR ${pred.diff}">
-                        ${oppText}
+                    <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
+                        <div style="background:${color}; color:#111; padding:3px 6px; border-radius:4px; font-size:10px; font-weight:800; min-width:48px; text-align:center; text-transform:uppercase; box-shadow: 0 1px 2px rgba(0,0,0,0.15);" title="GW${gw}: ${oppText} - FDR ${pred.diff} (${ptsText})">
+                            ${oppText}
+                        </div>
+                        <span style="font-size:9.5px; font-weight:800; color:var(--primary); font-family:var(--font-body); line-height:1; margin-top:1px;">
+                            ${ptsText}
+                        </span>
                     </div>
                 `;
             }
         }
-        return `<div style="display:flex; gap:4px; margin-top:4px; flex-wrap:wrap;">${fixturesHtml}</div>`;
+        return `<div style="display:flex; gap:5px; margin-top:4px; flex-wrap:wrap; align-items:flex-start;">${fixturesHtml}</div>`;
     };
+
 
 
     const renderPlayerStats = (player) => {
