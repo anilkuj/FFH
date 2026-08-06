@@ -519,6 +519,14 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
             </div>
         ` : '';
 
+        const riskColor = riskInfo ? (riskInfo.risk === 'High' ? '#ef4444' : (riskInfo.risk === 'Medium' ? '#f59e0b' : '#38bdf8')) : '';
+        const riskLabel = riskInfo ? `
+            <span style="font-size: 8px; font-weight: 800; text-transform: uppercase; color: ${riskColor}; background: ${riskColor}1a; padding: 1px 4px; border-radius: 3px; border: 0.5px solid ${riskColor}33; margin-right: 4px; display: inline-flex; align-items: center; gap: 2px;">
+                <span style="width: 4px; height: 4px; border-radius: 50%; background: ${riskColor}; display: inline-block;"></span>
+                ${riskInfo.risk}
+            </span>
+        ` : '';
+
         return `
             <div class="player-pitch-card ${cardClass}" data-id="${player.id}" data-type="starter">
                 <button class="pitch-sell-btn" data-id="${player.id}" title="Remove Player" style="display: ${isSquadUnlocked ? 'flex' : 'none'} !important; opacity: 1 !important;">&times;</button>
@@ -536,7 +544,7 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
                             ${renderSetPieceBadges(player)}
                         </div>
                         <div class="player-pitch-points">
-
+                            ${riskLabel}
                             <span class="player-pitch-price">£${player.price.toFixed(1)}m</span>
                             <span class="player-pitch-sep"> • </span>
                             <span class="player-pitch-xp">
@@ -600,6 +608,14 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions, is
             </div>
         ` : '';
 
+        const riskColor = riskInfo ? (riskInfo.risk === 'High' ? '#ef4444' : (riskInfo.risk === 'Medium' ? '#f59e0b' : '#38bdf8')) : '';
+        const riskLabel = riskInfo ? `
+            <span style="font-size: 8px; font-weight: 800; text-transform: uppercase; color: ${riskColor}; background: ${riskColor}1a; padding: 1px 4px; border-radius: 3px; border: 0.5px solid ${riskColor}33; margin-right: 4px; display: inline-flex; align-items: center; gap: 2px;">
+                <span style="width: 4px; height: 4px; border-radius: 50%; background: ${riskColor}; display: inline-block;"></span>
+                ${riskInfo.risk}
+            </span>
+        ` : '';
+
         return `
             <div class="bench-slot-wrapper">
                 <span class="bench-slot-label">${label}</span>
@@ -619,7 +635,7 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions, is
                                 ${renderSetPieceBadges(player)}
                             </div>
                             <div class="player-pitch-points">
-
+                                ${riskLabel}
                                 <span class="player-pitch-price">£${player.price.toFixed(1)}m</span>
                                 <span class="player-pitch-sep"> • </span>
                                 <span class="player-pitch-xp">

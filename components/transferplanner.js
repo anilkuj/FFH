@@ -720,21 +720,34 @@ export function renderTransferPlanner(container, state, actions) {
         style.id = 'fpl-squad-risk-styles';
         style.innerHTML = `
             .player-pitch-card.has-starting-risk {
-                border: 2px solid rgba(239, 68, 68, 0.75) !important;
-                background: rgba(239, 68, 68, 0.05) !important;
-                animation: borderPulse 2s infinite alternate;
+                animation: borderPulseHigh 2s infinite alternate;
+            }
+            .player-pitch-card.has-starting-risk.risk-high {
+                border: 2px solid #ef4444 !important;
+                background: rgba(239, 68, 68, 0.08) !important;
+                animation: borderPulseHigh 2s infinite alternate;
             }
             .player-pitch-card.has-starting-risk.risk-medium {
-                border-color: rgba(245, 158, 11, 0.75) !important;
-                background: rgba(245, 158, 11, 0.05) !important;
+                border: 2px solid #f59e0b !important;
+                background: rgba(245, 158, 11, 0.08) !important;
+                animation: borderPulseMedium 2s infinite alternate;
             }
             .player-pitch-card.has-starting-risk.risk-low {
-                border-color: rgba(56, 189, 248, 0.7) !important;
-                background: rgba(56, 189, 248, 0.04) !important;
+                border: 2px solid #38bdf8 !important;
+                background: rgba(56, 189, 248, 0.06) !important;
+                animation: borderPulseLow 2s infinite alternate;
             }
-            @keyframes borderPulse {
+            @keyframes borderPulseHigh {
                 0% { box-shadow: 0 0 3px rgba(239, 68, 68, 0.2); }
-                100% { box-shadow: 0 0 9px rgba(239, 68, 68, 0.5); }
+                100% { box-shadow: 0 0 10px rgba(239, 68, 68, 0.6); }
+            }
+            @keyframes borderPulseMedium {
+                0% { box-shadow: 0 0 3px rgba(245, 158, 11, 0.2); }
+                100% { box-shadow: 0 0 10px rgba(245, 158, 11, 0.6); }
+            }
+            @keyframes borderPulseLow {
+                0% { box-shadow: 0 0 3px rgba(56, 189, 248, 0.2); }
+                100% { box-shadow: 0 0 10px rgba(56, 189, 248, 0.6); }
             }
             .pitch-risk-badge {
                 position: absolute;
