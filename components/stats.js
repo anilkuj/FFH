@@ -19,15 +19,29 @@ export function renderStats(container, state, actions) {
 
     const isLight = document.documentElement.classList.contains('light-theme');
 
-    // Rich, solid group colors for 100% guaranteed rendering across all laptops, desktops & browsers
-    const groupStyles = {
-        info: isLight ? 'background-color: #f1f5f9 !important; color: #0f172a !important;' : 'background-color: #1e293b !important; color: #f8fafc !important;',
-        core: isLight ? 'background-color: #e0f2fe !important; color: #0369a1 !important;' : 'background-color: rgba(2, 132, 199, 0.18) !important; color: #38bdf8 !important;',
-        attack: isLight ? 'background-color: #dcfce7 !important; color: #15803d !important;' : 'background-color: rgba(22, 163, 74, 0.18) !important; color: #4ade80 !important;',
-        expected: isLight ? 'background-color: #f3e8ff !important; color: #6d28d9 !important;' : 'background-color: rgba(124, 58, 237, 0.18) !important; color: #c084fc !important;',
-        defence: isLight ? 'background-color: #ffe4e6 !important; color: #be123c !important;' : 'background-color: rgba(219, 39, 119, 0.18) !important; color: #f472b6 !important;',
-        passing: isLight ? 'background-color: #e0e7ff !important; color: #4338ca !important;' : 'background-color: rgba(99, 102, 241, 0.18) !important; color: #818cf8 !important;',
-        xp: isLight ? 'background-color: #fef3c7 !important; color: #b45309 !important;' : 'background-color: rgba(217, 119, 6, 0.18) !important; color: #fbbf24 !important;',
+    // Alternate cell backgrounds based on even/odd index for zebra-striping
+    const getGroupStyles = (isEven) => {
+        if (isLight) {
+            return {
+                info: isEven ? 'background-color: #f8fafc !important; color: #0f172a !important;' : 'background-color: #f1f5f9 !important; color: #0f172a !important;',
+                core: isEven ? 'background-color: #f0f9ff !important; color: #0369a1 !important;' : 'background-color: #e0f2fe !important; color: #0369a1 !important;',
+                attack: isEven ? 'background-color: #f0fdf4 !important; color: #15803d !important;' : 'background-color: #dcfce7 !important; color: #15803d !important;',
+                expected: isEven ? 'background-color: #faf5ff !important; color: #6d28d9 !important;' : 'background-color: #f3e8ff !important; color: #6d28d9 !important;',
+                defence: isEven ? 'background-color: #fff1f2 !important; color: #be123c !important;' : 'background-color: #ffe4e6 !important; color: #be123c !important;',
+                passing: isEven ? 'background-color: #eef2ff !important; color: #4338ca !important;' : 'background-color: #e0e7ff !important; color: #4338ca !important;',
+                xp: isEven ? 'background-color: #fffbeb !important; color: #b45309 !important;' : 'background-color: #fef3c7 !important; color: #b45309 !important;',
+            };
+        } else {
+            return {
+                info: isEven ? 'background-color: #0f172a !important; color: #f8fafc !important;' : 'background-color: #1e293b !important; color: #f8fafc !important;',
+                core: isEven ? 'background-color: rgba(2, 132, 199, 0.08) !important; color: #38bdf8 !important;' : 'background-color: rgba(2, 132, 199, 0.18) !important; color: #38bdf8 !important;',
+                attack: isEven ? 'background-color: rgba(22, 163, 74, 0.08) !important; color: #4ade80 !important;' : 'background-color: rgba(22, 163, 74, 0.18) !important; color: #4ade80 !important;',
+                expected: isEven ? 'background-color: rgba(124, 58, 237, 0.08) !important; color: #c084fc !important;' : 'background-color: rgba(124, 58, 237, 0.18) !important; color: #c084fc !important;',
+                defence: isEven ? 'background-color: rgba(219, 39, 119, 0.08) !important; color: #f472b6 !important;' : 'background-color: rgba(219, 39, 119, 0.18) !important; color: #f472b6 !important;',
+                passing: isEven ? 'background-color: rgba(99, 102, 241, 0.08) !important; color: #818cf8 !important;' : 'background-color: rgba(99, 102, 241, 0.18) !important; color: #818cf8 !important;',
+                xp: isEven ? 'background-color: rgba(217, 119, 6, 0.08) !important; color: #fbbf24 !important;' : 'background-color: rgba(217, 119, 6, 0.18) !important; color: #fbbf24 !important;',
+            };
+        }
     };
 
     const headerStyles = {
@@ -178,58 +192,59 @@ export function renderStats(container, state, actions) {
             return `<span style="opacity: 0.45; font-size: 10.5px; font-weight: 500;">No</span>`;
         };
 
-        tableBody.innerHTML = filtered.map(player => {
+        tableBody.innerHTML = filtered.map((player, idx) => {
             const st = getComputedStats(player);
             const displayName = formatPlayerShortName(player.name);
+            const rowStyles = getGroupStyles(idx % 2 === 0);
             return `
                 <tr>
-                    <td class="col-grp-info cell-player-name" style="${groupStyles.info} text-align: left; padding-left: 8px; cursor: pointer;" title="${player.name}">
+                    <td class="col-grp-info cell-player-name" style="${rowStyles.info} text-align: left; padding-left: 8px; cursor: pointer;" title="${player.name}">
                         <div style="display: flex; align-items: center; gap: 5px; overflow: visible;">
                             <strong style="font-weight: 700; font-size: 12.5px; white-space: nowrap;" title="${player.name}">${displayName}</strong>
                             <span class="cell-team-tag" style="font-size: 10px; font-weight: 700; color: var(--text-muted); flex-shrink: 0; padding: 1px 4px; background: rgba(0,0,0,0.06); border-radius: 3px;">${player.team}</span>
                         </div>
                     </td>
 
-                    <td class="col-grp-info font-weight-700" style="${groupStyles.info}">${player.position}</td>
-                    <td class="col-grp-info font-weight-800" style="${groupStyles.info} color: var(--primary);">£${player.price.toFixed(1)}</td>
+                    <td class="col-grp-info font-weight-700" style="${rowStyles.info}">${player.position}</td>
+                    <td class="col-grp-info font-weight-800" style="${rowStyles.info} color: var(--primary);">£${player.price.toFixed(1)}</td>
 
                     <!-- Core -->
-                    <td class="col-grp-core" style="${groupStyles.core}">${player.ownership.toFixed(1)}%</td>
-                    <td class="col-grp-core font-weight-800" style="${groupStyles.core}">${player.points}</td>
+                    <td class="col-grp-core" style="${rowStyles.core}">${player.ownership.toFixed(1)}%</td>
+                    <td class="col-grp-core font-weight-800" style="${rowStyles.core}">${player.points}</td>
                     
                     <!-- Attack (Includes Set Pieces) -->
-                    <td class="col-grp-attack" style="${groupStyles.attack}">${renderYesNoBadge(st.pk, '#ef4444')}</td>
-                    <td class="col-grp-attack" style="${groupStyles.attack}">${renderYesNoBadge(st.fk, '#f59e0b')}</td>
-                    <td class="col-grp-attack" style="${groupStyles.attack}">${renderYesNoBadge(st.ck, '#0284c7')}</td>
-                    <td class="col-grp-attack" style="${groupStyles.attack}">${st.goals}</td>
-                    <td class="col-grp-attack" style="${groupStyles.attack}">${st.assists}</td>
-                    <td class="col-grp-attack font-weight-700" style="${groupStyles.attack}">${st.ga}</td>
-                    <td class="col-grp-attack ${parseFloat(st.goalPerf) < 0 ? 'text-negative' : 'text-positive'}" style="${groupStyles.attack}">${st.goalPerf}</td>
-                    <td class="col-grp-attack" style="${groupStyles.attack}">${st.shots}</td>
-                    <td class="col-grp-attack" style="${groupStyles.attack}">${st.bigChancesCreated}</td>
-                    <td class="col-grp-attack" style="${groupStyles.attack}">${st.bigChancesMissed}</td>
+                    <td class="col-grp-attack" style="${rowStyles.attack}">${renderYesNoBadge(st.pk, '#ef4444')}</td>
+                    <td class="col-grp-attack" style="${rowStyles.attack}">${renderYesNoBadge(st.fk, '#f59e0b')}</td>
+                    <td class="col-grp-attack" style="${rowStyles.attack}">${renderYesNoBadge(st.ck, '#0284c7')}</td>
+                    <td class="col-grp-attack" style="${rowStyles.attack}">${st.goals}</td>
+                    <td class="col-grp-attack" style="${rowStyles.attack}">${st.assists}</td>
+                    <td class="col-grp-attack font-weight-700" style="${rowStyles.attack}">${st.ga}</td>
+                    <td class="col-grp-attack ${parseFloat(st.goalPerf) < 0 ? 'text-negative' : 'text-positive'}" style="${rowStyles.attack}">${st.goalPerf}</td>
+                    <td class="col-grp-attack" style="${rowStyles.attack}">${st.shots}</td>
+                    <td class="col-grp-attack" style="${rowStyles.attack}">${st.bigChancesCreated}</td>
+                    <td class="col-grp-attack" style="${rowStyles.attack}">${st.bigChancesMissed}</td>
 
                     <!-- Expected -->
-                    <td class="col-grp-expected" style="${groupStyles.expected}">${st.xG.toFixed(2)}</td>
-                    <td class="col-grp-expected" style="${groupStyles.expected}">${st.xA.toFixed(2)}</td>
-                    <td class="col-grp-expected font-weight-700" style="${groupStyles.expected}">${st.xGI.toFixed(2)}</td>
+                    <td class="col-grp-expected" style="${rowStyles.expected}">${st.xG.toFixed(2)}</td>
+                    <td class="col-grp-expected" style="${rowStyles.expected}">${st.xA.toFixed(2)}</td>
+                    <td class="col-grp-expected font-weight-700" style="${rowStyles.expected}">${st.xGI.toFixed(2)}</td>
 
                     <!-- Defence -->
-                    <td class="col-grp-defence" style="${groupStyles.defence}">${st.defCon}</td>
-                    <td class="col-grp-defence" style="${groupStyles.defence}">${st.defConPts}</td>
-                    <td class="col-grp-defence" style="${groupStyles.defence}">${st.recoveries}</td>
+                    <td class="col-grp-defence" style="${rowStyles.defence}">${st.defCon}</td>
+                    <td class="col-grp-defence" style="${rowStyles.defence}">${st.defConPts}</td>
+                    <td class="col-grp-defence" style="${rowStyles.defence}">${st.recoveries}</td>
 
                     <!-- Passing -->
-                    <td class="col-grp-passing" style="${groupStyles.passing}">${st.keyPasses}</td>
-                    <td class="col-grp-passing" style="${groupStyles.passing}">${st.crosses}</td>
+                    <td class="col-grp-passing" style="${rowStyles.passing}">${st.keyPasses}</td>
+                    <td class="col-grp-passing" style="${rowStyles.passing}">${st.crosses}</td>
 
                     <!-- XP -->
-                    <td class="col-grp-xp font-weight-700" style="${groupStyles.xp}">${st.xp1}</td>
-                    <td class="col-grp-xp font-weight-700" style="${groupStyles.xp}">${st.xp2}</td>
-                    <td class="col-grp-xp font-weight-700" style="${groupStyles.xp}">${st.xp3}</td>
-                    <td class="col-grp-xp font-weight-700" style="${groupStyles.xp}">${st.xp4}</td>
-                    <td class="col-grp-xp font-weight-700" style="${groupStyles.xp}">${st.xp5}</td>
-                    <td class="col-grp-xp font-weight-800" style="${groupStyles.xp}">${st.xp10}</td>
+                    <td class="col-grp-xp font-weight-700" style="${rowStyles.xp}">${st.xp1}</td>
+                    <td class="col-grp-xp font-weight-700" style="${rowStyles.xp}">${st.xp2}</td>
+                    <td class="col-grp-xp font-weight-700" style="${rowStyles.xp}">${st.xp3}</td>
+                    <td class="col-grp-xp font-weight-700" style="${rowStyles.xp}">${st.xp4}</td>
+                    <td class="col-grp-xp font-weight-700" style="${rowStyles.xp}">${st.xp5}</td>
+                    <td class="col-grp-xp font-weight-800" style="${rowStyles.xp}">${st.xp10}</td>
                 </tr>
             `;
         }).join('');
