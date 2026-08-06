@@ -12,6 +12,8 @@ import { renderLiveRank } from './components/liverank.js';
 import { renderReveals } from './components/reveals.js';
 import { renderTransferPlanner } from './components/transferplanner.js';
 
+const PROMOTED_TEAMS = ['COV', 'HUL', 'SUN', 'IPS', 'LEE'];
+
 window.getPlayerMinutesFactor = function(player) {
     if (!player) return 1.0;
     if (player.status === 'i' || player.status === 's' || player.status === 'u') return 0;
@@ -25,15 +27,21 @@ window.getPlayerMinutesFactor = function(player) {
         matchMinutesRatio = Math.min(1.0, Math.max(0.15, player.MPPG / 90));
     }
 
-    // Starting Frequency Factor: penalizes players with low starts (GS < 28 out of 38 games)
+    // Do NOT penalize newly promoted teams or new transfers without established PL start history!
+    const isPromotedOrNew = (player.team && PROMOTED_TEAMS.includes(player.team)) || 
+                            player.transferredThisSeason || 
+                            (typeof player.points === 'number' && player.points < 15);
+
     let startRatio = 1.0;
-    if (typeof player.GS === 'number') {
+    // Only apply starting frequency (GS) penalty to established PL squad rotation players
+    if (!isPromotedOrNew && typeof player.GS === 'number' && player.GS > 0) {
         startRatio = Math.min(1.0, Math.max(0.20, player.GS / 28));
     }
 
     const combined = chance * startRatio * matchMinutesRatio;
     return Math.min(1.0, Math.max(0.15, combined));
 };
+
 
 
 // Universal dataset-wide minutes & rotation risk discounting for all 700+ players

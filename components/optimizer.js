@@ -1001,6 +1001,8 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
 /**
  * Helper: guaranteed start filter based on MPPG and start chance
  */
+const PROMOTED_TEAMS_LIST = ['COV', 'HUL', 'SUN', 'IPS', 'LEE'];
+
 function isGuaranteedStart(player, state) {
     if (!player) return false;
     if (state && state.mustInclude && state.mustInclude.includes(player.id)) return true;
@@ -1012,12 +1014,16 @@ function isGuaranteedStart(player, state) {
     const mppg = typeof player.MPPG === 'number' ? player.MPPG : 85;
     const gs = typeof player.GS === 'number' ? player.GS : 25;
 
-    // DYNAMIC START QUALITY EVALUATION (Driven by Live Starts & Minutes Data):
+    const isPromotedOrNew = (player.team && PROMOTED_TEAMS_LIST.includes(player.team)) || 
+                            player.transferredThisSeason || 
+                            (typeof player.points === 'number' && player.points < 15);
+
+    // DYNAMIC START QUALITY EVALUATION:
     // 1. Hard reject if current chance of playing is < 50%
     if (chance < 50) return false;
     
-    // 2. Reject rotation risks / squad players with low starting frequency (GS < 18 starts out of 38)
-    if (gs < 18) return false;
+    // 2. Reject rotation risks with low starts (GS < 18 starts out of 38), but exempt newly promoted teams & new transfers!
+    if (!isPromotedOrNew && gs < 18) return false;
 
     // 3. Reject rotation risks if chance < 75% AND minutes per game < 60
     if (chance < 75 && mppg < 60) return false;
@@ -1025,11 +1031,12 @@ function isGuaranteedStart(player, state) {
     // Respect user's custom Guaranteed Start slider threshold if configured
     const minMins = (state && state.guaranteedStart) || 0;
     if (minMins > 0) {
-        return mppg >= minMins && gs >= 18;
+        return mppg >= minMins && (isPromotedOrNew || gs >= 18);
     }
 
     return true;
 }
+
 
 
 
