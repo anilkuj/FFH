@@ -109,20 +109,20 @@ export function renderTransferPlanner(container, state, actions) {
                     ? `${Math.round(ptsVal)} pts`
                     : `${ptsVal.toFixed(1)} XP`;
 
+                const isDarkBg = pred.diff === 4 || pred.diff === 5 || pred.diff === 1;
+                const textColor = isDarkBg ? '#ffffff' : '#0f172a';
+
                 fixturesHtml += `
-                    <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
-                        <div style="background:${color}; color:#111; padding:3px 6px; border-radius:4px; font-size:10px; font-weight:800; min-width:48px; text-align:center; text-transform:uppercase; box-shadow: 0 1px 2px rgba(0,0,0,0.15);" title="GW${gw}: ${oppText} - FDR ${pred.diff} (${ptsText})">
-                            ${oppText}
-                        </div>
-                        <span style="font-size:9.5px; font-weight:800; color:var(--primary); font-family:var(--font-body); line-height:1; margin-top:1px;">
-                            ${ptsText}
-                        </span>
+                    <div style="background:${color}; color:${textColor}; padding:4px 7px; border-radius:5px; min-width:52px; text-align:center; box-shadow: 0 1px 3px rgba(0,0,0,0.25); display:inline-flex; flex-direction:column; align-items:center; justify-content:center; line-height:1.15;" title="GW${gw}: ${oppText} - FDR ${pred.diff} (${ptsText})">
+                        <span style="font-size:9.5px; font-weight:800; text-transform:uppercase; color:${textColor}; letter-spacing:0.2px;">${oppText}</span>
+                        <span style="font-size:9px; font-weight:800; margin-top:2px; color:${textColor}; opacity:0.95;">${ptsText}</span>
                     </div>
                 `;
             }
         }
-        return `<div style="display:flex; gap:5px; margin-top:4px; flex-wrap:wrap; align-items:flex-start;">${fixturesHtml}</div>`;
+        return `<div style="display:flex; gap:5px; margin-top:4px; flex-wrap:wrap; align-items:center;">${fixturesHtml}</div>`;
     };
+
 
 
 

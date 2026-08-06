@@ -329,9 +329,10 @@ function renderPitchFixtures(player, currentGw) {
 function renderFdrFixtures(player, currentGw) {
     if (!player || !player.predictions) return '';
     const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
+    const currentGwNum = parseInt(currentGw) || 1;
 
-    let html = '<div class="fdr-fixtures-container" style="display: flex; gap: 5px; align-items: flex-start; flex-wrap: wrap; margin: 4px 0 2px 0;">';
-    for (let gw = currentGw; gw < currentGw + 5; gw++) {
+    let html = '<div class="fdr-fixtures-container" style="display: flex; gap: 5px; align-items: center; flex-wrap: wrap; margin: 4px 0 2px 0;">';
+    for (let gw = currentGwNum; gw < currentGwNum + 5; gw++) {
         if (gw > 10) break;
         const pr = player.predictions.find(p => p.gw === gw);
         if (pr) {
@@ -343,45 +344,43 @@ function renderFdrFixtures(player, currentGw) {
                 ? `${Math.round(ptsVal)} pts`
                 : `${ptsVal.toFixed(1)} XP`;
 
+            const isDarkBg = pr.diff === 4 || pr.diff === 5 || pr.diff === 1;
+            const textColor = isDarkBg ? '#ffffff' : '#0f172a';
+
             html += `
-                <div class="fdr-fixture-column" style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
-                    <span class="fdr-fixture-badge diff-${pr.diff}" title="GW${gw}: ${oppText} (FDR ${pr.diff} - ${ptsText})" style="
-                        font-size: 10px;
-                        font-weight: 800;
-                        padding: 3px 6px;
-                        border-radius: 4px;
-                        text-transform: uppercase;
-                        display: inline-block;
-                        min-width: 52px;
-                        text-align: center;
-                        box-shadow: 0 1px 2px rgba(0,0,0,0.15);
-                    ">
-                        ${oppText}
-                    </span>
-                    <span class="fdr-fixture-xp-subtext" style="font-size: 9.5px; font-weight: 800; color: var(--primary); font-family: var(--font-body); line-height: 1.1; margin-top: 1px;">
-                        ${ptsText}
-                    </span>
+                <div class="fdr-fixture-badge diff-${pr.diff}" title="GW${gw}: ${oppText} (FDR ${pr.diff} - ${ptsText})" style="
+                    display: inline-flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 4px 7px;
+                    border-radius: 5px;
+                    min-width: 52px;
+                    text-align: center;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+                    line-height: 1.15;
+                ">
+                    <span style="font-size: 9.5px; font-weight: 800; text-transform: uppercase; color: ${textColor}; letter-spacing: 0.2px;">${oppText}</span>
+                    <span style="font-size: 9px; font-weight: 800; margin-top: 2px; color: ${textColor}; opacity: 0.95;">${ptsText}</span>
                 </div>
             `;
         } else {
             html += `
-                <div class="fdr-fixture-column" style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
-                    <span class="fdr-fixture-badge" title="GW${gw}: BYE" style="
-                        font-size: 10px;
-                        font-weight: 800;
-                        color: #fff;
-                        background-color: #334155;
-                        padding: 3px 6px;
-                        border-radius: 4px;
-                        display: inline-block;
-                        min-width: 52px;
-                        text-align: center;
-                    ">
-                        BYE
-                    </span>
-                    <span class="fdr-fixture-xp-subtext" style="font-size: 9.5px; font-weight: 700; color: var(--text-muted); line-height: 1.1; margin-top: 1px;">
-                        0 XP
-                    </span>
+                <div class="fdr-fixture-badge" title="GW${gw}: BYE" style="
+                    display: inline-flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 4px 7px;
+                    border-radius: 5px;
+                    min-width: 52px;
+                    text-align: center;
+                    background-color: #334155;
+                    color: #ffffff;
+                    line-height: 1.15;
+                ">
+                    <span style="font-size: 9.5px; font-weight: 800; color: #ffffff;">BYE</span>
+                    <span style="font-size: 9px; font-weight: 700; color: #94a3b8; margin-top: 2px;">0 XP</span>
                 </div>
             `;
         }
@@ -389,6 +388,7 @@ function renderFdrFixtures(player, currentGw) {
     html += '</div>';
     return html;
 }
+
 
 
 
