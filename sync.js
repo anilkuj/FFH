@@ -239,12 +239,20 @@ function parseAndWriteData(data, fixturesData) {
 
         const xG = parseFloat(el.expected_goals) || 0.0;
         const xA = parseFloat(el.expected_assists) || 0.0;
-        const xG90 = minutes > 0 ? (xG / minutes) * 90 : 0.0;
-        const xA90 = minutes > 0 ? (xA / minutes) * 90 : 0.0;
 
-        // GK-specific stats
-        const saves90 = minutes > 0 ? (totalSaves / minutes) * 90 : 0.0;
-        const goalsConceded90 = minutes > 0 ? (goalsConceded / minutes) * 90 : 0.0;
+        // Regress per-90 metrics for low minutes (< 450 minutes) to prevent small sample size inflation
+        const sampleSizeFactor = minutes >= 450 ? 1.0 : (minutes / 450);
+        const xG90 = minutes > 0 ? ((xG / minutes) * 90) * sampleSizeFactor : 0.0;
+        const xA90 = minutes > 0 ? ((xA / minutes) * 90) * sampleSizeFactor : 0.0;
+
+        // GK-specific stats regression
+        const baseSaves90 = 3.0;
+        const rawSaves90 = minutes > 0 ? (totalSaves / minutes) * 90 : baseSaves90;
+        const saves90 = minutes >= 450 ? rawSaves90 : baseSaves90 + (rawSaves90 - baseSaves90) * sampleSizeFactor;
+
+        const baseGc90 = 1.37;
+        const rawGc90 = minutes > 0 ? (goalsConceded / minutes) * 90 : baseGc90;
+        const goalsConceded90 = minutes >= 450 ? rawGc90 : baseGc90 + (rawGc90 - baseGc90) * sampleSizeFactor;
 
         let appearances = starts;
         if (minutes > starts * 90) {

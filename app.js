@@ -25,7 +25,7 @@ window.getPlayerMinutesFactor = function(player) {
     // Do NOT penalize newly promoted teams or new transfers without established PL start history!
     const isPromotedOrNew = (player.team && PROMOTED_TEAMS.includes(player.team)) || 
                             player.transferredThisSeason || 
-                            (typeof player.points === 'number' && player.points < 15);
+                            (typeof player.points === 'number' && player.points < 15 && player.minutes === 0);
 
     // Also do NOT heavily penalize premium or highly-owned key players (they are established starters/key players)
     const isPremiumOrKey = (player.position === 'GKP' && player.price >= 5.0) ||
