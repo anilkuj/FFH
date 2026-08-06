@@ -1198,35 +1198,46 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
 
     const getSquadPointsForHorizon = (slots, h) => {
         let total = 0;
-        let maxStarterPts = 0;
         
-        slots.forEach(slot => {
-            if (slot.playerId === null) return;
-            const p = PLAYERS.find(pl => pl.id === slot.playerId);
-            if (!p) return;
-            if (p.status === 'i' || p.status === 's' || p.status === 'u') return;
+        for (let gw = state.currentGw; gw < state.currentGw + h; gw++) {
+            if (gw > 10) break;
             
-            const chance = (p.chanceOfPlaying !== undefined && p.chanceOfPlaying !== null) ? (p.chanceOfPlaying / 100) : 1.0;
-            let sum = 0;
-            for (let gw = state.currentGw; gw < state.currentGw + h; gw++) {
+            let gwTotal = 0;
+            let maxStarterScore = 0;
+            
+            slots.forEach(slot => {
+                if (slot.playerId === null) return;
+                const p = PLAYERS.find(pl => pl.id === slot.playerId);
+                if (!p) return;
+                if (p.status === 'i' || p.status === 's' || p.status === 'u') return;
+                
+                const chance = (p.chanceOfPlaying !== undefined && p.chanceOfPlaying !== null) ? (p.chanceOfPlaying / 100) : 1.0;
                 const pred = p.predictions.find(pr => pr.gw === gw);
-                if (pred) sum += (pred.pts * chance);
-            }
-            
-            const rawScore = objective === 'efficiency' ? getPlayerEfficiency(p, state.currentGw) * 10 : sum;
-            if (slot.isStarting) {
-                total += rawScore;
-                if (rawScore > maxStarterPts) {
-                    maxStarterPts = rawScore;
+                if (!pred) return;
+                
+                const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
+                const pts = raw * chance;
+                const score = objective === 'efficiency' ? getPlayerEfficiency(p, state.currentGw) * 10 : pts;
+                
+                if (slot.isStarting) {
+                    gwTotal += score;
+                    if (score > maxStarterScore) {
+                        maxStarterScore = score;
+                    }
+                } else {
+                    const isBbActive = state.chips.benchBoost || 
+                                       (state.planBenchBoost && state.benchBoostTargetGw === gw);
+                    const benchWeight = isBbActive ? 1.0 : 0.10;
+                    gwTotal += score * benchWeight;
                 }
-            } else {
-                const benchWeight = state.chips.benchBoost ? 1.0 : 0.10;
-                total += rawScore * benchWeight;
-            }
-        });
-        
-        const captainMultiplier = state.chips.tripleCaptain ? 2.0 : 1.0;
-        total += maxStarterPts * captainMultiplier;
+            });
+            
+            const isTcActive = state.chips.tripleCaptain;
+            const captainMultiplier = isTcActive ? 2.0 : 1.0;
+            gwTotal += maxStarterScore * captainMultiplier;
+            
+            total += gwTotal;
+        }
         
         return total;
     };
