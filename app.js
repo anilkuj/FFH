@@ -41,7 +41,8 @@ window.getPlayerMinutesFactor = function(player) {
 
     let matchMinutesRatio = 1.0;
     if (typeof player.MPPG === 'number' && player.MPPG > 0) {
-        matchMinutesRatio = Math.min(1.0, Math.max(isBypassPenalty ? 0.85 : 0.15, player.MPPG / 90));
+        // If they average 85+ minutes per game, treat them as a full 90-minute player (no discount)
+        matchMinutesRatio = player.MPPG >= 85.0 ? 1.0 : Math.min(1.0, Math.max(isBypassPenalty ? 0.85 : 0.15, player.MPPG / 90));
     } else if (!isBypassPenalty) {
         // Only apply the 0.15 floor for established PL players with 0 recorded minutes
         // (e.g. true bench warmers). Promoted/new/premium players get full 90-min assumption.
