@@ -3505,6 +3505,8 @@ html.light-theme .stats-table td.cell-player-name strong { color: #0f172a !impor
     background: rgba(255, 255, 255, 0.01);
     border: 1px solid var(--border-color);
     transition: all var(--transition-fast);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .panel-player-row:hover:not(.disabled-row) {
