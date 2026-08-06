@@ -264,10 +264,14 @@ function getFdrColor(diff) {
 }
 
 function get5GwXp(player, currentGw) {
+    return getNGwXp(player, currentGw, 5);
+}
+
+function getNGwXp(player, currentGw, n) {
     if (!player || !player.predictions) return 0;
     const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
     let sum = 0;
-    for (let gw = currentGw; gw < currentGw + 5; gw++) {
+    for (let gw = currentGw; gw < currentGw + n; gw++) {
         const pred = player.predictions.find(p => p.gw === gw);
         if (pred) {
             const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
@@ -1512,7 +1516,9 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
         !allSquadIds.includes(p.id) &&
         p.price <= bank &&
         (teamCounts[p.team] || 0) < 3
-    ).sort((a, b) => get5GwXp(b, state.currentGw) - get5GwXp(a, state.currentGw));
+    );
+
+    let gwWindow = 5; // default sort window
 
     // Generate Price Options in 0.5m increments
     let priceOptions = '<option value="">Any Price</option>';
@@ -1543,6 +1549,14 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
                 </div>
                 <div style="display: flex; gap: 8px; width: 100%; flex-wrap: wrap;">
                     <input type="text" class="transfer-search-field" id="modalSearchField" placeholder="Search by name or team..." style="flex: 2; min-width: 150px; font-size: 12px; padding: 8px; background: var(--bg-card); color:var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;" />
+                    <select class="panel-price-select" id="modalGwWindowSelect" title="Sort by XP over N gameweeks" style="flex: 1; min-width: 95px; font-size: 12px; padding: 8px; background: var(--bg-card); color: var(--primary); border: 1px solid var(--primary); border-radius: 6px; font-weight: 700;">
+                        <option value="1">Sort: 1-GW XP</option>
+                        <option value="2">Sort: 2-GW XP</option>
+                        <option value="3">Sort: 3-GW XP</option>
+                        <option value="4">Sort: 4-GW XP</option>
+                        <option value="5" selected>Sort: 5-GW XP</option>
+                        <option value="10">Sort: 10-GW XP</option>
+                    </select>
                     <select class="panel-price-select" id="modalTeamSelect" style="flex: 1; min-width: 110px; font-size: 12px; padding: 8px; background: var(--bg-card); color:var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
                         ${teamOptions}
                     </select>
@@ -1582,7 +1596,7 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
             </div>
 
             <div class="modal-player-list-scroll" id="modalPlayerList" style="display: flex; flex-direction: column; gap: 10px; max-height: 48vh; overflow-y: auto; padding-right: 4px;">
-                ${renderModalPlayerRows(buyablePlayers, bank, state)}
+                ${renderModalPlayerRows(buyablePlayers, bank, state, gwWindow)}
             </div>
         </div>
     `;
@@ -1592,6 +1606,7 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
         if (closeBtn) closeBtn.addEventListener('click', actions.hideModal);
 
         const searchField = document.getElementById('modalSearchField');
+        const gwWindowSelect = document.getElementById('modalGwWindowSelect');
         const teamSelect = document.getElementById('modalTeamSelect');
         const priceSelect = document.getElementById('modalPriceSelect');
         const attSelect = document.getElementById('modalAttSelect');
@@ -1603,6 +1618,7 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
         const applyFilters = () => {
             try {
                 const query = searchField ? searchField.value.trim().toLowerCase() : "";
+                gwWindow = gwWindowSelect ? parseInt(gwWindowSelect.value) || 5 : 5;
                 const selectedTeam = teamSelect ? teamSelect.value : "";
                 const maxPriceStr = priceSelect ? priceSelect.value : "";
                 const maxPrice = maxPriceStr ? parseFloat(maxPriceStr) : Infinity;
@@ -1667,8 +1683,11 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
      
                     return false;
                 });
+
+                // Sort descending by selected GW window xP
+                filtered.sort((a, b) => getNGwXp(b, state.currentGw, gwWindow) - getNGwXp(a, state.currentGw, gwWindow));
                 
-                console.log("[FPL HUB] Filters applied. Count:", filtered.length, "Query:", query, "Team:", selectedTeam, "Price:", maxPrice, "Att:", minAttGrade, "Defcon:", minDefconGrade);
+                console.log("[FPL HUB] Filters applied. Count:", filtered.length, "GW Window:", gwWindow, "Query:", query, "Team:", selectedTeam, "Price:", maxPrice, "Att:", minAttGrade, "Defcon:", minDefconGrade);
                 
                 const filterCountLabel = document.getElementById('modalFilterCount');
                 if (filterCountLabel) {
@@ -1676,7 +1695,7 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
                 }
 
                 if (listContainer) {
-                    listContainer.innerHTML = renderModalPlayerRows(filtered, bank, state);
+                    listContainer.innerHTML = renderModalPlayerRows(filtered, bank, state, gwWindow);
                 }
                 wireAddButtons();
             } catch (err) {
@@ -1685,6 +1704,7 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
         };
  
         if (searchField) searchField.addEventListener('input', applyFilters);
+        if (gwWindowSelect) gwWindowSelect.addEventListener('change', applyFilters);
         if (teamSelect) teamSelect.addEventListener('change', applyFilters);
         if (priceSelect) priceSelect.addEventListener('change', applyFilters);
         if (attSelect) attSelect.addEventListener('change', applyFilters);
@@ -1713,7 +1733,8 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
     });
 }
 
-function renderModalPlayerRows(players, bank, state) {
+function renderModalPlayerRows(players, bank, state, gwWindow) {
+    gwWindow = gwWindow || 5;
     if (players.length === 0) {
         return `<div class="transfer-list-empty" style="text-align: center; padding: 20px; color: var(--text-muted);">No matching players found.</div>`;
     }
@@ -1780,7 +1801,7 @@ function renderModalPlayerRows(players, bank, state) {
                     <span class="player-team-sub" style="font-size: 10px; color: var(--text-muted); opacity: 0.85;">Matches last year: ${player.GS} • Avg Min: ${player.MPPG.toFixed(0)}m</span>
                 </div>
                 <div class="player-info-right" style="display: flex; align-items: center; gap: 12px; margin-left: 8px;">
-                    <span class="player-pts-val" style="font-size: 12px; font-weight: 700; color: var(--primary); white-space: nowrap;">${get5GwXp(player, state.currentGw).toFixed(1)} XP (5-GW)</span>
+                    <span class="player-pts-val" style="font-size: 12px; font-weight: 700; color: var(--primary); white-space: nowrap;">${getNGwXp(player, state.currentGw, gwWindow).toFixed(1)} XP (${gwWindow}-GW)</span>
                     ${isAffordable ? `
                         <button class="add-player-action-btn apply-rec-btn" data-id="${player.id}" style="margin: 0; padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 4px; width: auto; height: 28px; display: flex; align-items: center; justify-content: center; gap: 4px;">
                             Add
