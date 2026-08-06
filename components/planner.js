@@ -1541,8 +1541,8 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
             </h3>
             <button class="close-modal-btn" id="closeAddPlayerModalBtn"><i data-lucide="x"></i></button>
         </div>
-        <div class="checkout-modal-body" style="padding: 20px; display: flex; flex-direction: column; gap: 16px; max-height: 80vh; overflow-y: auto;">
-            <div style="display: flex; flex-direction: column; gap: 12px; border-bottom: 1px dashed var(--border-color); padding-bottom: 16px; margin-bottom: 4px; width: 100%;">
+        <div class="checkout-modal-body" style="padding: 0; display: flex; flex-direction: column; gap: 0; max-height: 85vh; overflow-y: auto;">
+            <div style="padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; border-bottom: 1px dashed var(--border-color); width: 100%; box-sizing: border-box;">
                 <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; width: 100%;">
                     <p style="font-size: 13px; color: var(--text-muted); margin: 0;">Max Budget: <strong class="highlight-bank" style="font-size: 14px;">£${bank.toFixed(1)}m</strong></p>
                     <p style="font-size: 11px; color: var(--text-muted); margin: 0; opacity: 0.85;">Only showing <strong style="color: var(--primary);">${position}s</strong> <span id="modalFilterCount" style="color: var(--secondary); font-weight: 700; margin-left: 4px;"></span>. Search by name or team.</p>
@@ -1622,7 +1622,7 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
                 </div>
             </div>
 
-            <div class="modal-player-list-scroll" id="modalPlayerList" style="display: flex; flex-direction: column; gap: 10px; max-height: 48vh; overflow-y: auto; padding-right: 4px;">
+            <div class="modal-player-list-scroll" id="modalPlayerList" style="display: flex; flex-direction: column; gap: 8px; max-height: 55vh; overflow-y: auto; padding: 16px 20px;">
                 ${renderModalPlayerRows(buyablePlayers, bank, state, gwWindow)}
             </div>
         </div>
