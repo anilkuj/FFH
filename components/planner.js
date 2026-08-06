@@ -211,22 +211,22 @@ export function renderPlanner(container, state, actions) {
 
                     <!-- GKP Row -->
                     <div class="pitch-row" data-row="GKP">
-                        ${renderPlayerRow(state.squadSlots, "GKP", state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked)}
+                        ${renderPlayerRow(state.squadSlots, "GKP", state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked, state)}
                     </div>
 
                     <!-- DEF Row -->
                     <div class="pitch-row" data-row="DEF">
-                        ${renderPlayerRow(state.squadSlots, "DEF", state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked)}
+                        ${renderPlayerRow(state.squadSlots, "DEF", state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked, state)}
                     </div>
 
                     <!-- MID Row -->
                     <div class="pitch-row" data-row="MID">
-                        ${renderPlayerRow(state.squadSlots, "MID", state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked)}
+                        ${renderPlayerRow(state.squadSlots, "MID", state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked, state)}
                     </div>
 
                     <!-- FWD Row -->
                     <div class="pitch-row" data-row="FWD">
-                        ${renderPlayerRow(state.squadSlots, "FWD", state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked)}
+                        ${renderPlayerRow(state.squadSlots, "FWD", state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked, state)}
                     </div>
                 </div>
 
@@ -234,7 +234,7 @@ export function renderPlanner(container, state, actions) {
                 <div class="bench-container">
                     <span class="bench-title">Bench (Click starter to swap with bench)</span>
                     <div class="bench-row" id="benchRow">
-                        ${renderBenchRow(state.squadSlots, state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked)}
+                        ${renderBenchRow(state.squadSlots, state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked, state)}
                     </div>
                 </div>
             </div>
@@ -474,7 +474,12 @@ function renderPlayerTooltip(player, currentGw) {
 }
 
 
-export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, actions, isSquadUnlocked = false) {
+const getPlayerRiskInfo = (player, state) => {
+    if (!state || !state.squadRisks) return null;
+    return state.squadRisks[player.name] || null;
+};
+
+export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, actions, isSquadUnlocked = false, state = null) {
     const rowSlots = squadSlots.filter(s => s.position === position && s.isStarting);
 
     return rowSlots.map((slot, index) => {
@@ -506,12 +511,21 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
             designationBadge = `<span class="badge-vice">V</span>`;
         }
 
+        const riskInfo = getPlayerRiskInfo(player, state);
+        const cardClass = riskInfo ? `has-starting-risk risk-${riskInfo.risk.toLowerCase()}` : '';
+        const riskBadge = riskInfo ? `
+            <div class="pitch-risk-badge risk-${riskInfo.risk.toLowerCase()}" title="Starting Risk: ${riskInfo.risk}\n${riskInfo.reason}">
+                <i data-lucide="alert-triangle"></i>
+            </div>
+        ` : '';
+
         return `
-            <div class="player-pitch-card" data-id="${player.id}" data-type="starter">
+            <div class="player-pitch-card ${cardClass}" data-id="${player.id}" data-type="starter">
                 <button class="pitch-sell-btn" data-id="${player.id}" title="Remove Player" style="display: ${isSquadUnlocked ? 'flex' : 'none'} !important; opacity: 1 !important;">&times;</button>
-                <div class="shirt-icon-wrapper">
+                <div class="shirt-icon-wrapper" style="position: relative;">
                     ${getShirtSVG(teamObj.color, player.team, player.position)}
                     ${designationBadge}
+                    ${riskBadge}
                     ${player.transferredThisSeason ? `<div class="pitch-transfer-icon" title="Transferred from ${player.oldTeam}">⇆</div>` : ''}
                 </div>
 
@@ -543,7 +557,7 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
     }).join('');
 }
 
-export function renderBenchRow(squadSlots, currentGw, captain, vice, actions, isSquadUnlocked = false) {
+export function renderBenchRow(squadSlots, currentGw, captain, vice, actions, isSquadUnlocked = false, state = null) {
     const benchSlots = squadSlots.filter(s => !s.isStarting);
     return benchSlots.map((slot, index) => {
         const label = index === 0 ? "GKP" : `Sub ${index} (${slot.position})`;
@@ -578,14 +592,23 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions, is
             designationBadge = `<span class="badge-vice">V</span>`;
         }
 
+        const riskInfo = getPlayerRiskInfo(player, state);
+        const cardClass = riskInfo ? `has-starting-risk risk-${riskInfo.risk.toLowerCase()}` : '';
+        const riskBadge = riskInfo ? `
+            <div class="pitch-risk-badge risk-${riskInfo.risk.toLowerCase()}" title="Starting Risk: ${riskInfo.risk}\n${riskInfo.reason}">
+                <i data-lucide="alert-triangle"></i>
+            </div>
+        ` : '';
+
         return `
             <div class="bench-slot-wrapper">
                 <span class="bench-slot-label">${label}</span>
-                <div class="player-pitch-card" data-id="${player.id}" data-type="bench" data-index="${index}" style="width: 100%;">
+                <div class="player-pitch-card ${cardClass}" data-id="${player.id}" data-type="bench" data-index="${index}" style="width: 100%;">
                     <button class="pitch-sell-btn" data-id="${player.id}" title="Remove Player" style="display: ${isSquadUnlocked ? 'flex' : 'none'} !important; opacity: 1 !important;">&times;</button>
-                    <div class="shirt-icon-wrapper">
+                    <div class="shirt-icon-wrapper" style="position: relative;">
                         ${getShirtSVG(teamObj.color, player.team, player.position)}
                         ${designationBadge}
+                        ${riskBadge}
                         ${player.transferredThisSeason ? `<div class="pitch-transfer-icon" title="Transferred from ${player.oldTeam}">⇆</div>` : ''}
                     </div>
 

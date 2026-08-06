@@ -478,6 +478,9 @@ export function renderTransferPlanner(container, state, actions) {
                                     </select>
                                     <input type="text" id="tpFplTeamId" class="settings-select" placeholder="FPL Team ID" style="display:none; width:110px; font-size:12px; padding:8px;" value="${lastImportedId}" />
                                     <button class="action-main-btn" id="tpImportBtn" style="display:none; margin:0; padding:8px 16px; font-size:12px; height:38px;">Import</button>
+                                    <button class="action-secondary-btn" id="checkSquadRisksBtn" style="margin:0; padding:8px 16px; font-size:12px; height:38px; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.35); color: #f59e0b; font-weight: 700; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 6px; white-space: nowrap;">
+                                        <i data-lucide="shield-alert" style="width: 14px; height: 14px;"></i> Check Squad Risks
+                                    </button>
                                 </div>
                             </div>
 
@@ -615,22 +618,22 @@ export function renderTransferPlanner(container, state, actions) {
 
                         <!-- GKP Row -->
                         <div class="pitch-row" data-row="GKP">
-                            ${renderPlayerRow(previewSlots, "GKP", state.currentGw, previewCap, previewVice, actions)}
+                            ${renderPlayerRow(previewSlots, "GKP", state.currentGw, previewCap, previewVice, actions, false, state)}
                         </div>
 
                         <!-- DEF Row -->
                         <div class="pitch-row" data-row="DEF">
-                            ${renderPlayerRow(previewSlots, "DEF", state.currentGw, previewCap, previewVice, actions)}
+                            ${renderPlayerRow(previewSlots, "DEF", state.currentGw, previewCap, previewVice, actions, false, state)}
                         </div>
 
                         <!-- MID Row -->
                         <div class="pitch-row" data-row="MID">
-                            ${renderPlayerRow(previewSlots, "MID", state.currentGw, previewCap, previewVice, actions)}
+                            ${renderPlayerRow(previewSlots, "MID", state.currentGw, previewCap, previewVice, actions, false, state)}
                         </div>
 
                         <!-- FWD Row -->
                         <div class="pitch-row" data-row="FWD">
-                            ${renderPlayerRow(previewSlots, "FWD", state.currentGw, previewCap, previewVice, actions)}
+                            ${renderPlayerRow(previewSlots, "FWD", state.currentGw, previewCap, previewVice, actions, false, state)}
                         </div>
                     </div>
 
@@ -638,7 +641,7 @@ export function renderTransferPlanner(container, state, actions) {
                     <div class="bench-container" style="margin-top: 16px;">
                         <span class="bench-title">Bench Preview</span>
                         <div class="bench-row" id="benchRow">
-                            ${renderBenchRow(previewSlots, state.currentGw, previewCap, previewVice, actions)}
+                            ${renderBenchRow(previewSlots, state.currentGw, previewCap, previewVice, actions, false, state)}
                         </div>
                     </div>
                 </div>
@@ -710,6 +713,313 @@ export function renderTransferPlanner(container, state, actions) {
             tpImportBtn.disabled = false;
         }
     });
+
+    // Inject risk highlights stylesheet in head
+    if (typeof document !== 'undefined' && !document.getElementById('fpl-squad-risk-styles')) {
+        const style = document.createElement('style');
+        style.id = 'fpl-squad-risk-styles';
+        style.innerHTML = `
+            .player-pitch-card.has-starting-risk {
+                border: 2px solid rgba(239, 68, 68, 0.75) !important;
+                background: rgba(239, 68, 68, 0.05) !important;
+                animation: borderPulse 2s infinite alternate;
+            }
+            .player-pitch-card.has-starting-risk.risk-medium {
+                border-color: rgba(245, 158, 11, 0.75) !important;
+                background: rgba(245, 158, 11, 0.05) !important;
+            }
+            .player-pitch-card.has-starting-risk.risk-low {
+                border-color: rgba(56, 189, 248, 0.7) !important;
+                background: rgba(56, 189, 248, 0.04) !important;
+            }
+            @keyframes borderPulse {
+                0% { box-shadow: 0 0 3px rgba(239, 68, 68, 0.2); }
+                100% { box-shadow: 0 0 9px rgba(239, 68, 68, 0.5); }
+            }
+            .pitch-risk-badge {
+                position: absolute;
+                top: -5px;
+                right: -5px;
+                background: #ef4444;
+                color: white;
+                border-radius: 50%;
+                width: 20px;
+                height: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+                border: 1.5px solid var(--bg-card);
+                z-index: 10;
+                cursor: help;
+            }
+            .pitch-risk-badge.risk-medium {
+                background: #f59e0b;
+            }
+            .pitch-risk-badge.risk-low {
+                background: #38bdf8;
+            }
+            .pitch-risk-badge svg {
+                width: 10px;
+                height: 10px;
+                stroke-width: 3px;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    const showRiskReportModal = (squadPlayers) => {
+        const existing = document.getElementById('tpRiskModal');
+        if (existing) existing.remove();
+
+        const riskyPlayers = squadPlayers.filter(p => state.squadRisks && state.squadRisks[p.name]);
+
+        const modalDiv = document.createElement('div');
+        modalDiv.id = 'tpRiskModal';
+        modalDiv.style.cssText = `
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+        `;
+
+        const cardHtml = riskyPlayers.length === 0 ? `
+            <div style="text-align:center; padding:30px; color:var(--text-muted);">
+                <i data-lucide="check-circle" style="width:48px; height:48px; color:var(--primary); margin-bottom:12px;"></i>
+                <h4 style="margin:0; font-size:14px; font-weight:800; color:var(--text-main);">No Starter Risks Detected!</h4>
+                <p style="font-size:11px; margin:6px 0 0 0;">All 15 players in your squad are currently expected to start or are fully fit.</p>
+            </div>
+        ` : riskyPlayers.map(p => {
+            const r = state.squadRisks[p.name];
+            const borderCol = r.risk === 'High' ? '#ef4444' : (r.risk === 'Medium' ? '#f59e0b' : '#38bdf8');
+            const bgCol = r.risk === 'High' ? 'rgba(239, 68, 68, 0.05)' : (r.risk === 'Medium' ? 'rgba(245, 158, 11, 0.05)' : 'rgba(56, 189, 248, 0.05)');
+            return `
+                <div style="background:${bgCol}; border-left:4px solid ${borderCol}; border-radius:6px; padding:12px; display:flex; flex-direction:column; gap:4px; font-size:11.5px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <strong style="font-size:13px; color:var(--text-main); font-family:var(--font-heading);">${p.name} <span style="font-size:10px; font-weight:700; color:var(--text-muted); padding:2px 6px; background:rgba(0,0,0,0.15); border-radius:4px;">${p.team} - ${p.position}</span></strong>
+                        <span style="font-size:10px; font-weight:800; text-transform:uppercase; color:${borderCol}; background:${borderCol}1a; padding:2px 8px; border-radius:12px; border:1px solid ${borderCol}33;">${r.risk} Risk</span>
+                    </div>
+                    <p style="margin:4px 0 0 0; color:var(--text-main); font-weight:600;">⚠️ ${r.reason}</p>
+                    ${r.details ? `<p style="margin:2px 0 0 0; color:var(--text-muted); font-size:10.5px; font-style:italic;">ℹ️ ${r.details}</p>` : ''}
+                </div>
+            `;
+        }).join('<hr style="border:0; border-top:1px solid var(--border-color); margin:12px 0;">');
+
+        modalDiv.innerHTML = `
+            <div class="opt-settings-card" style="width: 100%; max-width: 580px; max-height: 80vh; display: flex; flex-direction: column; background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 16px; box-shadow: var(--shadow-lg); overflow: hidden;">
+                <div class="opt-card-header" style="border-bottom: 1px solid var(--border-color); padding: 16px; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.1);">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <div style="width:36px; height:36px; background:rgba(245,158,11,0.15); border-radius:50%; display:flex; align-items:center; justify-content:center; border:1px solid rgba(245,158,11,0.3);">
+                            <i data-lucide="shield-alert" style="width:18px; height:18px; color:#f59e0b;"></i>
+                        </div>
+                        <div>
+                            <h3 style="margin:0; font-size:15px; font-weight:800; font-family:var(--font-heading); color:var(--text-main);">AI Squad Starting Risk Analysis</h3>
+                            <p style="margin:2px 0 0 0; font-size:10.5px; color:var(--text-muted);">Real-time monitoring of manager tactics, press conferences, and injury news.</p>
+                        </div>
+                    </div>
+                    <button id="closeTpRiskModalBtn" style="background:transparent; border:none; color:var(--text-muted); cursor:pointer; font-size:20px; font-weight:300;">&times;</button>
+                </div>
+
+                <div style="flex:1; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:12px; box-sizing:border-box;">
+                    ${cardHtml}
+                </div>
+
+                <div style="padding:16px; border-top:1px solid var(--border-color); display:flex; justify-content:flex-end; background:rgba(0,0,0,0.1);">
+                    <button class="action-main-btn" id="closeTpRiskModalOkBtn" style="margin:0; padding:8px 24px; font-size:12px;">Close Report</button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(modalDiv);
+        lucide.createIcons();
+
+        const close = () => {
+            modalDiv.remove();
+        };
+
+        modalDiv.querySelector('#closeTpRiskModalBtn').addEventListener('click', close);
+        modalDiv.querySelector('#closeTpRiskModalOkBtn').addEventListener('click', close);
+    };
+
+    const runSquadRiskCheck = async (slots) => {
+        const apiKey = localStorage.getItem('fpl_hub_gemini_api_key');
+        const squadPlayers = slots.map(s => {
+            if (s.playerId === null) return null;
+            return PLAYERS.find(p => p.id === s.playerId);
+        }).filter(Boolean);
+
+        if (apiKey) {
+            const squadListText = squadPlayers.map(p => {
+                const chance = p.chanceOfPlaying !== undefined ? p.chanceOfPlaying : 100;
+                return `- ${p.name} (${p.team}, ${p.position}): status=${p.status || 'a'}, news="${p.news || 'None'}", chanceOfPlaying=${chance}%, starts=${p.GS || 0}, avgMinutes=${p.MPPG || 0}m, price=£${p.price.toFixed(1)}m`;
+            }).join('\n');
+
+            const promptText = `
+You are an expert Fantasy Premier League scout and analyst.
+Analyze the following squad of players for their starting risk in the upcoming Premier League Gameweek.
+Determine if any of them are at risk of not starting. Risks can be due to:
+- Injuries (recent flags, doubt, recovery schedules)
+- Manager press conferences and rotation policy
+- European commitments (Champions League, Europa League, Conference League lineup shifts)
+- League table situation (e.g. resting players after securing positions)
+- Cup rotations (FA Cup, EFL Cup)
+- International duty fatigue (long travel) or late returns
+- Tactical shifts (losing their starting spot to a teammate)
+
+Use Google Search to verify the latest manager quotes and team news for each player.
+
+Return a JSON array of objects. Each object MUST have this exact structure:
+{
+  "name": "Player Name (matching input list exactly)",
+  "risk": "High" (unlikely to start) or "Medium" (rotation/doubtful, ~50% chance) or "Low" (slight concern),
+  "reason": "Short 1-sentence explanation of the primary risk.",
+  "details": "Manager quote, injury context, or match calendar details."
+}
+
+Do not include players who are 100% fit, guaranteed starters with no rotation risk. If no player is at risk, return an empty array [].
+Return ONLY a raw JSON array. No markdown formatting, no code block backticks.
+
+Players:
+${squadListText}
+`;
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: promptText }] }],
+                        tools: [{ googleSearch: {} }],
+                        generationConfig: {
+                            responseMimeType: "application/json"
+                        }
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const jsonText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (jsonText) {
+                        const parsedRisks = JSON.parse(jsonText.trim());
+                        state.squadRisks = {};
+                        if (Array.isArray(parsedRisks)) {
+                            parsedRisks.forEach(r => {
+                                state.squadRisks[r.name] = {
+                                    risk: r.risk,
+                                    reason: r.reason,
+                                    details: r.details
+                                };
+                            });
+                        }
+                        showRiskReportModal(squadPlayers);
+                        updateSquadPreview();
+                        return;
+                    }
+                }
+            } catch (err) {
+                console.error("Gemini risk scan error, falling back to local scan:", err);
+            }
+        }
+
+        // Local rules-based fallback scan
+        state.squadRisks = {};
+        const PROMOTED_TEAMS = ['COV', 'HUL', 'SUN', 'IPS', 'LEE'];
+        squadPlayers.forEach(p => {
+            let riskLevel = null;
+            let reason = "";
+            let details = "";
+
+            const chance = (p.chanceOfPlaying !== undefined && p.chanceOfPlaying !== null) ? p.chanceOfPlaying : 100;
+            const status = p.status || 'a';
+            const starts = typeof p.GS === 'number' ? p.GS : 25;
+            const mppg = typeof p.MPPG === 'number' ? p.MPPG : 80;
+
+            if (status === 'i' || chance === 0) {
+                riskLevel = "High";
+                reason = p.news || "Ruled out with injury.";
+                details = "FPL official status flag set to unavailable.";
+            } else if (status === 's') {
+                riskLevel = "High";
+                reason = p.news || "Suspended.";
+                details = "FPL official status flag set to suspended.";
+            } else if (status === 'd' || chance < 75) {
+                riskLevel = "Medium";
+                reason = p.news || `Doubtful starting chance (${chance}% play probability).`;
+                details = "Player flagged by team medical staff.";
+            } else if (chance < 100) {
+                riskLevel = "Low";
+                reason = p.news || `Minor fitness concern (${chance}% play probability).`;
+                details = "Mild flag. Check press conferences before deadline.";
+            } else if (starts > 0 && starts < 15) {
+                const isPromotedOrNew = (p.team && PROMOTED_TEAMS.includes(p.team)) || p.transferredThisSeason;
+                if (!isPromotedOrNew) {
+                    riskLevel = "Medium";
+                    reason = `Tactical rotation risk (started only ${starts} matches last season).`;
+                    details = "Historical starting frequency indicates rotation risk.";
+                }
+            } else if (mppg > 0 && mppg < 60) {
+                const isPromotedOrNew = (p.team && PROMOTED_TEAMS.includes(p.team)) || p.transferredThisSeason;
+                if (!isPromotedOrNew) {
+                    riskLevel = "Low";
+                    reason = `Minutes risk (averages only ${mppg.toFixed(0)} mins per appearance).`;
+                    details = "Averages less than 60 minutes per game.";
+                }
+            }
+
+            if (riskLevel) {
+                state.squadRisks[p.name] = {
+                    risk: riskLevel,
+                    reason: reason,
+                    details: details
+                };
+            }
+        });
+
+        showRiskReportModal(squadPlayers);
+        updateSquadPreview();
+    };
+
+    const checkSquadRisksBtn = container.querySelector('#checkSquadRisksBtn');
+    if (checkSquadRisksBtn) {
+        checkSquadRisksBtn.addEventListener('click', async () => {
+            const sourceVal = tpSourceSquad.value;
+            let squadSlots = null;
+            if (sourceVal === 'active') {
+                squadSlots = state.squadSlots;
+            } else if (sourceVal.startsWith('draft_')) {
+                const draftIdx = parseInt(sourceVal.split('_')[1]);
+                squadSlots = state.drafts[draftIdx].squadSlots || state.squadSlots;
+            } else if (sourceVal === 'import') {
+                squadSlots = tempSourceSlots;
+            }
+
+            if (!squadSlots || squadSlots.every(s => s.playerId === null)) {
+                actions.showToast("Please load or import a squad first.", "warning");
+                return;
+            }
+
+            checkSquadRisksBtn.innerHTML = `<i data-lucide="loader" class="animate-spin" style="width:14px; height:14px;"></i> Scanning...`;
+            checkSquadRisksBtn.disabled = true;
+
+            try {
+                await runSquadRiskCheck(squadSlots);
+                actions.showToast("Squad risk scan completed!", "success");
+            } catch (err) {
+                console.error(err);
+                actions.showToast("Notice: Fallback scan completed.", "info");
+            } finally {
+                checkSquadRisksBtn.innerHTML = `<i data-lucide="shield-alert" style="width: 14px; height: 14px;"></i> Check Squad Risks`;
+                checkSquadRisksBtn.disabled = false;
+                lucide.createIcons();
+            }
+        });
+    }
 
     const tpActiveChip = container.querySelector('#tpActiveChip');
     if (tpActiveChip) {

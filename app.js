@@ -229,7 +229,7 @@ class AppState {
         };
 
         this.isSquadUnlocked = false; // By default the squad is locked to prevent accidental removals
-
+        this.squadRisks = {};
         this.alignSlotPositions();
     }
 
