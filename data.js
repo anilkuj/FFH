@@ -56660,9 +56660,9 @@ export const PLAYERS = [
         "goalsConceded90": 1.61,
         "transferredThisSeason": false,
         "oldTeam": null,
-        "news": "",
-        "status": "a",
-        "chanceOfPlaying": 100,
+        "news": "Lost starting spot to Kinsky. Unavailable.",
+        "status": "u",
+        "chanceOfPlaying": 0,
         "xp10": 37
     },
     {
@@ -56872,15 +56872,15 @@ export const PLAYERS = [
                 "actualPts": null
             }
         ],
-        "GS": 7,
+        "GS": 28,
         "MPPG": 90,
         "saves": 10,
-        "saves90": 1.43,
+        "saves90": 2.8,
         "goalsConceded": 7,
         "goalsConceded90": 1,
-        "transferredThisSeason": false,
-        "oldTeam": null,
-        "news": "",
+        "transferredThisSeason": true,
+        "oldTeam": "Slavia Prague",
+        "news": "Spurs' new #1 goalkeeper, signed from Slavia Prague.",
         "status": "a",
         "chanceOfPlaying": 100,
         "xp10": 32.2
@@ -56988,11 +56988,11 @@ export const PLAYERS = [
         "saves90": 3.63,
         "goalsConceded": 71,
         "goalsConceded90": 2.03,
-        "transferredThisSeason": false,
-        "oldTeam": null,
-        "news": "",
+        "transferredThisSeason": true,
+        "oldTeam": "NEW",
+        "news": "Backup goalkeeper at Spurs behind Kinsky.",
         "status": "a",
-        "chanceOfPlaying": 100,
+        "chanceOfPlaying": 15,
         "xp10": 38.5
     },
     {

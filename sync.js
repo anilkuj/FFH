@@ -114,6 +114,7 @@ function parseAndWriteData(data, fixturesData) {
         let oldTeam = null;
 
         const KNOWN_TRANSFERS = {
+            // Outfield transfers
             "Morgan Rogers": { oldTeam: "AVL", newTeam: "CHE" },
             "João Gomes": { oldTeam: "WOL", newTeam: "AVL" },
             "Joao Gomes": { oldTeam: "WOL", newTeam: "AVL" },
@@ -123,7 +124,17 @@ function parseAndWriteData(data, fixturesData) {
             "Piero Hincapie": { oldTeam: "Bayer Leverkusen", newTeam: "ARS" },
             "Piero Hincapié": { oldTeam: "Bayer Leverkusen", newTeam: "ARS" },
             "Illan Meslier": { oldTeam: "Leeds United", newTeam: "ARS" },
-            "Alejandro Garnacho": { oldTeam: "MUN", newTeam: "AVL" }
+            "Alejandro Garnacho": { oldTeam: "MUN", newTeam: "AVL" },
+            // Goalkeeper transfers — important for xP accuracy
+            "Antonín Kinský": { oldTeam: "Slavia Prague", newTeam: "TOT" },
+            "Antonin Kinsky": { oldTeam: "Slavia Prague", newTeam: "TOT" },
+            "Caoimhín Kelleher": { oldTeam: "LIV", newTeam: "BRE" },
+            "Caoimhin Kelleher": { oldTeam: "LIV", newTeam: "BRE" },
+            "Đorđe Petrović": { oldTeam: "CHE", newTeam: "BOU" },
+            "Djordje Petrovic": { oldTeam: "CHE", newTeam: "BOU" },
+            "Gianluigi Donnarumma": { oldTeam: "PSG", newTeam: "MCI" },
+            "Giorgi Mamardashvili": { oldTeam: "Valencia", newTeam: "LIV" },
+            "Senne Lammens": { oldTeam: "Antwerp", newTeam: "MUN" },
         };
 
         for (const [key, val] of Object.entries(KNOWN_TRANSFERS)) {
@@ -399,7 +410,26 @@ function parseAndWriteData(data, fixturesData) {
 
     });
 
-    // 4. Generate a valid DEFAULT_SQUAD of 15 players
+    // 4b. Apply manual role overrides for players where FPL API data is misleading
+    // (e.g. backup keepers who moved clubs but still show as 100% available)
+    const ROLE_OVERRIDES = {
+        // TOT keepers: Kinsky is #1, Dubravka is backup, Vicario lost his spot
+        "Martin Dubravka":      { chanceOfPlaying: 15,  status: "a", news: "Backup GKP at Spurs behind Kinsky." },
+        "Guglielmo Vicario":    { chanceOfPlaying: 0,   status: "u", news: "Lost starting spot to Kinsky. Unavailable." },
+        // LIV: Alisson is #1, Mamardashvili is backup
+        "Giorgi Mamardashvili": { chanceOfPlaying: 10,  status: "a", news: "Backup GKP at Liverpool behind Alisson." },
+    };
+
+    playersList.forEach(p => {
+        const override = ROLE_OVERRIDES[p.name];
+        if (override) {
+            if (override.chanceOfPlaying !== undefined) p.chanceOfPlaying = override.chanceOfPlaying;
+            if (override.status !== undefined) p.status = override.status;
+            if (override.news !== undefined) p.news = override.news;
+        }
+    });
+
+
     const getBestOwned = (pos, count) => {
         return playersList
             .filter(p => p.position === pos)
