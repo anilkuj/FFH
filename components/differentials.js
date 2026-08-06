@@ -14,13 +14,19 @@ export function renderDifferentials(container, state, actions) {
 
     // Helpers (consistent with Optimizer)
     const getExpectedPts = (player) => {
+        if (!player || !player.predictions) return 0;
+        const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
         let sum = 0;
         for (let gw = state.currentGw; gw < state.currentGw + horizon; gw++) {
             const pred = player.predictions.find(pr => pr.gw === gw);
-            if (pred) sum += pred.pts;
+            if (pred) {
+                const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
+                sum += (raw * factor);
+            }
         }
         return sum;
     };
+
 
     const getAvgFDR = (player) => {
         let sum = 0;

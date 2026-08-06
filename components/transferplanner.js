@@ -63,14 +63,20 @@ export function renderTransferPlanner(container, state, actions) {
     };
 
     const getExpectedPts = (player, h) => {
+        if (!player || !player.predictions) return 0;
+        const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
         let sum = 0;
         for (let gw = state.currentGw; gw < state.currentGw + h; gw++) {
             if (gw > 10) break;
             const pred = player.predictions.find(pr => pr.gw === gw);
-            if (pred) sum += pred.pts;
+            if (pred) {
+                const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
+                sum += (raw * factor);
+            }
         }
         return sum;
     };
+
 
     const getFdrColor = (diff) => {
         if (diff <= 2) return '#00ff88';
