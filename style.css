@@ -3080,6 +3080,7 @@ html, body {
 .stats-table th.cat-expected { color: #a78bfa; border-bottom-color: #7c3aed; background: #6d28d9 !important; border-left: 1px solid rgba(124, 58, 237, 0.4); }
 .stats-table th.cat-defence { color: #f472b6; border-bottom-color: #db2777; background: #be123c !important; border-left: 1px solid rgba(219, 39, 119, 0.4); }
 .stats-table th.cat-passing { color: #818cf8; border-bottom-color: #4338ca; background: #4338ca !important; border-left: 1px solid rgba(99, 102, 241, 0.4); }
+.stats-table th.cat-xp { color: #fcd34d; border-bottom-color: #d97706; background: #b45309 !important; border-left: 1px solid rgba(217, 119, 6, 0.4); }
 
 /* Native High-Performance Group Cell Colors (Dark Mode) */
 .stats-table th.col-grp-info, .stats-table td.col-grp-info { background: #1e293b !important; color: #f8fafc !important; }
@@ -3088,6 +3089,7 @@ html, body {
 .stats-table th.col-grp-expected, .stats-table td.col-grp-expected { background: #4c1d95 !important; color: #c084fc !important; }
 .stats-table th.col-grp-defence, .stats-table td.col-grp-defence { background: #881337 !important; color: #fda4af !important; }
 .stats-table th.col-grp-passing, .stats-table td.col-grp-passing { background: #312e81 !important; color: #a5b4fc !important; }
+.stats-table th.col-grp-xp, .stats-table td.col-grp-xp { background: #78350f !important; color: #fde68a !important; }
 
 /* Group Separation Borders */
 .stats-table th.col-grp-core:first-of-type, .stats-table td.col-grp-core:first-of-type { border-left: 1px solid rgba(2, 132, 199, 0.4) !important; }
@@ -3095,6 +3097,7 @@ html, body {
 .stats-table th.col-grp-expected:first-of-type, .stats-table td.col-grp-expected:first-of-type { border-left: 1px solid rgba(124, 58, 237, 0.4) !important; }
 .stats-table th.col-grp-defence:first-of-type, .stats-table td.col-grp-defence:first-of-type { border-left: 1px solid rgba(219, 39, 119, 0.4) !important; }
 .stats-table th.col-grp-passing:first-of-type, .stats-table td.col-grp-passing:first-of-type { border-left: 1px solid rgba(99, 102, 241, 0.4) !important; }
+.stats-table th.col-grp-xp:first-of-type, .stats-table td.col-grp-xp:first-of-type { border-left: 1px solid rgba(217, 119, 6, 0.4) !important; }
 
 /* Native High-Performance Group Cell Colors (Light Theme Overrides) */
 html.light-theme .stats-table th.col-grp-info, html.light-theme .stats-table td.col-grp-info { background: #f1f5f9 !important; color: #0f172a !important; }
@@ -3103,6 +3106,7 @@ html.light-theme .stats-table th.col-grp-attack, html.light-theme .stats-table t
 html.light-theme .stats-table th.col-grp-expected, html.light-theme .stats-table td.col-grp-expected { background: #f3e8ff !important; color: #6d28d9 !important; }
 html.light-theme .stats-table th.col-grp-defence, html.light-theme .stats-table td.col-grp-defence { background: #ffe4e6 !important; color: #be123c !important; }
 html.light-theme .stats-table th.col-grp-passing, html.light-theme .stats-table td.col-grp-passing { background: #e0e7ff !important; color: #4338ca !important; }
+html.light-theme .stats-table th.col-grp-xp, html.light-theme .stats-table td.col-grp-xp { background: #fef3c7 !important; color: #b45309 !important; }
 
 html.light-theme .stats-table th.cat-info { color: #1e293b; background: #cbd5e1 !important; border-bottom-color: #64748b; }
 html.light-theme .stats-table th.cat-core { color: #0369a1; background: #bae6fd !important; border-bottom-color: #0284c7; }
@@ -3110,6 +3114,7 @@ html.light-theme .stats-table th.cat-attack { color: #15803d; background: #bbf7d
 html.light-theme .stats-table th.cat-expected { color: #6d28d9; background: #e9d5ff !important; border-bottom-color: #7c3aed; }
 html.light-theme .stats-table th.cat-defence { color: #be123c; background: #fecdd3 !important; border-bottom-color: #db2777; }
 html.light-theme .stats-table th.cat-passing { color: #3730a3; background: #c7d2fe !important; border-bottom-color: #4338ca; }
+html.light-theme .stats-table th.cat-xp { color: #92400e; background: #fde68a !important; border-bottom-color: #d97706; }
 
 
 html.light-theme .stats-table td { color: #0f172a !important; font-weight: 600; }

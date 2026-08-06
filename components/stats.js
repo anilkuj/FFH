@@ -27,6 +27,7 @@ export function renderStats(container, state, actions) {
         expected: isLight ? 'background-color: #f3e8ff !important; color: #6d28d9 !important;' : 'background-color: rgba(124, 58, 237, 0.18) !important; color: #c084fc !important;',
         defence: isLight ? 'background-color: #ffe4e6 !important; color: #be123c !important;' : 'background-color: rgba(219, 39, 119, 0.18) !important; color: #f472b6 !important;',
         passing: isLight ? 'background-color: #e0e7ff !important; color: #4338ca !important;' : 'background-color: rgba(99, 102, 241, 0.18) !important; color: #818cf8 !important;',
+        xp: isLight ? 'background-color: #fef3c7 !important; color: #b45309 !important;' : 'background-color: rgba(217, 119, 6, 0.18) !important; color: #fbbf24 !important;',
     };
 
     const headerStyles = {
@@ -36,6 +37,7 @@ export function renderStats(container, state, actions) {
         expected: isLight ? 'background-color: #e9d5ff !important; color: #6d28d9 !important;' : 'background-color: rgba(124, 58, 237, 0.35) !important; color: #c084fc !important;',
         defence: isLight ? 'background-color: #fecdd3 !important; color: #be123c !important;' : 'background-color: rgba(219, 39, 119, 0.35) !important; color: #f472b6 !important;',
         passing: isLight ? 'background-color: #c7d2fe !important; color: #3730a3 !important;' : 'background-color: rgba(99, 102, 241, 0.35) !important; color: #818cf8 !important;',
+        xp: isLight ? 'background-color: #fde68a !important; color: #92400e !important;' : 'background-color: rgba(217, 119, 6, 0.35) !important; color: #fbbf24 !important;',
     };
 
     const priceOptions = [];
@@ -68,6 +70,29 @@ export function renderStats(container, state, actions) {
         const fk = spDuty.fk ? 1 : 0;
         const ck = spDuty.ck ? 1 : 0;
 
+        const currentGw = parseInt(state.currentGw) || 1;
+        const getNGwXp = (p, n) => {
+            if (!p || !p.predictions) return 0;
+            const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(p) : 1.0;
+            let sum = 0;
+            for (let gw = currentGw; gw < currentGw + n; gw++) {
+                if (gw > 10) break;
+                const pred = p.predictions.find(predObj => predObj.gw === gw);
+                if (pred) {
+                    const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
+                    sum += (raw * factor);
+                }
+            }
+            return parseFloat(sum.toFixed(1));
+        };
+
+        const xp1 = getNGwXp(player, 1);
+        const xp2 = getNGwXp(player, 2);
+        const xp3 = getNGwXp(player, 3);
+        const xp4 = getNGwXp(player, 4);
+        const xp5 = getNGwXp(player, 5);
+        const xp10 = getNGwXp(player, 10);
+
         return {
             name: player.name,
             team: player.team,
@@ -92,7 +117,13 @@ export function renderStats(container, state, actions) {
             defConPts,
             recoveries,
             keyPasses,
-            crosses
+            crosses,
+            xp1,
+            xp2,
+            xp3,
+            xp4,
+            xp5,
+            xp10
         };
     };
 
@@ -191,6 +222,14 @@ export function renderStats(container, state, actions) {
                     <!-- Passing -->
                     <td class="col-grp-passing" style="${groupStyles.passing}">${st.keyPasses}</td>
                     <td class="col-grp-passing" style="${groupStyles.passing}">${st.crosses}</td>
+
+                    <!-- XP -->
+                    <td class="col-grp-xp font-weight-700" style="${groupStyles.xp}">${st.xp1}</td>
+                    <td class="col-grp-xp font-weight-700" style="${groupStyles.xp}">${st.xp2}</td>
+                    <td class="col-grp-xp font-weight-700" style="${groupStyles.xp}">${st.xp3}</td>
+                    <td class="col-grp-xp font-weight-700" style="${groupStyles.xp}">${st.xp4}</td>
+                    <td class="col-grp-xp font-weight-700" style="${groupStyles.xp}">${st.xp5}</td>
+                    <td class="col-grp-xp font-weight-800" style="${groupStyles.xp}">${st.xp10}</td>
                 </tr>
             `;
         }).join('');
@@ -253,6 +292,7 @@ export function renderStats(container, state, actions) {
                             <th colspan="3" class="cat-header cat-expected" style="${headerStyles.expected}">Expected</th>
                             <th colspan="3" class="cat-header cat-defence" style="${headerStyles.defence}">Defence</th>
                             <th colspan="2" class="cat-header cat-passing" style="${headerStyles.passing}">Passing</th>
+                            <th colspan="6" class="cat-header cat-xp" style="${headerStyles.xp}">XP Projections</th>
                         </tr>
                         <tr class="stats-columns-row">
                             <th class="col-grp-info" data-col="name" style="${headerStyles.info} text-align: left; padding-left: 10px;">Player ${getSortArrow('name', sortColumn, sortAsc)}</th>
@@ -309,6 +349,12 @@ export function renderStats(container, state, actions) {
                             <th class="col-grp-defence" data-col="recoveries" style="${headerStyles.defence}">Recoveries ${getSortArrow('recoveries', sortColumn, sortAsc)}</th>
                             <th class="col-grp-passing" data-col="keyPasses" style="${headerStyles.passing}">Key Passes ${getSortArrow('keyPasses', sortColumn, sortAsc)}</th>
                             <th class="col-grp-passing" data-col="crosses" style="${headerStyles.passing}">Crosses ${getSortArrow('crosses', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-xp" data-col="xp1" style="${headerStyles.xp}">1 GW XP ${getSortArrow('xp1', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-xp" data-col="xp2" style="${headerStyles.xp}">2 GW XP ${getSortArrow('xp2', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-xp" data-col="xp3" style="${headerStyles.xp}">3 GW XP ${getSortArrow('xp3', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-xp" data-col="xp4" style="${headerStyles.xp}">4 GW XP ${getSortArrow('xp4', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-xp" data-col="xp5" style="${headerStyles.xp}">5 GW XP ${getSortArrow('xp5', sortColumn, sortAsc)}</th>
+                            <th class="col-grp-xp" data-col="xp10" style="${headerStyles.xp}">10 GW XP ${getSortArrow('xp10', sortColumn, sortAsc)}</th>
                         </tr>
                     </thead>
 
