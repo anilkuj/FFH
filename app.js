@@ -317,10 +317,87 @@ class AppState {
         this.lastLocalUpdate = Date.now();
         localStorage.setItem('fpl_hub_last_local_update', this.lastLocalUpdate.toString());
 
+        // Save automatic rolling snapshot backup
+        this.saveBackupSnapshot('User edit');
+
         // Asynchronously sync to Google Account & PIN Room Storage
         this.syncCloudDrafts();
         this.syncRoomSync();
     }
+
+    saveBackupSnapshot(reason = 'auto') {
+        try {
+            if (!this.squadSlots || !Array.isArray(this.squadSlots)) return;
+            const backup = {
+                id: 'snap_' + Date.now(),
+                timestamp: Date.now(),
+                reason: reason,
+                activeDraftIndex: this.activeDraftIndex,
+                drafts: JSON.parse(JSON.stringify(this.drafts || [])),
+                squadSlots: JSON.parse(JSON.stringify(this.squadSlots)),
+                captain: this.captain,
+                vice: this.vice,
+                formation: this.formation,
+                playerCount: this.squadSlots.filter(s => s.playerId !== null).length
+            };
+            let backups = [];
+            try {
+                backups = JSON.parse(localStorage.getItem('fpl_hub_backups') || '[]');
+            } catch (e) {}
+
+            if (backups.length > 0 && Math.abs(Date.now() - backups[0].timestamp) < 5000) {
+                return;
+            }
+
+            backups.unshift(backup);
+            if (backups.length > 15) backups = backups.slice(0, 15);
+            localStorage.setItem('fpl_hub_backups', JSON.stringify(backups));
+        } catch (e) {
+            console.warn("Backup error:", e);
+        }
+    }
+
+    getBackups() {
+        try {
+            return JSON.parse(localStorage.getItem('fpl_hub_backups') || '[]');
+        } catch (e) {
+            return [];
+        }
+    }
+
+    restoreBackup(timestampOrId) {
+        try {
+            const backups = this.getBackups();
+            const found = backups.find(b => b.id === timestampOrId || b.timestamp === parseInt(timestampOrId));
+            if (!found) return false;
+
+            if (found.drafts && Array.isArray(found.drafts)) {
+                this.drafts = JSON.parse(JSON.stringify(found.drafts));
+            }
+            if (typeof found.activeDraftIndex === 'number') {
+                this.activeDraftIndex = found.activeDraftIndex;
+            }
+            if (found.squadSlots && Array.isArray(found.squadSlots)) {
+                this.squadSlots = JSON.parse(JSON.stringify(found.squadSlots));
+            }
+            this.captain = found.captain;
+            this.vice = found.vice;
+            this.formation = found.formation || '4-3-3';
+
+            this.saveState();
+            if (typeof actions !== 'undefined' && actions.renderActiveView) {
+                actions.renderActiveView();
+            }
+            if (typeof actions !== 'undefined' && actions.showToast) {
+                actions.showToast("⏪ Restored squad backup from " + new Date(found.timestamp).toLocaleTimeString() + "!", "success");
+            }
+            return true;
+        } catch (e) {
+            console.error("Restore backup error:", e);
+            return false;
+        }
+    }
+
 
     getDeviceSyncCode() {
         let code = localStorage.getItem('fpl_hub_device_pin');
@@ -367,6 +444,7 @@ class AppState {
                     const localTime = this.lastLocalUpdate || 0;
 
                     if (force || !localTime || cloudTime > (localTime + 500)) {
+                        this.saveBackupSnapshot('Pre-sync auto backup');
                         this.drafts = data.drafts;
                         this.activeDraftIndex = typeof data.activeDraftIndex === 'number' ? data.activeDraftIndex : 0;
                         
@@ -377,6 +455,7 @@ class AppState {
                             this.vice = activeDraft.vice;
                             this.formation = activeDraft.formation;
                         }
+
 
                         this.lastLocalUpdate = cloudTime > 0 ? cloudTime : Date.now();
                         localStorage.setItem('fpl_hub_last_local_update', this.lastLocalUpdate.toString());
@@ -473,8 +552,10 @@ class AppState {
                 const cloudStr = JSON.stringify(cloudData.drafts);
                 
                 if (force || currentStr !== cloudStr || this.activeDraftIndex !== cloudData.activeDraftIndex) {
+                    this.saveBackupSnapshot('Pre-sync auto backup');
                     this.drafts = cloudData.drafts;
                     this.activeDraftIndex = typeof cloudData.activeDraftIndex === 'number' ? cloudData.activeDraftIndex : 0;
+
                     
                     const activeDraft = this.drafts[this.activeDraftIndex];
                     if (activeDraft && activeDraft.squadSlots) {
@@ -1226,8 +1307,40 @@ const actions = {
                         <i data-lucide="download-cloud" style="width: 16px; height: 16px;"></i> Import & Sync Squads Now
                     </button>
                 </div>
+
+                <!-- Section 4: ⏪ Restore Overwritten Squad Backups -->
+                <div style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 10px; padding: 14px; margin-top: 16px; text-align: left;">
+                    <label style="display: block; font-size: 12.5px; font-weight: 700; color: #f87171; margin-bottom: 6px;">
+                        ⏪ Restore Overwritten Squad Backups
+                    </label>
+                    <p style="font-size: 11.5px; color: var(--text-muted); margin-top: 0; margin-bottom: 10px; line-height: 1.4;">
+                        If a sync overwrote your mobile squad, click <strong>Restore ⏪</strong> next to a recent backup timestamp to recover your exact squad instantly:
+                    </p>
+                    <div style="display: flex; flex-direction: column; gap: 4px; max-height: 140px; overflow-y: auto;">
+                        ${(() => {
+                            const backups = state.getBackups();
+                            if (backups.length === 0) return '<p style="font-size: 11px; color: var(--text-muted); margin: 0;">No previous backups recorded yet.</p>';
+                            return backups.slice(0, 6).map(b => {
+                                const timeStr = new Date(b.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                                const count = b.playerCount || 0;
+                                return `
+                                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 8px; background: var(--bg-card); border-radius: 6px; border: 1px solid var(--border-color); font-size: 11.5px;">
+                                        <div>
+                                            <span style="font-weight: 700; color: var(--text-main);">${timeStr}</span>
+                                            <span style="color: var(--text-muted); margin-left: 6px;">(${count} players, ${b.reason || 'auto'})</span>
+                                        </div>
+                                        <button class="restore-snap-btn" data-id="${b.id}" style="padding: 4px 10px; font-size: 10.5px; font-weight: 700; background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 4px; cursor: pointer;">
+                                            Restore ⏪
+                                        </button>
+                                    </div>
+                                `;
+                            }).join('');
+                        })()}
+                    </div>
+                </div>
             </div>
         `;
+
 
         actions.showCustomModal("Multi-Device Draft Sync", modalHtml);
 
@@ -1256,7 +1369,6 @@ const actions = {
             }
 
             const cloudSyncBtn = document.getElementById('manualCloudSyncBtn');
-ument.getElementById('manualCloudSyncBtn');
             if (cloudSyncBtn) {
                 cloudSyncBtn.addEventListener('click', async () => {
                     if (!state.userProfile) {
@@ -1329,7 +1441,19 @@ ument.getElementById('manualCloudSyncBtn');
                     }
                 });
             }
+
+            // Wire Restore Squad Backup buttons
+            document.querySelectorAll('.restore-snap-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.getAttribute('data-id');
+                    const success = state.restoreBackup(id);
+                    if (success) {
+                        actions.hideModal();
+                    }
+                });
+            });
         }, 100);
+
     },
 
     decodeJwt(token) {
