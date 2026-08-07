@@ -687,7 +687,8 @@ class AppState {
 
 
     optimizeCaptaincy() {
-        const starters = this.starters;
+        const squadInfo = this.getSquadForGw(this.currentGw);
+        const starters = squadInfo.starters;
         if (starters.length === 0) return;
 
         const starterPts = starters.map(id => {
@@ -702,7 +703,6 @@ class AppState {
             }
             return { id, pts };
         });
-
 
         starterPts.sort((a, b) => b.pts - a.pts);
 
@@ -829,10 +829,19 @@ class AppState {
         }
 
         if (bestStarters.length === 11) {
-            // Apply new starting configuration
+            // Apply new starting configuration to baseline slots
             this.squadSlots.forEach(slot => {
                 if (slot.playerId !== null) {
-                    slot.isStarting = bestStarters.includes(slot.playerId);
+                    // Resolve who occupies this slot in week gw after transfers
+                    let currentId = slot.playerId;
+                    for (let g = 2; g <= gw; g++) {
+                        const weeklyTransfers = this.transfers[g] || [];
+                        const tx = weeklyTransfers.find(t => t.out === currentId);
+                        if (tx) {
+                            currentId = tx.in;
+                        }
+                    }
+                    slot.isStarting = bestStarters.includes(currentId);
                 }
             });
 
