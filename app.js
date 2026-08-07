@@ -2202,6 +2202,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('prevGwBtn').addEventListener('click', () => {
         if (state.currentGw > 1) {
             state.currentGw--;
+            state.chips.wildcard = false;
+            state.chips.tripleCaptain = false;
+            state.chips.benchBoost = false;
             state.autoRotateLineup(state.currentGw);
             actions.renderActiveView();
         }
@@ -2210,6 +2213,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('nextGwBtn').addEventListener('click', () => {
         if (state.currentGw < 38) {
             state.currentGw++;
+            state.chips.wildcard = false;
+            state.chips.tripleCaptain = false;
+            state.chips.benchBoost = false;
             state.autoRotateLineup(state.currentGw);
             actions.renderActiveView();
         }
