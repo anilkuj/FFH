@@ -97,6 +97,22 @@ Return the results ONLY as a valid JSON array of objects (no markdown, no code b
 async function parseAndWriteData(data, fixturesData) {
     const aiOverrides = await fetchAIPleayerNews();
     const PROMOTED_TEAMS = ['COV', 'HUL', 'SUN', 'IPS', 'LEE'];
+
+    const ROLE_OVERRIDES = {
+        // TOT keepers: Kinsky is #1, Dubravka is backup, Vicario lost his spot
+        "Martin Dubravka":      { chanceOfPlaying: 15,  status: "a", news: "Backup GKP at Spurs behind Kinsky." },
+        "Guglielmo Vicario":    { chanceOfPlaying: 0,   status: "u", news: "Lost starting spot to Kinsky. Unavailable." },
+        // LIV: Alisson is #1, Mamardashvili is backup
+        "Giorgi Mamardashvili": { chanceOfPlaying: 10,  status: "a", news: "Backup GKP at Liverpool behind Alisson." },
+        // Outfield role overrides
+        "Illan Meslier":        { chanceOfPlaying: 5,   status: "a", news: "Backup GK behind David Raya." },
+        "Marcos Senesi":        { chanceOfPlaying: 40,  status: "a", news: "Rotation option behind van Hecke, Romero, van de Ven." },
+        "Jordan Henderson":     { chanceOfPlaying: 15,  status: "a", news: "Backup/rotation option at Chelsea." },
+        "Danny Welbeck":        { chanceOfPlaying: 20,  status: "a", news: "Backup forward at Chelsea behind Nicolas Jackson." },
+        "Casemiro":             { chanceOfPlaying: 25,  status: "a", news: "Backup midfielder at Man Utd." },
+        "Christian Eriksen":    { chanceOfPlaying: 15,  status: "a", news: "Backup midfielder at Man Utd." },
+        "Mamadou Sangaré":      { chanceOfPlaying: 100, status: "a", news: "New signing expected to start for Brentford.", basePPG: 3.2 }
+    };
     
     // Read existing players list from data.js
     let existingPlayers = [];
@@ -321,7 +337,10 @@ async function parseAndWriteData(data, fixturesData) {
 
         // Calculate a realistic points-per-game baseline
         let basePPG = 0.5;
-        if (minutes > 500 && appearances > 0) {
+        const manualOverride = ROLE_OVERRIDES[playerName];
+        if (manualOverride && manualOverride.basePPG !== undefined) {
+            basePPG = manualOverride.basePPG;
+        } else if (minutes > 500 && appearances > 0) {
             basePPG = totalPoints / appearances;
         } else if (minutes > 0 && appearances > 0) {
             // Scale the default baseline by how much they play
@@ -558,22 +577,7 @@ async function parseAndWriteData(data, fixturesData) {
     });
 
     // 4b. Apply manual role overrides for players where FPL API data is misleading
-    // (e.g. backup keepers who moved clubs but still show as 100% available)
-    const ROLE_OVERRIDES = {
-        // TOT keepers: Kinsky is #1, Dubravka is backup, Vicario lost his spot
-        "Martin Dubravka":      { chanceOfPlaying: 15,  status: "a", news: "Backup GKP at Spurs behind Kinsky." },
-        "Guglielmo Vicario":    { chanceOfPlaying: 0,   status: "u", news: "Lost starting spot to Kinsky. Unavailable." },
-        // LIV: Alisson is #1, Mamardashvili is backup
-        "Giorgi Mamardashvili": { chanceOfPlaying: 10,  status: "a", news: "Backup GKP at Liverpool behind Alisson." },
-        // Outfield role overrides
-        "Illan Meslier":        { chanceOfPlaying: 5,   status: "a", news: "Backup GK behind David Raya." },
-        "Marcos Senesi":        { chanceOfPlaying: 40,  status: "a", news: "Rotation option behind van Hecke, Romero, van de Ven." },
-        "Jordan Henderson":     { chanceOfPlaying: 15,  status: "a", news: "Backup/rotation option at Chelsea." },
-        "Danny Welbeck":        { chanceOfPlaying: 20,  status: "a", news: "Backup forward at Chelsea behind Nicolas Jackson." },
-        "Casemiro":             { chanceOfPlaying: 25,  status: "a", news: "Backup midfielder at Man Utd." },
-        "Christian Eriksen":    { chanceOfPlaying: 15,  status: "a", news: "Backup midfielder at Man Utd." },
-        "Mamadou Sangaré":      { chanceOfPlaying: 100, status: "a", news: "New signing expected to start for Brentford." }
-    };
+    // (Note: ROLE_OVERRIDES has been moved to the top of the function)
 
     playersList.forEach(p => {
         // 1. AI Overrides first
