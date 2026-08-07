@@ -333,14 +333,7 @@ export function renderOptimizer(container, state, actions) {
                                 <span class="setting-help">Analyze fixtures and expected points over this horizon.</span>
                             </div>
 
-                            <div class="setting-group">
-                                <label for="optimizerObjectiveSelect">Optimization Objective</label>
-                                <select id="optimizerObjectiveSelect" class="settings-select">
-                                    <option value="xp" ${state.optimizerObjective === 'xp' ? 'selected' : ''}>Maximize Projected Points (XP)</option>
-                                    <option value="efficiency" ${state.optimizerObjective === 'efficiency' ? 'selected' : ''}>Maximize Rating Efficiency</option>
-                                </select>
-                                <span class="setting-help">Optimize for raw expected points or value-for-money rating efficiency.</span>
-                            </div>
+
 
                             <div class="setting-group">
                                 <label for="seasonPhase">Season Mode</label>
@@ -644,13 +637,7 @@ export function renderOptimizer(container, state, actions) {
         });
     }
 
-    const objectiveSelect = container.querySelector('#optimizerObjectiveSelect');
-    if (objectiveSelect) {
-        objectiveSelect.addEventListener('change', () => {
-            state.optimizerObjective = objectiveSelect.value;
-            state.saveState();
-        });
-    }
+
 
     // Draft selection listener
     const draftSelect = container.querySelector('#optimizerDraftSelect');
@@ -1174,7 +1161,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
 
 
 
-    const objective = state.optimizerObjective || 'xp';
+    const objective = 'xp';
     const getSolverScore = (player) => {
         if (!player) return 0;
         // Ignore injured, suspended, or unavailable players (status 'i', 's', 'u')
