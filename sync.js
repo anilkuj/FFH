@@ -571,7 +571,8 @@ async function parseAndWriteData(data, fixturesData) {
         "Jordan Henderson":     { chanceOfPlaying: 15,  status: "a", news: "Backup/rotation option at Chelsea." },
         "Danny Welbeck":        { chanceOfPlaying: 20,  status: "a", news: "Backup forward at Chelsea behind Nicolas Jackson." },
         "Casemiro":             { chanceOfPlaying: 25,  status: "a", news: "Backup midfielder at Man Utd." },
-        "Christian Eriksen":    { chanceOfPlaying: 15,  status: "a", news: "Backup midfielder at Man Utd." }
+        "Christian Eriksen":    { chanceOfPlaying: 15,  status: "a", news: "Backup midfielder at Man Utd." },
+        "Mamadou Sangaré":      { chanceOfPlaying: 100, status: "a", news: "New signing expected to start for Brentford." }
     };
 
     playersList.forEach(p => {
