@@ -1216,7 +1216,8 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 if (!pred) return;
                 
                 const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
-                const pts = raw * chance;
+                const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(p) : 1.0;
+                const pts = raw * chance * factor;
                 const score = objective === 'efficiency' ? getPlayerEfficiency(p, state.currentGw) * 10 : pts;
                 
                 if (slot.isStarting) {
