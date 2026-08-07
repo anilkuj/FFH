@@ -1,43 +1,101 @@
 import fs from 'fs';
-import https from 'https';
 
 const BOOTSTRAP_URL = 'https://fantasy.premierleague.com/api/bootstrap-static/';
 const FIXTURES_URL = 'https://fantasy.premierleague.com/api/fixtures/';
 
-console.log('Fetching live data from FPL API...');
+async function sync() {
+    try {
+        console.log('Fetching live data from FPL API...');
+        const bootstrapRes = await fetch(BOOTSTRAP_URL);
+        const bootstrapData = await bootstrapRes.json();
 
-https.get(BOOTSTRAP_URL, (res1) => {
-    let body1 = '';
-    res1.on('data', (chunk) => body1 += chunk);
-    res1.on('end', () => {
-        try {
-            const bootstrapData = JSON.parse(body1);
-            
-            console.log('Fetching live fixtures from FPL API...');
-            https.get(FIXTURES_URL, (res2) => {
-                let body2 = '';
-                res2.on('data', (chunk) => body2 += chunk);
-                res2.on('end', () => {
-                    try {
-                        const fixturesData = JSON.parse(body2);
-                        parseAndWriteData(bootstrapData, fixturesData);
-                    } catch (e) {
-                        console.error('Failed to parse fixtures: ', e.message);
-                    }
-                });
-            }).on('error', (err) => {
-                console.error('Failed to fetch fixtures: ', err.message);
-            });
-            
-        } catch (e) {
-            console.error('Failed to parse FPL bootstrap data: ', e.message);
+        console.log('Fetching live fixtures from FPL API...');
+        const fixturesRes = await fetch(FIXTURES_URL);
+        const fixturesData = await fixturesRes.json();
+
+        await parseAndWriteData(bootstrapData, fixturesData);
+    } catch (e) {
+        console.error('Error during synchronization:', e);
+        process.exit(1);
+    }
+}
+
+sync();
+
+async function fetchAIPleayerNews() {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+        console.log('No GEMINI_API_KEY environment variable found. Skipping AI player news fetch.');
+        return {};
+    }
+
+    console.log('Contacting Gemini API to scan Premier League injury news and rotation risks for all players...');
+    
+    const prompt = `Search/retrieve and analyze the current injury news, fitness flags, suspension statuses, rotation risks, and coach team selections (backups / non-starters / out of favor players) for all 20 English Premier League (EPL) teams.
+Specifically identify any player who is NOT the absolute first choice (regular starter) in their position for their coach, or who faces high rotation risk due to competition or tactical preferences.
+
+Return the results ONLY as a valid JSON array of objects (no markdown, no code block backticks) with the following structure:
+[
+  {
+    "name": "Player Full Name (matching official FPL names, e.g., 'Riccardo Calafiori', 'Bukayo Saka')",
+    "status": "i" | "s" | "d" | "a", // 'i' for injured, 's' for suspended, 'd' for doubtful/rotation risk, 'a' for fit but backup/not #1 choice
+    "chanceOfPlaying": number, // 0 to 100 representing their starting probability (e.g. 0 for injured, 10-30 for backup players, 50 for doubtful/rotation risk)
+    "news": "A concise, informative note explaining their situation (e.g., 'Injured hamstring, out until September.', 'Backup goalkeeper behind Alisson.', 'Rotation risk due to European competition.')"
+  }
+]`;
+
+    try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                contents: [{
+                    parts: [{
+                        text: prompt
+                    }]
+                }],
+                generationConfig: {
+                    responseMimeType: "application/json"
+                }
+            })
+        });
+
+        if (!response.ok) {
+            const errText = await response.text();
+            throw new Error(`Gemini API error: ${response.status} - ${errText}`);
         }
-    });
-}).on('error', (err) => {
-    console.error('Failed to fetch FPL API: ', err.message);
-});
 
-function parseAndWriteData(data, fixturesData) {
+        const resData = await response.json();
+        const text = resData.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!text) {
+            throw new Error("Empty response from Gemini API");
+        }
+
+        const cleaned = text.trim();
+        const parsed = JSON.parse(cleaned);
+        console.log(`Successfully fetched and parsed ${parsed.length} player status and news overrides from Gemini API!`);
+        
+        const dict = {};
+        parsed.forEach(item => {
+            if (item.name) {
+                dict[item.name.trim()] = {
+                    chanceOfPlaying: typeof item.chanceOfPlaying === 'number' ? item.chanceOfPlaying : 100,
+                    status: item.status || 'a',
+                    news: item.news || ''
+                };
+            }
+        });
+        return dict;
+    } catch (err) {
+        console.error("Failed to fetch AI player news overrides:", err.message);
+        return {};
+    }
+}
+
+async function parseAndWriteData(data, fixturesData) {
+    const aiOverrides = await fetchAIPleayerNews();
     const PROMOTED_TEAMS = ['COV', 'HUL', 'SUN', 'IPS', 'LEE'];
     
     // Read existing players list from data.js
@@ -517,6 +575,25 @@ function parseAndWriteData(data, fixturesData) {
     };
 
     playersList.forEach(p => {
+        // 1. AI Overrides first
+        const aiOverride = aiOverrides[p.name];
+        if (aiOverride) {
+            if (aiOverride.chanceOfPlaying !== undefined) p.chanceOfPlaying = aiOverride.chanceOfPlaying;
+            if (aiOverride.status !== undefined) p.status = aiOverride.status;
+            if (aiOverride.news !== undefined) p.news = aiOverride.news;
+        }
+
+        // 2. Rules-based fallback classifier (if no AI override)
+        // Checks if outfield player started very few games and played very few minutes last season
+        if (!aiOverride) {
+            const hasLowStarts = typeof p.GS === 'number' && p.GS < 8 && typeof p.MPPG === 'number' && p.MPPG < 45;
+            if (hasLowStarts && !p.news && p.status === 'a' && !p.transferredThisSeason) {
+                p.chanceOfPlaying = 15;
+                p.news = "Backup/squad rotation option based on low historical starts.";
+            }
+        }
+
+        // 3. Explicit hardcoded overrides (highest priority)
         const override = ROLE_OVERRIDES[p.name];
         if (override) {
             if (override.chanceOfPlaying !== undefined) p.chanceOfPlaying = override.chanceOfPlaying;

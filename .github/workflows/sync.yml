@@ -41,6 +41,7 @@ jobs:
         run: node sync.js
         env:
           NODE_OPTIONS: '--no-warnings'
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
       # 5. Rebuild the production bundle with the fresh data.js
       - name: 🏗️ Rebuild production bundle
