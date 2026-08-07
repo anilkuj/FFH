@@ -249,7 +249,8 @@ async function parseAndWriteData(data, fixturesData) {
             "Oscar Mingueza": { oldTeam: "Celta Vigo", newTeam: "CRY" },
             "Jeremy Jacquet": { oldTeam: "Rennes", newTeam: "LIV" },
             "Thomas Meunier": { oldTeam: "Free Agent", newTeam: "SUN" },
-            "Jannik Schuster": { oldTeam: "RB Salzburg", newTeam: "BRE" }
+            "Jannik Schuster": { oldTeam: "RB Salzburg", newTeam: "BRE" },
+            "Mamadou Sangaré": { oldTeam: "Free Agent", newTeam: "BRE" }
         };
 
         for (const [key, val] of Object.entries(KNOWN_TRANSFERS)) {
