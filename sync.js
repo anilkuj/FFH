@@ -274,8 +274,11 @@ function parseAndWriteData(data, fixturesData) {
             basePPG = (price > 6.0) ? 2.0 : 0.5;
         }
 
-        if (position === 'GKP') basePPG = Math.max(1.8, Math.min(4.8, basePPG));
-        else if (position === 'DEF') basePPG = Math.max(1.5, Math.min(5.5, basePPG));
+        if (position === 'GKP') {
+            const TOP_TEAMS = ['MCI', 'ARS', 'LIV', 'TOT', 'CHE', 'MUN'];
+            const minGkpPpg = TOP_TEAMS.includes(teamShort) ? 3.5 : 1.8;
+            basePPG = Math.max(minGkpPpg, Math.min(4.8, basePPG));
+        } else if (position === 'DEF') basePPG = Math.max(1.5, Math.min(5.5, basePPG));
         else if (position === 'MID') basePPG = Math.max(1.8, Math.min(8.5, basePPG));
         else if (position === 'FWD') basePPG = Math.max(2.0, Math.min(8.5, basePPG));
 
