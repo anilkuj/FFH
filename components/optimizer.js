@@ -1638,21 +1638,37 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         const getCheapestPlayersList = (pos, count, usedIds, forceGuaranteed = false) => {
             const list = pos === 'GKP' ? cheapestGKPs : (pos === 'DEF' ? cheapestDEFs : (pos === 'MID' ? cheapestMIDs : cheapestFWDs));
             const result = [];
+            
+            // Calculate current team counts from usedIds to enforce the max 3 constraint
+            const currentTeamCounts = {};
+            for (const id of usedIds) {
+                const p = PLAYERS.find(pl => pl.id === id);
+                if (p) {
+                    currentTeamCounts[p.team] = (currentTeamCounts[p.team] || 0) + 1;
+                }
+            }
+
             for (const p of list) {
                 if (!usedIds.includes(p.id)) {
                     if (forceGuaranteed && !isGuaranteedStart(p, state)) continue;
-                    result.push(p);
-                    usedIds.push(p.id);
-                    if (result.length === count) break;
+                    if ((currentTeamCounts[p.team] || 0) < 3) {
+                        result.push(p);
+                        usedIds.push(p.id);
+                        currentTeamCounts[p.team] = (currentTeamCounts[p.team] || 0) + 1;
+                        if (result.length === count) break;
+                    }
                 }
             }
             // Fallback for bench slots: if we didn't find enough players and forceGuaranteed is false, grab from the list
             if (result.length < count && !forceGuaranteed) {
                 for (const p of list) {
                     if (!usedIds.includes(p.id)) {
-                        result.push(p);
-                        usedIds.push(p.id);
-                        if (result.length === count) break;
+                        if ((currentTeamCounts[p.team] || 0) < 3) {
+                            result.push(p);
+                            usedIds.push(p.id);
+                            currentTeamCounts[p.team] = (currentTeamCounts[p.team] || 0) + 1;
+                            if (result.length === count) break;
+                        }
                     }
                 }
             }
@@ -2027,13 +2043,29 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                                     currentSlot.playerId = cand.id;
                                     donorSlot.playerId = donorReplacement.id;
 
-                                    const newPts = getSquadExpectedPts(optimizedSquadSlots);
+                                    // Check max 3 players per team constraint across entire 15-player squad
+                                    const counts = {};
+                                    let isValid = true;
+                                    for (const s of optimizedSquadSlots) {
+                                        if (s.playerId !== null) {
+                                            const pl = PLAYERS.find(p => p.id === s.playerId);
+                                            if (pl) {
+                                                counts[pl.team] = (counts[pl.team] || 0) + 1;
+                                                if (counts[pl.team] > 3) {
+                                                    isValid = false;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    const newPts = isValid ? getSquadExpectedPts(optimizedSquadSlots) : -1;
 
                                     // Swap back for evaluation
                                     currentSlot.playerId = oldGkpId;
                                     donorSlot.playerId = oldDonorId;
 
-                                    if (newPts > bestPts + 0.05) {
+                                    if (isValid && newPts > bestPts + 0.05) {
                                         bestPts = newPts;
                                         bestCandidate = cand;
                                         // Execute swap immediately
@@ -2049,31 +2081,31 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                         continue;
                     }
 
-                    // Check max 3 players per team constraint for starting 11
-                    const tempStartingIds = [...usedStartingIds, cand.id];
-                    const teamCounts = {};
-                    let ok = true;
-                    for (const id of tempStartingIds) {
-                        const p = PLAYERS.find(pl => pl.id === id);
-                        if (p) {
-                            teamCounts[p.team] = (teamCounts[p.team] || 0) + 1;
-                            if (teamCounts[p.team] > 3) {
-                                ok = false;
-                                break;
+                    const oldId = currentSlot.playerId;
+                    currentSlot.playerId = cand.id;
+
+                    // Check max 3 players per team constraint across entire 15-player squad
+                    const counts = {};
+                    let isValid = true;
+                    for (const s of optimizedSquadSlots) {
+                        if (s.playerId !== null) {
+                            const pl = PLAYERS.find(p => p.id === s.playerId);
+                            if (pl) {
+                                counts[pl.team] = (counts[pl.team] || 0) + 1;
+                                if (counts[pl.team] > 3) {
+                                    isValid = false;
+                                    break;
+                                }
                             }
                         }
                     }
 
-                    if (ok) {
-                        const oldId = currentSlot.playerId;
-                        currentSlot.playerId = cand.id;
-                        const newSquadPts = getSquadExpectedPts(optimizedSquadSlots);
-                        currentSlot.playerId = oldId; // Swap back
+                    const newPts = isValid ? getSquadExpectedPts(optimizedSquadSlots) : -1;
+                    currentSlot.playerId = oldId; // Swap back
 
-                        if (newSquadPts > bestPts + 0.05) {
-                            bestPts = newSquadPts;
-                            bestCandidate = cand;
-                        }
+                    if (isValid && newPts > bestPts + 0.05) {
+                        bestPts = newPts;
+                        bestCandidate = cand;
                     }
                 }
 
