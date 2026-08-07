@@ -80,6 +80,18 @@ export function renderPlanner(container, state, actions) {
     const squadInfo = state.getSquadForGw(state.currentGw);
     const { starters, bench, bank, freeTransfers } = squadInfo;
 
+    // Clone baseline slots and apply planned transfers to show correct week-by-week squad
+    let currentSlots = JSON.parse(JSON.stringify(state.squadSlots));
+    for (let gw = 2; gw <= state.currentGw; gw++) {
+        const weeklyTransfers = state.transfers[gw] || [];
+        weeklyTransfers.forEach(tx => {
+            const slot = currentSlots.find(s => s.playerId === tx.out);
+            if (slot) {
+                slot.playerId = tx.in;
+            }
+        });
+    }
+
     // Calculate total predicted points for starters
     let expectedPoints = 0;
     starters.forEach(id => {
@@ -284,22 +296,22 @@ export function renderPlanner(container, state, actions) {
 
                     <!-- GKP Row -->
                     <div class="pitch-row" data-row="GKP">
-                        ${renderPlayerRow(state.squadSlots, "GKP", state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked, state)}
+                        ${renderPlayerRow(currentSlots, "GKP", state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked, state)}
                     </div>
 
                     <!-- DEF Row -->
                     <div class="pitch-row" data-row="DEF">
-                        ${renderPlayerRow(state.squadSlots, "DEF", state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked, state)}
+                        ${renderPlayerRow(currentSlots, "DEF", state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked, state)}
                     </div>
 
                     <!-- MID Row -->
                     <div class="pitch-row" data-row="MID">
-                        ${renderPlayerRow(state.squadSlots, "MID", state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked, state)}
+                        ${renderPlayerRow(currentSlots, "MID", state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked, state)}
                     </div>
 
                     <!-- FWD Row -->
                     <div class="pitch-row" data-row="FWD">
-                        ${renderPlayerRow(state.squadSlots, "FWD", state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked, state)}
+                        ${renderPlayerRow(currentSlots, "FWD", state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked, state)}
                     </div>
                 </div>
 
@@ -307,7 +319,7 @@ export function renderPlanner(container, state, actions) {
                 <div class="bench-container">
                     <span class="bench-title">Bench (Click starter to swap with bench)</span>
                     <div class="bench-row" id="benchRow">
-                        ${renderBenchRow(state.squadSlots, state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked, state)}
+                        ${renderBenchRow(currentSlots, state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked, state)}
                     </div>
                 </div>
             </div>
@@ -1116,6 +1128,117 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
 
         const riskyPlayers = squadPlayers.filter(p => state.squadRisks && state.squadRisks[p.name]);
 
+        // Calculate dynamic starting XI vs bench rotation advice
+        const currentSlotsCopy = JSON.parse(JSON.stringify(state.squadSlots));
+        
+        const squadPlayersForOpt = currentSlotsCopy
+            .map(slot => {
+                if (slot.playerId === null) return null;
+                const p = PLAYERS.find(pl => pl.id === slot.playerId);
+                if (!p) return null;
+                const pred = p.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 };
+                const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(p) : 1.0;
+                const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
+                const pts = raw * factor;
+                return { slot, player: p, pts };
+            })
+            .filter(Boolean);
+
+        const gkps = squadPlayersForOpt.filter(p => p.player.position === 'GKP').sort((a, b) => b.pts - a.pts);
+        const defs = squadPlayersForOpt.filter(p => p.player.position === 'DEF').sort((a, b) => b.pts - a.pts);
+        const mids = squadPlayersForOpt.filter(p => p.player.position === 'MID').sort((a, b) => b.pts - a.pts);
+        const fwds = squadPlayersForOpt.filter(p => p.player.position === 'FWD').sort((a, b) => b.pts - a.pts);
+
+        const validFormations = [
+            [3, 4, 3], [3, 5, 2], [4, 4, 2], [4, 5, 1], [4, 3, 3], [5, 3, 2], [5, 4, 1], [5, 2, 3]
+        ];
+
+        let bestScore = -1;
+        let bestStarters = [];
+        let bestFormStr = '4-4-2';
+
+        for (const [reqDef, reqMid, reqFwd] of validFormations) {
+            const chosenGkp = gkps.slice(0, 1);
+            const chosenDef = defs.slice(0, reqDef);
+            const chosenMid = mids.slice(0, reqMid);
+            const chosenFwd = fwds.slice(0, reqFwd);
+
+            const currentStarters = [...chosenGkp, ...chosenDef, ...chosenMid, ...chosenFwd];
+            if (currentStarters.length !== 11) continue;
+
+            let score = currentStarters.reduce((sum, p) => sum + p.pts, 0);
+            const maxPts = Math.max(...currentStarters.map(p => p.pts), 0);
+            score += maxPts;
+
+            if (score > bestScore) {
+                bestScore = score;
+                bestStarters = currentStarters.map(p => p.player.id);
+                bestFormStr = `${reqDef}-${reqMid}-${reqFwd}`;
+            }
+        }
+
+        const currentStartersIds = state.squadSlots.filter(s => s.isStarting && s.playerId !== null).map(s => s.playerId);
+        const currentBenchIds = state.squadSlots.filter(s => !s.isStarting && s.playerId !== null).map(s => s.playerId);
+
+        const shouldStart = currentBenchIds.filter(id => bestStarters.includes(id)).map(id => PLAYERS.find(p => p.id === id)).filter(Boolean);
+        const shouldBench = currentStartersIds.filter(id => !bestStarters.includes(id)).map(id => PLAYERS.find(p => p.id === id)).filter(Boolean);
+
+        let rotationAdviceHtml = '';
+        if (shouldStart.length > 0 && shouldBench.length > 0) {
+            rotationAdviceHtml += `
+                <div style="background: rgba(0, 255, 136, 0.04); border: 1px solid rgba(0, 255, 136, 0.2); border-radius: 12px; padding: 14px; margin-bottom: 16px; font-size: 11.5px; display: flex; flex-direction: column; gap: 10px;">
+                    <h4 style="margin: 0; font-family: var(--font-heading); color: var(--primary); font-size: 13px; font-weight: 800; display: flex; align-items: center; gap: 6px;">
+                        <i data-lucide="sparkles" style="width: 14px; height: 14px; color: var(--primary);"></i>
+                        AI Lineup Optimization Tips (GW${state.currentGw})
+                    </h4>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+            `;
+
+            for (let idx = 0; idx < Math.min(shouldStart.length, shouldBench.length); idx++) {
+                const sPlayer = shouldStart[idx];
+                const bPlayer = shouldBench[idx];
+                
+                const sPred = sPlayer.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 };
+                const sFactor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(sPlayer) : 1.0;
+                const sXP = (sPred._rawPts !== undefined ? sPred._rawPts : sPred.pts) * sFactor;
+
+                const bPred = bPlayer.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 };
+                const bFactor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(bPlayer) : 1.0;
+                const bXP = (bPred._rawPts !== undefined ? bPred._rawPts : bPred.pts) * bFactor;
+
+                const diff = sXP - bXP;
+                const diffText = diff > 0 ? `+${diff.toFixed(1)} XP` : '0.0 XP';
+
+                const bRisk = state.squadRisks && state.squadRisks[bPlayer.name];
+                const riskLabel = bRisk ? ` (${bRisk.risk} starting risk)` : '';
+
+                rotationAdviceHtml += `
+                    <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.015); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; gap: 10px; flex-wrap: wrap;">
+                        <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                            <span style="color: var(--primary); font-weight: 600;">Start</span>
+                            <span style="color: var(--text-main); font-weight: 700;">${sPlayer.name}</span>
+                            <span style="color: var(--text-muted); font-size: 10.5px;">(${sXP.toFixed(1)} XP)</span>
+                            <span style="color: var(--text-muted);">⇆ Bench</span>
+                            <span style="color: var(--text-muted); font-weight: 700;">${bPlayer.name}</span>
+                            <span style="color: var(--text-muted); font-size: 10.5px;">(${bXP.toFixed(1)} XP)${riskLabel}</span>
+                        </div>
+                        <span style="color: var(--primary); font-weight: 800; font-family: var(--font-heading); font-size: 12px;">${diffText}</span>
+                    </div>
+                `;
+            }
+
+            rotationAdviceHtml += `
+                    </div>
+                    <div style="text-align: right; margin-top: 4px;">
+                        <button class="action-main-btn" id="applyAutoRotateBtn" style="margin: 0; padding: 6px 14px; font-size: 11px; background: var(--primary); border: none; color: black; font-weight: 700; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
+                            <i data-lucide="rotate-cw" style="width: 12px; height: 12px; color: black;"></i>
+                            Auto-Rotate Lineup
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
         const modalDiv = document.createElement('div');
         modalDiv.id = 'tpRiskModal';
         modalDiv.style.cssText = `
@@ -1169,6 +1292,7 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
                 </div>
 
                 <div style="flex:1; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:12px; box-sizing:border-box;">
+                    ${rotationAdviceHtml}
                     ${cardHtml}
                 </div>
 
@@ -1187,6 +1311,31 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
 
         modalDiv.querySelector('#closeTpRiskModalBtn').addEventListener('click', close);
         modalDiv.querySelector('#closeTpRiskModalOkBtn').addEventListener('click', close);
+
+        const applyBtn = modalDiv.querySelector('#applyAutoRotateBtn');
+        if (applyBtn) {
+            applyBtn.addEventListener('click', () => {
+                // Apply optimal starting lineup directly to state.squadSlots
+                bestStarters.forEach(id => {
+                    const slot = state.squadSlots.find(s => s.playerId === id);
+                    if (slot) slot.isStarting = true;
+                });
+                const allPlayerIds = [...currentStartersIds, ...currentBenchIds];
+                const benchIds = allPlayerIds.filter(id => !bestStarters.includes(id));
+                benchIds.forEach(id => {
+                    const slot = state.squadSlots.find(s => s.playerId === id);
+                    if (slot) slot.isStarting = false;
+                });
+
+                state.formation = bestFormStr;
+
+                state.optimizeCaptaincy();
+                state.saveState();
+                modalDiv.remove();
+                actions.renderActiveView();
+                actions.showToast('Squad auto-rotated to maximize points!', 'success');
+            });
+        }
     };
 
     const runPlannerSquadRiskCheck = async (slots) => {

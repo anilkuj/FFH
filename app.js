@@ -29,13 +29,14 @@ window.getPlayerMinutesFactor = function(player) {
 
     // Also do NOT heavily penalize premium or highly-owned key players (they are established starters/key players)
     // BUT do not let them bypass if their historical stats indicate they are highly rotated (low minutes/starts)
-    const isPremiumOrKey = ((player.position === 'GKP' && player.price >= 5.0) ||
-                            (player.position === 'DEF' && player.price >= 5.0) ||
-                            (player.position === 'MID' && player.price >= 7.0) ||
-                            (player.position === 'FWD' && player.price >= 7.5) ||
-                            (player.ownership && player.ownership > 8.0)) &&
-                           (player.MPPG === undefined || player.MPPG >= 65.0) &&
-                           (player.GS === undefined || player.GS >= 15);
+    // EXCEPT if they have high ownership (>= 10.0%) indicating the community expects them to start regularly.
+    const isPremiumOrKey = (((player.position === 'GKP' && player.price >= 5.0) ||
+                             (player.position === 'DEF' && player.price >= 5.0) ||
+                             (player.position === 'MID' && player.price >= 7.0) ||
+                             (player.position === 'FWD' && player.price >= 7.5)) &&
+                            (player.MPPG === undefined || player.MPPG >= 65.0) &&
+                            (player.GS === undefined || player.GS >= 15)) ||
+                           (player.ownership && player.ownership >= 10.0);
 
     const isBypassPenalty = isPromotedOrNew || isPremiumOrKey;
 
@@ -749,6 +750,80 @@ class AppState {
         }
 
         return { starters, bench, squad, bank, freeTransfers };
+    }
+
+    autoRotateLineup(gw) {
+        if (!this.squadSlots || this.squadSlots.every(s => s.playerId === null)) return;
+
+        // Get the active squad for this gameweek (applying prior transfers)
+        const squadInfo = this.getSquadForGw(gw);
+        const allPlayerIds = [...squadInfo.starters, ...squadInfo.bench];
+        const squadPlayers = allPlayerIds
+            .map(id => {
+                const p = PLAYERS.find(pl => pl.id === id);
+                if (!p) return null;
+                const pred = p.predictions.find(pr => pr.gw === gw) || { pts: 0 };
+                const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(p) : 1.0;
+                const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
+                const pts = raw * factor;
+                return { player: p, pts, id: p.id };
+            })
+            .filter(Boolean);
+
+        if (squadPlayers.length === 0) return;
+
+        const gkps = squadPlayers.filter(p => p.player.position === 'GKP').sort((a, b) => b.pts - a.pts);
+        const defs = squadPlayers.filter(p => p.player.position === 'DEF').sort((a, b) => b.pts - a.pts);
+        const mids = squadPlayers.filter(p => p.player.position === 'MID').sort((a, b) => b.pts - a.pts);
+        const fwds = squadPlayers.filter(p => p.player.position === 'FWD').sort((a, b) => b.pts - a.pts);
+
+        const validFormations = [
+            [3, 4, 3],
+            [3, 5, 2],
+            [4, 4, 2],
+            [4, 5, 1],
+            [4, 3, 3],
+            [5, 3, 2],
+            [5, 4, 1],
+            [5, 2, 3]
+        ];
+
+        let bestScore = -1;
+        let bestStarters = [];
+        let bestFormation = '4-4-2';
+
+        for (const [reqDef, reqMid, reqFwd] of validFormations) {
+            const chosenGkp = gkps.slice(0, 1);
+            const chosenDef = defs.slice(0, reqDef);
+            const chosenMid = mids.slice(0, reqMid);
+            const chosenFwd = fwds.slice(0, reqFwd);
+
+            const currentStarters = [...chosenGkp, ...chosenDef, ...chosenMid, ...chosenFwd];
+            if (currentStarters.length !== 11) continue;
+
+            let score = currentStarters.reduce((sum, p) => sum + p.pts, 0);
+            const maxPts = Math.max(...currentStarters.map(p => p.pts), 0);
+            score += maxPts;
+
+            if (score > bestScore) {
+                bestScore = score;
+                bestStarters = currentStarters.map(p => p.id);
+                bestFormation = `${reqDef}-${reqMid}-${reqFwd}`;
+            }
+        }
+
+        if (bestStarters.length === 11) {
+            // Apply new starting configuration
+            this.squadSlots.forEach(slot => {
+                if (slot.playerId !== null) {
+                    slot.isStarting = bestStarters.includes(slot.playerId);
+                }
+            });
+
+            this.formation = bestFormation;
+            this.optimizeCaptaincy();
+            this.saveState();
+        }
     }
 
     getDraftsStorageKey() {
@@ -2111,6 +2186,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('prevGwBtn').addEventListener('click', () => {
         if (state.currentGw > 1) {
             state.currentGw--;
+            state.autoRotateLineup(state.currentGw);
             actions.renderActiveView();
         }
     });
@@ -2118,6 +2194,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('nextGwBtn').addEventListener('click', () => {
         if (state.currentGw < 10) {
             state.currentGw++;
+            state.autoRotateLineup(state.currentGw);
             actions.renderActiveView();
         }
     });
