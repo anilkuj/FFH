@@ -1039,7 +1039,9 @@ function isGuaranteedStart(player, state) {
     // Respect user's custom Guaranteed Start slider threshold if configured
     const minMins = (state && state.guaranteedStart) || 0;
     if (minMins > 0) {
-        return mppg >= minMins && (isPromotedOrNew || gs >= 18);
+        if (isPromotedOrNew) return true;
+        const minStarts = minMins >= 80 ? 25 : (minMins >= 60 ? 22 : 18);
+        return mppg >= minMins && gs >= minStarts;
     }
 
     return true;
@@ -1670,7 +1672,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 !state.mustExclude.includes(p.id) &&
                 !usedIds.includes(p.id) &&
                 passesMinFwd(p) &&
-                (isGuaranteedStart(p) || p.chanceOfPlaying >= 75)
+                (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 75)
             ).sort((a, b) => getSolverScore(b) - getSolverScore(a));
             
             const result = [];
@@ -2153,7 +2155,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                     passesMinFwd(p)
                 );
 
-                const guaranteedCandidates = candidates.filter(isGuaranteedStart);
+                const guaranteedCandidates = candidates.filter(p => isGuaranteedStart(p, state));
                 if (guaranteedCandidates.length > 0) {
                     candidates = guaranteedCandidates;
                 }
@@ -2329,7 +2331,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                     passesMinFwd(p)
                 );
 
-                const guaranteedCandidates = candidates.filter(isGuaranteedStart);
+                const guaranteedCandidates = candidates.filter(p => isGuaranteedStart(p, state));
                 if (guaranteedCandidates.length > 0) {
                     candidates = guaranteedCandidates;
                 }
@@ -2899,7 +2901,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 (p.position !== 'FWD' || p.price >= (state.minFwdPrice ?? 6.0) || (state.mustInclude && state.mustInclude.includes(p.id)))
             );
 
-            const guaranteedCandidates = candidates.filter(isGuaranteedStart);
+            const guaranteedCandidates = candidates.filter(p => isGuaranteedStart(p, state));
             if (guaranteedCandidates.length > 0) {
                 candidates = guaranteedCandidates;
             }
@@ -2964,7 +2966,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                     p.id !== single1TxOutId &&
                     (p.position !== 'FWD' || p.price >= (state.minFwdPrice ?? 6.0) || (state.mustInclude && state.mustInclude.includes(p.id)))
                 );
-                const g1 = candidates1.filter(isGuaranteedStart);
+                const g1 = candidates1.filter(p => isGuaranteedStart(p, state));
                 if (g1.length > 0) candidates1 = g1;
 
                 const mustIncludeNotInSquad1 = state.mustInclude.filter(id => 
@@ -2982,7 +2984,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                     p.id !== single1TxOutId &&
                     (p.position !== 'FWD' || p.price >= (state.minFwdPrice ?? 6.0) || (state.mustInclude && state.mustInclude.includes(p.id)))
                 );
-                const g2 = candidates2.filter(isGuaranteedStart);
+                const g2 = candidates2.filter(p => isGuaranteedStart(p, state));
                 if (g2.length > 0) candidates2 = g2;
 
                 const mustIncludeNotInSquad2 = state.mustInclude.filter(id => 
