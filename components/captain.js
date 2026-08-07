@@ -9,7 +9,16 @@ export function renderCaptain(container, state, actions) {
 
     // Get expected points for a player in a given gameweek
     const getGwPrediction = (player, gw) => {
-        return player.predictions.find(pr => pr.gw === gw) || { pts: 0, opp: 'BYE', loc: '', diff: 3 };
+        const pred = player.predictions.find(pr => pr.gw === gw) || { pts: 0, opp: 'BYE', loc: '', diff: 3 };
+        const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
+        const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
+        return {
+            pts: raw * factor,
+            opp: pred.opp,
+            loc: pred.loc,
+            diff: pred.diff,
+            actualPts: pred.actualPts
+        };
     };
 
     // 1. Sort squad options by expected points for active GW
