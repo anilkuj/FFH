@@ -90,7 +90,7 @@ export function renderStats(container, state, actions) {
             const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(p) : 1.0;
             let sum = 0;
             for (let gw = currentGw; gw < currentGw + n; gw++) {
-                if (gw > 10) break;
+                if (gw > 38) break;
                 const pred = p.predictions.find(predObj => predObj.gw === gw);
                 if (pred) {
                     const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;

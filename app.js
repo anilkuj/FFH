@@ -86,6 +86,22 @@ window.applyUniversalMinutesDiscount = function() {
 // Run universal minutes discounting across all 700+ players immediately on startup
 window.applyUniversalMinutesDiscount();
 
+// Dynamic Injury/Suspension Boost: If Saliba (id 6) is injured/out, Mosquera (id 11) starts and gets Calafiori (id 8) XP
+const saliba = PLAYERS.find(p => p.id === 6);
+const mosquera = PLAYERS.find(p => p.id === 11);
+const calafiori = PLAYERS.find(p => p.id === 8);
+if (mosquera && saliba && calafiori && (saliba.chanceOfPlaying === 0 || saliba.status === 'i' || saliba.status === 's')) {
+    mosquera.predictions.forEach(pred => {
+        const calaPred = calafiori.predictions.find(cp => cp.gw === pred.gw);
+        if (calaPred) {
+            pred._rawPts = calaPred._rawPts !== undefined ? calaPred._rawPts : calaPred.pts;
+            pred.pts = calaPred.pts;
+        }
+    });
+    const sum10 = mosquera.predictions.slice(0, 10).reduce((acc, p) => acc + p.pts, 0);
+    mosquera.xp10 = Math.round(sum10 * 10) / 10;
+}
+
 // Application State class
 
 
@@ -2192,7 +2208,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('nextGwBtn').addEventListener('click', () => {
-        if (state.currentGw < 10) {
+        if (state.currentGw < 38) {
             state.currentGw++;
             state.autoRotateLineup(state.currentGw);
             actions.renderActiveView();

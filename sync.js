@@ -92,7 +92,7 @@ function parseAndWriteData(data, fixturesData) {
 
     fixturesData.forEach(f => {
         const gw = f.event;
-        if (gw >= 1 && gw <= 10) {
+        if (gw >= 1 && gw <= 38) {
             const homeTeam = teamMap[f.team_h];
             const awayTeam = teamMap[f.team_a];
             
@@ -331,7 +331,7 @@ function parseAndWriteData(data, fixturesData) {
         const predictions = [];
         const fixtures = fixturesSchedule[teamShort] || [];
         
-        for (let gw = 1; gw <= 10; gw++) {
+        for (let gw = 1; gw <= 38; gw++) {
             const fixture = fixtures.find(f => f.gw === gw) || { opp: 'BYE', loc: 'H', diff: 3 };
             let pts = basePPG;
             
@@ -465,7 +465,7 @@ function parseAndWriteData(data, fixturesData) {
             });
         }
 
-        const totalXp10 = predictions.reduce((sum, pr) => sum + pr.pts, 0);
+        const totalXp10 = predictions.slice(0, 10).reduce((sum, pr) => sum + pr.pts, 0);
  
         return {
             id: el.id,

@@ -125,7 +125,7 @@ export function renderPlanner(container, state, actions) {
     const getSquadXPForHorizon = (numGws) => {
         let total = 0;
         for (let gw = state.currentGw; gw < state.currentGw + numGws; gw++) {
-            if (gw > 10) break;
+            if (gw > 38) break;
             let gwTotal = 0;
             starters.forEach(id => {
                 const player = PLAYERS.find(p => p.id === id);
@@ -268,6 +268,7 @@ export function renderPlanner(container, state, actions) {
                     <button class="pitch-btn" id="cloneDraftBtn" title="Clone Current Draft" style="height: 32px; width: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); cursor: pointer;"><i data-lucide="copy" style="width: 14px; height: 14px;"></i></button>
                     <button class="pitch-btn" id="exportDraftsBtn" title="Export All Drafts" style="height: 32px; width: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); cursor: pointer;"><i data-lucide="download" style="width: 14px; height: 14px;"></i></button>
                     <button class="pitch-btn" id="importDraftsBtn" title="Import Drafts from File" style="height: 32px; width: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); cursor: pointer;"><i data-lucide="upload" style="width: 14px; height: 14px;"></i></button>
+                    <button class="pitch-btn" id="copySquadClipboardBtn" title="Copy Current Squad to Clipboard" style="height: 32px; width: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); cursor: pointer;"><i data-lucide="clipboard" style="width: 14px; height: 14px;"></i></button>
                     <input type="file" id="importDraftsInput" accept=".json" style="display: none;" />
                     
                     ${renderSetPieceLegend()}
@@ -381,7 +382,7 @@ function formatFdrOpponentText(pr) {
 function renderPitchFixtures(player, currentGw) {
     let html = '';
     for (let gw = currentGw; gw < currentGw + 3; gw++) {
-        if (gw > 10) break;
+        if (gw > 38) break;
         const pr = player.predictions.find(p => p.gw === gw);
         if (pr) {
             const oppText = formatFdrOpponentText(pr);
@@ -426,7 +427,7 @@ function renderFdrFixtures(player, currentGw) {
 
     let html = '<div class="fdr-fixtures-container" style="display: flex; gap: 5px; align-items: center; flex-wrap: wrap; margin: 4px 0 2px 0;">';
     for (let gw = currentGwNum; gw < currentGwNum + 5; gw++) {
-        if (gw > 10) break;
+        if (gw > 38) break;
         const pr = player.predictions.find(p => p.gw === gw);
         if (pr) {
             const oppText = formatFdrOpponentText(pr);
@@ -1122,6 +1123,45 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
         });
     }
 
+    // Copy squad starters and bench to clipboard
+    const copySquadClipboardBtn = container.querySelector('#copySquadClipboardBtn');
+    if (copySquadClipboardBtn) {
+        copySquadClipboardBtn.addEventListener('click', () => {
+            try {
+                const startersList = starters.map(id => {
+                    const p = PLAYERS.find(pl => pl.id === id);
+                    if (!p) return null;
+                    let textStr = `${p.name} (${p.team}, ${p.position})`;
+                    if (id === state.captain) textStr += " (C)";
+                    else if (id === state.vice) textStr += " (V)";
+                    return textStr;
+                }).filter(Boolean);
+
+                const benchList = bench.map(id => {
+                    const p = PLAYERS.find(pl => pl.id === id);
+                    if (!p) return null;
+                    return `${p.name} (${p.team}, ${p.position})`;
+                }).filter(Boolean);
+
+                const squadText = `Gameweek ${state.currentGw} Squad:\n\n` +
+                                  `Starting XI:\n` +
+                                  startersList.map((n, i) => `${i + 1}. ${n}`).join('\n') +
+                                  `\n\nBench:\n` +
+                                  benchList.map((n, i) => `${i + 1}. ${n}`).join('\n');
+
+                navigator.clipboard.writeText(squadText).then(() => {
+                    actions.showToast("Squad copied to clipboard!", "success");
+                }).catch(err => {
+                    console.error("Clipboard copy failed:", err);
+                    actions.showToast("Failed to copy squad to clipboard.", "error");
+                });
+            } catch (err) {
+                console.error(err);
+                actions.showToast("Failed to generate squad copy text.", "error");
+            }
+        });
+    }
+
     const showPlannerRiskReportModal = (squadPlayers) => {
         const existing = document.getElementById('tpRiskModal');
         if (existing) existing.remove();
@@ -1232,7 +1272,7 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
                     <div style="text-align: right; margin-top: 4px;">
                         <button class="action-main-btn" id="applyAutoRotateBtn" style="margin: 0; padding: 6px 14px; font-size: 11px; background: var(--primary); border: none; color: black; font-weight: 700; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
                             <i data-lucide="rotate-cw" style="width: 12px; height: 12px; color: black;"></i>
-                            Auto-Rotate Lineup
+                            Apply Rotations
                         </button>
                     </div>
                 </div>

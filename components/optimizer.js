@@ -202,7 +202,7 @@ function renderFdrFixtures(player, currentGw) {
 
     let html = '<div class="fdr-fixtures-container" style="display: flex; gap: 5px; align-items: center; flex-wrap: wrap; margin: 6px 0 2px 0;">';
     for (let gw = currentGwNum; gw < currentGwNum + 5; gw++) {
-        if (gw > 10) break;
+        if (gw > 38) break;
         const pr = player.predictions.find(p => p.gw === gw);
 
         if (pr) {
@@ -1200,7 +1200,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         let total = 0;
         
         for (let gw = state.currentGw; gw < state.currentGw + h; gw++) {
-            if (gw > 10) break;
+            if (gw > 38) break;
             
             let gwTotal = 0;
             let maxStarterScore = 0;
