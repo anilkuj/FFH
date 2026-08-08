@@ -1224,8 +1224,8 @@ html, body {
     display: flex;
     flex-direction: column;
     gap: 32px;
-    height: 100%;
-    overflow-y: auto;
+    height: auto;
+    overflow-y: visible;
     padding-right: 8px;
 }
 
