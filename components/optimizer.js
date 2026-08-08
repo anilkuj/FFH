@@ -1771,7 +1771,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             const p = pId !== null ? PLAYERS.find(pl => pl.id === pId) : null;
             return sum + (p ? p.price : 0);
         }, 0);
-        const reservedBenchBudget = state.planBenchBoost ? 17.0 : Math.max(minBenchBudget, initialBenchCost);
+        // For bench boost, reserve a much larger bench budget so starters don't consume everything.
+        // £35 gives 4 bench players an avg of £8.75m each — genuine scoring potential.
+        const reservedBenchBudget = state.planBenchBoost ? 35.0 : Math.max(minBenchBudget, initialBenchCost);
         const maxStartingBudget = Math.max(0, totalValue - reservedBenchBudget);
         const minFwd = state.minFwdPrice ?? 6.0;
 
@@ -2293,9 +2295,11 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         const remainingForBench = totalValue - startingCost;
         const benchBudget = Math.min(maxBenchBudget, remainingForBench);
 
+        // For bench boost, run more optimization iterations to find the best 4 bench players
+        const maxBenchIter = state.planBenchBoost ? 40 : 20;
         let benchImproved = !state.ignoreBench;
         let benchIter = 0;
-        while (benchImproved && benchIter < 20) {
+        while (benchImproved && benchIter < maxBenchIter) {
 
             benchImproved = false;
             benchIter++;
