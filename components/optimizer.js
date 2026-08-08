@@ -1217,7 +1217,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
     };
 
 
-    const getSquadPointsForHorizon = (slots, h) => {
+    const getSquadPointsForHorizon = (slots, h, includeHeuristics = false) => {
         let total = 0;
         
         for (let gw = state.currentGw; gw < state.currentGw + h; gw++) {
@@ -1241,7 +1241,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 const pts = raw * chance * factor;
                 let score = objective === 'efficiency' ? getPlayerEfficiency(p, state.currentGw) * 10 : pts;
                 
-                if (state.prioritizeDefcon && (p.position === 'GKP' || p.position === 'DEF' || p.position === 'MID')) {
+                if (includeHeuristics && state.prioritizeDefcon && (p.position === 'GKP' || p.position === 'DEF' || p.position === 'MID')) {
                     const ratings = getPlayerRatings(p, state.currentGw);
                     if (ratings.defconPotential === 'A' || ratings.defconPotential === 'B') {
                         const avgFdr = parseFloat(getAvgFDR(p)) || 3.0;
@@ -1272,8 +1272,8 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         return total;
     };
 
-    const getSquadExpectedPts = (slots) => {
-        return getSquadPointsForHorizon(slots, horizon);
+    const getSquadExpectedPts = (slots, includeHeuristics = false) => {
+        return getSquadPointsForHorizon(slots, horizon, includeHeuristics);
     };
 
     // Helper: FDR (average fixture difficulty)
@@ -1995,7 +1995,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 const currentSlot = optimizedSquadSlots[idx];
                 if (currentSlot.locked) continue; // Skip locked force-included players!
 
-                const currentSquadPts = getSquadExpectedPts(optimizedSquadSlots);
+                const currentSquadPts = getSquadExpectedPts(optimizedSquadSlots, true);
                 
                 // Cost of other starting players
                 const otherStartingCost = startingIndices.reduce((sum, sIdx) => {
@@ -2089,7 +2089,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                                         }
                                     }
 
-                                    const newPts = isValid ? getSquadExpectedPts(optimizedSquadSlots) : -1;
+                                    const newPts = isValid ? getSquadExpectedPts(optimizedSquadSlots, true) : -1;
 
                                     // Swap back for evaluation
                                     currentSlot.playerId = oldGkpId;
@@ -2130,7 +2130,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                         }
                     }
 
-                    const newPts = isValid ? getSquadExpectedPts(optimizedSquadSlots) : -1;
+                    const newPts = isValid ? getSquadExpectedPts(optimizedSquadSlots, true) : -1;
                     currentSlot.playerId = oldId; // Swap back
 
                     if (isValid && newPts > bestPts + 0.05) {
@@ -2170,7 +2170,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 const currentSlot = optimizedSquadSlots[idx];
                 if (currentSlot.locked) continue; // Skip locked force-included players!
 
-                const currentSquadPts = getSquadExpectedPts(optimizedSquadSlots);
+                const currentSquadPts = getSquadExpectedPts(optimizedSquadSlots, true);
                 
                 // Cost of other bench players
                 const otherBenchCost = benchIndices.reduce((sum, bIdx) => {
@@ -2223,7 +2223,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                     if (ok) {
                         const oldId = currentSlot.playerId;
                         currentSlot.playerId = cand.id;
-                        const newSquadPts = getSquadExpectedPts(optimizedSquadSlots);
+                        const newSquadPts = getSquadExpectedPts(optimizedSquadSlots, true);
                         currentSlot.playerId = oldId; // Swap back
 
                         if (newSquadPts > bestPts) {
@@ -2274,7 +2274,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                         passesMinFwd(p)
                     );
 
-                    const currentPts = getSquadExpectedPts(optimizedSquadSlots);
+                    const currentPts = getSquadExpectedPts(optimizedSquadSlots, true);
 
                     for (const cand of cheaperCandidates) {
                         const tempBenchIds = benchIds.filter(id => id !== slot.playerId);
@@ -2294,7 +2294,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                         if (ok) {
                             const oldId = slot.playerId;
                             slot.playerId = cand.id;
-                            const newPts = getSquadExpectedPts(optimizedSquadSlots);
+                            const newPts = getSquadExpectedPts(optimizedSquadSlots, true);
                             slot.playerId = oldId;
 
                             const ptsLoss = currentPts - newPts;
@@ -2378,7 +2378,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 candidates.sort((a, b) => getSolverScore(b) - getSolverScore(a));
 
 
-                const currentSquadPts = getSquadExpectedPts(optimizedSquadSlots);
+                const currentSquadPts = getSquadExpectedPts(optimizedSquadSlots, true);
 
                 for (const cand of candidates) {
                     if (isBenchSlot && !state.planBenchBoost) {
@@ -2409,7 +2409,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                     if (ok) {
                         const oldId = slot.playerId;
                         slot.playerId = cand.id;
-                        const newSquadPts = getSquadExpectedPts(optimizedSquadSlots);
+                        const newSquadPts = getSquadExpectedPts(optimizedSquadSlots, true);
                         slot.playerId = oldId; // Swap back
 
                         const gain = newSquadPts - currentSquadPts;
@@ -2481,10 +2481,10 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                     }
 
                     if (ok) {
-                        const currentPts = getSquadExpectedPts(optimizedSquadSlots);
+                        const currentPts = getSquadExpectedPts(optimizedSquadSlots, true);
                         const oldId = slot.playerId;
                         slot.playerId = cand.id;
-                        const newPts = getSquadExpectedPts(optimizedSquadSlots);
+                        const newPts = getSquadExpectedPts(optimizedSquadSlots, true);
                         slot.playerId = oldId;
 
                         const gain = newPts - currentPts;
@@ -2525,7 +2525,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 let targetSlotIdx = -1;
 
                 const currentSquadIds = optimizedSquadSlots.map(s => s.playerId).filter(id => id !== null);
-                const currentPts = getSquadExpectedPts(optimizedSquadSlots);
+                const currentPts = getSquadExpectedPts(optimizedSquadSlots, true);
 
                 for (let i = 0; i < optimizedSquadSlots.length; i++) {
                     const slot = optimizedSquadSlots[i];
@@ -2567,7 +2567,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                         if (ok) {
                             const oldId = slot.playerId;
                             slot.playerId = cand.id;
-                            const newPts = getSquadExpectedPts(optimizedSquadSlots);
+                            const newPts = getSquadExpectedPts(optimizedSquadSlots, true);
                             slot.playerId = oldId; // Swap back
 
                             const ptsLoss = Math.max(0, currentPts - newPts);
@@ -2963,14 +2963,15 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 const targetSlot = tempSlots.find(s => s.playerId === soldId);
                 if (targetSlot) targetSlot.playerId = boughtPlayer.id;
 
-                const gain = getSquadExpectedPts(tempSlots) - getSquadExpectedPts(activeSquadSlots);
+                const solveGain = getSquadExpectedPts(tempSlots, true) - getSquadExpectedPts(activeSquadSlots, true);
+                const realGain = getSquadExpectedPts(tempSlots, false) - getSquadExpectedPts(activeSquadSlots, false);
 
-                if (gain > maxGain1 && gain > 0.01) {
-                    maxGain1 = gain;
+                if (solveGain > maxGain1 && solveGain > 0.01) {
+                    maxGain1 = solveGain;
                     best1Tx = {
                         out: soldPlayer,
                         in: boughtPlayer,
-                        gain: gain
+                        gain: realGain
                     };
                 }
             }
@@ -3048,16 +3049,17 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                         if (slot1) slot1.playerId = b1.id;
                         if (slot2) slot2.playerId = b2.id;
 
-                        const gain = getSquadExpectedPts(tempSlots) - getSquadExpectedPts(activeSquadSlots);
+                        const solveGain = getSquadExpectedPts(tempSlots, true) - getSquadExpectedPts(activeSquadSlots, true);
+                        const realGain = getSquadExpectedPts(tempSlots, false) - getSquadExpectedPts(activeSquadSlots, false);
 
-                        if (gain > maxGain2 && gain > 0.01) {
-                            maxGain2 = gain;
+                        if (solveGain > maxGain2 && solveGain > 0.01) {
+                            maxGain2 = solveGain;
                             best2Tx = {
                                 out1: s1,
                                 out2: s2,
                                 in1: b1,
                                 in2: b2,
-                                gain: gain
+                                gain: realGain
                             };
                         }
                     }
