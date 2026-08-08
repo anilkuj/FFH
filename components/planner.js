@@ -986,6 +986,9 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
             state.formation = targetDraft.formation;
             state.activeDraftIndex = newIdx;
 
+            // Auto-rotate squad slots based on new draft's lineup
+            state.autoRotateLineup(state.currentGw);
+
             // Save and render
             state.saveState();
             actions.renderActiveView();
@@ -1474,6 +1477,30 @@ ${squadListText}
                                 };
                             });
                         }
+                        
+                        // Rules-based backup GKP risk enforcer
+                        squadPlayers.forEach(p => {
+                            if (p.position === 'GKP' && p.price <= 4.0) {
+                                const primaryGKPs = PLAYERS.filter(other => 
+                                    other.position === 'GKP' && 
+                                    other.team === p.team && 
+                                    other.price >= 4.5
+                                );
+                                const hasActivePrimary = primaryGKPs.some(other => 
+                                    other.status !== 'i' && 
+                                    other.status !== 's' && 
+                                    (other.chanceOfPlaying === undefined || other.chanceOfPlaying > 0)
+                                );
+                                if (hasActivePrimary) {
+                                    state.squadRisks[p.name] = {
+                                        risk: "Medium",
+                                        reason: "Second-choice / backup goalkeeper.",
+                                        details: "Goalkeepers priced at £4.0m are typically backup options and unlikely to start unless the first-choice keeper is injured or suspended."
+                                    };
+                                }
+                            }
+                        });
+
                         showPlannerRiskReportModal(squadPlayers);
                         actions.renderActiveView();
                         return;
@@ -1491,6 +1518,25 @@ ${squadListText}
             let riskLevel = null;
             let reason = "";
             let details = "";
+
+            // Check for backup goalkeeper risk
+            if (p.position === 'GKP' && p.price <= 4.0) {
+                const primaryGKPs = PLAYERS.filter(other => 
+                    other.position === 'GKP' && 
+                    other.team === p.team && 
+                    other.price >= 4.5
+                );
+                const hasActivePrimary = primaryGKPs.some(other => 
+                    other.status !== 'i' && 
+                    other.status !== 's' && 
+                    (other.chanceOfPlaying === undefined || other.chanceOfPlaying > 0)
+                );
+                if (hasActivePrimary) {
+                    riskLevel = "Medium";
+                    reason = "Second-choice / backup goalkeeper.";
+                    details = "Goalkeepers priced at £4.0m are typically backup options and unlikely to start unless the first-choice keeper is injured or suspended.";
+                }
+            }
 
             const chance = (p.chanceOfPlaying !== undefined && p.chanceOfPlaying !== null) ? p.chanceOfPlaying : 100;
             const status = p.status || 'a';

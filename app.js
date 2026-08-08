@@ -17,6 +17,17 @@ const PROMOTED_TEAMS = ['COV', 'HUL', 'SUN', 'IPS', 'LEE'];
 window.getPlayerMinutesFactor = function(player) {
     if (!player) return 1.0;
     if (player.status === 'i' || player.status === 's' || player.status === 'u') return 0;
+
+    // Discount backup goalkeepers (priced <= 4.0m) if the primary goalkeeper is fit/active
+    if (player.position === 'GKP' && player.price <= 4.0) {
+        if (typeof PLAYERS !== 'undefined' && Array.isArray(PLAYERS)) {
+            const primaryGKPs = PLAYERS.filter(p => p.position === 'GKP' && p.team === player.team && p.price >= 4.5);
+            const hasActivePrimary = primaryGKPs.some(p => p.status !== 'i' && p.status !== 's' && (p.chanceOfPlaying === undefined || p.chanceOfPlaying > 0));
+            if (hasActivePrimary) {
+                return 0.02;
+            }
+        }
+    }
     
     const chance = (player.chanceOfPlaying !== undefined && player.chanceOfPlaying !== null) 
         ? (player.chanceOfPlaying / 100) 
@@ -1205,7 +1216,13 @@ const actions = {
         const chipsPillVal = document.querySelector('#activeChipsDisplay .pill-value');
         const mobChipsPillVal = document.querySelector('#mobileActiveChipsDisplay .pill-value');
         const currentWeekChips = state.chips[state.currentGw] || { wildcard: false, tripleCaptain: false, benchBoost: false };
-        const activeChips = Object.keys(currentWeekChips).filter(k => currentWeekChips[k]);
+        const isBbActive = !!(currentWeekChips.benchBoost || (state.planBenchBoost && state.benchBoostTargetGw === state.currentGw));
+        
+        const activeChips = [];
+        if (currentWeekChips.wildcard) activeChips.push('wildcard');
+        if (currentWeekChips.tripleCaptain) activeChips.push('tripleCaptain');
+        if (isBbActive) activeChips.push('benchBoost');
+
         const formattedChips = activeChips.length > 0 ? activeChips.map(c => c === 'tripleCaptain' ? 'TC' : (c === 'benchBoost' ? 'BB' : 'WC')).join(', ') : 'None';
 
         if (chipsPillVal) {
@@ -2118,14 +2135,29 @@ const actions = {
                 // If it was active (manual or planned), deactivate it completely
                 state.chips[gw].benchBoost = false;
                 state.planBenchBoost = false;
+                // Clear any active benchBoost chip in state.chips for all weeks
+                for (let g = 1; g <= 10; g++) {
+                    if (state.chips[g]) {
+                        state.chips[g].benchBoost = false;
+                    }
+                }
             } else {
                 state.chips[gw].benchBoost = true;
+                state.planBenchBoost = true;
+                state.benchBoostTargetGw = gw;
+                // Clear any other manual benchBoost activation on other weeks
+                for (let g = 1; g <= 10; g++) {
+                    if (g !== gw && state.chips[g]) {
+                        state.chips[g].benchBoost = false;
+                    }
+                }
             }
         } else {
             state.chips[gw][chipName] = !wasActive;
             // FPL rule: only one chip per GW, so if they manual-activated TC/Wildcard, deactivate planned Bench Boost
             if (state.chips[gw][chipName] && state.planBenchBoost && state.benchBoostTargetGw === gw) {
                 state.planBenchBoost = false;
+                state.chips[gw].benchBoost = false;
             }
         }
         

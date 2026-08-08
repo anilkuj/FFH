@@ -3657,7 +3657,80 @@ html.light-theme .stats-table td.cell-player-name strong { color: #0f172a !impor
     pointer-events: none;
 }
 
-/* Settings Section */
+/* Dashboard UI styling for Optimizer Settings */
+.opt-settings-grid-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.opt-panel-card {
+    background: rgba(255, 255, 255, 0.015);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: transform var(--transition-normal), border-color var(--transition-fast), box-shadow var(--transition-normal);
+}
+
+.opt-panel-card:hover {
+    border-color: rgba(0, 255, 136, 0.2);
+    box-shadow: 0 4px 20px rgba(0, 255, 136, 0.03);
+}
+
+.opt-panel-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+    margin-bottom: 2px;
+}
+
+.opt-panel-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--secondary);
+}
+
+.opt-panel-icon i {
+    width: 12px;
+    height: 12px;
+}
+
+.opt-panel-title-text {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--text-main);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Light Theme overrides for Panel Cards */
+html.light-theme .opt-settings-grid-layout {
+    background: #f1f5f9;
+}
+
+html.light-theme .opt-panel-card {
+    background: #ffffff;
+    box-shadow: var(--shadow-sm);
+}
+
+html.light-theme .opt-panel-icon {
+    background: rgba(0, 0, 0, 0.03);
+    color: var(--primary);
+}
+
 .opt-settings-section {
     padding: 20px 24px;
     border-bottom: 1px solid var(--border-color);

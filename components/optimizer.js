@@ -313,11 +313,19 @@ export function renderOptimizer(container, state, actions) {
                 </div>
 
                 <!-- Settings Form Body (collapsible without wiping DOM) -->
+                <!-- Settings Form Body (collapsible without wiping DOM) -->
                 <div class="opt-settings-body" id="optSettingsBody">
-                    <!-- Row 1: Core Strategy Settings -->
-                    <div class="opt-settings-section">
-                        <div class="opt-section-label"><i data-lucide="sliders-horizontal" style="width:13px;height:13px;"></i> Strategy</div>
-                        <div class="opt-settings-row">
+                    <div class="opt-settings-grid-layout">
+                        
+                        <!-- Panel 1: Strategy & Target -->
+                        <div class="opt-panel-card">
+                            <div class="opt-panel-header">
+                                <div class="opt-panel-icon">
+                                    <i data-lucide="sliders-horizontal"></i>
+                                </div>
+                                <span class="opt-panel-title-text">Strategy & Mode</span>
+                            </div>
+                            
                             <div class="setting-group">
                                 <label for="gwHorizon">Gameweek Horizon</label>
                                 <select id="gwHorizon" class="settings-select">
@@ -328,12 +336,8 @@ export function renderOptimizer(container, state, actions) {
                                     <option value="5" ${!state.horizon || state.horizon === 5 ? 'selected' : ''}>5 Gameweeks (Medium-term)</option>
                                     <option value="10" ${state.horizon === 10 ? 'selected' : ''}>10 Gameweeks (Extended Horizon)</option>
                                 </select>
-
-
                                 <span class="setting-help">Analyze fixtures and expected points over this horizon.</span>
                             </div>
-
-
 
                             <div class="setting-group">
                                 <label for="seasonPhase">Season Mode</label>
@@ -359,15 +363,7 @@ export function renderOptimizer(container, state, actions) {
                                 </select>
                                 <span class="setting-help" id="formationHelpText">${state.formation === 'optimum' ? '⚡ AI will test all 8 formations and pick the one maximizing predicted points.' : 'Fix the formation the optimizer builds the squad around.'}</span>
                             </div>
-                        </div>
-                    </div>
 
-                    <!-- Row 2: Draft + Sliders -->
-                    <div class="opt-settings-section">
-                        <div class="opt-section-label"><i data-lucide="layers" style="width:13px;height:13px;"></i> Squad Budget & Constraints</div>
-                        <div class="opt-settings-row" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
-
-                            <!-- Draft Selector with actions below -->
                             <div class="setting-group">
                                 <label for="optimizerDraftSelect">Active Optimization Draft</label>
                                 <select id="optimizerDraftSelect" class="settings-select">
@@ -385,8 +381,17 @@ export function renderOptimizer(container, state, actions) {
                                 </div>
                                 <span class="setting-help">Select draft to read & save recommendations.</span>
                             </div>
+                        </div>
 
-                            <!-- Ignore Bench Checkbox -->
+                        <!-- Panel 2: Budget & Constraints -->
+                        <div class="opt-panel-card">
+                            <div class="opt-panel-header">
+                                <div class="opt-panel-icon">
+                                    <i data-lucide="layers"></i>
+                                </div>
+                                <span class="opt-panel-title-text">Budget & Starters</span>
+                            </div>
+
                             <div class="setting-group" id="ignoreBenchGroup" style="display: flex; flex-direction: column; justify-content: space-between;">
                                 <label for="ignoreBenchCheckbox" style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12px; font-weight: 700; color: var(--text-main); line-height: 1.3;">
                                     <input type="checkbox" id="ignoreBenchCheckbox" ${state.ignoreBench ? 'checked' : ''} style="width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0;">
@@ -395,7 +400,6 @@ export function renderOptimizer(container, state, actions) {
                                 <span class="setting-help">Frees 100% of budget to spend maximizing starting 11. Bench kept as cheap fillers.</span>
                             </div>
 
-                            <!-- Bench Budget Slider -->
                             <div class="setting-group" id="benchBudgetGroup" style="${state.ignoreBench ? 'opacity: 0.4; pointer-events: none;' : ''}">
                                 <label for="benchBudgetRange">
                                     Reserved Bench Budget
@@ -409,8 +413,6 @@ export function renderOptimizer(container, state, actions) {
                                 <span class="setting-help">Budget reserved for 4 bench slots.</span>
                             </div>
 
-
-                            <!-- Guaranteed Start Slider -->
                             <div class="setting-group" id="guaranteedStartGroup">
                                 <label for="guaranteedStartRange">
                                     Guaranteed Start
@@ -424,7 +426,6 @@ export function renderOptimizer(container, state, actions) {
                                 <span class="setting-help">Min avg minutes per appearance.</span>
                             </div>
 
-                            <!-- Min FWD Price Slider -->
                             <div class="setting-group" id="minFwdPriceGroup">
                                 <label for="minFwdPriceRange">
                                     Min FWD Price
@@ -437,16 +438,25 @@ export function renderOptimizer(container, state, actions) {
                                 </div>
                                 <span class="setting-help">Min price for FWDs (default £6.0m).</span>
                             </div>
+                        </div>
 
-                            <!-- Plan Bench Boost Control -->
+                        <!-- Panel 3: AI Features & Exclusions -->
+                        <div class="opt-panel-card">
+                            <div class="opt-panel-header">
+                                <div class="opt-panel-icon">
+                                    <i data-lucide="brain"></i>
+                                </div>
+                                <span class="opt-panel-title-text">AI Features & Rules</span>
+                            </div>
+
                             <div class="setting-group" id="benchBoostGroup">
                                 <label for="planBenchBoostCheckbox" style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12px; font-weight: 700; color: var(--text-main); line-height: 1.3;">
                                     <input type="checkbox" id="planBenchBoostCheckbox" ${state.planBenchBoost ? 'checked' : ''} style="width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0;">
                                     ⚡ Plan Bench Boost Chip
                                 </label>
                                 <div id="benchBoostTargetGwRow" style="display: flex; align-items: center; gap: 8px; margin-top: 8px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 8px 12px; border-radius: 8px;">
-                                    <span style="font-size: 12px; font-weight: 700; color: var(--secondary);">Target Bench Boost Gameweek:</span>
-                                    <select id="benchBoostTargetGwSelect" class="settings-select" style="padding: 4px 10px; font-size: 12px; font-weight: 700; color: var(--primary); background: var(--bg-dark); border: 1px solid var(--primary-glow);">
+                                    <span style="font-size: 11px; font-weight: 700; color: var(--secondary);">Target GW:</span>
+                                    <select id="benchBoostTargetGwSelect" class="settings-select" style="padding: 4px 10px; font-size: 11px; font-weight: 700; color: var(--primary); background: var(--bg-dark); border: 1px solid var(--primary-glow); width: auto; flex: 1; height: 28px;">
                                         ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(gw => `
                                             <option value="${gw}" ${(state.benchBoostTargetGw || state.currentGw) === gw ? 'selected' : ''}>Gameweek ${gw}</option>
                                         `).join('')}
@@ -455,58 +465,43 @@ export function renderOptimizer(container, state, actions) {
                                 <span class="setting-help">Optimizes all 15 squad players for maximum points, easy FDR (&le;2), and Home fixtures in your target Gameweek.</span>
                             </div>
 
-                            <!-- Prioritize Defcon Monsters Checkbox -->
                             <div class="setting-group" id="prioritizeDefconGroup">
                                 <label for="prioritizeDefconCheckbox" style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12px; font-weight: 700; color: var(--text-main); line-height: 1.3;">
                                     <input type="checkbox" id="prioritizeDefconCheckbox" ${state.prioritizeDefcon ? 'checked' : ''} style="width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0;">
-                                    🛡️ Prioritize Defcon Monsters (Easiest FDR)
+                                    🛡️ Prioritize Defcon Monsters
                                 </label>
                                 <span class="setting-help">Boosts GKPs, DEFs, and MIDs with elite Defcon Potential (A/B rating) and favors easiest fixture difficulties (FDR).</span>
                             </div>
-                        </div>
-                    </div>
 
-
-
-                    <!-- Solver Constraints Section -->
-                    <div class="opt-settings-section">
-                        <div class="opt-section-label"><i data-lucide="shield-alert" style="width:13px;height:13px;"></i> Solver Constraints (Optional)</div>
-                        <div class="opt-settings-row">
                             <div class="setting-group">
-                                <label style="font-size: 12px; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 6px;">Force Include Players</label>
-                                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-                                    <input type="text" list="mustIncludeOptions" id="mustIncludeSearch" placeholder="Type to search player..." class="settings-select" style="flex: 1; min-width: 140px;">
+                                <label style="font-size: 12px; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 2px;">Force Include Players</label>
+                                <div style="display: flex; gap: 8px; margin-bottom: 4px;">
+                                    <input type="text" list="mustIncludeOptions" id="mustIncludeSearch" placeholder="Search player..." class="settings-select" style="flex: 1; height: 32px; padding: 6px 10px;">
                                     <datalist id="mustIncludeOptions"></datalist>
-                                    <button id="addMustIncludeBtn" class="draft-action-btn" style="padding: 8px 14px; flex-shrink:0;"><i data-lucide="plus" style="width:13px;height:13px;"></i></button>
+                                    <button id="addMustIncludeBtn" class="draft-action-btn" style="padding: 6px 12px; height: 32px; flex-shrink:0;"><i data-lucide="plus" style="width:13px;height:13px;"></i></button>
                                 </div>
-                                <div id="mustIncludeTags" style="display: flex; flex-wrap: wrap; gap: 8px; min-height: 24px;"></div>
+                                <div id="mustIncludeTags" style="display: flex; flex-wrap: wrap; gap: 6px; min-height: 20px;"></div>
                             </div>
 
                             <div class="setting-group">
-                                <label style="font-size: 12px; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 6px;">Force Exclude Players</label>
-                                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-                                    <input type="text" list="mustExcludeOptions" id="mustExcludeSearch" placeholder="Type to search player..." class="settings-select" style="flex: 1; min-width: 140px;">
+                                <label style="font-size: 12px; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 2px;">Force Exclude Players</label>
+                                <div style="display: flex; gap: 8px; margin-bottom: 4px;">
+                                    <input type="text" list="mustExcludeOptions" id="mustExcludeSearch" placeholder="Search player..." class="settings-select" style="flex: 1; height: 32px; padding: 6px 10px;">
                                     <datalist id="mustExcludeOptions"></datalist>
-                                    <button id="addMustExcludeBtn" class="draft-action-btn" style="padding: 8px 14px; flex-shrink:0;"><i data-lucide="plus" style="width:13px;height:13px;"></i></button>
+                                    <button id="addMustExcludeBtn" class="draft-action-btn" style="padding: 6px 12px; height: 32px; flex-shrink:0;"><i data-lucide="plus" style="width:13px;height:13px;"></i></button>
                                 </div>
-                                <div id="mustExcludeTags" style="display: flex; flex-wrap: wrap; gap: 8px; min-height: 24px;"></div>
+                                <div id="mustExcludeTags" style="display: flex; flex-wrap: wrap; gap: 6px; min-height: 20px;"></div>
                             </div>
-                        </div>
-                    </div>
 
-                    <!-- AI Analyst Settings Section -->
-                    <div class="opt-settings-section">
-                        <div class="opt-section-label"><i data-lucide="brain" style="width:13px;height:13px;color:var(--secondary);"></i> AI Analyst Settings</div>
-                        <div class="opt-settings-row" style="max-width: 640px;">
-                            <div class="setting-group" style="grid-column: span 2;">
+                            <div class="setting-group">
                                 <label for="geminiApiKey">Gemini API Key <span style="font-weight:400; color:var(--text-muted);">(Optional)</span></label>
                                 <div style="display: flex; gap: 8px;">
-                                    <input type="password" id="geminiApiKey" placeholder="Enter your Gemini API Key..." class="settings-select" style="flex: 1;" value="${localStorage.getItem('fpl_hub_gemini_api_key') || ''}">
-                                    <button id="saveApiKeyBtn" class="draft-action-btn" style="padding: 8px 16px; font-weight: 700; flex-shrink:0;">Save</button>
+                                    <input type="password" id="geminiApiKey" placeholder="Enter key..." class="settings-select" style="flex: 1; height: 32px; padding: 6px 10px;" value="${localStorage.getItem('fpl_hub_gemini_api_key') || ''}">
+                                    <button id="saveApiKeyBtn" class="draft-action-btn" style="padding: 6px 12px; height: 32px; font-weight: 700; flex-shrink:0;">Save</button>
                                 </div>
-                                <span class="setting-help">Provides real-time elite LLM strategist reports customized to your team. If left blank, FPL Hub's local analysis engine will be used.</span>
                             </div>
                         </div>
+
                     </div>
 
                     <!-- Bottom Action Bar inside settings body -->
@@ -609,7 +604,6 @@ export function renderOptimizer(container, state, actions) {
             state.saveState();
         });
     }
-
     // Wire Plan Bench Boost listeners
     const planBbCheckbox = container.querySelector('#planBenchBoostCheckbox');
     const bbTargetSelect = container.querySelector('#benchBoostTargetGwSelect');
@@ -619,6 +613,22 @@ export function renderOptimizer(container, state, actions) {
             const isChecked = e.target.checked;
             state.planBenchBoost = isChecked;
             localStorage.setItem('fpl_hub_plan_bench_boost', isChecked ? 'true' : 'false');
+            
+            const targetGw = state.benchBoostTargetGw || state.currentGw;
+            if (isChecked) {
+                if (!state.chips[targetGw]) state.chips[targetGw] = { wildcard: false, tripleCaptain: false, benchBoost: false };
+                state.chips[targetGw].benchBoost = true;
+                // Clear other gameweeks
+                for (let g = 1; g <= 10; g++) {
+                    if (g !== targetGw && state.chips[g]) {
+                        state.chips[g].benchBoost = false;
+                    }
+                }
+            } else {
+                if (state.chips[targetGw]) {
+                    state.chips[targetGw].benchBoost = false;
+                }
+            }
             state.saveState();
         });
     }
@@ -628,6 +638,17 @@ export function renderOptimizer(container, state, actions) {
             const gw = parseInt(e.target.value);
             state.benchBoostTargetGw = gw;
             localStorage.setItem('fpl_hub_bench_boost_target_gw', gw.toString());
+            
+            if (state.planBenchBoost) {
+                if (!state.chips[gw]) state.chips[gw] = { wildcard: false, tripleCaptain: false, benchBoost: false };
+                state.chips[gw].benchBoost = true;
+                // Clear other gameweeks
+                for (let g = 1; g <= 10; g++) {
+                    if (g !== gw && state.chips[g]) {
+                        state.chips[g].benchBoost = false;
+                    }
+                }
+            }
             state.saveState();
         });
     }
@@ -688,6 +709,9 @@ export function renderOptimizer(container, state, actions) {
             state.vice = targetDraft.vice;
             state.formation = targetDraft.formation;
             state.activeDraftIndex = newIdx;
+
+            // Auto-rotate squad slots based on new draft's lineup
+            state.autoRotateLineup(state.currentGw);
 
             // Save and render optimizer view
             state.saveState();
@@ -939,11 +963,13 @@ export function renderOptimizer(container, state, actions) {
         lucide.createIcons();
     };
 
-    if (toggleBtn) {
-        toggleBtn.addEventListener('click', () => toggleSettingsBody());
-    }
-
+    let isExecuting = false;
     const executeAnalysis = () => {
+        if (isExecuting) return;
+        isExecuting = true;
+
+        runBtn.disabled = true;
+        if (reRunInBodyBtn) reRunInBodyBtn.disabled = true;
         runBtn.innerHTML = `<i data-lucide="loader" class="animate-spin" style="margin-right: 8px;"></i> Running AI Solver...`;
         if (reRunInBodyBtn) reRunInBodyBtn.innerHTML = `<i data-lucide="loader" class="animate-spin" style="margin-right: 8px;"></i> Running AI Solver...`;
         lucide.createIcons();
@@ -973,15 +999,39 @@ export function renderOptimizer(container, state, actions) {
         const bbTargetSelect = container.querySelector('#benchBoostTargetGwSelect');
         if (bbTargetSelect) state.benchBoostTargetGw = parseInt(bbTargetSelect.value);
 
+        // Sync Bench Boost state to state.chips
+        const targetGw = state.benchBoostTargetGw || state.currentGw;
+        if (state.planBenchBoost) {
+            if (!state.chips[targetGw]) state.chips[targetGw] = { wildcard: false, tripleCaptain: false, benchBoost: false };
+            state.chips[targetGw].benchBoost = true;
+            for (let g = 1; g <= 10; g++) {
+                if (g !== targetGw && state.chips[g]) {
+                    state.chips[g].benchBoost = false;
+                }
+            }
+        } else {
+            if (state.chips[targetGw]) state.chips[targetGw].benchBoost = false;
+        }
+
         const prioritizeDefconCheckbox = container.querySelector('#prioritizeDefconCheckbox');
         if (prioritizeDefconCheckbox) state.prioritizeDefcon = prioritizeDefconCheckbox.checked;
 
         state.saveState();
         const mode = phaseSelect.value;
 
+        // Show a loader card inside the resultsGrid before optimization runs to prevent clashing UI
+        resultsGrid.innerHTML = `
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px; gap: 16px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px;">
+                <i data-lucide="loader" class="animate-spin" style="color: var(--primary); width: 32px; height: 32px;"></i>
+                <span style="font-weight: 700; color: var(--text-main); font-size: 15px;">AI Solver is analyzing player data...</span>
+                <span style="color: var(--text-muted); font-size: 12px;">Running expected points projections and fixture constraints</span>
+            </div>
+        `;
+        resultsGrid.classList.remove('hidden');
+        lucide.createIcons();
+
         setTimeout(() => {
             try {
-                resultsGrid.classList.remove('hidden');
                 performOptimization(resultsGrid, state, actions, horizon, mode);
                 updateActivePills(horizon, mode);
                 toggleSettingsBody(true); // Gently collapse form so results are focal, while preserving form DOM
@@ -990,17 +1040,18 @@ export function renderOptimizer(container, state, actions) {
                 console.error("AI Optimizer Execution Error:", err);
                 actions.showToast("Optimizer notice: " + (err.message || "Optimization complete"), "warning");
             } finally {
+                runBtn.disabled = false;
+                if (reRunInBodyBtn) reRunInBodyBtn.disabled = false;
                 runBtn.innerHTML = `<i data-lucide="play-circle"></i> Re-run Analysis`;
                 if (reRunInBodyBtn) reRunInBodyBtn.innerHTML = `<i data-lucide="play-circle"></i> Re-run Analysis`;
                 lucide.createIcons();
+                isExecuting = false;
             }
         }, 1200);
-
     };
 
     runBtn.addEventListener('click', executeAnalysis);
     if (reRunInBodyBtn) reRunInBodyBtn.addEventListener('click', executeAnalysis);
-
 }
 
 function renderLockOverlay(container, actions) {
