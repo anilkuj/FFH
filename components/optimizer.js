@@ -1101,7 +1101,7 @@ function isGuaranteedStart(player, state) {
 /**
  * Helper: Expected points over selected horizon
  */
-function getExpectedPtsOverHorizon(player, currentGw, horizon) {
+function getExpectedPtsOverHorizon(player, currentGw, horizon, state = null) {
     if (!player || !player.predictions) return 0;
     const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
     let sum = 0;
@@ -1110,7 +1110,11 @@ function getExpectedPtsOverHorizon(player, currentGw, horizon) {
         if (pred) {
             const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
             const t = gw - currentGw;
-            const weight = Math.max(0.6, 1.0 - (t * 0.08));
+            const isBbActive = state && (
+                (state.chips && state.chips[gw]?.benchBoost) || 
+                (state.planBenchBoost && state.benchBoostTargetGw === gw)
+            );
+            const weight = isBbActive ? 1.0 : Math.max(0.6, 1.0 - (t * 0.08));
             sum += (raw * factor * weight);
         }
     }
@@ -1132,7 +1136,7 @@ function _scoreOptimizationForFormation(state, horizon, mode) {
             !state.mustExclude.includes(p.id) &&
             !initUsedIds.includes(p.id) &&
             (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 75)
-        ).sort((a, b) => getExpectedPtsOverHorizon(b, state.currentGw, horizon) - getExpectedPtsOverHorizon(a, state.currentGw, horizon));
+        ).sort((a, b) => getExpectedPtsOverHorizon(b, state.currentGw, horizon, state) - getExpectedPtsOverHorizon(a, state.currentGw, horizon, state));
         
         const result = [];
         for (const p of pool) {
@@ -1149,8 +1153,8 @@ function _scoreOptimizationForFormation(state, horizon, mode) {
     const fwds = getTopList('FWD', cons.FWD);
 
     const startingXI = [...gkps, ...defs, ...mids, ...fwds];
-    let totalScore = startingXI.reduce((sum, p) => sum + getExpectedPtsOverHorizon(p, state.currentGw, horizon), 0);
-    const maxScore = startingXI.reduce((best, p) => Math.max(best, getExpectedPtsOverHorizon(p, state.currentGw, horizon)), 0);
+    let totalScore = startingXI.reduce((sum, p) => sum + getExpectedPtsOverHorizon(p, state.currentGw, horizon, state), 0);
+    const maxScore = startingXI.reduce((best, p) => Math.max(best, getExpectedPtsOverHorizon(p, state.currentGw, horizon, state)), 0);
     totalScore += maxScore; // Captain 2x bonus
 
     // Midfield & Attack FPL power formation preference (+5.0 xP bonus for 3-5-2, 3-4-3, 4-4-2, 4-5-1)
@@ -1298,7 +1302,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             gwTotal += maxStarterScore * captainMultiplier;
             
             const t = gw - state.currentGw;
-            const gwWeight = Math.max(0.6, 1.0 - (t * 0.08));
+            const isBbActive = state.chips[gw]?.benchBoost || 
+                               (state.planBenchBoost && state.benchBoostTargetGw === gw);
+            const gwWeight = isBbActive ? 1.0 : Math.max(0.6, 1.0 - (t * 0.08));
             total += gwTotal * gwWeight;
         }
         
@@ -1798,9 +1804,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                     isStarterPriceFloorInit(p, slot.position) &&
                     passesMinFwd(p) &&
                     (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 75)
-                ).sort((a, b) => getExpectedPtsOverHorizon(b, state.currentGw, horizon) - getExpectedPtsOverHorizon(a, state.currentGw, horizon));
+                ).sort((a, b) => getExpectedPtsOverHorizon(b, state.currentGw, horizon, state) - getExpectedPtsOverHorizon(a, state.currentGw, horizon, state));
                 
-                const chosen = pool[0] || PLAYERS.filter(p => p.position === slot.position && isStarterPriceFloorInit(p, slot.position) && !initUsedIds.includes(p.id) && (runningTeamCounts[p.team] || 0) < 3).sort((a, b) => getExpectedPtsOverHorizon(b, state.currentGw, horizon) - getExpectedPtsOverHorizon(a, state.currentGw, horizon))[0] || getCheapestPlayersList(slot.position, 1, initUsedIds, true)[0];
+                const chosen = pool[0] || PLAYERS.filter(p => p.position === slot.position && isStarterPriceFloorInit(p, slot.position) && !initUsedIds.includes(p.id) && (runningTeamCounts[p.team] || 0) < 3).sort((a, b) => getExpectedPtsOverHorizon(b, state.currentGw, horizon, state) - getExpectedPtsOverHorizon(a, state.currentGw, horizon, state))[0] || getCheapestPlayersList(slot.position, 1, initUsedIds, true)[0];
                 if (chosen) {
                     slot.playerId = chosen.id;
                     initUsedIds.push(chosen.id);
