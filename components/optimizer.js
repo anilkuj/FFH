@@ -1114,6 +1114,15 @@ function isGuaranteedStart(player, state) {
     
     // Injured, suspended, or unavailable players are NEVER starters for that GW
     if (player.status === 'i' || player.status === 's' || player.status === 'u') return false;
+
+    const allPlayers = (typeof PLAYERS !== 'undefined' && Array.isArray(PLAYERS)) ? PLAYERS : (typeof window !== 'undefined' && window.PLAYERS ? window.PLAYERS : []);
+
+    // Reject second-choice / backup goalkeepers (<= 4.0m) if the primary keeper is fit/active
+    if (player.position === 'GKP' && player.price <= 4.0) {
+        const primaryGKPs = allPlayers.filter(p => p.position === 'GKP' && p.team === player.team && p.price >= 4.5);
+        const hasActivePrimary = primaryGKPs.some(p => p.status !== 'i' && p.status !== 's' && (p.chanceOfPlaying === undefined || p.chanceOfPlaying > 0));
+        if (hasActivePrimary) return false;
+    }
     
     const chance = (player.chanceOfPlaying !== undefined && player.chanceOfPlaying !== null) ? player.chanceOfPlaying : 100;
     const mppg = typeof player.MPPG === 'number' ? player.MPPG : 85;
@@ -1771,6 +1780,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             for (const p of list) {
                 if (!usedIds.includes(p.id)) {
                     if (forceGuaranteed && !isGuaranteedStart(p, state)) continue;
+                    if (state && state.planBenchBoost && pos === 'GKP' && p.price <= 4.0 && !isGuaranteedStart(p, state)) continue;
                     if ((currentTeamCounts[p.team] || 0) < 3) {
                         result.push(p);
                         usedIds.push(p.id);
@@ -1783,6 +1793,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             if (result.length < count && !forceGuaranteed) {
                 for (const p of list) {
                     if (!usedIds.includes(p.id)) {
+                        if (state && state.planBenchBoost && pos === 'GKP' && p.price <= 4.0 && !isGuaranteedStart(p, state)) continue;
                         if ((currentTeamCounts[p.team] || 0) < 3) {
                             result.push(p);
                             usedIds.push(p.id);
@@ -2287,6 +2298,10 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                     passesMinFwd(p)
                 );
 
+                if (state.planBenchBoost && currentSlot.position === 'GKP') {
+                    candidates = candidates.filter(p => p.price >= 4.5 || isGuaranteedStart(p, state));
+                }
+
                 const guaranteedCandidates = candidates.filter(p => isGuaranteedStart(p, state));
                 if (guaranteedCandidates.length > 0) {
                     candidates = guaranteedCandidates;
@@ -2611,11 +2626,15 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             pairwiseIter++;
             
             const getEliteCandidates = (pos) => {
-                return PLAYERS.filter(p => 
+                let list = PLAYERS.filter(p => 
                     p.position === pos &&
                     !state.mustExclude.includes(p.id) &&
                     (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 75)
-                ).sort((a, b) => getSolverScore(b) - getSolverScore(a))
+                );
+                if (pos === 'GKP') {
+                    list = list.filter(p => p.price >= 4.5 || isGuaranteedStart(p, state));
+                }
+                return list.sort((a, b) => getSolverScore(b) - getSolverScore(a))
                  .slice(0, 30);
             };
             
@@ -2627,7 +2646,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             };
             
             for (const pos of ['GKP', 'DEF', 'MID', 'FWD']) {
-                const cheapest = getCheapestPlayersList(pos, 5, [], false);
+                const cheapest = getCheapestPlayersList(pos, 5, [], state.planBenchBoost);
                 cheapest.forEach(p => {
                     if (!elitePools[pos].some(ep => ep.id === p.id)) {
                         elitePools[pos].push(p);

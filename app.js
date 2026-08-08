@@ -13,19 +13,22 @@ import { renderReveals } from './components/reveals.js';
 import { renderTransferPlanner } from './components/transferplanner.js';
 
 const PROMOTED_TEAMS = ['COV', 'HUL', 'SUN', 'IPS', 'LEE'];
+if (typeof window !== 'undefined') {
+    window.PLAYERS = PLAYERS;
+}
 
 window.getPlayerMinutesFactor = function(player) {
     if (!player) return 1.0;
     if (player.status === 'i' || player.status === 's' || player.status === 'u') return 0;
 
-    // Discount backup goalkeepers (priced <= 4.0m) if the primary goalkeeper is fit/active
+    const allPlayers = (typeof PLAYERS !== 'undefined' && Array.isArray(PLAYERS)) ? PLAYERS : (typeof window !== 'undefined' && window.PLAYERS ? window.PLAYERS : []);
+
+    // Discount backup / second-choice goalkeepers (priced <= 4.0m) to 0 if the primary goalkeeper is fit/active
     if (player.position === 'GKP' && player.price <= 4.0) {
-        if (typeof PLAYERS !== 'undefined' && Array.isArray(PLAYERS)) {
-            const primaryGKPs = PLAYERS.filter(p => p.position === 'GKP' && p.team === player.team && p.price >= 4.5);
-            const hasActivePrimary = primaryGKPs.some(p => p.status !== 'i' && p.status !== 's' && (p.chanceOfPlaying === undefined || p.chanceOfPlaying > 0));
-            if (hasActivePrimary) {
-                return 0.02;
-            }
+        const primaryGKPs = allPlayers.filter(p => p.position === 'GKP' && p.team === player.team && p.price >= 4.5);
+        const hasActivePrimary = primaryGKPs.some(p => p.status !== 'i' && p.status !== 's' && (p.chanceOfPlaying === undefined || p.chanceOfPlaying > 0));
+        if (hasActivePrimary) {
+            return 0.0;
         }
     }
     

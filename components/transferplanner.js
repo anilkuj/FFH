@@ -946,9 +946,9 @@ ${squadListText}
                                 );
                                 if (hasActivePrimary) {
                                     state.squadRisks[p.name] = {
-                                        risk: "Medium",
+                                        risk: "High",
                                         reason: "Second-choice / backup goalkeeper.",
-                                        details: "Goalkeepers priced at £4.0m are typically backup options and unlikely to start unless the first-choice keeper is injured or suspended."
+                                        details: "Goalkeepers priced at £4.0m are backup options and will not start or score points on Bench Boost unless the first-choice keeper is injured or suspended."
                                     };
                                 }
                             }
@@ -985,9 +985,9 @@ ${squadListText}
                     (other.chanceOfPlaying === undefined || other.chanceOfPlaying > 0)
                 );
                 if (hasActivePrimary) {
-                    riskLevel = "Medium";
+                    riskLevel = "High";
                     reason = "Second-choice / backup goalkeeper.";
-                    details = "Goalkeepers priced at £4.0m are typically backup options and unlikely to start unless the first-choice keeper is injured or suspended.";
+                    details = "Goalkeepers priced at £4.0m are backup options and will not start or score points on Bench Boost unless the first-choice keeper is injured or suspended.";
                 }
             }
 
