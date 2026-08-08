@@ -2015,6 +2015,14 @@ const actions = {
         state.vice = 401; // Haaland
         state.transfers = { 1: [], 2: [], 3: [], 4: [], 5: [] };
 
+        // Turn off Bench Boost and reset all active chips across all gameweeks
+        state.planBenchBoost = false;
+        state.benchBoostTargetGw = null;
+        for (let g = 1; g <= 38; g++) {
+            state.chips[g] = { wildcard: false, tripleCaptain: false, benchBoost: false };
+        }
+        state.squadRisks = {};
+
         state.saveState();
         actions.renderActiveView();
         actions.showToast('Squad reset to default lineup.', 'success');
@@ -2047,6 +2055,14 @@ const actions = {
         state.captain = null;
         state.vice = null;
         state.transfers = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+
+        // Turn off Bench Boost and reset all active chips across all gameweeks
+        state.planBenchBoost = false;
+        state.benchBoostTargetGw = null;
+        for (let g = 1; g <= 38; g++) {
+            state.chips[g] = { wildcard: false, tripleCaptain: false, benchBoost: false };
+        }
+        state.squadRisks = {};
 
         state.saveState();
         actions.renderActiveView();
@@ -2136,7 +2152,7 @@ const actions = {
                 state.chips[gw].benchBoost = false;
                 state.planBenchBoost = false;
                 // Clear any active benchBoost chip in state.chips for all weeks
-                for (let g = 1; g <= 10; g++) {
+                for (let g = 1; g <= 38; g++) {
                     if (state.chips[g]) {
                         state.chips[g].benchBoost = false;
                     }
@@ -2146,7 +2162,7 @@ const actions = {
                 state.planBenchBoost = true;
                 state.benchBoostTargetGw = gw;
                 // Clear any other manual benchBoost activation on other weeks
-                for (let g = 1; g <= 10; g++) {
+                for (let g = 1; g <= 38; g++) {
                     if (g !== gw && state.chips[g]) {
                         state.chips[g].benchBoost = false;
                     }

@@ -619,7 +619,7 @@ export function renderOptimizer(container, state, actions) {
                 if (!state.chips[targetGw]) state.chips[targetGw] = { wildcard: false, tripleCaptain: false, benchBoost: false };
                 state.chips[targetGw].benchBoost = true;
                 // Clear other gameweeks
-                for (let g = 1; g <= 10; g++) {
+                for (let g = 1; g <= 38; g++) {
                     if (g !== targetGw && state.chips[g]) {
                         state.chips[g].benchBoost = false;
                     }
@@ -643,7 +643,7 @@ export function renderOptimizer(container, state, actions) {
                 if (!state.chips[gw]) state.chips[gw] = { wildcard: false, tripleCaptain: false, benchBoost: false };
                 state.chips[gw].benchBoost = true;
                 // Clear other gameweeks
-                for (let g = 1; g <= 10; g++) {
+                for (let g = 1; g <= 38; g++) {
                     if (g !== gw && state.chips[g]) {
                         state.chips[g].benchBoost = false;
                     }
@@ -1004,7 +1004,7 @@ export function renderOptimizer(container, state, actions) {
         if (state.planBenchBoost) {
             if (!state.chips[targetGw]) state.chips[targetGw] = { wildcard: false, tripleCaptain: false, benchBoost: false };
             state.chips[targetGw].benchBoost = true;
-            for (let g = 1; g <= 10; g++) {
+            for (let g = 1; g <= 38; g++) {
                 if (g !== targetGw && state.chips[g]) {
                     state.chips[g].benchBoost = false;
                 }
