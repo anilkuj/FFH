@@ -367,6 +367,8 @@ class AppState {
         localStorage.setItem('fpl_hub_prioritize_defcon', (this.prioritizeDefcon || false).toString());
         localStorage.setItem('fpl_hub_optimizer_objective', this.optimizerObjective || 'xp');
         localStorage.setItem('fpl_hub_active_chips', JSON.stringify(this.chips));
+        localStorage.setItem('fpl_hub_plan_bench_boost', (this.planBenchBoost || false).toString());
+        localStorage.setItem('fpl_hub_bench_boost_target_gw', (this.benchBoostTargetGw || 1).toString());
 
         // Save drafts state
         localStorage.setItem(this.getDraftsStorageKey(), JSON.stringify(this.drafts));
@@ -2101,18 +2103,39 @@ const actions = {
         if (!state.chips[gw]) {
             state.chips[gw] = { wildcard: false, tripleCaptain: false, benchBoost: false };
         }
-        const wasActive = state.chips[gw][chipName];
+        
+        let wasActive = state.chips[gw][chipName];
+        if (chipName === 'benchBoost' && state.planBenchBoost && state.benchBoostTargetGw === gw) {
+            wasActive = true;
+        }
         
         // Deactivate all chips for this gameweek first (FPL rules: 1 chip per week max)
         Object.keys(state.chips[gw]).forEach(k => state.chips[gw][k] = false);
         
-        // Toggle target chip
-        state.chips[gw][chipName] = !wasActive;
+        // Handle target chip toggling
+        if (chipName === 'benchBoost') {
+            if (wasActive) {
+                // If it was active (manual or planned), deactivate it completely
+                state.chips[gw].benchBoost = false;
+                state.planBenchBoost = false;
+            } else {
+                state.chips[gw].benchBoost = true;
+            }
+        } else {
+            state.chips[gw][chipName] = !wasActive;
+            // FPL rule: only one chip per GW, so if they manual-activated TC/Wildcard, deactivate planned Bench Boost
+            if (state.chips[gw][chipName] && state.planBenchBoost && state.benchBoostTargetGw === gw) {
+                state.planBenchBoost = false;
+            }
+        }
         
         state.saveState();
         actions.renderActiveView();
         
-        const statusText = state.chips[gw][chipName] ? 'Activated' : 'Deactivated';
+        const isBbNowActive = chipName === 'benchBoost' ? 
+            (state.chips[gw].benchBoost || (state.planBenchBoost && state.benchBoostTargetGw === gw)) : 
+            state.chips[gw][chipName];
+        const statusText = isBbNowActive ? 'Activated' : 'Deactivated';
         const formattedName = chipName === 'tripleCaptain' ? 'Triple Captain' : chipName === 'benchBoost' ? 'Bench Boost' : 'Wildcard';
         actions.showToast(`${formattedName} chip ${statusText} for Gameweek ${gw}`, 'success');
     },

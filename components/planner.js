@@ -108,8 +108,9 @@ export function renderPlanner(container, state, actions) {
         }
     });
 
-    // Add bench points if Bench Boost is active
-    if (state.chips[state.currentGw]?.benchBoost) {
+    // Add bench points if Bench Boost is active (either manual or planned via optimizer)
+    const isBbActiveCurrentGw = !!(state.chips[state.currentGw]?.benchBoost || (state.planBenchBoost && state.benchBoostTargetGw === state.currentGw));
+    if (isBbActiveCurrentGw) {
         bench.forEach(id => {
             const player = PLAYERS.find(p => p.id === id);
             if (player) {
@@ -140,7 +141,8 @@ export function renderPlanner(container, state, actions) {
                     gwTotal += (raw * factor) * multiplier;
                 }
             });
-            if (state.chips[gw]?.benchBoost) {
+            const isBbActiveGw = !!(state.chips[gw]?.benchBoost || (state.planBenchBoost && state.benchBoostTargetGw === gw));
+            if (isBbActiveGw) {
                 bench.forEach(id => {
                     const player = PLAYERS.find(p => p.id === id);
                     if (player) {
@@ -170,6 +172,7 @@ export function renderPlanner(container, state, actions) {
 
     const isPreseason = state.currentGw === 1;
     const currentWeekChips = state.chips[state.currentGw] || { wildcard: false, tripleCaptain: false, benchBoost: false };
+    const isBbActive = !!(currentWeekChips.benchBoost || (state.planBenchBoost && state.benchBoostTargetGw === state.currentGw));
     let chipsHtml = '';
     if (!isPreseason) {
         chipsHtml += `
@@ -182,7 +185,7 @@ export function renderPlanner(container, state, actions) {
         <button class="pitch-btn ${currentWeekChips.tripleCaptain ? 'active-chip' : ''}" id="chipTcBtn" title="Play Triple Captain (Captain points tripled)">
             <i data-lucide="award"></i> Triple Capt.
         </button>
-        <button class="pitch-btn ${currentWeekChips.benchBoost ? 'active-chip' : ''}" id="chipBbBtn" title="Play Bench Boost (Bench points added to starting XI)">
+        <button class="pitch-btn ${isBbActive ? 'active-chip' : ''}" id="chipBbBtn" title="Play Bench Boost (Bench points added to starting XI)">
             <i data-lucide="shield"></i> Bench Boost
         </button>
     `;
