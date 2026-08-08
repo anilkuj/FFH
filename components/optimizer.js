@@ -948,11 +948,36 @@ export function renderOptimizer(container, state, actions) {
         if (reRunInBodyBtn) reRunInBodyBtn.innerHTML = `<i data-lucide="loader" class="animate-spin" style="margin-right: 8px;"></i> Running AI Solver...`;
         lucide.createIcons();
 
+        // Read all current values from DOM to ensure state is synchronized
         const horizon = parseInt(container.querySelector('#gwHorizon').value);
         state.horizon = horizon;
+        
+        const formationSelect = container.querySelector('#optimizerFormationSelect');
+        if (formationSelect) state.formation = formationSelect.value;
+
+        const ignoreBenchCheckbox = container.querySelector('#ignoreBenchCheckbox');
+        if (ignoreBenchCheckbox) state.ignoreBench = ignoreBenchCheckbox.checked;
+
+        const benchSlider = container.querySelector('#benchBudgetRange');
+        if (benchSlider) state.benchBudget = parseFloat(benchSlider.value);
+
+        const startSlider = container.querySelector('#guaranteedStartRange');
+        if (startSlider) state.guaranteedStart = parseInt(startSlider.value);
+
+        const minFwdSlider = container.querySelector('#minFwdPriceRange');
+        if (minFwdSlider) state.minFwdPrice = parseFloat(minFwdSlider.value);
+
+        const planBbCheckbox = container.querySelector('#planBenchBoostCheckbox');
+        if (planBbCheckbox) state.planBenchBoost = planBbCheckbox.checked;
+
+        const bbTargetSelect = container.querySelector('#benchBoostTargetGwSelect');
+        if (bbTargetSelect) state.benchBoostTargetGw = parseInt(bbTargetSelect.value);
+
+        const prioritizeDefconCheckbox = container.querySelector('#prioritizeDefconCheckbox');
+        if (prioritizeDefconCheckbox) state.prioritizeDefcon = prioritizeDefconCheckbox.checked;
+
         state.saveState();
         const mode = phaseSelect.value;
-
 
         setTimeout(() => {
             try {
@@ -1006,6 +1031,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
     // If 'optimum' formation: score each formation with top-starter expected points,
     // then temporarily set state.formation to the winner before running the real solver.
     if (state.formation === 'optimum') {
+        const originalFormation = 'optimum';
         let bestFormation = '3-5-2';
         let bestScore = -Infinity;
 
@@ -1018,7 +1044,7 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
             }
         }
 
-        state.formation = bestFormation;
+        state.formation = originalFormation;
         _performOptimizationWithFormation(resultsGrid, state, actions, horizon, mode, bestFormation, true);
         return;
     }
@@ -1141,7 +1167,8 @@ function _scoreOptimizationForFormation(state, horizon, mode) {
  */
 function _performOptimizationWithFormation(resultsGrid, state, actions, horizon, mode, chosenFormation, isOptimumMode) {
     const squadInfo = state.getSquadForGw(state.currentGw);
-    const { starters, bench, bank } = squadInfo;
+    const { starters, bench } = squadInfo;
+    let bank = squadInfo.bank;
     const currentSquadIds = [...starters, ...bench];
 
     // Resolve current active squad slots for the active gameweek (applying prior transfers)
@@ -1642,7 +1669,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
 
         // Budget boundaries based on user selection
         const minBenchBudget = state.benchBudget || 17.0;
-        const maxBenchBudget = minBenchBudget;
+        const maxBenchBudget = state.planBenchBoost ? 99.0 : minBenchBudget;
         
         // Initial bench cost after initial slot assignment
         const initialBenchCost = benchIndices.reduce((sum, bIdx) => {
@@ -1650,7 +1677,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             const p = pId !== null ? PLAYERS.find(pl => pl.id === pId) : null;
             return sum + (p ? p.price : 0);
         }, 0);
-        const reservedBenchBudget = Math.max(minBenchBudget, initialBenchCost);
+        const reservedBenchBudget = state.planBenchBoost ? 17.0 : Math.max(minBenchBudget, initialBenchCost);
         const maxStartingBudget = Math.max(0, totalValue - reservedBenchBudget);
         const minFwd = state.minFwdPrice ?? 6.0;
 
@@ -2247,9 +2274,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             return sum + (p ? p.price : 0);
         }, 0);
 
-        if (currentBenchCost > maxBenchBudget + 0.001) {
+        if (currentBenchCost > maxBenchBudget + 0.001 && !state.planBenchBoost) {
             let benchTrimIter = 0;
-            while (currentBenchCost > maxBenchBudget + 0.001 && benchTrimIter < 20) {
+            while (currentBenchCost > maxBenchBudget + 0.001 && benchTrimIter < 20 && !state.planBenchBoost) {
                 benchTrimIter++;
                 let bestDowngrade = null;
                 let minPtsLoss = 9999;
@@ -2505,6 +2532,121 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 optimizedSquadSlots[targetIdx].playerId = bestAggressiveUpgrade.id;
             } else {
                 break;
+            }
+        }
+
+
+        // --- PAIRWISE DOUBLE-UPGRADE STEP ---
+        // Escape local minima by checking pairs of slots and swapping them with elite candidates
+        let pairwiseImproved = true;
+        let pairwiseIter = 0;
+        
+        while (pairwiseImproved && pairwiseIter < 3) {
+            pairwiseImproved = false;
+            pairwiseIter++;
+            
+            const getEliteCandidates = (pos) => {
+                return PLAYERS.filter(p => 
+                    p.position === pos &&
+                    !state.mustExclude.includes(p.id) &&
+                    (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 75)
+                ).sort((a, b) => getSolverScore(b) - getSolverScore(a))
+                 .slice(0, 20);
+            };
+            
+            const elitePools = {
+                GKP: getEliteCandidates('GKP'),
+                DEF: getEliteCandidates('DEF'),
+                MID: getEliteCandidates('MID'),
+                FWD: getEliteCandidates('FWD')
+            };
+            
+            for (const pos of ['GKP', 'DEF', 'MID', 'FWD']) {
+                const cheapest = getCheapestPlayersList(pos, 5, [], false);
+                cheapest.forEach(p => {
+                    if (!elitePools[pos].some(ep => ep.id === p.id)) {
+                        elitePools[pos].push(p);
+                    }
+                });
+            }
+
+            for (let i = 0; i < optimizedSquadSlots.length; i++) {
+                for (let j = i + 1; j < optimizedSquadSlots.length; j++) {
+                    const slotI = optimizedSquadSlots[i];
+                    const slotJ = optimizedSquadSlots[j];
+                    if (slotI.locked || slotJ.locked) continue;
+                    
+                    const pI = PLAYERS.find(p => p.id === slotI.playerId);
+                    const pJ = PLAYERS.find(p => p.id === slotJ.playerId);
+                    if (!pI || !pJ) continue;
+                    
+                    const currentPairPts = getSquadExpectedPts(optimizedSquadSlots, true);
+                    const combinedBudget = pI.price + pJ.price + bank;
+                    
+                    const candsI = elitePools[slotI.position];
+                    const candsJ = elitePools[slotJ.position];
+                    
+                    let bestPair = null;
+                    let bestPts = currentPairPts;
+                    
+                    const currentSquadIds = optimizedSquadSlots.map(s => s.playerId).filter(id => id !== null);
+                    const otherSquadIds = currentSquadIds.filter(id => id !== pI.id && id !== pJ.id);
+                    
+                    for (const candI of candsI) {
+                        for (const candJ of candsJ) {
+                            if (candI.id === candJ.id && slotI.position === slotJ.position) continue;
+                            if (candI.price + candJ.price > combinedBudget + 0.001) continue;
+                            
+                            if (otherSquadIds.includes(candI.id) || otherSquadIds.includes(candJ.id)) continue;
+                            
+                            const tempSquadIds = [...otherSquadIds, candI.id, candJ.id];
+                            const teamCounts = {};
+                            let ok = true;
+                            for (const id of tempSquadIds) {
+                                const pl = PLAYERS.find(p => p.id === id);
+                                if (pl) {
+                                    teamCounts[pl.team] = (teamCounts[pl.team] || 0) + 1;
+                                    if (teamCounts[pl.team] > 3) { ok = false; break; }
+                                }
+                            }
+                            if (!ok) continue;
+                            
+                            const isStarterPriceFloor = (player, pos) => {
+                                if (pos === 'GKP' && player.price < 4.5) return false;
+                                if (pos === 'DEF' && player.price < 4.5) return false;
+                                if (pos === 'FWD' && cons.FWD >= 2 && player.price < 5.5) return false;
+                                return true;
+                            };
+                            
+                            if (slotI.isStarting && !isStarterPriceFloor(candI, slotI.position)) continue;
+                            if (slotJ.isStarting && !isStarterPriceFloor(candJ, slotJ.position)) continue;
+                            if (slotI.isStarting && !isGuaranteedStart(candI, state)) continue;
+                            if (slotJ.isStarting && !isGuaranteedStart(candJ, state)) continue;
+                            
+                            const oldI = slotI.playerId;
+                            const oldJ = slotJ.playerId;
+                            slotI.playerId = candI.id;
+                            slotJ.playerId = candJ.id;
+                            
+                            const newPts = getSquadExpectedPts(optimizedSquadSlots, true);
+                            
+                            slotI.playerId = oldI;
+                            slotJ.playerId = oldJ;
+                            
+                            if (newPts > bestPts + 0.1) {
+                                bestPts = newPts;
+                                bestPair = { candI, candJ };
+                            }
+                        }
+                    }
+                    
+                    if (bestPair) {
+                        slotI.playerId = bestPair.candI.id;
+                        slotJ.playerId = bestPair.candJ.id;
+                        bank = combinedBudget - (bestPair.candI.price + bestPair.candJ.price);
+                        pairwiseImproved = true;
+                    }
+                }
             }
         }
 
