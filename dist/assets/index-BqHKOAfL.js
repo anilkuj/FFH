@@ -3321,31 +3321,31 @@ ${V.map(hl=>{const Nl=hl.chanceOfPlaying!==void 0?hl.chanceOfPlaying:100;return`
                     }
                     .tp-transfer-badge {
                         position: absolute;
-                        top: -7px;
-                        left: -7px;
-                        width: 22px;
-                        height: 22px;
-                        background: linear-gradient(135deg, #00f2fe, #4facfe);
-                        border-radius: 50%;
+                        bottom: -6px;
+                        right: -6px;
+                        padding: 1px 5px;
+                        background: linear-gradient(135deg, #22c55e, #16a34a);
+                        border-radius: 4px;
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        font-size: 11px;
+                        font-size: 9px;
                         font-weight: 900;
-                        color: #0a0a1a;
-                        border: 2px solid rgba(255,255,255,0.3);
-                        box-shadow: 0 2px 8px rgba(0,242,254,0.5);
+                        letter-spacing: 0.5px;
+                        color: #fff;
+                        border: 1.5px solid rgba(255,255,255,0.35);
+                        box-shadow: 0 2px 8px rgba(34,197,94,0.55);
                         z-index: 20;
                         cursor: pointer;
                         animation: tpBadgePulse 2s infinite alternate;
                     }
                     @keyframes tpBadgePulse {
-                        0% { box-shadow: 0 0 4px rgba(0,242,254,0.4); }
-                        100% { box-shadow: 0 0 12px rgba(0,242,254,0.9); }
+                        0% { box-shadow: 0 0 4px rgba(34,197,94,0.4); }
+                        100% { box-shadow: 0 0 12px rgba(34,197,94,0.9); }
                     }
                     #tpSquadPreviewContainer .player-pitch-card.is-transferred-in {
-                        border: 2px solid rgba(0,242,254,0.6) !important;
-                        background: rgba(0,242,254,0.06) !important;
+                        border: 2px solid rgba(34,197,94,0.6) !important;
+                        background: rgba(34,197,94,0.06) !important;
                     }
                     .tp-transfer-tooltip {
                         position: fixed;
@@ -3457,7 +3457,7 @@ ${V.map(hl=>{const Nl=hl.chanceOfPlaying!==void 0?hl.chanceOfPlaying:100;return`
                 </div>
                 <!-- Floating transfer tooltip -->
                 <div id="tpTransferTooltip" class="tp-transfer-tooltip"></div>
-            `,lucide.createIcons();const v=A.querySelector("#tpTransferTooltip");A.querySelectorAll(".player-pitch-card:not(.empty-slot)").forEach(ll=>{const al=parseInt(ll.getAttribute("data-id")),El=G[al];if(!El)return;ll.classList.add("is-transferred-in");const sl=ll.querySelector(".shirt-icon-wrapper");if(sl){const tl=document.createElement("div");tl.className="tp-transfer-badge",tl.title=`Transferred in for ${El.name}`,tl.textContent="⇆",tl.style.position="absolute",sl.style.position="relative",sl.appendChild(tl);const Pl=yl=>{const Ll=C.find(Dl=>Dl.id===al),Vl=Ll&&Ll.predictions?Ll.predictions.slice(0,5).reduce((Dl,_l)=>Dl+(_l.pts||0),0).toFixed(1):"—",Wl=El.predictions?El.predictions.slice(0,5).reduce((Dl,_l)=>Dl+(_l.pts||0),0).toFixed(1):"—";v.innerHTML=`
+            `,lucide.createIcons();const v=A.querySelector("#tpTransferTooltip");A.querySelectorAll(".player-pitch-card:not(.empty-slot)").forEach(ll=>{const al=parseInt(ll.getAttribute("data-id")),El=G[al];if(!El)return;ll.classList.add("is-transferred-in");const sl=ll.querySelector(".shirt-icon-wrapper");if(sl){const tl=document.createElement("div");tl.className="tp-transfer-badge",tl.title=`Planned transfer: ${El.name} → OUT`,tl.textContent="IN",tl.style.position="absolute",sl.style.position="relative",sl.appendChild(tl);const Pl=yl=>{const Ll=C.find(Dl=>Dl.id===al),Vl=Ll&&Ll.predictions?Ll.predictions.slice(0,5).reduce((Dl,_l)=>Dl+(_l.pts||0),0).toFixed(1):"—",Wl=El.predictions?El.predictions.slice(0,5).reduce((Dl,_l)=>Dl+(_l.pts||0),0).toFixed(1):"—";v.innerHTML=`
                             <div style="font-size:10px; font-weight:800; color:rgba(0,242,254,0.9); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">Transfer Applied</div>
                             <div style="display:flex; flex-direction:column; gap:4px;">
                                 <div style="display:flex; align-items:center; gap:6px;">
