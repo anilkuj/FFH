@@ -558,7 +558,25 @@ export function renderTransferPlanner(container, state, actions) {
         let previewBank = bank;
 
         if (sourceVal === 'active') {
-            previewSlots = state.squadSlots;
+            // Apply current GW transfers to a copy so IN players appear in the preview
+            const gwTxForSlots = (state.transfers && state.transfers[state.currentGw]) || [];
+            if (gwTxForSlots.length > 0) {
+                previewSlots = JSON.parse(JSON.stringify(state.squadSlots));
+                gwTxForSlots.forEach(tx => {
+                    const slot = previewSlots.find(s => s.playerId === tx.out);
+                    if (slot) slot.playerId = tx.in;
+                });
+                // Update bank for applied transfers
+                let adjBank = bank;
+                gwTxForSlots.forEach(tx => {
+                    const pOut = PLAYERS.find(p => p.id === tx.out);
+                    const pIn = PLAYERS.find(p => p.id === tx.in);
+                    if (pOut && pIn) adjBank += pOut.price - pIn.price;
+                });
+                previewBank = Math.max(0, adjBank);
+            } else {
+                previewSlots = state.squadSlots;
+            }
         } else if (sourceVal.startsWith('draft_')) {
             const draftIdx = parseInt(sourceVal.split('_')[1]);
             const d = state.drafts[draftIdx];
