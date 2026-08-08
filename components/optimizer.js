@@ -454,6 +454,15 @@ export function renderOptimizer(container, state, actions) {
                                 </div>
                                 <span class="setting-help">Optimizes all 15 squad players for maximum points, easy FDR (&le;2), and Home fixtures in your target Gameweek.</span>
                             </div>
+
+                            <!-- Prioritize Defcon Monsters Checkbox -->
+                            <div class="setting-group" id="prioritizeDefconGroup">
+                                <label for="prioritizeDefconCheckbox" style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12px; font-weight: 700; color: var(--text-main); line-height: 1.3;">
+                                    <input type="checkbox" id="prioritizeDefconCheckbox" ${state.prioritizeDefcon ? 'checked' : ''} style="width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0;">
+                                    🛡️ Prioritize Defcon Monsters (Easiest FDR)
+                                </label>
+                                <span class="setting-help">Boosts GKPs, DEFs, and MIDs with elite Defcon Potential (A/B rating) and favors easiest fixture difficulties (FDR).</span>
+                            </div>
                         </div>
                     </div>
 
@@ -619,6 +628,17 @@ export function renderOptimizer(container, state, actions) {
             const gw = parseInt(e.target.value);
             state.benchBoostTargetGw = gw;
             localStorage.setItem('fpl_hub_bench_boost_target_gw', gw.toString());
+            state.saveState();
+        });
+    }
+
+    // Wire Prioritize Defcon Monsters listener
+    const prioritizeDefconCheckbox = container.querySelector('#prioritizeDefconCheckbox');
+    if (prioritizeDefconCheckbox) {
+        prioritizeDefconCheckbox.addEventListener('change', (e) => {
+            const isChecked = e.target.checked;
+            state.prioritizeDefcon = isChecked;
+            localStorage.setItem('fpl_hub_prioritize_defcon', isChecked ? 'true' : 'false');
             state.saveState();
         });
     }
@@ -1177,11 +1197,23 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         if (duty.fk) setPieceBonus += 0.4;
         if (duty.ck) setPieceBonus += 0.35;
 
+        let baseScore = 0;
         if (objective === 'efficiency') {
-            return (getPlayerEfficiency(player, state.currentGw) * 10) + setPieceBonus;
+            baseScore = (getPlayerEfficiency(player, state.currentGw) * 10) + setPieceBonus;
         } else {
-            return getExpectedPts(player) + (setPieceBonus * horizon);
+            baseScore = getExpectedPts(player) + (setPieceBonus * horizon);
         }
+
+        // Add Defcon Monster with easiest FDR bonus if prioritizeDefcon option is checked
+        if (state.prioritizeDefcon && (player.position === 'GKP' || player.position === 'DEF' || player.position === 'MID')) {
+            const ratings = getPlayerRatings(player, state.currentGw);
+            if (ratings.defconPotential === 'A' || ratings.defconPotential === 'B') {
+                const avgFdr = parseFloat(getAvgFDR(player)) || 3.0;
+                baseScore += 15.0 + (5.0 - avgFdr) * 3.0;
+            }
+        }
+
+        return baseScore;
     };
 
 
@@ -1207,7 +1239,15 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
                 const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(p) : 1.0;
                 const pts = raw * chance * factor;
-                const score = objective === 'efficiency' ? getPlayerEfficiency(p, state.currentGw) * 10 : pts;
+                let score = objective === 'efficiency' ? getPlayerEfficiency(p, state.currentGw) * 10 : pts;
+                
+                if (state.prioritizeDefcon && (p.position === 'GKP' || p.position === 'DEF' || p.position === 'MID')) {
+                    const ratings = getPlayerRatings(p, state.currentGw);
+                    if (ratings.defconPotential === 'A' || ratings.defconPotential === 'B') {
+                        const avgFdr = parseFloat(getAvgFDR(p)) || 3.0;
+                        score += 15.0 + (5.0 - avgFdr) * 3.0;
+                    }
+                }
                 
                 if (slot.isStarting) {
                     gwTotal += score;
