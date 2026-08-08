@@ -1109,7 +1109,9 @@ function getExpectedPtsOverHorizon(player, currentGw, horizon) {
         const pred = player.predictions.find(pr => pr.gw === gw);
         if (pred) {
             const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
-            sum += (raw * factor);
+            const t = gw - currentGw;
+            const weight = Math.max(0.6, 1.0 - (t * 0.08));
+            sum += (raw * factor * weight);
         }
     }
     return sum;
@@ -1196,7 +1198,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             const pred = player.predictions.find(pr => pr.gw === gw);
             if (pred) {
                 const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
-                sum += (raw * factor);
+                const t = gw - state.currentGw;
+                const weight = Math.max(0.6, 1.0 - (t * 0.08));
+                sum += (raw * factor * weight);
             }
         }
         return sum;
@@ -1293,7 +1297,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             const captainMultiplier = isTcActive ? 2.0 : 1.0;
             gwTotal += maxStarterScore * captainMultiplier;
             
-            total += gwTotal;
+            const t = gw - state.currentGw;
+            const gwWeight = Math.max(0.6, 1.0 - (t * 0.08));
+            total += gwTotal * gwWeight;
         }
         
         return total;
@@ -1776,6 +1782,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 
                 const isStarterPriceFloorInit = (player, pos) => {
                     if (!player) return false;
+                    if (isGuaranteedStart(player, state)) return true;
                     if (pos === 'GKP' && player.price < 4.5) return false;
                     if (pos === 'DEF' && player.price < 4.5) return false;
                     if (pos === 'FWD' && cons.FWD >= 2 && player.price < 5.5) return false;
@@ -2047,6 +2054,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
 
                 const isStarterPriceFloor = (player, pos) => {
                     if (!player) return false;
+                    if (isGuaranteedStart(player, state)) return true;
                     if (pos === 'GKP' && player.price < 4.5) return false;
                     if (pos === 'DEF' && player.price < 4.5) return false;
                     if (pos === 'FWD' && cons.FWD >= 2 && player.price < 5.5) return false;
@@ -2551,7 +2559,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                     !state.mustExclude.includes(p.id) &&
                     (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 75)
                 ).sort((a, b) => getSolverScore(b) - getSolverScore(a))
-                 .slice(0, 20);
+                 .slice(0, 30);
             };
             
             const elitePools = {
@@ -2612,6 +2620,8 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                             if (!ok) continue;
                             
                             const isStarterPriceFloor = (player, pos) => {
+                                if (!player) return false;
+                                if (isGuaranteedStart(player, state)) return true;
                                 if (pos === 'GKP' && player.price < 4.5) return false;
                                 if (pos === 'DEF' && player.price < 4.5) return false;
                                 if (pos === 'FWD' && cons.FWD >= 2 && player.price < 5.5) return false;
