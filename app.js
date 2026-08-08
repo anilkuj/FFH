@@ -239,12 +239,14 @@ class AppState {
 
 
 
-        // Active chips
-        this.chips = {
-            wildcard: false,
-            tripleCaptain: false,
-            benchBoost: false
-        };
+        // Active chips stored per Gameweek: { gwNum: { wildcard: bool, tripleCaptain: bool, benchBoost: bool } }
+        const savedChips = localStorage.getItem('fpl_hub_active_chips');
+        this.chips = savedChips ? JSON.parse(savedChips) : {};
+        for (let gw = 1; gw <= 38; gw++) {
+            if (!this.chips[gw]) {
+                this.chips[gw] = { wildcard: false, tripleCaptain: false, benchBoost: false };
+            }
+        }
 
         // Planned transfers: { gwNum: [ { out: id, in: id } ] }
         const savedTransfers = localStorage.getItem('fpl_hub_transfers');
@@ -364,6 +366,7 @@ class AppState {
         localStorage.setItem('fpl_hub_min_fwd_price', (this.minFwdPrice || 6.0).toString());
         localStorage.setItem('fpl_hub_prioritize_defcon', (this.prioritizeDefcon || false).toString());
         localStorage.setItem('fpl_hub_optimizer_objective', this.optimizerObjective || 'xp');
+        localStorage.setItem('fpl_hub_active_chips', JSON.stringify(this.chips));
 
         // Save drafts state
         localStorage.setItem(this.getDraftsStorageKey(), JSON.stringify(this.drafts));
@@ -756,14 +759,14 @@ class AppState {
             // Wildcard gives unlimited free transfers for that week
             if (gw < targetGw) {
                 const txCount = weeklyTransfers.length;
-                if (this.chips.wildcard) {
+                if (this.chips[gw]?.wildcard) {
                     freeTransfers = 5; // Reset to max after wildcard
                 } else {
                     freeTransfers = Math.min(5, Math.max(0, freeTransfers - txCount) + 1);
                 }
             } else {
                 const txCount = weeklyTransfers.length;
-                if (!this.chips.wildcard) {
+                if (!this.chips[gw]?.wildcard) {
                     freeTransfers = Math.max(0, freeTransfers - txCount);
                 }
             }
@@ -1157,7 +1160,7 @@ const actions = {
 
         const formattedSquadValue = `£${(totalVal + squadInfo.bank).toFixed(1)}m`;
         const formattedBankValue = `£${squadInfo.bank.toFixed(1)}m`;
-        const formattedTransfers = (state.currentGw === 1 || state.chips.wildcard) ? 'Unlimited' : squadInfo.freeTransfers;
+        const formattedTransfers = (state.currentGw === 1 || state.chips[state.currentGw]?.wildcard) ? 'Unlimited' : squadInfo.freeTransfers;
 
         document.getElementById('squadValueDisplay').innerText = formattedSquadValue;
         document.getElementById('bankValueDisplay').innerText = formattedBankValue;
@@ -1199,7 +1202,8 @@ const actions = {
         // Active Chips Indicator (Desktop & Mobile)
         const chipsPillVal = document.querySelector('#activeChipsDisplay .pill-value');
         const mobChipsPillVal = document.querySelector('#mobileActiveChipsDisplay .pill-value');
-        const activeChips = Object.keys(state.chips).filter(k => state.chips[k]);
+        const currentWeekChips = state.chips[state.currentGw] || { wildcard: false, tripleCaptain: false, benchBoost: false };
+        const activeChips = Object.keys(currentWeekChips).filter(k => currentWeekChips[k]);
         const formattedChips = activeChips.length > 0 ? activeChips.map(c => c === 'tripleCaptain' ? 'TC' : (c === 'benchBoost' ? 'BB' : 'WC')).join(', ') : 'None';
 
         if (chipsPillVal) {
@@ -2078,19 +2082,24 @@ const actions = {
     },
 
     toggleChip(chipName) {
-        const wasActive = state.chips[chipName];
+        const gw = state.currentGw;
+        if (!state.chips[gw]) {
+            state.chips[gw] = { wildcard: false, tripleCaptain: false, benchBoost: false };
+        }
+        const wasActive = state.chips[gw][chipName];
         
-        // Deactivate all chips first
-        Object.keys(state.chips).forEach(k => state.chips[k] = false);
+        // Deactivate all chips for this gameweek first (FPL rules: 1 chip per week max)
+        Object.keys(state.chips[gw]).forEach(k => state.chips[gw][k] = false);
         
         // Toggle target chip
-        state.chips[chipName] = !wasActive;
+        state.chips[gw][chipName] = !wasActive;
         
+        state.saveState();
         actions.renderActiveView();
         
-        const statusText = state.chips[chipName] ? 'Activated' : 'Deactivated';
+        const statusText = state.chips[gw][chipName] ? 'Activated' : 'Deactivated';
         const formattedName = chipName === 'tripleCaptain' ? 'Triple Captain' : chipName === 'benchBoost' ? 'Bench Boost' : 'Wildcard';
-        actions.showToast(`${formattedName} chip ${statusText}`, 'success');
+        actions.showToast(`${formattedName} chip ${statusText} for Gameweek ${gw}`, 'success');
     },
 
     setTier(tier) {
@@ -2216,9 +2225,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('prevGwBtn').addEventListener('click', () => {
         if (state.currentGw > 1) {
             state.currentGw--;
-            state.chips.wildcard = false;
-            state.chips.tripleCaptain = false;
-            state.chips.benchBoost = false;
             state.autoRotateLineup(state.currentGw);
             actions.renderActiveView();
         }
@@ -2227,9 +2233,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('nextGwBtn').addEventListener('click', () => {
         if (state.currentGw < 38) {
             state.currentGw++;
-            state.chips.wildcard = false;
-            state.chips.tripleCaptain = false;
-            state.chips.benchBoost = false;
             state.autoRotateLineup(state.currentGw);
             actions.renderActiveView();
         }

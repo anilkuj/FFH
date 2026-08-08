@@ -9,7 +9,7 @@ export function renderTransferPlanner(container, state, actions) {
     
     // Determine context-aware default transfers based on available Free Transfers or active chips
     let defaultNumTransfers = squadInfo.freeTransfers;
-    if (state.currentGw === 1 || state.chips.wildcard) {
+    if (state.currentGw === 1 || state.chips[state.currentGw]?.wildcard) {
         defaultNumTransfers = 15; // Preseason or Wildcard unlimited
     } else if (defaultNumTransfers === 0 || isNaN(defaultNumTransfers)) {
         defaultNumTransfers = 1;
@@ -500,10 +500,10 @@ export function renderTransferPlanner(container, state, actions) {
                             <div style="display:flex; flex-direction:column; gap:6px;">
                                 <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Active Chip</label>
                                 <select id="tpActiveChip" class="settings-select" style="width:100%;">
-                                    <option value="none" ${!state.chips.wildcard && !state.chips.benchBoost && !state.chips.tripleCaptain ? 'selected' : ''}>None</option>
-                                    <option value="wildcard" ${state.chips.wildcard ? 'selected' : ''}>Wildcard</option>
-                                    <option value="benchBoost" ${state.chips.benchBoost ? 'selected' : ''}>Bench Boost</option>
-                                    <option value="tripleCaptain" ${state.chips.tripleCaptain ? 'selected' : ''}>Triple Captain</option>
+                                    <option value="none" ${!state.chips[state.currentGw]?.wildcard && !state.chips[state.currentGw]?.benchBoost && !state.chips[state.currentGw]?.tripleCaptain ? 'selected' : ''}>None</option>
+                                    <option value="wildcard" ${state.chips[state.currentGw]?.wildcard ? 'selected' : ''}>Wildcard</option>
+                                    <option value="benchBoost" ${state.chips[state.currentGw]?.benchBoost ? 'selected' : ''}>Bench Boost</option>
+                                    <option value="tripleCaptain" ${state.chips[state.currentGw]?.tripleCaptain ? 'selected' : ''}>Triple Captain</option>
                                 </select>
                             </div>
                             <div style="display:flex; flex-direction:column; gap:6px;">
@@ -1038,11 +1038,13 @@ ${squadListText}
     if (tpActiveChip) {
         tpActiveChip.addEventListener('change', (e) => {
             const chosen = e.target.value;
-            state.chips.wildcard = false;
-            state.chips.benchBoost = false;
-            state.chips.tripleCaptain = false;
+            const gw = state.currentGw;
+            if (!state.chips[gw]) {
+                state.chips[gw] = { wildcard: false, tripleCaptain: false, benchBoost: false };
+            }
+            Object.keys(state.chips[gw]).forEach(k => state.chips[gw][k] = false);
             if (chosen !== 'none') {
-                state.chips[chosen] = true;
+                state.chips[gw][chosen] = true;
             }
             state.saveState();
             
@@ -1367,7 +1369,7 @@ ${squadListText}
                 if (player) {
                     let multiplier = 1;
                     if (id === bestCapId) {
-                        multiplier = state.chips.tripleCaptain ? 3 : 2;
+                        multiplier = state.chips[state.currentGw]?.tripleCaptain ? 3 : 2;
                     }
                     expectedPoints += getExpectedPts(player, horizon) * multiplier;
                 }
@@ -1377,7 +1379,7 @@ ${squadListText}
             bench.forEach(id => {
                 const player = PLAYERS.find(p => p.id === id);
                 if (player) {
-                    const benchWeight = state.chips.benchBoost ? 1.0 : 0.10;
+                    const benchWeight = state.chips[state.currentGw]?.benchBoost ? 1.0 : 0.10;
                     expectedPoints += getExpectedPts(player, horizon) * benchWeight;
                 }
             });
@@ -1401,7 +1403,7 @@ ${squadListText}
                     !currentSquadIds.includes(p.id) &&
                     p.price <= sellBudget &&
                     !state.mustExclude.includes(p.id) &&
-                    (!state.chips.benchBoost || isGuaranteedStart(p))
+                    (!state.chips[state.currentGw]?.benchBoost || isGuaranteedStart(p))
                 );
 
                 for (const boughtPlayer of candidates) {
@@ -1435,7 +1437,7 @@ ${squadListText}
                     !currentSquadIds.includes(p.id) &&
                     p.price <= sellBudget &&
                     !state.mustExclude.includes(p.id) &&
-                    (!state.chips.benchBoost || isGuaranteedStart(p))
+                    (!state.chips[state.currentGw]?.benchBoost || isGuaranteedStart(p))
                 );
 
                 const optionsList = [];

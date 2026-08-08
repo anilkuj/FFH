@@ -101,7 +101,7 @@ export function renderPlanner(container, state, actions) {
             const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
             let multiplier = 1;
             if (id === state.captain) {
-                multiplier = state.chips.tripleCaptain ? 3 : 2;
+                multiplier = state.chips[state.currentGw]?.tripleCaptain ? 3 : 2;
             }
             const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
             expectedPoints += (raw * factor) * multiplier;
@@ -109,7 +109,7 @@ export function renderPlanner(container, state, actions) {
     });
 
     // Add bench points if Bench Boost is active
-    if (state.chips.benchBoost) {
+    if (state.chips[state.currentGw]?.benchBoost) {
         bench.forEach(id => {
             const player = PLAYERS.find(p => p.id === id);
             if (player) {
@@ -134,13 +134,13 @@ export function renderPlanner(container, state, actions) {
                     const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
                     let multiplier = 1;
                     if (id === state.captain) {
-                        multiplier = (gw === state.currentGw && state.chips.tripleCaptain) ? 3 : 2;
+                        multiplier = state.chips[gw]?.tripleCaptain ? 3 : 2;
                     }
                     const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
                     gwTotal += (raw * factor) * multiplier;
                 }
             });
-            if (gw === state.currentGw && state.chips.benchBoost) {
+            if (state.chips[gw]?.benchBoost) {
                 bench.forEach(id => {
                     const player = PLAYERS.find(p => p.id === id);
                     if (player) {
@@ -163,25 +163,26 @@ export function renderPlanner(container, state, actions) {
     const gw10XP = getSquadXPForHorizon(10);
 
     // Deactivate Wildcard if we are in preseason (GW 1)
-    if (state.currentGw === 1 && state.chips.wildcard) {
-        state.chips.wildcard = false;
+    if (state.currentGw === 1 && state.chips[1]?.wildcard) {
+        state.chips[1].wildcard = false;
         state.saveState();
     }
 
     const isPreseason = state.currentGw === 1;
+    const currentWeekChips = state.chips[state.currentGw] || { wildcard: false, tripleCaptain: false, benchBoost: false };
     let chipsHtml = '';
     if (!isPreseason) {
         chipsHtml += `
-            <button class="pitch-btn ${state.chips.wildcard ? 'active-chip' : ''}" id="chipWildcardBtn" title="Play Wildcard (Unlimited Free Transfers)">
+            <button class="pitch-btn ${currentWeekChips.wildcard ? 'active-chip' : ''}" id="chipWildcardBtn" title="Play Wildcard (Unlimited Free Transfers)">
                 <i data-lucide="zap"></i> Wildcard
             </button>
         `;
     }
     chipsHtml += `
-        <button class="pitch-btn ${state.chips.tripleCaptain ? 'active-chip' : ''}" id="chipTcBtn" title="Play Triple Captain (Captain points tripled)">
+        <button class="pitch-btn ${currentWeekChips.tripleCaptain ? 'active-chip' : ''}" id="chipTcBtn" title="Play Triple Captain (Captain points tripled)">
             <i data-lucide="award"></i> Triple Capt.
         </button>
-        <button class="pitch-btn ${state.chips.benchBoost ? 'active-chip' : ''}" id="chipBbBtn" title="Play Bench Boost (Bench points added to starting XI)">
+        <button class="pitch-btn ${currentWeekChips.benchBoost ? 'active-chip' : ''}" id="chipBbBtn" title="Play Bench Boost (Bench points added to starting XI)">
             <i data-lucide="shield"></i> Bench Boost
         </button>
     `;

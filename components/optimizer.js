@@ -1255,14 +1255,14 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                         maxStarterScore = score;
                     }
                 } else {
-                    const isBbActive = state.chips.benchBoost || 
+                    const isBbActive = state.chips[gw]?.benchBoost || 
                                        (state.planBenchBoost && state.benchBoostTargetGw === gw);
                     const benchWeight = isBbActive ? 1.0 : 0.10;
                     gwTotal += score * benchWeight;
                 }
             });
             
-            const isTcActive = state.chips.tripleCaptain;
+            const isTcActive = state.chips[gw]?.tripleCaptain;
             const captainMultiplier = isTcActive ? 2.0 : 1.0;
             gwTotal += maxStarterScore * captainMultiplier;
             
