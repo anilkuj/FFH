@@ -601,15 +601,62 @@ export function renderTransferPlanner(container, state, actions) {
                 d.vice = state.vice;
                 d.formation = state.formation;
             }
-            previewSlots = d.squadSlots;
             previewCap = d.captain || state.captain;
             previewVice = d.vice || state.vice;
-            const spent = d.squadSlots.reduce((sum, slot) => {
-                if (slot.playerId === null) return sum;
-                const p = PLAYERS.find(pl => pl.id === slot.playerId);
-                return sum + (p ? p.price : 0);
-            }, 0);
-            previewBank = Math.max(0, 100 - spent);
+
+            // Apply all prior-GW transfers cumulatively to d.squadSlots base
+            let draftSlotsAtGw = JSON.parse(JSON.stringify(d.squadSlots));
+            for (let gw = 1; gw < state.currentGw; gw++) {
+                const priorTx = (state.transfers && state.transfers[gw]) || [];
+                priorTx.forEach(tx => {
+                    const slot = draftSlotsAtGw.find(s => s.playerId === tx.out);
+                    if (slot) slot.playerId = tx.in;
+                });
+            }
+
+            // Apply current GW transfers for the highlighted preview
+            const draftGwTx = (state.transfers && state.transfers[state.currentGw]) || [];
+            if (draftGwTx.length > 0) {
+                previewSlots = JSON.parse(JSON.stringify(draftSlotsAtGw));
+                draftGwTx.forEach(tx => {
+                    const slot = previewSlots.find(s => s.playerId === tx.out);
+                    if (slot) slot.playerId = tx.in;
+                });
+                // Bank: base draft cost adjusted for all transfers up to currentGw
+                const baseSpent = d.squadSlots.reduce((sum, slot) => {
+                    if (slot.playerId === null) return sum;
+                    const p = PLAYERS.find(pl => pl.id === slot.playerId);
+                    return sum + (p ? p.price : 0);
+                }, 0);
+                let adjBank = 100 - baseSpent;
+                for (let gw = 1; gw <= state.currentGw; gw++) {
+                    const txs = (state.transfers && state.transfers[gw]) || [];
+                    txs.forEach(tx => {
+                        const pOut = PLAYERS.find(p => p.id === tx.out);
+                        const pIn = PLAYERS.find(p => p.id === tx.in);
+                        if (pOut && pIn) adjBank += pOut.price - pIn.price;
+                    });
+                }
+                previewBank = Math.max(0, adjBank);
+            } else {
+                previewSlots = draftSlotsAtGw;
+                // Bank for this GW without current-GW transfers
+                const baseSpent = d.squadSlots.reduce((sum, slot) => {
+                    if (slot.playerId === null) return sum;
+                    const p = PLAYERS.find(pl => pl.id === slot.playerId);
+                    return sum + (p ? p.price : 0);
+                }, 0);
+                let adjBank = 100 - baseSpent;
+                for (let gw = 1; gw < state.currentGw; gw++) {
+                    const txs = (state.transfers && state.transfers[gw]) || [];
+                    txs.forEach(tx => {
+                        const pOut = PLAYERS.find(p => p.id === tx.out);
+                        const pIn = PLAYERS.find(p => p.id === tx.in);
+                        if (pOut && pIn) adjBank += pOut.price - pIn.price;
+                    });
+                }
+                previewBank = Math.max(0, adjBank);
+            }
         } else if (sourceVal === 'import') {
             if (tempSourceSlots) {
                 previewSlots = tempSourceSlots;
