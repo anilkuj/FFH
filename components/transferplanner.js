@@ -594,6 +594,15 @@ export function renderTransferPlanner(container, state, actions) {
         }
 
         if (previewSlots) {
+            // Build a lookup: playerId (IN) -> playerName (OUT) for current GW transfers
+            const gwTransfers = (state.transfers && state.transfers[state.currentGw]) || [];
+            const transferInMap = {}; // inId -> outPlayer
+            gwTransfers.forEach(tx => {
+                const pOut = PLAYERS.find(p => p.id === tx.out);
+                if (pOut) transferInMap[tx.in] = pOut;
+            });
+            const hasTransfers = gwTransfers.length > 0;
+
             tpSquadPreviewContainer.innerHTML = `
                 <style>
                     #tpSquadPreviewContainer .pitch-sell-btn {
@@ -602,11 +611,81 @@ export function renderTransferPlanner(container, state, actions) {
                     #tpSquadPreviewContainer .player-pitch-card {
                         cursor: default !important;
                     }
+                    .tp-transfer-badge {
+                        position: absolute;
+                        top: -7px;
+                        left: -7px;
+                        width: 22px;
+                        height: 22px;
+                        background: linear-gradient(135deg, #00f2fe, #4facfe);
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 11px;
+                        font-weight: 900;
+                        color: #0a0a1a;
+                        border: 2px solid rgba(255,255,255,0.3);
+                        box-shadow: 0 2px 8px rgba(0,242,254,0.5);
+                        z-index: 20;
+                        cursor: pointer;
+                        animation: tpBadgePulse 2s infinite alternate;
+                    }
+                    @keyframes tpBadgePulse {
+                        0% { box-shadow: 0 0 4px rgba(0,242,254,0.4); }
+                        100% { box-shadow: 0 0 12px rgba(0,242,254,0.9); }
+                    }
+                    #tpSquadPreviewContainer .player-pitch-card.is-transferred-in {
+                        border: 2px solid rgba(0,242,254,0.6) !important;
+                        background: rgba(0,242,254,0.06) !important;
+                    }
+                    .tp-transfer-tooltip {
+                        position: fixed;
+                        z-index: 99999;
+                        background: #0d1f3c;
+                        border: 1px solid rgba(0,242,254,0.4);
+                        border-radius: 10px;
+                        padding: 10px 14px;
+                        min-width: 180px;
+                        max-width: 240px;
+                        pointer-events: none;
+                        display: none;
+                        box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+                    }
+                    .tp-transfer-tooltip.visible {
+                        display: block;
+                    }
+                    .tp-revert-all-btn {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 6px;
+                        padding: 6px 12px;
+                        font-size: 11px;
+                        font-weight: 700;
+                        color: #ef4444;
+                        background: rgba(239,68,68,0.12);
+                        border: 1px solid rgba(239,68,68,0.35);
+                        border-radius: 8px;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                        white-space: nowrap;
+                    }
+                    .tp-revert-all-btn:hover {
+                        background: rgba(239,68,68,0.22);
+                        border-color: rgba(239,68,68,0.6);
+                        transform: translateY(-1px);
+                    }
                 </style>
                 <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:16px; padding:20px; display:flex; flex-direction:column; gap:16px; box-shadow: var(--shadow-sm);">
-                    <h3 style="font-family:var(--font-heading); margin:0; font-size:14px; font-weight:800; border-bottom:1px solid var(--border-color); padding-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
-                        <span>Squad Preview</span>
-                        <span style="font-size:12px; color:var(--primary); font-weight:700;">Bank Capital: £${previewBank.toFixed(1)}m</span>
+                    <h3 style="font-family:var(--font-heading); margin:0; font-size:14px; font-weight:800; border-bottom:1px solid var(--border-color); padding-bottom:10px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                        <span style="display:flex; align-items:center; gap:8px;">
+                            Squad Preview
+                            ${hasTransfers ? `<span style="font-size:11px; font-weight:700; color:rgba(0,242,254,0.9); background:rgba(0,242,254,0.1); border:1px solid rgba(0,242,254,0.25); border-radius:6px; padding:2px 8px;">${gwTransfers.length} transfer${gwTransfers.length > 1 ? 's' : ''} applied</span>` : ''}
+                        </span>
+                        <span style="display:flex; align-items:center; gap:10px;">
+                            ${hasTransfers ? `<button class="tp-revert-all-btn" id="tpRevertAllBtn"><i data-lucide="rotate-ccw" style="width:12px;height:12px;"></i> Revert All</button>` : ''}
+                            <span style="font-size:12px; color:var(--primary); font-weight:700;">Bank: £${previewBank.toFixed(1)}m</span>
+                        </span>
                     </h3>
 
                     <!-- Regular Full Size Football Pitch -->
@@ -644,11 +723,145 @@ export function renderTransferPlanner(container, state, actions) {
                             ${renderBenchRow(previewSlots, state.currentGw, previewCap, previewVice, actions, false, state)}
                         </div>
                     </div>
+
+                    ${hasTransfers ? `
+                    <!-- Transfer Summary Log -->
+                    <div style="border-top:1px solid var(--border-color); padding-top:14px; display:flex; flex-direction:column; gap:8px;">
+                        <p style="margin:0 0 6px 0; font-size:11px; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">GW${state.currentGw} Transfers</p>
+                        ${gwTransfers.map((tx, idx) => {
+                            const pOut = PLAYERS.find(p => p.id === tx.out);
+                            const pIn = PLAYERS.find(p => p.id === tx.in);
+                            if (!pOut || !pIn) return '';
+                            const priceDiff = pIn.price - pOut.price;
+                            const diffStr = priceDiff > 0 ? `<span style="color:#ef4444;">+£${priceDiff.toFixed(1)}m</span>` :
+                                           priceDiff < 0 ? `<span style="color:#00f2fe;">-£${Math.abs(priceDiff).toFixed(1)}m</span>` : `<span style="color:var(--text-muted);">±0</span>`;
+                            return `
+                            <div style="display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.03); border:1px solid var(--border-color); border-radius:8px; padding:8px 12px;">
+                                <div style="flex:1; min-width:0;">
+                                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                                        <span style="font-size:12px; font-weight:700; color:#ef4444; white-space:nowrap;">OUT</span>
+                                        <span style="font-size:12px; font-weight:700; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${pOut.name}">${pOut.name}</span>
+                                        <span style="font-size:10px; color:var(--text-muted);">${pOut.team} • £${pOut.price.toFixed(1)}m</span>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:4px;">
+                                        <span style="font-size:12px; font-weight:700; color:rgba(0,242,254,0.9); white-space:nowrap;">IN</span>
+                                        <span style="font-size:12px; font-weight:700; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${pIn.name}">${pIn.name}</span>
+                                        <span style="font-size:10px; color:var(--text-muted);">${pIn.team} • £${pIn.price.toFixed(1)}m • ${diffStr}</span>
+                                    </div>
+                                </div>
+                                <button class="tp-revert-single-btn" data-idx="${idx}" title="Revert this transfer" style="flex-shrink:0; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); color:#ef4444; border-radius:6px; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:14px; transition:all 0.15s;">✕</button>
+                            </div>`;
+                        }).join('')}
+                    </div>
+                    ` : ''}
                 </div>
+                <!-- Floating transfer tooltip -->
+                <div id="tpTransferTooltip" class="tp-transfer-tooltip"></div>
             `;
             lucide.createIcons();
+
+            // --- Overlay transfer badges on transferred-in player cards ---
+            const tooltip = tpSquadPreviewContainer.querySelector('#tpTransferTooltip');
+            tpSquadPreviewContainer.querySelectorAll('.player-pitch-card:not(.empty-slot)').forEach(card => {
+                const playerId = parseInt(card.getAttribute('data-id'));
+                const pOut = transferInMap[playerId];
+                if (!pOut) return;
+
+                // Mark card with transferred-in class
+                card.classList.add('is-transferred-in');
+
+                // Inject badge into shirt wrapper
+                const shirtWrapper = card.querySelector('.shirt-icon-wrapper');
+                if (shirtWrapper) {
+                    const badge = document.createElement('div');
+                    badge.className = 'tp-transfer-badge';
+                    badge.title = `Transferred in for ${pOut.name}`;
+                    badge.textContent = '⇆';
+                    badge.style.position = 'absolute';
+                    shirtWrapper.style.position = 'relative';
+                    shirtWrapper.appendChild(badge);
+
+                    // Hover tooltip
+                    const showTip = (e) => {
+                        const pIn = PLAYERS.find(p => p.id === playerId);
+                        const xpIn = pIn && pIn.predictions ? pIn.predictions.slice(0, 5).reduce((s, pr) => s + (pr.pts || 0), 0).toFixed(1) : '—';
+                        const xpOut = pOut.predictions ? pOut.predictions.slice(0, 5).reduce((s, pr) => s + (pr.pts || 0), 0).toFixed(1) : '—';
+                        tooltip.innerHTML = `
+                            <div style="font-size:10px; font-weight:800; color:rgba(0,242,254,0.9); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">Transfer Applied</div>
+                            <div style="display:flex; flex-direction:column; gap:4px;">
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <span style="font-size:10px; font-weight:800; color:#ef4444; background:rgba(239,68,68,0.12); padding:1px 5px; border-radius:4px;">OUT</span>
+                                    <span style="font-size:12px; font-weight:700; color:var(--text-main);">${pOut.name}</span>
+                                    <span style="font-size:10px; color:var(--text-muted);">£${pOut.price.toFixed(1)}m</span>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <span style="font-size:10px; font-weight:800; color:#00f2fe; background:rgba(0,242,254,0.12); padding:1px 7px; border-radius:4px;">IN</span>
+                                    <span style="font-size:12px; font-weight:700; color:var(--text-main);">${pIn ? pIn.name : '—'}</span>
+                                    <span style="font-size:10px; color:var(--text-muted);">£${pIn ? pIn.price.toFixed(1) : '—'}m</span>
+                                </div>
+                                <div style="border-top:1px solid rgba(255,255,255,0.06); padding-top:5px; margin-top:2px; display:flex; gap:12px;">
+                                    <div style="font-size:10px; color:var(--text-muted);">5GW XP: <strong style="color:var(--text-main);">${xpIn}</strong> vs <strong style="color:var(--text-muted);">${xpOut}</strong></div>
+                                </div>
+                            </div>`;
+                        tooltip.classList.add('visible');
+                        // Position tooltip
+                        const rect = card.getBoundingClientRect();
+                        let top = rect.top - 10;
+                        let left = rect.left + rect.width / 2 - 90;
+                        if (top < 10) top = rect.bottom + 10;
+                        left = Math.max(8, Math.min(left, window.innerWidth - 250));
+                        tooltip.style.top = top + 'px';
+                        tooltip.style.left = left + 'px';
+                    };
+                    const hideTip = () => { tooltip.classList.remove('visible'); };
+
+                    card.addEventListener('mouseenter', showTip);
+                    card.addEventListener('mouseleave', hideTip);
+                    badge.addEventListener('mouseenter', showTip);
+                    badge.addEventListener('mouseleave', hideTip);
+                    card.addEventListener('click', (e) => {
+                        if (tooltip.classList.contains('visible')) {
+                            hideTip();
+                        } else {
+                            showTip(e);
+                            setTimeout(hideTip, 3000);
+                        }
+                    });
+                }
+            });
+
+            // --- Revert All Transfers ---
+            const revertAllBtn = tpSquadPreviewContainer.querySelector('#tpRevertAllBtn');
+            if (revertAllBtn) {
+                revertAllBtn.addEventListener('click', () => {
+                    const count = gwTransfers.length;
+                    if (!confirm(`Revert all ${count} transfer${count > 1 ? 's' : ''} for GW${state.currentGw}? This cannot be undone.`)) return;
+                    state.transfers[state.currentGw] = [];
+                    state.optimizeCaptaincy();
+                    state.saveState();
+                    actions.showToast(`Reverted all ${count} transfer${count > 1 ? 's' : ''} for GW${state.currentGw}.`, 'success');
+                    updateSquadPreview();
+                });
+            }
+
+            // --- Revert individual transfers ---
+            tpSquadPreviewContainer.querySelectorAll('.tp-revert-single-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const idx = parseInt(btn.getAttribute('data-idx'));
+                    const tx = gwTransfers[idx];
+                    const pOut = tx ? PLAYERS.find(p => p.id === tx.out) : null;
+                    const pIn = tx ? PLAYERS.find(p => p.id === tx.in) : null;
+                    actions.removeTransfer(state.currentGw, idx);
+                    if (pOut && pIn) {
+                        actions.showToast(`Reverted: ${pIn.name} → ${pOut.name}`, 'success');
+                    }
+                    updateSquadPreview();
+                });
+            });
         }
     };
+
+
 
     const toggleImportFields = () => {
         if (tpSourceSquad.value === 'import') {
