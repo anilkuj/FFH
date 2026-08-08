@@ -572,6 +572,8 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
     return rowSlots.map((slot, index) => {
         if (slot.playerId === null) {
             const slotIndex = squadSlots.indexOf(slot);
+            const prevPlayer = slot.prevPlayerId ? PLAYERS.find(p => p.id === slot.prevPlayerId) : null;
+            const prevPlayerName = prevPlayer ? (prevPlayer.name.split(' ').pop()) : '';
             return `
                 <div class="player-pitch-card empty-slot" data-slot-index="${slotIndex}" data-position="${position}" data-type="starter">
                     <div class="shirt-icon-wrapper">
@@ -580,6 +582,11 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
                     <div class="player-card-info">
                         <div class="player-pitch-name">Add ${position}</div>
                         <div class="player-pitch-points">Empty Slot</div>
+                        ${prevPlayer ? `
+                            <button class="restore-player-btn" data-slot-index="${slotIndex}" data-player-id="${prevPlayer.id}" style="margin-top: 5px; padding: 2px 6px; font-size: 9px; font-weight: 700; background: rgba(0, 242, 254, 0.2); color: var(--secondary); border: 1px solid var(--secondary-glow); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 3px; z-index: 10;">
+                                <i data-lucide="rotate-ccw" style="width: 10px; height: 10px;"></i> Restore ${prevPlayerName}
+                            </button>
+                        ` : ''}
                     </div>
                 </div>
             `;
@@ -659,6 +666,8 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions, is
         const slotIndex = squadSlots.indexOf(slot);
         
         if (slot.playerId === null) {
+            const prevPlayer = slot.prevPlayerId ? PLAYERS.find(p => p.id === slot.prevPlayerId) : null;
+            const prevPlayerName = prevPlayer ? (prevPlayer.name.split(' ').pop()) : '';
             return `
                 <div class="bench-slot-wrapper">
                     <span class="bench-slot-label">${label}</span>
@@ -669,6 +678,11 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions, is
                         <div class="player-card-info">
                             <div class="player-pitch-name">Add ${slot.position}</div>
                             <div class="player-pitch-points">Empty Slot</div>
+                            ${prevPlayer ? `
+                                <button class="restore-player-btn" data-slot-index="${slotIndex}" data-player-id="${prevPlayer.id}" style="margin-top: 5px; padding: 2px 6px; font-size: 9px; font-weight: 700; background: rgba(0, 242, 254, 0.2); color: var(--secondary); border: 1px solid var(--secondary-glow); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 3px; z-index: 10;">
+                                    <i data-lucide="rotate-ccw" style="width: 10px; height: 10px;"></i> Restore ${prevPlayerName}
+                                </button>
+                            ` : ''}
                         </div>
                     </div>
                 </div>
@@ -925,6 +939,14 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
     // Add Player slot click trigger (opens the add player popup modal)
     container.querySelectorAll('.player-pitch-card.empty-slot').forEach(card => {
         card.addEventListener('click', e => {
+            const restoreBtn = e.target.closest('.restore-player-btn');
+            if (restoreBtn) {
+                e.stopPropagation();
+                const slotIndex = parseInt(restoreBtn.getAttribute('data-slot-index'));
+                const playerId = parseInt(restoreBtn.getAttribute('data-player-id'));
+                actions.restorePlayer(slotIndex, playerId);
+                return;
+            }
             const slotIndex = parseInt(card.getAttribute('data-slot-index'));
             const position = card.getAttribute('data-position');
             openAddPlayerModal(container, state, actions, slotIndex, position);
@@ -2047,6 +2069,9 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
     const squadInfo = state.getSquadForGw(state.currentGw);
     const { bank } = squadInfo;
 
+    const slot = state.squadSlots[slotIndex];
+    const prevPlayer = (slot && slot.prevPlayerId) ? PLAYERS.find(p => p.id === slot.prevPlayerId) : null;
+
     // Find buyable players
     const allSquadIds = state.squadSlots.map(s => s.playerId).filter(id => id !== null);
     
@@ -2090,6 +2115,17 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
             <button class="close-modal-btn" id="closeAddPlayerModalBtn"><i data-lucide="x"></i></button>
         </div>
         <div class="checkout-modal-body" style="padding: 0; display: flex; flex-direction: column; gap: 0; max-height: 85vh; overflow-y: auto;">
+            ${prevPlayer ? `
+                <div class="restore-banner-modal" style="margin: 16px 20px 0 20px; padding: 12px 16px; background: rgba(0, 242, 254, 0.08); border: 1px solid rgba(0, 242, 254, 0.25); border-radius: 8px; display: flex; align-items: center; justify-content: space-between; gap: 12px; box-sizing: border-box;">
+                    <div style="display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--text-main);">
+                        <i data-lucide="rotate-ccw" style="width: 16px; height: 16px; color: var(--secondary);"></i>
+                        <span>Would you like to restore <strong>${prevPlayer.name}</strong> (${prevPlayer.team} • £${prevPlayer.price.toFixed(1)}m)?</span>
+                    </div>
+                    <button class="restore-modal-action-btn" data-slot-index="${slotIndex}" data-player-id="${prevPlayer.id}" style="padding: 6px 12px; font-size: 11px; font-weight: 700; background: var(--secondary); color: #000; border: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: transform 0.2s;">
+                        Restore
+                    </button>
+                </div>
+            ` : ''}
             <div style="padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; border-bottom: 1px dashed var(--border-color); width: 100%; box-sizing: border-box;">
                 <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; width: 100%;">
                     <p style="font-size: 13px; color: var(--text-muted); margin: 0;">Max Budget: <strong class="highlight-bank" style="font-size: 14px;">£${bank.toFixed(1)}m</strong></p>
@@ -2179,6 +2215,16 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
     actions.showModal(modalHTML, () => {
         const closeBtn = document.getElementById('closeAddPlayerModalBtn');
         if (closeBtn) closeBtn.addEventListener('click', actions.hideModal);
+
+        const restoreBannerBtn = document.querySelector('.restore-modal-action-btn');
+        if (restoreBannerBtn) {
+            restoreBannerBtn.addEventListener('click', () => {
+                const slotIndex = parseInt(restoreBannerBtn.getAttribute('data-slot-index'));
+                const playerId = parseInt(restoreBannerBtn.getAttribute('data-player-id'));
+                actions.restorePlayer(slotIndex, playerId);
+                actions.hideModal();
+            });
+        }
 
         const searchField = document.getElementById('modalSearchField');
         const gwWindowSelect = document.getElementById('modalGwWindowSelect');

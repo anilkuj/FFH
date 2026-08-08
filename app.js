@@ -1896,11 +1896,25 @@ const actions = {
         const slot = state.squadSlots.find(s => s.playerId === playerId);
         if (slot) {
             slot.playerId = null;
+            slot.prevPlayerId = playerId;
             
             state.optimizeCaptaincy();
             state.saveState();
             actions.renderActiveView();
             actions.showToast('Player removed completely.', 'success');
+        }
+    },
+
+    restorePlayer(slotIndex, playerId) {
+        const slot = state.squadSlots[slotIndex];
+        if (slot && slot.prevPlayerId === playerId) {
+            slot.playerId = playerId;
+            delete slot.prevPlayerId;
+            
+            state.optimizeCaptaincy();
+            state.saveState();
+            actions.renderActiveView();
+            actions.showToast('Player restored successfully!', 'success');
         }
     },
 
@@ -1937,6 +1951,7 @@ const actions = {
         } else {
             state.squadSlots[slotIndex].playerId = inId;
         }
+        delete state.squadSlots[slotIndex].prevPlayerId;
 
         state.optimizeCaptaincy();
         state.saveState();

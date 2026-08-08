@@ -2,6 +2,7 @@ import fs from 'fs';
 
 const BOOTSTRAP_URL = 'https://fantasy.premierleague.com/api/bootstrap-static/';
 const FIXTURES_URL = 'https://fantasy.premierleague.com/api/fixtures/';
+const PROMOTED_TEAMS = ['LEI', 'IPS', 'SOU'];
 
 async function sync() {
     try {
@@ -300,8 +301,8 @@ async function parseAndWriteData(data, fixturesData) {
         const isPromoted = PROMOTED_TEAMS.includes(teamShort);
         if (minutes === 0 && starts === 0) {
             const isExpectedStarter = isPromoted 
-                ? (ownership > 2.0 || price > (position === 'GKP' || position === 'DEF' ? 4.0 : 4.5)) 
-                : (price > 6.0 || ownership > 5.0);
+                ? (ownership > 0.4 || price >= (position === 'GKP' || position === 'DEF' ? 4.0 : 4.5)) 
+                : (price >= (position === 'GKP' || position === 'DEF' ? 4.5 : 5.5) || ownership > 1.5);
                 
             if (isExpectedStarter) {
                 starts = 25;
@@ -340,6 +341,8 @@ async function parseAndWriteData(data, fixturesData) {
         // Calculate a realistic points-per-game baseline
         let basePPG = 0.5;
         const manualOverride = ROLE_OVERRIDES[playerName];
+        const isPromotedOrTransfer = PROMOTED_TEAMS.includes(teamShort) || transferredThisSeason;
+
         if (manualOverride && manualOverride.basePPG !== undefined) {
             basePPG = manualOverride.basePPG;
         } else if (minutes > 500 && appearances > 0) {
@@ -349,8 +352,8 @@ async function parseAndWriteData(data, fixturesData) {
             const playingRatio = Math.min(1.0, minutes / 500);
             const defaultPPG = (position === 'GKP' ? 3.0 : (position === 'DEF' ? 2.8 : (position === 'MID' ? 3.2 : 3.5)));
             basePPG = 0.5 + (defaultPPG - 0.5) * playingRatio;
-        } else if (transferredThisSeason) {
-            // Newly transferred players or division transfers are default starters
+        } else if (isPromotedOrTransfer) {
+            // Newly transferred players or promoted team starters are default starters
             basePPG = (position === 'GKP' ? 3.0 : (position === 'DEF' ? 2.8 : (position === 'MID' ? 3.2 : 3.5)));
         } else {
             basePPG = (price > 6.0) ? 2.0 : 0.5;
@@ -596,8 +599,9 @@ async function parseAndWriteData(data, fixturesData) {
         // 2. Rules-based fallback classifier (if no AI override)
         // Checks if outfield player started very few games and played very few minutes last season
         if (!aiOverride) {
+            const isPromotedOrTransfer = PROMOTED_TEAMS.includes(p.team) || p.transferredThisSeason;
             const hasLowStarts = typeof p.GS === 'number' && p.GS < 8 && typeof p.MPPG === 'number' && p.MPPG < 45;
-            if (hasLowStarts && !p.news && p.status === 'a' && !p.transferredThisSeason) {
+            if (hasLowStarts && !p.news && p.status === 'a' && !isPromotedOrTransfer) {
                 p.chanceOfPlaying = 15;
                 p.news = "Backup/squad rotation option based on low historical starts.";
             }
