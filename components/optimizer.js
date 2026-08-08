@@ -1047,7 +1047,7 @@ export function renderOptimizer(container, state, actions) {
                 lucide.createIcons();
                 isExecuting = false;
             }
-        }, 1200);
+        }, 50);
     };
 
     runBtn.addEventListener('click', executeAnalysis);
@@ -1312,6 +1312,34 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
     };
 
 
+    // Pre-build O(1) player lookup map and per-player score cache for solver hot path
+    const _playerMap = new Map(PLAYERS.map(p => [p.id, p]));
+
+    // Per-player score cache: key = `${playerId}:${includeHeuristics}`, value = {score, isStarter}
+    // Invalidated when a slot's playerId changes.
+    const _scoreCache = new Map();
+    const _getCachedPlayerScore = (p, gw, includeHeuristics) => {
+        const key = `${p.id}:${gw}:${includeHeuristics ? 1 : 0}`;
+        if (_scoreCache.has(key)) return _scoreCache.get(key);
+        if (p.status === 'i' || p.status === 's' || p.status === 'u') { _scoreCache.set(key, 0); return 0; }
+        const chance = (p.chanceOfPlaying !== undefined && p.chanceOfPlaying !== null) ? (p.chanceOfPlaying / 100) : 1.0;
+        const pred = p.predictions.find(pr => pr.gw === gw);
+        if (!pred) { _scoreCache.set(key, 0); return 0; }
+        const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
+        const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(p) : 1.0;
+        const pts = raw * chance * factor;
+        let score = objective === 'efficiency' ? getPlayerEfficiency(p, state.currentGw) * 10 : pts;
+        if (includeHeuristics && state.prioritizeDefcon && (p.position === 'GKP' || p.position === 'DEF' || p.position === 'MID')) {
+            const ratings = getPlayerRatings(p, state.currentGw);
+            if (ratings.defconPotential === 'A' || ratings.defconPotential === 'B') {
+                const avgFdr = parseFloat(getAvgFDR(p)) || 3.0;
+                score += 15.0 + (5.0 - avgFdr) * 3.0;
+            }
+        }
+        _scoreCache.set(key, score);
+        return score;
+    };
+
     const getSquadPointsForHorizon = (slots, h, includeHeuristics = false) => {
         let total = 0;
         
@@ -1321,49 +1349,31 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             let gwTotal = 0;
             let maxStarterScore = 0;
             
-            slots.forEach(slot => {
-                if (slot.playerId === null) return;
-                const p = PLAYERS.find(pl => pl.id === slot.playerId);
-                if (!p) return;
-                if (p.status === 'i' || p.status === 's' || p.status === 'u') return;
-                
-                const chance = (p.chanceOfPlaying !== undefined && p.chanceOfPlaying !== null) ? (p.chanceOfPlaying / 100) : 1.0;
-                const pred = p.predictions.find(pr => pr.gw === gw);
-                if (!pred) return;
-                
-                const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
-                const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(p) : 1.0;
-                const pts = raw * chance * factor;
-                let score = objective === 'efficiency' ? getPlayerEfficiency(p, state.currentGw) * 10 : pts;
-                
-                if (includeHeuristics && state.prioritizeDefcon && (p.position === 'GKP' || p.position === 'DEF' || p.position === 'MID')) {
-                    const ratings = getPlayerRatings(p, state.currentGw);
-                    if (ratings.defconPotential === 'A' || ratings.defconPotential === 'B') {
-                        const avgFdr = parseFloat(getAvgFDR(p)) || 3.0;
-                        score += 15.0 + (5.0 - avgFdr) * 3.0;
-                    }
-                }
+            const isBbActive = !!(state.chips[gw]?.benchBoost || 
+                               (state.planBenchBoost && state.benchBoostTargetGw === gw));
+            const benchWeight = isBbActive ? 1.0 : 0.10;
+
+            for (const slot of slots) {
+                if (slot.playerId === null) continue;
+                const p = _playerMap.get(slot.playerId);
+                if (!p) continue;
+
+                const score = _getCachedPlayerScore(p, gw, includeHeuristics);
+                if (score === 0) continue;
                 
                 if (slot.isStarting) {
                     gwTotal += score;
-                    if (score > maxStarterScore) {
-                        maxStarterScore = score;
-                    }
+                    if (score > maxStarterScore) maxStarterScore = score;
                 } else {
-                    const isBbActive = state.chips[gw]?.benchBoost || 
-                                       (state.planBenchBoost && state.benchBoostTargetGw === gw);
-                    const benchWeight = isBbActive ? 1.0 : 0.10;
                     gwTotal += score * benchWeight;
                 }
-            });
+            }
             
-            const isTcActive = state.chips[gw]?.tripleCaptain;
+            const isTcActive = !!(state.chips[gw]?.tripleCaptain);
             const captainMultiplier = isTcActive ? 2.0 : 1.0;
             gwTotal += maxStarterScore * captainMultiplier;
             
             const t = gw - state.currentGw;
-            const isBbActive = state.chips[gw]?.benchBoost || 
-                               (state.planBenchBoost && state.benchBoostTargetGw === gw);
             const gwWeight = isBbActive ? 1.0 : Math.max(0.6, 1.0 - (t * 0.08));
             total += gwTotal * gwWeight;
         }
@@ -2093,35 +2103,46 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             startingImproved = false;
             startingIter++;
 
+            // Cache current squad pts once per iteration, not per-slot
+            let cachedSquadPts = getSquadExpectedPts(optimizedSquadSlots, true);
+
             for (const idx of startingIndices) {
                 const currentSlot = optimizedSquadSlots[idx];
                 if (currentSlot.locked) continue; // Skip locked force-included players!
 
-                const currentSquadPts = getSquadExpectedPts(optimizedSquadSlots, true);
+                const currentSquadPts = cachedSquadPts;
+                const currentSlotPlayer = currentSlot.playerId !== null ? _playerMap.get(currentSlot.playerId) : null;
+                const currentSlotScore = currentSlotPlayer ? getSolverScore(currentSlotPlayer) : 0;
                 
                 // Cost of other starting players
-                const otherStartingCost = startingIndices.reduce((sum, sIdx) => {
-                    if (sIdx === idx) return sum;
+                let otherStartingCost = 0;
+                for (const sIdx of startingIndices) {
+                    if (sIdx === idx) continue;
                     const pId = optimizedSquadSlots[sIdx].playerId;
-                    const p = pId !== null ? PLAYERS.find(pl => pl.id === pId) : null;
-                    return sum + (p ? p.price : 0);
-                }, 0);
+                    const p = pId !== null ? _playerMap.get(pId) : null;
+                    if (p) otherStartingCost += p.price;
+                }
 
                 const maxBudgetForSlot = maxStartingBudget - otherStartingCost;
                 const usedStartingIds = startingIndices.filter(sIdx => sIdx !== idx).map(sIdx => optimizedSquadSlots[sIdx].playerId).filter(id => id !== null);
+                const usedStartingSet = new Set(usedStartingIds);
                 
                 let candidates = PLAYERS.filter(p => 
                     p.position === currentSlot.position && 
-                    !usedStartingIds.includes(p.id) && 
+                    !usedStartingSet.has(p.id) && 
                     (!state.ignoreBench || !activeBenchIds.includes(p.id)) &&
                     p.price <= (currentSlot.position === 'GKP' ? 5.5 : maxBudgetForSlot) &&
                     !state.mustExclude.includes(p.id) &&
                     passesMinFwd(p)
                 );
 
-
                 const isStarterPriceFloor = (player, pos) => {
                     if (!player) return false;
+                    if (pos === 'GKP' && player.price < 4.5) {
+                        const primaryGKPs = PLAYERS.filter(p => p.position === 'GKP' && p.team === player.team && p.price >= 4.5);
+                        const hasActivePrimary = primaryGKPs.some(p => p.status !== 'i' && p.status !== 's' && (p.chanceOfPlaying === undefined || p.chanceOfPlaying > 0));
+                        if (hasActivePrimary) return false;
+                    }
                     if (isGuaranteedStart(player, state)) return true;
                     if (pos === 'GKP' && player.price < 4.5) return false;
                     if (pos === 'DEF' && player.price < 4.5) return false;
@@ -2139,8 +2160,6 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                     candidates = candidates.filter(p => (p.chanceOfPlaying >= 50) && isStarterPriceFloor(p, currentSlot.position));
                 }
                 candidates.sort((a, b) => getSolverScore(b) - getSolverScore(a));
-
-
 
                 let bestCandidate = null;
                 let bestPts = currentSquadPts;
@@ -2269,17 +2288,20 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             benchImproved = false;
             benchIter++;
 
+            // Cache squad pts once per iteration
+            let cachedBenchSquadPts = getSquadExpectedPts(optimizedSquadSlots, true);
+
             for (const idx of benchIndices) {
                 const currentSlot = optimizedSquadSlots[idx];
                 if (currentSlot.locked) continue; // Skip locked force-included players!
 
-                const currentSquadPts = getSquadExpectedPts(optimizedSquadSlots, true);
+                const currentSquadPts = cachedBenchSquadPts;
                 
                 // Cost of other bench players
                 const otherBenchCost = benchIndices.reduce((sum, bIdx) => {
                     if (bIdx === idx) return sum;
                     const pId = optimizedSquadSlots[bIdx].playerId;
-                    const p = pId !== null ? PLAYERS.find(pl => pl.id === pId) : null;
+                    const p = pId !== null ? _playerMap.get(pId) : null;
                     return sum + (p ? p.price : 0);
                 }, 0);
 
@@ -2287,11 +2309,11 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 
                 const startingIds = startingIndices.map(sIdx => optimizedSquadSlots[sIdx].playerId).filter(id => id !== null);
                 const otherBenchIds = benchIndices.filter(bIdx => bIdx !== idx).map(bIdx => optimizedSquadSlots[bIdx].playerId).filter(id => id !== null);
-                const unavailableIds = [...startingIds, ...otherBenchIds];
+                const unavailableIds = new Set([...startingIds, ...otherBenchIds]);
 
                 let candidates = PLAYERS.filter(p => 
                     p.position === currentSlot.position && 
-                    !unavailableIds.includes(p.id) && 
+                    !unavailableIds.has(p.id) && 
                     p.price <= maxBudgetForSlot &&
                     getSolverScore(p) >= 0.5 &&
                     !state.mustExclude.includes(p.id) &&
@@ -2317,7 +2339,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                     const teamCounts = {};
                     let ok = true;
                     for (const id of tempSquadIds) {
-                        const p = PLAYERS.find(pl => pl.id === id);
+                        const p = _playerMap.get(id);
                         if (p) {
                             teamCounts[p.team] = (teamCounts[p.team] || 0) + 1;
                             if (teamCounts[p.team] > 3) {
@@ -2635,7 +2657,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                     list = list.filter(p => p.price >= 4.5 || isGuaranteedStart(p, state));
                 }
                 return list.sort((a, b) => getSolverScore(b) - getSolverScore(a))
-                 .slice(0, 30);
+                 .slice(0, 16);
             };
             
             const elitePools = {
@@ -2646,7 +2668,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             };
             
             for (const pos of ['GKP', 'DEF', 'MID', 'FWD']) {
-                const cheapest = getCheapestPlayersList(pos, 5, [], state.planBenchBoost);
+                const cheapest = getCheapestPlayersList(pos, 4, [], state.planBenchBoost);
                 cheapest.forEach(p => {
                     if (!elitePools[pos].some(ep => ep.id === p.id)) {
                         elitePools[pos].push(p);
@@ -2665,6 +2687,8 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                     if (!pI || !pJ) continue;
                     
                     const currentPairPts = getSquadExpectedPts(optimizedSquadSlots, true);
+                    const scoreI = getSolverScore(pI);
+                    const scoreJ = getSolverScore(pJ);
                     const combinedBudget = pI.price + pJ.price + bank;
                     
                     const candsI = elitePools[slotI.position];
@@ -2672,6 +2696,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                     
                     let bestPair = null;
                     let bestPts = currentPairPts;
+                    let bestDelta = 0.05;
                     
                     const currentSquadIds = optimizedSquadSlots.map(s => s.playerId).filter(id => id !== null);
                     const otherSquadIds = currentSquadIds.filter(id => id !== pI.id && id !== pJ.id);
@@ -2680,6 +2705,10 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                         for (const candJ of candsJ) {
                             if (candI.id === candJ.id && slotI.position === slotJ.position) continue;
                             if (candI.price + candJ.price > combinedBudget + 0.001) continue;
+                            
+                            // Fast O(1) heuristic score filter to avoid expensive squad XP recomputation
+                            const candDelta = (getSolverScore(candI) - scoreI) + (getSolverScore(candJ) - scoreJ);
+                            if (candDelta <= bestDelta) continue;
                             
                             if (otherSquadIds.includes(candI.id) || otherSquadIds.includes(candJ.id)) continue;
                             
@@ -2697,6 +2726,11 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                             
                             const isStarterPriceFloor = (player, pos) => {
                                 if (!player) return false;
+                                if (pos === 'GKP' && player.price < 4.5) {
+                                    const primaryGKPs = PLAYERS.filter(p => p.position === 'GKP' && p.team === player.team && p.price >= 4.5);
+                                    const hasActivePrimary = primaryGKPs.some(p => p.status !== 'i' && p.status !== 's' && (p.chanceOfPlaying === undefined || p.chanceOfPlaying > 0));
+                                    if (hasActivePrimary) return false;
+                                }
                                 if (isGuaranteedStart(player, state)) return true;
                                 if (pos === 'GKP' && player.price < 4.5) return false;
                                 if (pos === 'DEF' && player.price < 4.5) return false;
@@ -2721,6 +2755,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                             
                             if (newPts > bestPts + 0.1) {
                                 bestPts = newPts;
+                                bestDelta = candDelta;
                                 bestPair = { candI, candJ };
                             }
                         }
@@ -2740,7 +2775,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         // --- HARD SAFETY ENFORCER: GUARANTEE SQUAD NEVER EXCEEDS TOTAL BUDGET ---
         let finalSquadCost = optimizedSquadSlots.reduce((sum, slot) => {
             if (slot.playerId === null) return sum;
-            const p = PLAYERS.find(pl => pl.id === slot.playerId);
+            const p = _playerMap.get(slot.playerId);
             return sum + (p ? p.price : 0);
         }, 0);
 
@@ -2753,20 +2788,21 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 let targetSlotIdx = -1;
 
                 const currentSquadIds = optimizedSquadSlots.map(s => s.playerId).filter(id => id !== null);
+                const currentSquadSet = new Set(currentSquadIds);
                 const currentPts = getSquadExpectedPts(optimizedSquadSlots, true);
 
                 for (let i = 0; i < optimizedSquadSlots.length; i++) {
                     const slot = optimizedSquadSlots[i];
                     if (slot.locked) continue; // Do not replace force-included locked players
 
-                    const player = slot.playerId !== null ? PLAYERS.find(p => p.id === slot.playerId) : null;
+                    const player = slot.playerId !== null ? _playerMap.get(slot.playerId) : null;
                     if (!player) continue;
 
                     // Search for cheaper valid replacement for this position
                     const cheaperCandidates = PLAYERS.filter(p => 
                         p.position === slot.position &&
                         p.price < player.price &&
-                        !currentSquadIds.includes(p.id) &&
+                        !currentSquadSet.has(p.id) &&
                         !state.mustExclude.includes(p.id) &&
                         passesMinFwd(p)
                     );
@@ -2782,7 +2818,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                         const teamCounts = {};
                         let ok = true;
                         for (const id of tempSquadIds) {
-                            const pl = PLAYERS.find(p => p.id === id);
+                            const pl = _playerMap.get(id);
                             if (pl) {
                                 teamCounts[pl.team] = (teamCounts[pl.team] || 0) + 1;
                                 if (teamCounts[pl.team] > 3) {
@@ -2814,7 +2850,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                     optimizedSquadSlots[targetSlotIdx].playerId = bestDowngrade.id;
                     finalSquadCost = optimizedSquadSlots.reduce((sum, slot) => {
                         if (slot.playerId === null) return sum;
-                        const p = PLAYERS.find(pl => pl.id === slot.playerId);
+                        const p = _playerMap.get(slot.playerId);
                         return sum + (p ? p.price : 0);
                     }, 0);
                 } else {
@@ -2823,13 +2859,13 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                     for (let i = 0; i < optimizedSquadSlots.length; i++) {
                         const slot = optimizedSquadSlots[i];
                         if (slot.locked || !slot.isStarting) continue;
-                        const player = PLAYERS.find(p => p.id === slot.playerId);
+                        const player = _playerMap.get(slot.playerId);
                         if (!player) continue;
 
                         const cheapestFallback = PLAYERS.filter(p =>
                             p.position === slot.position &&
                             p.price < player.price &&
-                            !currentSquadIds.includes(p.id) &&
+                            !currentSquadSet.has(p.id) &&
                             (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 50)
                         ).sort((a, b) => a.price - b.price)[0];
 
@@ -2837,7 +2873,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                             slot.playerId = cheapestFallback.id;
                             emergencyTrimmed = true;
                             finalSquadCost = optimizedSquadSlots.reduce((sum, s) => {
-                                const p = PLAYERS.find(pl => pl.id === s.playerId);
+                                const p = _playerMap.get(s.playerId);
                                 return sum + (p ? p.price : 0);
                             }, 0);
                             break;
