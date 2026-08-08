@@ -250,7 +250,8 @@ async function parseAndWriteData(data, fixturesData) {
             "Jeremy Jacquet": { oldTeam: "Rennes", newTeam: "LIV" },
             "Thomas Meunier": { oldTeam: "Free Agent", newTeam: "SUN" },
             "Jannik Schuster": { oldTeam: "RB Salzburg", newTeam: "BRE" },
-            "Mamadou Sangaré": { oldTeam: "Free Agent", newTeam: "BRE" }
+            "Mamadou Sangaré": { oldTeam: "Free Agent", newTeam: "BRE" },
+            "Dara O'Shea": { oldTeam: "BUR", newTeam: "IPS" }
         };
 
         for (const [key, val] of Object.entries(KNOWN_TRANSFERS)) {
@@ -348,6 +349,9 @@ async function parseAndWriteData(data, fixturesData) {
             const playingRatio = Math.min(1.0, minutes / 500);
             const defaultPPG = (position === 'GKP' ? 3.0 : (position === 'DEF' ? 2.8 : (position === 'MID' ? 3.2 : 3.5)));
             basePPG = 0.5 + (defaultPPG - 0.5) * playingRatio;
+        } else if (transferredThisSeason) {
+            // Newly transferred players or division transfers are default starters
+            basePPG = (position === 'GKP' ? 3.0 : (position === 'DEF' ? 2.8 : (position === 'MID' ? 3.2 : 3.5)));
         } else {
             basePPG = (price > 6.0) ? 2.0 : 0.5;
         }
