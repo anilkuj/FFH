@@ -37,9 +37,14 @@ window.getPlayerMinutesFactor = function(player) {
         : 1.0;
 
     // Do NOT penalize newly promoted teams or new transfers without established PL start history!
-    const isPromotedOrNew = (player.team && PROMOTED_TEAMS.includes(player.team)) || 
-                            player.transferredThisSeason || 
-                            (typeof player.points === 'number' && player.points < 15 && (player.minutes === 0 || player.MPPG === 0));
+    // NOTE: GKPs are explicitly excluded from this bypass — promoted-team GKPs (Walton/IPS etc)
+    // must be scored by actual MPPG/GS data like any other keeper, not treated as guaranteed starters.
+    const isGKP = player.position === 'GKP';
+    const isPromotedOrNew = !isGKP && (
+        (player.team && PROMOTED_TEAMS.includes(player.team)) || 
+        player.transferredThisSeason || 
+        (typeof player.points === 'number' && player.points < 15 && (player.minutes === 0 || player.MPPG === 0))
+    );
 
     // Also do NOT heavily penalize premium or highly-owned key players (they are established starters/key players)
     // BUT do not let them bypass if their historical stats indicate they are highly rotated (low minutes/starts)

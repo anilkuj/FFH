@@ -1128,15 +1128,20 @@ function isGuaranteedStart(player, state) {
     const mppg = typeof player.MPPG === 'number' ? player.MPPG : 85;
     const gs = typeof player.GS === 'number' ? player.GS : 25;
 
-    const isPromotedOrNew = (player.team && PROMOTED_TEAMS_LIST.includes(player.team)) || 
-                            player.transferredThisSeason || 
-                            (typeof player.points === 'number' && player.points < 15);
+    // Promoted/new team flag — NOTE: GKPs are explicitly excluded from this bypass
+    // to prevent newly-promoted goalkeepers (e.g. Walton/IPS) from overriding established PL keepers.
+    const isGKP = player.position === 'GKP';
+    const isPromotedOrNew = !isGKP && (
+        (player.team && PROMOTED_TEAMS_LIST.includes(player.team)) || 
+        player.transferredThisSeason || 
+        (typeof player.points === 'number' && player.points < 15)
+    );
 
     // DYNAMIC START QUALITY EVALUATION:
     // 1. Hard reject if current chance of playing is < 50%
     if (chance < 50) return false;
     
-    // 2. Reject rotation risks with low starts (GS < 18 starts out of 38), but exempt newly promoted teams & new transfers!
+    // 2. Reject rotation risks with low starts (GS < 18 starts out of 38), but exempt newly promoted teams & new transfers (non-GKP only)!
     if (!isPromotedOrNew && gs < 18) return false;
 
     // 3. Reject rotation risks if chance < 75% AND minutes per game < 60
@@ -1306,6 +1311,13 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 const avgFdr = parseFloat(getAvgFDR(player)) || 3.0;
                 baseScore += 15.0 + (5.0 - avgFdr) * 3.0;
             }
+        }
+
+        // Penalise GKPs from newly-promoted clubs so established PL keepers (Verbruggen,
+        // Kinsky, Petrovic etc) are always ranked above newly-promoted options (Walton/IPS).
+        // This is intentional: promoted-team GKPs have no PL data and higher variance.
+        if (player.position === 'GKP' && PROMOTED_TEAMS_LIST.includes(player.team)) {
+            baseScore -= 3.0;
         }
 
         return baseScore;
