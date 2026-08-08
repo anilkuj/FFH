@@ -558,16 +558,28 @@ export function renderTransferPlanner(container, state, actions) {
         let previewBank = bank;
 
         if (sourceVal === 'active') {
-            // Apply current GW transfers to a copy so IN players appear in the preview
+            // Build the squad entering the currentGw by applying all prior-GW transfers
+            // to a clone of the base squadSlots (which is the GW1 / base squad state).
+            let slotsAtGw = JSON.parse(JSON.stringify(state.squadSlots));
+            for (let gw = 1; gw < state.currentGw; gw++) {
+                const priorTx = (state.transfers && state.transfers[gw]) || [];
+                priorTx.forEach(tx => {
+                    const slot = slotsAtGw.find(s => s.playerId === tx.out);
+                    if (slot) slot.playerId = tx.in;
+                });
+            }
+
+            // Now apply the currentGw transfers on top to get the post-transfer preview
             const gwTxForSlots = (state.transfers && state.transfers[state.currentGw]) || [];
             if (gwTxForSlots.length > 0) {
-                previewSlots = JSON.parse(JSON.stringify(state.squadSlots));
+                previewSlots = JSON.parse(JSON.stringify(slotsAtGw));
                 gwTxForSlots.forEach(tx => {
                     const slot = previewSlots.find(s => s.playerId === tx.out);
                     if (slot) slot.playerId = tx.in;
                 });
-                // Update bank for applied transfers
-                let adjBank = bank;
+                // Recalculate bank: start from pre-transfer bank then adjust for this GW's transfers
+                const preGwInfo = state.getSquadForGw(state.currentGw - 1 < 1 ? 1 : state.currentGw - 1);
+                let adjBank = state.currentGw <= 1 ? bank : preGwInfo.bank;
                 gwTxForSlots.forEach(tx => {
                     const pOut = PLAYERS.find(p => p.id === tx.out);
                     const pIn = PLAYERS.find(p => p.id === tx.in);
@@ -575,7 +587,10 @@ export function renderTransferPlanner(container, state, actions) {
                 });
                 previewBank = Math.max(0, adjBank);
             } else {
-                previewSlots = state.squadSlots;
+                previewSlots = slotsAtGw;
+                // Show the bank for this GW without transfers
+                const gwInfo = state.currentGw <= 1 ? squadInfo : state.getSquadForGw(state.currentGw);
+                previewBank = gwInfo.bank;
             }
         } else if (sourceVal.startsWith('draft_')) {
             const draftIdx = parseInt(sourceVal.split('_')[1]);
