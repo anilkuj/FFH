@@ -1122,6 +1122,19 @@ const actions = {
         const container = document.getElementById('viewContainer');
         if (!container) return;
 
+        // --- Optimizer guard: never tear down a live optimizer session on re-render ---
+        // The optimizer manages its own DOM (results, loader, buttons, isExecuting flag).
+        // Any call to renderActiveView() while on the optimizer tab — e.g. from a chip toggle
+        // or squad mutation — must NOT wipe and rebuild the whole view, otherwise:
+        //   1. isExecuting resets to false mid-solve → duplicate concurrent runs fire
+        //   2. Event listeners stack up → run button triggers multiple solves on each click
+        //   3. Results are wiped mid-render → user sees blank flicker
+        // Instead we just sync the top bar and return early.
+        if (state.activeTab === 'optimizer' && container.querySelector('#runOptBtn')) {
+            actions.syncTopBar();
+            return;
+        }
+
         // Clear contents
         container.innerHTML = '';
         
@@ -1165,6 +1178,7 @@ const actions = {
                 break;
         }
     },
+
 
     syncTopBar() {
         // Sync current GW
