@@ -847,7 +847,7 @@ ${i.length>0?i.map(h=>`- **${h.name}** (${h.team}, £${h.price.toFixed(1)}m) —
         <button class="pitch-btn ${F?"active-chip":""}" id="chipBbBtn" title="Play Bench Boost (Bench points added to starting XI)">
             <i data-lucide="shield"></i> Bench Boost
         </button>
-    `;const D=E.find(y=>y.id===l.captain),R=D?(((rl=D.predictions.find(y=>y.gw===l.currentGw))==null?void 0:rl.pts)||0)*((s=l.chips[l.currentGw])!=null&&s.tripleCaptain?2:1):0,ul=Math.max(0,r-R)/11,El=Math.min(100,Math.round(ul/5.8*100));t.innerHTML=`
+    `;const D=E.find(y=>y.id===l.captain),R=D?(((rl=D.predictions.find(y=>y.gw===l.currentGw))==null?void 0:rl.pts)||0)*((s=l.chips[l.currentGw])!=null&&s.tripleCaptain?2:1):0,ul=Math.max(0,r-R)/11,El=Math.min(100,Math.round(ul/6.5*100));t.innerHTML=`
         <div class="planner-grid">
             <!-- Left Column: The Football Pitch -->
             <div class="pitch-container">

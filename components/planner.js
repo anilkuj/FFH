@@ -195,7 +195,7 @@ export function renderPlanner(container, state, actions) {
     const captainBonus = captainPlayer ? (captainPlayer.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0) * (state.chips[state.currentGw]?.tripleCaptain ? 2 : 1) : 0;
     const rawExpectedPoints = Math.max(0, expectedPoints - captainBonus);
     const averagePlayerXP = rawExpectedPoints / 11;
-    const ratingScore = Math.min(100, Math.round((averagePlayerXP / 5.8) * 100));
+    const ratingScore = Math.min(100, Math.round((averagePlayerXP / 6.5) * 100));
 
     container.innerHTML = `
         <div class="planner-grid">
