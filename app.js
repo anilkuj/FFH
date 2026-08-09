@@ -82,7 +82,14 @@ window.getPlayerMinutesFactor = function(player) {
 
 
 
-// Universal dataset-wide minutes & rotation risk discounting for all 700+ players
+// Universal dataset-wide minutes & rotation risk discounting for all 700+ players.
+// CALIBRATION_FACTOR: scales raw predictions down to realistic FPL score levels.
+// Real-world FPL sites estimate a good squad at 50-65 GW pts; our raw data averages 70+ 
+// due to historical PPG including bonus pts & easy-fixture multipliers stacking.
+// 0.82 brings elite players (Saka 9.3→7.6, Bruno 9.1→7.5) to realistic levels, and 
+// typical squads from 70+ to the expected 55-65 range.
+const XP_CALIBRATION_FACTOR = 0.82;
+
 window.applyUniversalMinutesDiscount = function() {
     if (typeof PLAYERS === 'undefined' || !Array.isArray(PLAYERS)) return;
     PLAYERS.forEach(player => {
@@ -90,8 +97,12 @@ window.applyUniversalMinutesDiscount = function() {
         if (player.predictions && Array.isArray(player.predictions)) {
             player.predictions.forEach(pr => {
                 if (pr._rawPts === undefined) {
-                    pr._rawPts = pr.pts;
+                    // Scale _rawPts by calibration factor so all code paths get realistic values.
+                    // Components like optimizer and planner read _rawPts directly and re-apply
+                    // the minutes factor, so calibrating _rawPts covers all usage sites.
+                    pr._rawPts = pr.pts * XP_CALIBRATION_FACTOR;
                 }
+                // pts = calibrated base × per-player minutes/rotation factor
                 pr.pts = Math.round(pr._rawPts * factor * 10) / 10;
             });
         }

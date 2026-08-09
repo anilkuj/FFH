@@ -1900,14 +1900,47 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             }
         }
 
-        // Initialize bench slots (with cheapest budget enablers if not ignoreBench) if they are not locked
+        // Initialize bench slots (with cheapest budget enablers if not ignoreBench) if they are not locked.
+        // BUDGET-AWARE: track running bench cost and only pick players that keep total bench within maxBenchBudget.
         if (!state.ignoreBench || state.planBenchBoost) {
             const forceBenchGuaranteed = state.planBenchBoost ? true : false;
-            for (const idx of benchIndices) {
+
+            // Count already-locked bench cost
+            let runningBenchCost = benchIndices.reduce((sum, bIdx) => {
+                const slot = optimizedSquadSlots[bIdx];
+                if (slot.locked && slot.playerId !== null) {
+                    const p = PLAYERS.find(pl => pl.id === slot.playerId);
+                    return sum + (p ? p.price : 0);
+                }
+                return sum;
+            }, 0);
+
+            const openBenchSlots = benchIndices.filter(bIdx => !optimizedSquadSlots[bIdx].locked && optimizedSquadSlots[bIdx].playerId === null);
+            const benchBudgetLimit = state.planBenchBoost ? 99.0 : maxBenchBudget;
+
+            for (let bi = 0; bi < openBenchSlots.length; bi++) {
+                const idx = openBenchSlots[bi];
                 const slot = optimizedSquadSlots[idx];
-                if (!slot.locked && slot.playerId === null) {
-                    const cheapest = getCheapestPlayersList(slot.position, 1, initUsedIds, forceBenchGuaranteed)[0];
-                    slot.playerId = cheapest ? cheapest.id : null;
+
+                // How many slots come after this one?
+                const remainingOpenAfterThis = openBenchSlots.length - 1 - bi;
+                // Max price for this slot: remaining budget minus minimum reserve for future slots (min 4.0m each)
+                const remainingBudget = benchBudgetLimit - runningBenchCost;
+                const minReserveForFuture = remainingOpenAfterThis * 4.0;
+                const maxPriceForThisSlot = Math.max(4.0, remainingBudget - minReserveForFuture);
+
+                // Get candidate list (getCheapestPlayersList mutates a copy so initUsedIds is safe)
+                const candidateUsedIds = [...initUsedIds];
+                const allCandidates = getCheapestPlayersList(slot.position, 50, candidateUsedIds, forceBenchGuaranteed);
+
+                // Pick cheapest player that fits within budget ceiling, else just cheapest available (enforcer will fix later)
+                const withinBudget = allCandidates.filter(p => p.price <= maxPriceForThisSlot);
+                const chosen = withinBudget.length > 0 ? withinBudget[0] : allCandidates[0];
+
+                if (chosen) {
+                    slot.playerId = chosen.id;
+                    initUsedIds.push(chosen.id);
+                    runningBenchCost += chosen.price;
                 }
             }
         }

@@ -359,13 +359,16 @@ async function parseAndWriteData(data, fixturesData) {
             basePPG = (price > 6.0) ? 2.0 : 0.5;
         }
 
+        // Ceilings calibrated so elite players realistically score 50-65 pts/GW across a squad.
+        // FPL historical PPG for elite players is ~5-6/game including bonuses; we cap to prevent
+        // easy-fixture multipliers compounding into unrealistic 9+ XP predictions.
         if (position === 'GKP') {
             const TOP_TEAMS = ['MCI', 'ARS', 'LIV', 'TOT', 'CHE', 'MUN'];
-            const minGkpPpg = TOP_TEAMS.includes(teamShort) ? 3.5 : 1.8;
-            basePPG = Math.max(minGkpPpg, Math.min(4.8, basePPG));
-        } else if (position === 'DEF') basePPG = Math.max(1.5, Math.min(5.5, basePPG));
-        else if (position === 'MID') basePPG = Math.max(1.8, Math.min(8.5, basePPG));
-        else if (position === 'FWD') basePPG = Math.max(2.0, Math.min(8.5, basePPG));
+            const minGkpPpg = TOP_TEAMS.includes(teamShort) ? 3.2 : 1.8;
+            basePPG = Math.max(minGkpPpg, Math.min(4.2, basePPG));
+        } else if (position === 'DEF') basePPG = Math.max(1.5, Math.min(4.5, basePPG));
+        else if (position === 'MID') basePPG = Math.max(1.8, Math.min(6.0, basePPG));
+        else if (position === 'FWD') basePPG = Math.max(2.0, Math.min(6.0, basePPG));
 
         // -------------------------------------------------------
         // Clean Sheet Probability Model (mirrors Defcon logic)
@@ -422,9 +425,10 @@ async function parseAndWriteData(data, fixturesData) {
             
             if (fixture.opp !== 'BYE') {
                 // --- FDR-based scaling ---
-                if (fixture.diff === 2) pts *= 1.25;
-                else if (fixture.diff === 4) pts *= 0.85;
-                else if (fixture.diff === 5) pts *= 0.65;
+                // Using conservative multipliers to avoid stacking with xGI and home/away bonuses.
+                if (fixture.diff === 2) pts *= 1.12;
+                else if (fixture.diff === 4) pts *= 0.88;
+                else if (fixture.diff === 5) pts *= 0.70;
                 
                 // --- Home/Away base adjustment ---
                 if (fixture.loc === 'H') pts += 0.35;
@@ -456,18 +460,18 @@ async function parseAndWriteData(data, fixturesData) {
                     const avgCsProb = getCleanSheetProb(3, 'H');
                     pts += (csProb - avgCsProb) * 1; // marginal CS contribution vs average
 
-                    // Attacking bonus for MID/FWD
+                    // Attacking bonus for MID/FWD based on fixture difficulty
                     const xGI90 = xG90 + xA90;
                     if (xGI90 > 0.1) {
-                        if (fixture.diff === 2) pts += xGI90 * 1.5;
-                        if (fixture.diff === 5) pts -= xGI90 * 0.8;
+                        if (fixture.diff === 2) pts += xGI90 * 0.8;
+                        if (fixture.diff === 5) pts -= xGI90 * 0.6;
                     }
                 } else {
                     // FWD — attacking only, no CS points
                     const xGI90 = xG90 + xA90;
                     if (xGI90 > 0.1) {
-                        if (fixture.diff === 2) pts += xGI90 * 1.5;
-                        if (fixture.diff === 5) pts -= xGI90 * 0.8;
+                        if (fixture.diff === 2) pts += xGI90 * 0.8;
+                        if (fixture.diff === 5) pts -= xGI90 * 0.6;
                     }
                 }
             } else {
