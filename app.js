@@ -123,6 +123,14 @@ if (mosquera && saliba && calafiori && (saliba.chanceOfPlaying === 0 || saliba.s
 
 // Application State class
 
+const safeJsonParse = (str, fallback) => {
+    if (!str || str === 'undefined') return fallback;
+    try {
+        return JSON.parse(str);
+    } catch (e) {
+        return fallback;
+    }
+};
 
 class AppState {
     constructor() {
@@ -135,12 +143,14 @@ class AppState {
         
         // Load slot-based squad representation
         const savedSquadSlots = localStorage.getItem('fpl_hub_squad_slots');
-        if (savedSquadSlots) {
-            this.squadSlots = JSON.parse(savedSquadSlots);
-        } else {
+        if (savedSquadSlots && savedSquadSlots !== 'undefined') {
+            this.squadSlots = safeJsonParse(savedSquadSlots, null);
+        }
+        
+        if (!this.squadSlots) {
             // Initialize from old local storage or DEFAULT_SQUAD
             const savedSquad = localStorage.getItem('fpl_hub_squad');
-            const squadIds = savedSquad ? JSON.parse(savedSquad) : [...DEFAULT_SQUAD];
+            const squadIds = safeJsonParse(savedSquad, null) || [...DEFAULT_SQUAD];
             
             const gkps = squadIds.filter(id => PLAYERS.find(p => p.id === id)?.position === 'GKP');
             const defs = squadIds.filter(id => PLAYERS.find(p => p.id === id)?.position === 'DEF');
@@ -148,7 +158,7 @@ class AppState {
             const fwds = squadIds.filter(id => PLAYERS.find(p => p.id === id)?.position === 'FWD');
             
             const savedStarters = localStorage.getItem('fpl_hub_starters');
-            const startersList = savedStarters ? JSON.parse(savedStarters) : [];
+            const startersList = safeJsonParse(savedStarters, []);
             
             this.squadSlots = [];
             
@@ -197,10 +207,10 @@ class AppState {
 
         // Load must include / exclude players
         const savedMustInclude = localStorage.getItem('fpl_hub_must_include');
-        this.mustInclude = savedMustInclude ? JSON.parse(savedMustInclude) : [];
+        this.mustInclude = safeJsonParse(savedMustInclude, []);
 
         const savedMustExclude = localStorage.getItem('fpl_hub_must_exclude');
-        this.mustExclude = savedMustExclude ? JSON.parse(savedMustExclude) : [];
+        this.mustExclude = safeJsonParse(savedMustExclude, []);
 
         const savedBenchBudget = localStorage.getItem('fpl_hub_bench_budget');
         this.benchBudget = savedBenchBudget ? parseFloat(savedBenchBudget) : 17.0;
@@ -222,12 +232,26 @@ class AppState {
 
         this.optimizerObjective = localStorage.getItem('fpl_hub_optimizer_objective') || 'xp';
 
-
         const savedProfile = localStorage.getItem('fpl_hub_user_profile');
-        this.userProfile = savedProfile ? JSON.parse(savedProfile) : null;
+        this.userProfile = safeJsonParse(savedProfile, null);
 
         const savedLastLocalUpdate = localStorage.getItem('fpl_hub_last_local_update');
         this.lastLocalUpdate = savedLastLocalUpdate ? parseInt(savedLastLocalUpdate) : 0;
+
+        // Active chips stored per Gameweek: { gwNum: { wildcard: bool, tripleCaptain: bool, benchBoost: bool } }
+        const savedChips = localStorage.getItem('fpl_hub_active_chips');
+        this.chips = safeJsonParse(savedChips, {});
+        for (let gw = 1; gw <= 38; gw++) {
+            if (!this.chips[gw]) {
+                this.chips[gw] = { wildcard: false, tripleCaptain: false, benchBoost: false };
+            }
+        }
+
+        // Planned transfers: { gwNum: [ { out: id, in: id } ] }
+        const savedTransfers = localStorage.getItem('fpl_hub_transfers');
+        this.transfers = safeJsonParse(savedTransfers, null) || {
+            1: [], 2: [], 3: [], 4: [], 5: []
+        };
 
         this.loadUserDrafts();
         this.loadCloudDrafts();
@@ -251,27 +275,6 @@ class AppState {
             // Polling interval every 15s to check for mobile updates in background
             setInterval(triggerAutoSync, 15000);
         }
-
-
-
-
-
-
-
-        // Active chips stored per Gameweek: { gwNum: { wildcard: bool, tripleCaptain: bool, benchBoost: bool } }
-        const savedChips = localStorage.getItem('fpl_hub_active_chips');
-        this.chips = savedChips ? JSON.parse(savedChips) : {};
-        for (let gw = 1; gw <= 38; gw++) {
-            if (!this.chips[gw]) {
-                this.chips[gw] = { wildcard: false, tripleCaptain: false, benchBoost: false };
-            }
-        }
-
-        // Planned transfers: { gwNum: [ { out: id, in: id } ] }
-        const savedTransfers = localStorage.getItem('fpl_hub_transfers');
-        this.transfers = savedTransfers ? JSON.parse(savedTransfers) : {
-            1: [], 2: [], 3: [], 4: [], 5: []
-        };
 
         this.isSquadUnlocked = false; // By default the squad is locked to prevent accidental removals
         this.squadRisks = {};
@@ -908,7 +911,7 @@ class AppState {
             }
         }
 
-        this.drafts = savedDrafts ? JSON.parse(savedDrafts) : Array.from({ length: 10 }, (_, i) => ({
+        this.drafts = safeJsonParse(savedDrafts, null) || Array.from({ length: 10 }, (_, i) => ({
             name: `Draft ${i + 1}`,
             squadSlots: null,
             captain: null,
