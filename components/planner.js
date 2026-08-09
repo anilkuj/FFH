@@ -191,14 +191,14 @@ export function renderPlanner(container, state, actions) {
     `;
 
     // Calculate AI Squad Rating (0-100).
-    // XP values are calibrated by 0.82 factor in app.js, so displayed GW1 XP for a good squad is 55-65.
-    // Benchmark: 5.5 XP/player average = 100 rating. This means ~65 total calibrated GW XP needed for 100.
-    // Distribution: average squad ~50XP → ~70 rating | good squad ~57XP → ~82 | excellent ~65XP → ~95+
+    // XP values are calibrated by 0.90 factor in app.js, so displayed GW1 XP for a good squad is ~58-65.
+    // Benchmark: 6.0 XP/player average = 100 rating (calibrated middle ground — not too easy, not too strict).
+    // Distribution: average squad ~50XP → ~68 rating | good optimized ~60XP → ~82 | excellent ~68XP → ~95 | elite ~100
     const captainPlayer = PLAYERS.find(p => p.id === state.captain);
     const captainBonus = captainPlayer ? (captainPlayer.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0) * (state.chips[state.currentGw]?.tripleCaptain ? 2 : 1) : 0;
     const rawExpectedPoints = Math.max(0, expectedPoints - captainBonus);
     const averagePlayerXP = rawExpectedPoints / 11;
-    const ratingScore = Math.min(100, Math.round((averagePlayerXP / 5.5) * 100));
+    const ratingScore = Math.min(100, Math.round((averagePlayerXP / 6.0) * 100));
 
     container.innerHTML = `
         <div class="planner-grid">

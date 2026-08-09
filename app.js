@@ -88,7 +88,7 @@ window.getPlayerMinutesFactor = function(player) {
 // due to historical PPG including bonus pts & easy-fixture multipliers stacking.
 // 0.82 brings elite players (Saka 9.3→7.6, Bruno 9.1→7.5) to realistic levels, and 
 // typical squads from 70+ to the expected 55-65 range.
-const XP_CALIBRATION_FACTOR = 0.82;
+const XP_CALIBRATION_FACTOR = 0.90;
 
 window.applyUniversalMinutesDiscount = function() {
     if (typeof PLAYERS === 'undefined' || !Array.isArray(PLAYERS)) return;
