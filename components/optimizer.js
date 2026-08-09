@@ -1761,7 +1761,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
 
         // Budget boundaries based on user selection
         const minBenchBudget = state.benchBudget || 17.0;
-        const maxBenchBudget = state.planBenchBoost ? 99.0 : minBenchBudget;
+        const maxBenchBudget = minBenchBudget;
         
         // Initial bench cost after initial slot assignment
         const initialBenchCost = benchIndices.reduce((sum, bIdx) => {
@@ -1769,9 +1769,8 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             const p = pId !== null ? PLAYERS.find(pl => pl.id === pId) : null;
             return sum + (p ? p.price : 0);
         }, 0);
-        // For bench boost, reserve a much larger bench budget so starters don't consume everything.
-        // £35 gives 4 bench players an avg of £8.75m each — genuine scoring potential.
-        const reservedBenchBudget = state.planBenchBoost ? 35.0 : Math.max(minBenchBudget, initialBenchCost);
+        // Reserve bench budget so starters don't consume all funds
+        const reservedBenchBudget = Math.max(minBenchBudget, initialBenchCost);
         const maxStartingBudget = Math.max(0, totalValue - reservedBenchBudget);
         const minFwd = state.minFwdPrice ?? 6.0;
 
@@ -1916,7 +1915,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             }, 0);
 
             const openBenchSlots = benchIndices.filter(bIdx => !optimizedSquadSlots[bIdx].locked && optimizedSquadSlots[bIdx].playerId === null);
-            const benchBudgetLimit = state.planBenchBoost ? 99.0 : maxBenchBudget;
+            const benchBudgetLimit = maxBenchBudget;
 
             for (let bi = 0; bi < openBenchSlots.length; bi++) {
                 const idx = openBenchSlots[bi];
@@ -2423,9 +2422,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             return sum + (p ? p.price : 0);
         }, 0);
 
-        if (currentBenchCost > maxBenchBudget + 0.001 && !state.planBenchBoost) {
+        if (currentBenchCost > maxBenchBudget + 0.001) {
             let benchTrimIter = 0;
-            while (currentBenchCost > maxBenchBudget + 0.001 && benchTrimIter < 20 && !state.planBenchBoost) {
+            while (currentBenchCost > maxBenchBudget + 0.001 && benchTrimIter < 20) {
                 benchTrimIter++;
                 let bestDowngrade = null;
                 let minPtsLoss = 9999;
@@ -2557,10 +2556,10 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 const currentSquadPts = getSquadExpectedPts(optimizedSquadSlots, true);
 
                 for (const cand of candidates) {
-                    if (isBenchSlot && !state.planBenchBoost) {
+                    if (isBenchSlot) {
                         const newBenchCost = currentBenchCost - playerPrice + cand.price;
                         if (newBenchCost > maxBenchBudget) {
-                            continue; // Skip this candidate if it exceeds reserved bench budget (when NOT Bench Boost)
+                            continue; // Skip this candidate if it exceeds reserved bench budget
                         }
                     }
 
@@ -2773,7 +2772,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
 
                             // --- BENCH BUDGET CHECK FOR PAIRWISE UPGRADES ---
                             // If either slot is a bench slot, ensure the new pair doesn't exceed bench budget
-                            if (!state.planBenchBoost && ((!slotI.isStarting) || (!slotJ.isStarting))) {
+                            if ((!slotI.isStarting) || (!slotJ.isStarting)) {
                                 const currentBenchCostPair = benchIndices.reduce((sum, bIdx) => {
                                     const pId = optimizedSquadSlots[bIdx].playerId;
                                     const pl = pId !== null ? PLAYERS.find(p => p.id === pId) : null;
@@ -2948,7 +2947,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         // --- FINAL HARD BENCH BUDGET SAFETY ENFORCER ---
         // Runs after ALL optimization passes to guarantee bench cost never exceeds the user's bench budget.
         // This catches any bench upgrades that slipped through the pairwise or fine-tune passes.
-        if (!state.planBenchBoost) {
+        {
             let finalBenchCost = benchIndices.reduce((sum, bIdx) => {
                 const pId = optimizedSquadSlots[bIdx].playerId;
                 const p = pId !== null ? PLAYERS.find(pl => pl.id === pId) : null;
@@ -3337,7 +3336,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         const maxBenchBudget = state.benchBudget || 17.0;
         const currentBenchCost = getBenchCost(activeSquadSlots);
         const isBenchBudgetOk = (slots) => {
-            if (state.planBenchBoost || state.ignoreBench) return true;
+            if (state.ignoreBench) return true;
             const newBenchCost = getBenchCost(slots);
             return newBenchCost <= maxBenchBudget + 0.001 || newBenchCost <= currentBenchCost + 0.001;
         };
