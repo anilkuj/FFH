@@ -190,12 +190,14 @@ export function renderPlanner(container, state, actions) {
         </button>
     `;
 
-    // Calculate AI Squad Rating (0-100) based on total expected points (excluding captain bonus inflation) and average player quality
+    // Calculate AI Squad Rating (0-100) based on total expected points (excluding captain bonus inflation) and average player quality.
+    // Benchmark: 8.0 XP/player avg (~88 total GW XP) = 100 rating. Achievable only with a near-perfect elite squad.
+    // A solid, well-constructed squad scoring ~55-65 GW pts will rate in the 60-80 range.
     const captainPlayer = PLAYERS.find(p => p.id === state.captain);
     const captainBonus = captainPlayer ? (captainPlayer.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0) * (state.chips[state.currentGw]?.tripleCaptain ? 2 : 1) : 0;
     const rawExpectedPoints = Math.max(0, expectedPoints - captainBonus);
     const averagePlayerXP = rawExpectedPoints / 11;
-    const ratingScore = Math.min(100, Math.round((averagePlayerXP / 6.5) * 100));
+    const ratingScore = Math.min(100, Math.round((averagePlayerXP / 8.0) * 100));
 
     container.innerHTML = `
         <div class="planner-grid">

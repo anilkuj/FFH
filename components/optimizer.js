@@ -2737,6 +2737,20 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                                 }
                             }
                             if (!ok) continue;
+
+                            // --- BENCH BUDGET CHECK FOR PAIRWISE UPGRADES ---
+                            // If either slot is a bench slot, ensure the new pair doesn't exceed bench budget
+                            if (!state.planBenchBoost && ((!slotI.isStarting) || (!slotJ.isStarting))) {
+                                const currentBenchCostPair = benchIndices.reduce((sum, bIdx) => {
+                                    const pId = optimizedSquadSlots[bIdx].playerId;
+                                    const pl = pId !== null ? PLAYERS.find(p => p.id === pId) : null;
+                                    return sum + (pl ? pl.price : 0);
+                                }, 0);
+                                let projectedBenchCost = currentBenchCostPair;
+                                if (!slotI.isStarting) projectedBenchCost += (candI.price - pI.price);
+                                if (!slotJ.isStarting) projectedBenchCost += (candJ.price - pJ.price);
+                                if (projectedBenchCost > maxBenchBudget + 0.001) continue;
+                            }
                             
                             const isStarterPriceFloor = (player, pos) => {
                                 if (!player) return false;
@@ -2894,6 +2908,90 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                         }
                     }
                     if (!emergencyTrimmed) break;
+                }
+            }
+        }
+
+        // --- FINAL HARD BENCH BUDGET SAFETY ENFORCER ---
+        // Runs after ALL optimization passes to guarantee bench cost never exceeds the user's bench budget.
+        // This catches any bench upgrades that slipped through the pairwise or fine-tune passes.
+        if (!state.planBenchBoost) {
+            let finalBenchCost = benchIndices.reduce((sum, bIdx) => {
+                const pId = optimizedSquadSlots[bIdx].playerId;
+                const p = pId !== null ? PLAYERS.find(pl => pl.id === pId) : null;
+                return sum + (p ? p.price : 0);
+            }, 0);
+
+            if (finalBenchCost > maxBenchBudget + 0.001) {
+                let finalBenchTrimIter = 0;
+                while (finalBenchCost > maxBenchBudget + 0.001 && finalBenchTrimIter < 20) {
+                    finalBenchTrimIter++;
+                    let bestFinalDowngrade = null;
+                    let minFinalPtsLoss = 9999;
+                    let finalTargetBenchIdx = -1;
+
+                    const fStartingIds = startingIndices.map(sIdx => optimizedSquadSlots[sIdx].playerId).filter(id => id !== null);
+                    const fBenchIds = benchIndices.map(bIdx => optimizedSquadSlots[bIdx].playerId).filter(id => id !== null);
+
+                    for (const bIdx of benchIndices) {
+                        const slot = optimizedSquadSlots[bIdx];
+                        if (slot.locked) continue;
+
+                        const player = slot.playerId !== null ? PLAYERS.find(p => p.id === slot.playerId) : null;
+                        if (!player) continue;
+
+                        const cheaperCandidates = PLAYERS.filter(p =>
+                            p.position === slot.position &&
+                            p.price < player.price &&
+                            !fStartingIds.includes(p.id) &&
+                            !fBenchIds.includes(p.id) &&
+                            !state.mustExclude.includes(p.id) &&
+                            passesMinFwd(p)
+                        );
+
+                        const fCurrentPts = getSquadExpectedPts(optimizedSquadSlots, true);
+
+                        for (const cand of cheaperCandidates) {
+                            const tempBenchIds = fBenchIds.filter(id => id !== slot.playerId);
+                            tempBenchIds.push(cand.id);
+
+                            const tempSquadIds = [...fStartingIds, ...tempBenchIds];
+                            const teamCounts = {};
+                            let ok = true;
+                            for (const id of tempSquadIds) {
+                                const pl = PLAYERS.find(p => p.id === id);
+                                if (pl) {
+                                    teamCounts[pl.team] = (teamCounts[pl.team] || 0) + 1;
+                                    if (teamCounts[pl.team] > 3) { ok = false; break; }
+                                }
+                            }
+
+                            if (ok) {
+                                const oldId = slot.playerId;
+                                slot.playerId = cand.id;
+                                const fNewPts = getSquadExpectedPts(optimizedSquadSlots, true);
+                                slot.playerId = oldId;
+
+                                const ptsLoss = fCurrentPts - fNewPts;
+                                if (ptsLoss < minFinalPtsLoss) {
+                                    minFinalPtsLoss = ptsLoss;
+                                    bestFinalDowngrade = cand;
+                                    finalTargetBenchIdx = bIdx;
+                                }
+                            }
+                        }
+                    }
+
+                    if (bestFinalDowngrade && finalTargetBenchIdx !== -1) {
+                        optimizedSquadSlots[finalTargetBenchIdx].playerId = bestFinalDowngrade.id;
+                        finalBenchCost = benchIndices.reduce((sum, bIdx) => {
+                            const pId = optimizedSquadSlots[bIdx].playerId;
+                            const p = pId !== null ? PLAYERS.find(pl => pl.id === pId) : null;
+                            return sum + (p ? p.price : 0);
+                        }, 0);
+                    } else {
+                        break; // No cheaper replacement found, best effort
+                    }
                 }
             }
         }
