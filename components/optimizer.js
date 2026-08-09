@@ -3204,9 +3204,11 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             }, 0);
         };
         const maxBenchBudget = state.benchBudget || 17.0;
+        const currentBenchCost = getBenchCost(activeSquadSlots);
         const isBenchBudgetOk = (slots) => {
             if (state.planBenchBoost || state.ignoreBench) return true;
-            return getBenchCost(slots) <= maxBenchBudget + 0.001;
+            const newBenchCost = getBenchCost(slots);
+            return newBenchCost <= maxBenchBudget + 0.001 || newBenchCost <= currentBenchCost + 0.001;
         };
 
         // --- FIND BEST 1-TRANSFER OPTION ---
