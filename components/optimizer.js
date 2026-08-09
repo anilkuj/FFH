@@ -406,8 +406,8 @@ export function renderOptimizer(container, state, actions) {
                                     <span class="opt-slider-value" id="benchBudgetValue">£${state.benchBudget.toFixed(1)}m</span>
                                 </label>
                                 <div class="opt-slider-container">
-                                    <span class="opt-slider-bound">£17m</span>
-                                    <input type="range" id="benchBudgetRange" min="17.0" max="25.0" step="0.5" value="${state.benchBudget}" class="opt-range-input" ${state.ignoreBench ? 'disabled' : ''}>
+                                    <span class="opt-slider-bound">£16.5m</span>
+                                    <input type="range" id="benchBudgetRange" min="16.5" max="25.0" step="0.5" value="${state.benchBudget}" class="opt-range-input" ${state.ignoreBench ? 'disabled' : ''}>
                                     <span class="opt-slider-bound">£25m</span>
                                 </div>
                                 <span class="setting-help">Budget reserved for 4 bench slots.</span>
@@ -533,11 +533,9 @@ export function renderOptimizer(container, state, actions) {
     const updateHelpText = () => {
         if (phaseSelect.value === 'preseason') {
             helpText.textContent = `Allows unlimited squad upgrades within total squad budget. Perfect for preseason/wildcard planning.`;
-            if (benchGroup) benchGroup.style.display = 'flex';
         } else {
             const currentFt = state.currentGw === 1 ? 'Unlimited' : freeTransfers;
             helpText.textContent = `Respects your available free transfers (${currentFt} FT) for GW${state.currentGw} to avoid points hits.`;
-            if (benchGroup) benchGroup.style.display = 'none';
         }
     };
 
