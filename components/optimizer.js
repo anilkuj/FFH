@@ -3196,6 +3196,19 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             return true;
         };
 
+        const getBenchCost = (slots) => {
+            return slots.filter(s => !s.isStarting).reduce((sum, slot) => {
+                if (slot.playerId === null) return sum;
+                const p = PLAYERS.find(pl => pl.id === slot.playerId);
+                return sum + (p ? p.price : 0);
+            }, 0);
+        };
+        const maxBenchBudget = state.benchBudget || 17.0;
+        const isBenchBudgetOk = (slots) => {
+            if (state.planBenchBoost || state.ignoreBench) return true;
+            return getBenchCost(slots) <= maxBenchBudget + 0.001;
+        };
+
         // --- FIND BEST 1-TRANSFER OPTION ---
         let best1Tx = null;
         let maxGain1 = -999;
@@ -3240,6 +3253,8 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 const tempSlots = JSON.parse(JSON.stringify(activeSquadSlots));
                 const targetSlot = tempSlots.find(s => s.playerId === soldId);
                 if (targetSlot) targetSlot.playerId = boughtPlayer.id;
+
+                if (!isBenchBudgetOk(tempSlots)) continue;
 
                 const solveGain = getSquadExpectedPts(tempSlots, true) - getSquadExpectedPts(activeSquadSlots, true);
                 const realGain = getSquadExpectedPts(tempSlots, false) - getSquadExpectedPts(activeSquadSlots, false);
@@ -3327,6 +3342,8 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                         if (slot1) slot1.playerId = b1.id;
                         if (slot2) slot2.playerId = b2.id;
 
+                        if (!isBenchBudgetOk(tempSlots)) continue;
+
                         const solveGain = getSquadExpectedPts(tempSlots, true) - getSquadExpectedPts(activeSquadSlots, true);
                         const realGain = getSquadExpectedPts(tempSlots, false) - getSquadExpectedPts(activeSquadSlots, false);
 
@@ -3381,7 +3398,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 </div>
             ` : ''}
             <!-- Single Transfer Recommendation -->
-            <div class="optimizer-card" style="${freeTransfersCount === 1 ? 'grid-column: span 2;' : ''}">
+            <div class="optimizer-card">
                 <h3><i data-lucide="arrow-right-left" class="highlight-transfers"></i> Best Single Transfer</h3>
                 <div class="recommendations-list" style="margin-top: 16px;">
                     ${best1Tx && best1Tx.gain > 0.1 ? `
@@ -3389,6 +3406,11 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                             <div class="rec-option-header" style="margin-bottom: 12px;">
                                 <span class="rec-badge">RECOMMENDED</span>
                                 <span class="rec-pts-gain" style="display: inline-flex; align-items: center; gap: 4px;">
+                                    ${freeTransfersCount === 0 ? `
+                                        <span style="font-size: 11px; background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 2px 8px; border-radius: 4px; font-weight: 700; margin-right: 6px;">
+                                            -4 PTS HIT
+                                        </span>
+                                    ` : ''}
                                     <span style="color: ${best1Tx.gain >= 0 ? 'var(--primary)' : '#ef4444'}; font-weight: 800;">
                                         +${best1Tx.gain.toFixed(1)} XP (${horizon}-GW)
                                     </span>
@@ -3427,74 +3449,81 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             </div>
 
             <!-- Double Transfer Recommendation -->
-            ${freeTransfersCount >= 2 ? `
-                <div class="optimizer-card">
-                    <h3><i data-lucide="layers" class="highlight-bank"></i> Best Double Transfer</h3>
-                    <div class="recommendations-list" style="margin-top: 16px;">
-                        ${best2Tx && (objective === 'efficiency' ? best2Tx.gain > 0.1 : best2Tx.gain > 0.5) ? `
-                            <div class="rec-option-box">
-                                <div class="rec-option-header" style="margin-bottom: 12px;">
-                                    <span class="rec-badge" style="background:rgba(0, 242, 254, 0.1); color: var(--secondary); border-color: var(--secondary-glow)">HIGH IMPACT</span>
-                                    <span class="rec-pts-gain" style="display: inline-flex; align-items: center; gap: 4px;">
-                                        <span style="color: ${best2Tx.gain >= 0 ? 'var(--primary)' : '#ef4444'}; font-weight: 800;">
-                                            +${best2Tx.gain.toFixed(1)} XP (${horizon}-GW)
+            <div class="optimizer-card">
+                <h3><i data-lucide="layers" class="highlight-bank"></i> Best Double Transfer</h3>
+                <div class="recommendations-list" style="margin-top: 16px;">
+                    ${best2Tx && (objective === 'efficiency' ? best2Tx.gain > 0.1 : best2Tx.gain > 0.5) ? `
+                        <div class="rec-option-box">
+                            <div class="rec-option-header" style="margin-bottom: 12px;">
+                                <span class="rec-badge" style="background:rgba(0, 242, 254, 0.1); color: var(--secondary); border-color: var(--secondary-glow)">HIGH IMPACT</span>
+                                <span class="rec-pts-gain" style="display: inline-flex; align-items: center; gap: 4px;">
+                                    ${freeTransfersCount === 0 ? `
+                                        <span style="font-size: 11px; background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 2px 8px; border-radius: 4px; font-weight: 700; margin-right: 6px;">
+                                            -8 PTS HIT
                                         </span>
-                                        <span style="color: var(--text-muted);">•</span>
-                                        <span style="color: ${best2Tx1GwGain >= 0 ? 'var(--primary)' : '#ef4444'}; font-weight: 800;">
-                                            ${best2Tx1GwGain >= 0 ? '+' : ''}${best2Tx1GwGain.toFixed(1)} XP (Next GW)
+                                    ` : (freeTransfersCount === 1 ? `
+                                        <span style="font-size: 11px; background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); padding: 2px 8px; border-radius: 4px; font-weight: 700; margin-right: 6px;">
+                                            -4 PTS HIT
                                         </span>
+                                    ` : '')}
+                                    <span style="color: ${best2Tx.gain >= 0 ? 'var(--primary)' : '#ef4444'}; font-weight: 800;">
+                                        +${best2Tx.gain.toFixed(1)} XP (${horizon}-GW)
                                     </span>
-                                </div>
-                                
-                                <!-- Transfer 1 -->
-                                <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 12px;">
-                                    <div class="transfer-player-card player-card-out" style="flex:1;">
-                                        <span class="player-name-main">${best2Tx.out1.name}</span>
-                                        <span class="player-team-sub">${best2Tx.out1.team} • £${best2Tx.out1.price.toFixed(1)}m</span>
-                                        ${renderPlayerStatsBreakdown(best2Tx.out1)}
-                                        ${renderFdrFixtures(best2Tx.out1, state.currentGw)}
-                                    </div>
-                                    <i data-lucide="arrow-right" class="transfer-arrow-icon" style="align-self:center;"></i>
-                                    <div class="transfer-player-card player-card-in" style="flex:1;">
-                                        <span class="player-name-main">${best2Tx.in1.name}</span>
-                                        <span class="player-team-sub">${best2Tx.in1.team} • £${best2Tx.in1.price.toFixed(1)}m</span>
-                                        ${renderPlayerStatsBreakdown(best2Tx.in1)}
-                                        ${renderFdrFixtures(best2Tx.in1, state.currentGw)}
-                                    </div>
-                                </div>
-        
-                                <!-- Transfer 2 -->
-                                <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 12px;">
-                                    <div class="transfer-player-card player-card-out" style="flex:1;">
-                                        <span class="player-name-main">${best2Tx.out2.name}</span>
-                                        <span class="player-team-sub">${best2Tx.out2.team} • £${best2Tx.out2.price.toFixed(1)}m</span>
-                                        ${renderPlayerStatsBreakdown(best2Tx.out2)}
-                                        ${renderFdrFixtures(best2Tx.out2, state.currentGw)}
-                                    </div>
-                                    <i data-lucide="arrow-right" class="transfer-arrow-icon" style="align-self:center;"></i>
-                                    <div class="transfer-player-card player-card-in" style="flex:1;">
-                                        <span class="player-name-main">${best2Tx.in2.name}</span>
-                                        <span class="player-team-sub">${best2Tx.in2.team} • £${best2Tx.in2.price.toFixed(1)}m</span>
-                                        ${renderPlayerStatsBreakdown(best2Tx.in2)}
-                                        ${renderFdrFixtures(best2Tx.in2, state.currentGw)}
-                                    </div>
-                                </div>
-                                
-                                ${getOptimizationExplanation(best2Tx.out1, best2Tx.in1)}
-                                ${getOptimizationExplanation(best2Tx.out2, best2Tx.in2)}
-        
-                                <div class="optimizer-info-banner" style="margin-top: 12px; font-size: 11px; color: var(--text-muted); background: rgba(255, 255, 255, 0.01); padding: 10px; border-radius: 6px; border-left: 3px solid var(--primary); line-height: 1.5;">
-                                    <i data-lucide="info" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px; color: var(--primary);"></i>
-                                    <strong>Horizon Points Calibration:</strong> This double transfer is expected to yield <strong>+${best2Tx.gain.toFixed(1)} XP</strong> over the next 5 weeks. The immediate points increase for next week's single gameweek is <strong>+${best2Tx1GwGain.toFixed(1)} XP</strong>, with the remaining points improvement realized in subsequent weeks.
-                                </div>
-                                <button class="apply-rec-btn" id="applyDoubleBtn" style="margin-top: 16px; width: 100%;">Apply Both Transfers</button>
+                                    <span style="color: var(--text-muted);">•</span>
+                                    <span style="color: ${best2Tx1GwGain >= 0 ? 'var(--primary)' : '#ef4444'}; font-weight: 800;">
+                                        ${best2Tx1GwGain >= 0 ? '+' : ''}${best2Tx1GwGain.toFixed(1)} XP (Next GW)
+                                    </span>
+                                </span>
                             </div>
-                        ` : `
-                            <div class="transfer-list-empty">Current squad is optimized. No beneficial double transfer found.</div>
-                        `}
-                    </div>
+                            
+                            <!-- Transfer 1 -->
+                            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 12px;">
+                                <div class="transfer-player-card player-card-out" style="flex:1;">
+                                    <span class="player-name-main">${best2Tx.out1.name}</span>
+                                    <span class="player-team-sub">${best2Tx.out1.team} • £${best2Tx.out1.price.toFixed(1)}m</span>
+                                    ${renderPlayerStatsBreakdown(best2Tx.out1)}
+                                    ${renderFdrFixtures(best2Tx.out1, state.currentGw)}
+                                </div>
+                                <i data-lucide="arrow-right" class="transfer-arrow-icon" style="align-self:center;"></i>
+                                <div class="transfer-player-card player-card-in" style="flex:1;">
+                                    <span class="player-name-main">${best2Tx.in1.name}</span>
+                                    <span class="player-team-sub">${best2Tx.in1.team} • £${best2Tx.in1.price.toFixed(1)}m</span>
+                                    ${renderPlayerStatsBreakdown(best2Tx.in1)}
+                                    ${renderFdrFixtures(best2Tx.in1, state.currentGw)}
+                                </div>
+                            </div>
+    
+                            <!-- Transfer 2 -->
+                            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 12px;">
+                                <div class="transfer-player-card player-card-out" style="flex:1;">
+                                    <span class="player-name-main">${best2Tx.out2.name}</span>
+                                    <span class="player-team-sub">${best2Tx.out2.team} • £${best2Tx.out2.price.toFixed(1)}m</span>
+                                    ${renderPlayerStatsBreakdown(best2Tx.out2)}
+                                    ${renderFdrFixtures(best2Tx.out2, state.currentGw)}
+                                </div>
+                                <i data-lucide="arrow-right" class="transfer-arrow-icon" style="align-self:center;"></i>
+                                <div class="transfer-player-card player-card-in" style="flex:1;">
+                                    <span class="player-name-main">${best2Tx.in2.name}</span>
+                                    <span class="player-team-sub">${best2Tx.in2.team} • £${best2Tx.in2.price.toFixed(1)}m</span>
+                                    ${renderPlayerStatsBreakdown(best2Tx.in2)}
+                                    ${renderFdrFixtures(best2Tx.in2, state.currentGw)}
+                                </div>
+                            </div>
+                            
+                            ${getOptimizationExplanation(best2Tx.out1, best2Tx.in1)}
+                            ${getOptimizationExplanation(best2Tx.out2, best2Tx.in2)}
+    
+                            <div class="optimizer-info-banner" style="margin-top: 12px; font-size: 11px; color: var(--text-muted); background: rgba(255, 255, 255, 0.01); padding: 10px; border-radius: 6px; border-left: 3px solid var(--primary); line-height: 1.5;">
+                                <i data-lucide="info" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:4px; color: var(--primary);"></i>
+                                <strong>Horizon Points Calibration:</strong> This double transfer is expected to yield <strong>+${best2Tx.gain.toFixed(1)} XP</strong> over the next 5 weeks. The immediate points increase for next week's single gameweek is <strong>+${best2Tx1GwGain.toFixed(1)} XP</strong>, with the remaining points improvement realized in subsequent weeks.
+                            </div>
+                            <button class="apply-rec-btn" id="applyDoubleBtn" style="margin-top: 16px; width: 100%;">Apply Both Transfers</button>
+                        </div>
+                    ` : `
+                        <div class="transfer-list-empty">Current squad is optimized. No beneficial double transfer found.</div>
+                    `}
                 </div>
-            ` : ''}
+            </div>
             <div id="aiStrategistReportContainer" style="grid-column: span 2; margin-top: 24px;"></div>
         `;
 

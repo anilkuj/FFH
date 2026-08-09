@@ -190,8 +190,12 @@ export function renderPlanner(container, state, actions) {
         </button>
     `;
 
-    // Calculate AI Squad Rating (0-100) based on total expected points and average player quality
-    const ratingScore = Math.min(100, Math.round((expectedPoints / 11) * 15));
+    // Calculate AI Squad Rating (0-100) based on total expected points (excluding captain bonus inflation) and average player quality
+    const captainPlayer = PLAYERS.find(p => p.id === state.captain);
+    const captainBonus = captainPlayer ? (captainPlayer.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0) * (state.chips[state.currentGw]?.tripleCaptain ? 2 : 1) : 0;
+    const rawExpectedPoints = Math.max(0, expectedPoints - captainBonus);
+    const averagePlayerXP = rawExpectedPoints / 11;
+    const ratingScore = Math.min(100, Math.round((averagePlayerXP / 5.8) * 100));
 
     container.innerHTML = `
         <div class="planner-grid">
@@ -490,7 +494,7 @@ function renderFdrFixtures(player, currentGw) {
 
 
 
-function renderPlayerTooltip(player, currentGw) {
+function renderPlayerTooltip(player, currentGw, state = null) {
     const ratings = getPlayerRatings(player, currentGw);
     const getBadgeClass = (val) => {
         if (val === 'A') return 'rating-badge-a';
@@ -509,12 +513,24 @@ function renderPlayerTooltip(player, currentGw) {
     const savesTotal = isGKP && typeof player.saves === 'number' ? player.saves : null;
     const saves90Val = isGKP && typeof player.saves90 === 'number' ? player.saves90.toFixed(1) : null;
     
+    // Check if player is transferred in during currentGw
+    const weeklyTransfers = (state && state.transfers && state.transfers[currentGw]) || [];
+    const txForPlayer = weeklyTransfers.find(tx => tx.in === player.id);
+    const isTransferredIn = !!txForPlayer;
+    const pOut = isTransferredIn ? PLAYERS.find(p => p.id === txForPlayer.out) : null;
+    const transferReplacementHtml = isTransferredIn && pOut ? `
+        <div style="background: rgba(0, 255, 136, 0.12); border: 1px solid rgba(0, 255, 136, 0.25); color: var(--primary); font-size: 11.5px; font-weight: 700; padding: 6px 10px; border-radius: 6px; margin: 8px 0; text-align: center; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>🔄 Replaces: ${pOut.name}</span>
+        </div>
+    ` : '';
+    
     return `
         <div class="player-card-tooltip">
             <div class="tooltip-title">
                 <span>${player.name}</span>
                 <span class="tooltip-title-team">${player.team}</span>
             </div>
+            ${transferReplacementHtml}
             <div class="tooltip-quick-stats">
                 <div class="tooltip-quick-stat">
                     <span class="tooltip-quick-stat-val">${starts}</span>
@@ -672,7 +688,7 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
                         ${renderPitchFixtures(player, currentGw)}
                     </div>
                 </div>
-                ${renderPlayerTooltip(player, currentGw)}
+                ${renderPlayerTooltip(player, currentGw, state)}
             </div>
         `;
     }).join('');
@@ -786,7 +802,7 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions, is
                             ${renderPitchFixtures(player, currentGw)}
                         </div>
                     </div>
-                    ${renderPlayerTooltip(player, currentGw)}
+                    ${renderPlayerTooltip(player, currentGw, state)}
                 </div>
             </div>
         `;
