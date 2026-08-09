@@ -4933,3 +4933,34 @@ html.light-theme .rating-badge-na {
         overflow: visible !important;
     }
 }
+
+/* Planned Transfer Indicators (Global) */
+.tp-transfer-badge {
+    position: absolute;
+    bottom: -6px;
+    right: -6px;
+    padding: 1px 5px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    color: #fff;
+    border: 1.5px solid rgba(255,255,255,0.35);
+    box-shadow: 0 2px 8px rgba(34,197,94,0.55);
+    z-index: 20;
+    cursor: pointer;
+    animation: tpBadgePulse 2s infinite alternate;
+}
+@keyframes tpBadgePulse {
+    0% { box-shadow: 0 0 4px rgba(34,197,94,0.4); }
+    100% { box-shadow: 0 0 12px rgba(34,197,94,0.9); }
+}
+.player-pitch-card.is-transferred-in {
+    border: 2px solid rgba(34,197,94,0.6) !important;
+    background: rgba(34,197,94,0.06) !important;
+}
+

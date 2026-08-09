@@ -1571,8 +1571,18 @@ ${squadListText}
             const applyAllTpBtn = resultsContainer.querySelector('#applyAllTpBtn');
             if (applyAllTpBtn) {
                 applyAllTpBtn.addEventListener('click', () => {
-                    // Update state.squadSlots directly
-                    state.squadSlots = result.finalSquadSlots;
+                    if (state.currentGw === 1) {
+                        // Update state.squadSlots directly
+                        state.squadSlots = result.finalSquadSlots;
+                    } else {
+                        // Apply as planned transfers in the current gw
+                        if (!state.transfers[state.currentGw]) {
+                            state.transfers[state.currentGw] = [];
+                        }
+                        result.sequence.forEach(tx => {
+                            state.transfers[state.currentGw].push({ out: tx.out.id, in: tx.in.id });
+                        });
+                    }
                     state.optimizeCaptaincy();
                     state.saveState();
                     actions.syncTopBar();

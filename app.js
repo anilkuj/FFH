@@ -766,16 +766,16 @@ class AppState {
             const weeklyTransfers = this.transfers[gw] || [];
             weeklyTransfers.forEach(tx => {
                 const pOut = PLAYERS.find(p => p.id === tx.out);
-                const pIn = PLAYERS.find(p => p.id === tx.in);
+                const pIn = tx.in ? PLAYERS.find(p => p.id === tx.in) : null;
                 
-                if (pOut && pIn) {
+                if (pOut) {
                     // Update lists
                     squad = squad.map(id => id === tx.out ? tx.in : id);
                     starters = starters.map(id => id === tx.out ? tx.in : id);
                     bench = bench.map(id => id === tx.out ? tx.in : id);
 
                     // Update budget
-                    bank = bank + pOut.price - pIn.price;
+                    bank = bank + pOut.price - (pIn ? pIn.price : 0);
                 }
             });
 
@@ -796,7 +796,13 @@ class AppState {
             }
         }
 
-        return { starters, bench, squad, bank, freeTransfers };
+        return {
+            starters: starters.filter(id => id !== null),
+            bench: bench.filter(id => id !== null),
+            squad: squad.filter(id => id !== null),
+            bank,
+            freeTransfers
+        };
     }
 
     autoRotateLineup(gw) {
@@ -1937,29 +1943,51 @@ const actions = {
     },
 
     removePlayer(playerId) {
-        const slot = state.squadSlots.find(s => s.playerId === playerId);
-        if (slot) {
-            slot.playerId = null;
-            slot.prevPlayerId = playerId;
-            
-            state.optimizeCaptaincy();
-            state.saveState();
-            actions.renderActiveView();
-            actions.showToast('Player removed completely.', 'success');
+        if (state.currentGw === 1) {
+            const slot = state.squadSlots.find(s => s.playerId === playerId);
+            if (slot) {
+                slot.playerId = null;
+                slot.prevPlayerId = playerId;
+            }
+        } else {
+            // Check if this player was already transferred IN in this gameweek
+            const weeklyTransfers = state.transfers[state.currentGw] || [];
+            const existingTxIdx = weeklyTransfers.findIndex(tx => tx.in === playerId);
+            if (existingTxIdx !== -1) {
+                weeklyTransfers.splice(existingTxIdx, 1);
+            } else {
+                if (!state.transfers[state.currentGw]) {
+                    state.transfers[state.currentGw] = [];
+                }
+                state.transfers[state.currentGw].push({ out: playerId, in: null });
+            }
         }
+        
+        state.optimizeCaptaincy();
+        state.saveState();
+        actions.renderActiveView();
+        actions.showToast('Player removed.', 'success');
     },
 
     restorePlayer(slotIndex, playerId) {
-        const slot = state.squadSlots[slotIndex];
-        if (slot && slot.prevPlayerId === playerId) {
-            slot.playerId = playerId;
-            delete slot.prevPlayerId;
-            
-            state.optimizeCaptaincy();
-            state.saveState();
-            actions.renderActiveView();
-            actions.showToast('Player restored successfully!', 'success');
+        if (state.currentGw === 1) {
+            const slot = state.squadSlots[slotIndex];
+            if (slot && slot.prevPlayerId === playerId) {
+                slot.playerId = playerId;
+                delete slot.prevPlayerId;
+            }
+        } else {
+            const weeklyTransfers = state.transfers[state.currentGw] || [];
+            const idx = weeklyTransfers.findIndex(tx => tx.out === playerId && tx.in === null);
+            if (idx !== -1) {
+                weeklyTransfers.splice(idx, 1);
+            }
         }
+        
+        state.optimizeCaptaincy();
+        state.saveState();
+        actions.renderActiveView();
+        actions.showToast('Player restored successfully!', 'success');
     },
 
     addPlayer(gw, slotIndex, inId) {
@@ -1992,10 +2020,34 @@ const actions = {
         // Assign to the slot
         if (gw === 1) {
             state.squadSlots[slotIndex].playerId = inId;
+            delete state.squadSlots[slotIndex].prevPlayerId;
         } else {
-            state.squadSlots[slotIndex].playerId = inId;
+            // Find the original player in this slot entering this GW (after applying transfers from GW2 to gw - 1)
+            let slotsAtGwStart = JSON.parse(JSON.stringify(state.squadSlots));
+            for (let g = 2; g < gw; g++) {
+                const weeklyTxs = state.transfers[g] || [];
+                weeklyTxs.forEach(tx => {
+                    const slot = slotsAtGwStart.find(s => s.playerId === tx.out);
+                    if (slot) slot.playerId = tx.in;
+                });
+            }
+            const originalPlayerId = slotsAtGwStart[slotIndex].playerId;
+
+            if (originalPlayerId) {
+                if (!state.transfers[gw]) {
+                    state.transfers[gw] = [];
+                }
+                const existingTx = state.transfers[gw].find(tx => tx.out === originalPlayerId);
+                if (existingTx) {
+                    existingTx.in = inId;
+                } else {
+                    state.transfers[gw].push({ out: originalPlayerId, in: inId });
+                }
+            } else {
+                state.squadSlots[slotIndex].playerId = inId;
+                delete state.squadSlots[slotIndex].prevPlayerId;
+            }
         }
-        delete state.squadSlots[slotIndex].prevPlayerId;
 
         state.optimizeCaptaincy();
         state.saveState();

@@ -624,13 +624,29 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
             </span>
         ` : '';
 
+        // Check if player was transferred in during currentGw
+        const weeklyTransfers = (state && state.transfers && state.transfers[currentGw]) || [];
+        const txForPlayer = weeklyTransfers.find(tx => tx.in === player.id);
+        const isTransferredIn = !!txForPlayer;
+        const pOut = isTransferredIn ? PLAYERS.find(p => p.id === txForPlayer.out) : null;
+        
+        let finalCardClass = cardClass;
+        if (isTransferredIn) {
+            finalCardClass += ' is-transferred-in';
+        }
+        
+        const transferBadgeHtml = isTransferredIn && pOut ? `
+            <div class="tp-transfer-badge" title="Planned transfer: ${pOut.name} &rarr; OUT">IN</div>
+        ` : '';
+
         return `
-            <div class="player-pitch-card ${cardClass}" data-id="${player.id}" data-type="starter">
+            <div class="player-pitch-card ${finalCardClass}" data-id="${player.id}" data-type="starter">
                 <button class="pitch-sell-btn" data-id="${player.id}" title="Remove Player" style="display: ${isSquadUnlocked ? 'flex' : 'none'} !important; opacity: 1 !important;">&times;</button>
                 <div class="shirt-icon-wrapper" style="position: relative;">
                     ${getShirtSVG(teamObj.color, player.team, player.position)}
                     ${designationBadge}
                     ${riskBadge}
+                    ${transferBadgeHtml}
                     ${player.transferredThisSeason ? `<div class="pitch-transfer-icon" title="Transferred from ${player.oldTeam}">⇆</div>` : ''}
                 </div>
 
@@ -720,15 +736,31 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions, is
             </span>
         ` : '';
 
+        // Check if player was transferred in during currentGw
+        const weeklyTransfers = (state && state.transfers && state.transfers[currentGw]) || [];
+        const txForPlayer = weeklyTransfers.find(tx => tx.in === player.id);
+        const isTransferredIn = !!txForPlayer;
+        const pOut = isTransferredIn ? PLAYERS.find(p => p.id === txForPlayer.out) : null;
+        
+        let finalCardClass = cardClass;
+        if (isTransferredIn) {
+            finalCardClass += ' is-transferred-in';
+        }
+        
+        const transferBadgeHtml = isTransferredIn && pOut ? `
+            <div class="tp-transfer-badge" title="Planned transfer: ${pOut.name} &rarr; OUT">IN</div>
+        ` : '';
+
         return `
             <div class="bench-slot-wrapper">
                 <span class="bench-slot-label">${label}</span>
-                <div class="player-pitch-card ${cardClass}" data-id="${player.id}" data-type="bench" data-index="${index}" style="width: 100%;">
+                <div class="player-pitch-card ${finalCardClass}" data-id="${player.id}" data-type="bench" data-index="${index}" style="width: 100%;">
                     <button class="pitch-sell-btn" data-id="${player.id}" title="Remove Player" style="display: ${isSquadUnlocked ? 'flex' : 'none'} !important; opacity: 1 !important;">&times;</button>
                     <div class="shirt-icon-wrapper" style="position: relative;">
                         ${getShirtSVG(teamObj.color, player.team, player.position)}
                         ${designationBadge}
                         ${riskBadge}
+                        ${transferBadgeHtml}
                         ${player.transferredThisSeason ? `<div class="pitch-transfer-icon" title="Transferred from ${player.oldTeam}">⇆</div>` : ''}
                     </div>
 
