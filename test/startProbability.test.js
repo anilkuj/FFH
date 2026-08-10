@@ -21,6 +21,17 @@ test('computeStartProbability: official status "s" (suspended) short-circuits to
     assert.equal(result.startProbability, 0);
 });
 
+test('computeStartProbability: official status "u" (unavailable, e.g. left the club) short-circuits to 0', () => {
+    const result = computeStartProbability({
+        officialStatus: 'u', officialChanceOfPlaying: null,
+        recentWindow: { starts: 6, games: 6 }, priorSeasonRate: 0.9,
+        price: 8.0, ownership: 10, position: 'FWD'
+    });
+    assert.equal(result.startProbability, 0);
+    assert.equal(result.dataConfidence, 'high');
+    assert.equal(result.source, 'official-unavailable');
+});
+
 test('computeStartProbability: officialChanceOfPlaying === 0 short-circuits to 0 even with status "a"', () => {
     const result = computeStartProbability({
         officialStatus: 'a', officialChanceOfPlaying: 0,
@@ -83,6 +94,28 @@ test('computeStartProbability: no history anywhere, low price/ownership -> gener
         price: 4.0, ownership: 0.5, position: 'MID'
     });
     assert.equal(result.startProbability, 0.3);
+});
+
+test('computeStartProbability: malformed/undefined recentWindow does not throw, falls through to generic prior', () => {
+    const result = computeStartProbability({
+        officialStatus: 'a', officialChanceOfPlaying: null,
+        recentWindow: undefined, priorSeasonRate: null,
+        price: 8.0, ownership: 0.5, position: 'MID'
+    });
+    assert.equal(result.startProbability, 0.75);
+    assert.equal(result.dataConfidence, 'low');
+    assert.equal(result.source, 'generic-prior');
+});
+
+test('computeStartProbability: 1-2 recent-team games with no prior-season rate deliberately routes to generic prior, discarding the partial window', () => {
+    const result = computeStartProbability({
+        officialStatus: 'a', officialChanceOfPlaying: null,
+        recentWindow: { starts: 2, games: 2 }, priorSeasonRate: null,
+        price: 8.0, ownership: 0.5, position: 'MID'
+    });
+    assert.equal(result.startProbability, 0.75);
+    assert.equal(result.dataConfidence, 'low');
+    assert.equal(result.source, 'generic-prior');
 });
 
 test('computeStartProbability: generic prior price threshold is position-aware (GKP/DEF cheaper than MID/FWD)', () => {
