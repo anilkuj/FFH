@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "sync": "node sync.js",
     "start": "node server.js",
-    "test": "node --test test/"
+    "test": "node --test \"test/**/*.test.js\""
   },
   "dependencies": {
     "sirv-cli": "^3.0.1",
