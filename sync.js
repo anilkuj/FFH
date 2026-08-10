@@ -559,6 +559,7 @@ async function parseAndWriteData(data, fixturesData) {
         return {
             id: el.id,
             name: `${el.first_name} ${el.second_name}`,
+            web_name: el.web_name,
             team: teamShort,
             position: position,
             price: price,

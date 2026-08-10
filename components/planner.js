@@ -673,7 +673,7 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
                 <div class="player-card-info" style="padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; border-radius: 8px;">
                     <div class="pitch-card-info-header">
                         <div class="player-pitch-name" style="display:flex; align-items:center; justify-content:center; gap:4px; flex-wrap:wrap;">
-                            <span>${actions.getWebName(player.name)}</span>
+                            <span>${actions.getWebName(player)}</span>
                             ${renderSetPieceBadges(player)}
                         </div>
                         <div class="player-pitch-points">
@@ -787,7 +787,7 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions, is
                     <div class="player-card-info" style="padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; border-radius: 8px;">
                         <div class="pitch-card-info-header">
                             <div class="player-pitch-name" style="display:flex; align-items:center; justify-content:center; gap:4px; flex-wrap:wrap;">
-                                <span>${actions.getWebName(player.name)}</span>
+                                <span>${actions.getWebName(player)}</span>
                                 ${renderSetPieceBadges(player)}
                             </div>
                             <div class="player-pitch-points">
@@ -2387,8 +2387,8 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
      
                     if (!query) return true;
      
-                    // 1. Direct name match
-                    if (p.name.toLowerCase().includes(query)) return true;
+                    // 1. Direct full name or official FPL web_name match
+                    if (p.name.toLowerCase().includes(query) || (p.web_name && p.web_name.toLowerCase().includes(query))) return true;
      
                     // 2. Direct team name match
                     const teamObj = TEAMS.find(t => t.shortName === p.team);
@@ -2523,7 +2523,7 @@ function renderModalPlayerRows(players, bank, state, gwWindow) {
             <div class="panel-player-row ${!isAffordable ? 'disabled-row' : ''}" data-id="${player.id}" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px; transition: all var(--transition-fast);">
                 <div class="player-info-left" style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0;">
                     <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 6px;">
-                        <span class="player-name-main" style="font-weight: 600; color: var(--text-main); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 300px;">${player.name}</span>
+                        <span class="player-name-main" style="font-weight: 600; color: var(--text-main); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 300px;" title="${player.name}">${player.web_name || player.name}</span>
                         ${renderSetPieceBadges(player)}
                         ${badgesHtml}
                     </div>

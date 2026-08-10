@@ -1054,24 +1054,57 @@ const state = new AppState();
 
 // UI Render Action Controllers
 const actions = {
-    getWebName(name) {
-        if (!name) return '';
+    getWebName(target) {
+        if (!target) return '';
         
+        // 1. If passed a player object directly
+        if (typeof target === 'object') {
+            if (target.web_name) return target.web_name;
+            target = target.name || '';
+        }
+        
+        // 2. If passed a numeric player ID
+        if (typeof target === 'number') {
+            const p = (typeof PLAYERS !== 'undefined' && Array.isArray(PLAYERS)) ? PLAYERS.find(pl => pl.id === target) : null;
+            if (p && p.web_name) return p.web_name;
+            if (p && p.name) target = p.name;
+        }
+
+        if (typeof target !== 'string') return '';
+        const trimmed = target.trim();
+        if (!trimmed) return '';
+
+        // 3. Exact or case-insensitive lookup in PLAYERS array
+        if (typeof PLAYERS !== 'undefined' && Array.isArray(PLAYERS)) {
+            const p = PLAYERS.find(pl => pl.name === trimmed || pl.web_name === trimmed || pl.name.toLowerCase() === trimmed.toLowerCase());
+            if (p && p.web_name) return p.web_name;
+        }
+
         const webNameOverrides = {
+            "Pedro Porro Sauceda": "Pedro Porro",
+            "Pedro Porro": "Pedro Porro",
+            "João Pedro Junqueira de Jesus": "João Pedro",
+            "João Pedro": "João Pedro",
+            "Bruno Borges Fernandes": "B.Fernandes",
+            "Bruno Fernandes": "B.Fernandes",
+            "Francisco Evanilson de Lima Barbosa": "Evanilson",
+            "Evanilson": "Evanilson",
+            "Matheus Santos Carneiro da Cunha": "Cunha",
+            "Matheus Cunha": "Cunha",
+            "Dominic Solanke-Mitchell": "Solanke",
+            "Dominic Solanke": "Solanke",
+            "Pedro Lomba Neto": "Pedro Neto",
+            "Pedro Neto": "Pedro Neto",
+            "Bruno Guimarães Rodriguez Moura": "Bruno G.",
+            "Bruno Guimarães": "Bruno G.",
             "Igor Thiago Nascimento Rodrigues": "Thiago",
             "David Raya Martín": "Raya",
             "Gabriel dos Santos Magalhães": "Gabriel",
             "Emile Smith Rowe": "Smith Rowe",
             "Virgil van Dijk": "van Dijk",
             "Kevin De Bruyne": "De Bruyne",
-            "Bruno Guimarães Rodriguez Moura": "Bruno G.",
-            "Bruno Guimarães": "Bruno G.",
             "Diogo Teixeira da Silva": "Diogo J.",
             "Diogo Jota": "Diogo J.",
-            "Matheus Santos Carneiro da Cunha": "Cunha",
-            "Matheus Cunha": "Cunha",
-            "Pedro Lomba Neto": "Pedro Neto",
-            "Pedro Neto": "Pedro Neto",
             "Rodrigo Muniz Carvalho": "Rodrigo Muniz",
             "Alex Moreno Lopera": "Alex Moreno",
             "Alex Moreno": "Alex Moreno",
@@ -1081,8 +1114,8 @@ const actions = {
             "Andreas Pereira": "Andreas",
             "Alejandro Garnacho Ferreyra": "Garnacho",
             "Darwin Núñez Ribeiro": "Darwin",
-            "Gabriel Fernando de Jesus": "Jesus",
-            "Gabriel Jesus": "Jesus",
+            "Gabriel Fernando de Jesus": "G.Jesus",
+            "Gabriel Jesus": "G.Jesus",
             "Gabriel Martinelli Silva": "Martinelli",
             "Gabriel Martinelli": "Martinelli",
             "Enzo Fernández": "Enzo",
@@ -1100,24 +1133,24 @@ const actions = {
             "Joško Gvardiol": "Gvardiol"
         };
 
-        if (webNameOverrides[name]) {
-            return webNameOverrides[name];
+        if (webNameOverrides[trimmed]) {
+            return webNameOverrides[trimmed];
         }
 
         // Handle "van " names dynamically (e.g. Micky van de Ven, Jan Paul van Hecke)
-        const vanIdx = name.toLowerCase().indexOf(' van ');
+        const vanIdx = trimmed.toLowerCase().indexOf(' van ');
         if (vanIdx !== -1) {
-            return name.substring(vanIdx + 1);
+            return trimmed.substring(vanIdx + 1);
         }
 
         // Handle "de " names dynamically (e.g. Matthijs de Ligt, Bobby De Cordova-Reid)
-        const deIdx = name.toLowerCase().indexOf(' de ');
+        const deIdx = trimmed.toLowerCase().indexOf(' de ');
         if (deIdx !== -1) {
-            return name.substring(deIdx + 1);
+            return trimmed.substring(deIdx + 1);
         }
 
         // Default to last word
-        return name.split(' ').pop() || name;
+        return trimmed.split(' ').pop() || trimmed;
     },
 
     switchTab(tab) {

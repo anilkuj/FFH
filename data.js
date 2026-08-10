@@ -457,7 +457,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45.9
+        "xp10": 45.9,
+        "web_name": "Raya"
     },
     {
         "id": 2,
@@ -791,7 +792,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 40.1
+        "xp10": 40.1,
+        "web_name": "Arrizabalaga"
     },
     {
         "id": 3,
@@ -1125,7 +1127,8 @@ export const PLAYERS = [
         "news": "Backup GK behind David Raya.",
         "status": "a",
         "chanceOfPlaying": 5,
-        "xp10": 41.1
+        "xp10": 41.1,
+        "web_name": "Meslier"
     },
     {
         "id": 4,
@@ -1459,7 +1462,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.8
+        "xp10": 43.8,
+        "web_name": "Gabriel"
     },
     {
         "id": 5,
@@ -1793,7 +1797,8 @@ export const PLAYERS = [
         "news": "Groin injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "J.Timber"
     },
     {
         "id": 6,
@@ -2127,7 +2132,8 @@ export const PLAYERS = [
         "news": "Back injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Saliba"
     },
     {
         "id": 7,
@@ -2461,7 +2467,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.7
+        "xp10": 17.7,
+        "web_name": "Lewis-Skelly"
     },
     {
         "id": 8,
@@ -2795,7 +2802,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.8
+        "xp10": 43.8,
+        "web_name": "Calafiori"
     },
     {
         "id": 9,
@@ -3129,7 +3137,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.1
+        "xp10": 42.1,
+        "web_name": "Hincapie"
     },
     {
         "id": 10,
@@ -3463,7 +3472,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.8
+        "xp10": 43.8,
+        "web_name": "White"
     },
     {
         "id": 11,
@@ -3797,7 +3807,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 21.3
+        "xp10": 21.3,
+        "web_name": "Mosquera"
     },
     {
         "id": 12,
@@ -4131,7 +4142,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 61.2
+        "xp10": 61.2,
+        "web_name": "Saka"
     },
     {
         "id": 13,
@@ -4465,7 +4477,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 53.2
+        "xp10": 53.2,
+        "web_name": "Rice"
     },
     {
         "id": 14,
@@ -4799,7 +4812,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 52.2
+        "xp10": 52.2,
+        "web_name": "Eze"
     },
     {
         "id": 15,
@@ -5133,7 +5147,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 46.9
+        "xp10": 46.9,
+        "web_name": "Ødegaard"
     },
     {
         "id": 16,
@@ -5467,7 +5482,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45.6
+        "xp10": 45.6,
+        "web_name": "Madueke"
     },
     {
         "id": 17,
@@ -5801,7 +5817,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.5
+        "xp10": 42.5,
+        "web_name": "Merino"
     },
     {
         "id": 18,
@@ -6135,7 +6152,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.1
+        "xp10": 39.1,
+        "web_name": "Martinelli"
     },
     {
         "id": 19,
@@ -6469,7 +6487,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.3
+        "xp10": 39.3,
+        "web_name": "Zubimendi"
     },
     {
         "id": 20,
@@ -6803,7 +6822,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18.6
+        "xp10": 18.6,
+        "web_name": "Dowman"
     },
     {
         "id": 22,
@@ -7137,7 +7157,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.7
+        "xp10": 17.7,
+        "web_name": "Nwaneri"
     },
     {
         "id": 23,
@@ -7471,7 +7492,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30
+        "xp10": 30,
+        "web_name": "Fábio Vieira"
     },
     {
         "id": 24,
@@ -7805,7 +7827,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18.3
+        "xp10": 18.3,
+        "web_name": "Nelson"
     },
     {
         "id": 25,
@@ -8139,7 +8162,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 50.7
+        "xp10": 50.7,
+        "web_name": "Gyökeres"
     },
     {
         "id": 26,
@@ -8473,7 +8497,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 53
+        "xp10": 53,
+        "web_name": "Havertz"
     },
     {
         "id": 27,
@@ -8807,7 +8832,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 21.7
+        "xp10": 21.7,
+        "web_name": "G.Jesus"
     },
     {
         "id": 557,
@@ -9141,7 +9167,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30
+        "xp10": 30,
+        "web_name": "Tzolis"
     },
     {
         "id": 28,
@@ -9475,7 +9502,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45.4
+        "xp10": 45.4,
+        "web_name": "Martinez"
     },
     {
         "id": 29,
@@ -9809,7 +9837,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38
+        "xp10": 38,
+        "web_name": "M.Bizot"
     },
     {
         "id": 30,
@@ -10143,7 +10172,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.6
+        "xp10": 42.6,
+        "web_name": "Digne"
     },
     {
         "id": 31,
@@ -10477,7 +10507,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 27.3
+        "xp10": 27.3,
+        "web_name": "Konsa"
     },
     {
         "id": 32,
@@ -10811,7 +10842,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 32
+        "xp10": 32,
+        "web_name": "Cash"
     },
     {
         "id": 33,
@@ -11145,7 +11177,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 31
+        "xp10": 31,
+        "web_name": "Mings"
     },
     {
         "id": 34,
@@ -11479,7 +11512,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.3
+        "xp10": 28.3,
+        "web_name": "Pau"
     },
     {
         "id": 35,
@@ -11813,7 +11847,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 27.5
+        "xp10": 27.5,
+        "web_name": "Bogarde"
     },
     {
         "id": 36,
@@ -12147,7 +12182,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 24.8
+        "xp10": 24.8,
+        "web_name": "Maatsen"
     },
     {
         "id": 37,
@@ -12481,7 +12517,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 24.1
+        "xp10": 24.1,
+        "web_name": "Lindelöf"
     },
     {
         "id": 38,
@@ -12815,7 +12852,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 13.9
+        "xp10": 13.9,
+        "web_name": "A.García"
     },
     {
         "id": 39,
@@ -13149,7 +13187,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 13.2
+        "xp10": 13.2,
+        "web_name": "Nedeljkovic"
     },
     {
         "id": 41,
@@ -13483,7 +13522,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 47.9
+        "xp10": 47.9,
+        "web_name": "Buendía"
     },
     {
         "id": 42,
@@ -13817,7 +13857,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.9
+        "xp10": 30.9,
+        "web_name": "Guessand"
     },
     {
         "id": 44,
@@ -14151,7 +14192,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18.2
+        "xp10": 18.2,
+        "web_name": "Bailey"
     },
     {
         "id": 45,
@@ -14485,7 +14527,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 36.3
+        "xp10": 36.3,
+        "web_name": "McGinn"
     },
     {
         "id": 46,
@@ -14819,7 +14862,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 22.6
+        "xp10": 22.6,
+        "web_name": "Barkley"
     },
     {
         "id": 47,
@@ -15153,7 +15197,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.7
+        "xp10": 34.7,
+        "web_name": "Kamara"
     },
     {
         "id": 48,
@@ -15487,7 +15532,8 @@ export const PLAYERS = [
         "news": "Knee injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Onana"
     },
     {
         "id": 49,
@@ -15821,7 +15867,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.4
+        "xp10": 17.4,
+        "web_name": "Iling Jr"
     },
     {
         "id": 50,
@@ -16155,7 +16202,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.4
+        "xp10": 17.4,
+        "web_name": "Burrowes"
     },
     {
         "id": 51,
@@ -16489,7 +16537,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.4
+        "xp10": 17.4,
+        "web_name": "George Hemmings"
     },
     {
         "id": 52,
@@ -16823,7 +16872,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.4
+        "xp10": 17.4,
+        "web_name": "Alysson"
     },
     {
         "id": 53,
@@ -17157,7 +17207,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.5
+        "xp10": 29.5,
+        "web_name": "Manzambi"
     },
     {
         "id": 54,
@@ -17491,7 +17542,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 33.1
+        "xp10": 33.1,
+        "web_name": "Gomes"
     },
     {
         "id": 55,
@@ -17825,7 +17877,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 50.7
+        "xp10": 50.7,
+        "web_name": "Watkins"
     },
     {
         "id": 56,
@@ -18159,7 +18212,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 20.8
+        "xp10": 20.8,
+        "web_name": "Abraham"
     },
     {
         "id": 160,
@@ -18493,7 +18547,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 40.2
+        "xp10": 40.2,
+        "web_name": "Garnacho"
     },
     {
         "id": 57,
@@ -18827,7 +18882,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.7
+        "xp10": 39.7,
+        "web_name": "Petrović"
     },
     {
         "id": 58,
@@ -19161,7 +19217,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37.5
+        "xp10": 37.5,
+        "web_name": "Forster"
     },
     {
         "id": 59,
@@ -19495,7 +19552,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 26.2
+        "xp10": 26.2,
+        "web_name": "Dennis"
     },
     {
         "id": 60,
@@ -19829,7 +19887,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 36
+        "xp10": 36,
+        "web_name": "Hill"
     },
     {
         "id": 61,
@@ -20163,7 +20222,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.9
+        "xp10": 39.9,
+        "web_name": "Truffert"
     },
     {
         "id": 62,
@@ -20497,7 +20557,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 27.9
+        "xp10": 27.9,
+        "web_name": "Diakité"
     },
     {
         "id": 63,
@@ -20831,7 +20892,8 @@ export const PLAYERS = [
         "news": "Unspecified injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Milosavljević"
     },
     {
         "id": 64,
@@ -21165,7 +21227,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38
+        "xp10": 38,
+        "web_name": "Smith"
     },
     {
         "id": 65,
@@ -21499,7 +21562,8 @@ export const PLAYERS = [
         "news": "Thigh injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "J.Araujo"
     },
     {
         "id": 66,
@@ -21833,7 +21897,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 13.3
+        "xp10": 13.3,
+        "web_name": "Soler"
     },
     {
         "id": 67,
@@ -22167,7 +22232,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 50.2
+        "xp10": 50.2,
+        "web_name": "Rayan"
     },
     {
         "id": 68,
@@ -22501,7 +22567,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.1
+        "xp10": 43.1,
+        "web_name": "Tavernier"
     },
     {
         "id": 69,
@@ -22835,7 +22902,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39
+        "xp10": 39,
+        "web_name": "Scott"
     },
     {
         "id": 70,
@@ -23169,7 +23237,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 33.4
+        "xp10": 33.4,
+        "web_name": "Kluivert"
     },
     {
         "id": 71,
@@ -23503,7 +23572,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 27.2
+        "xp10": 27.2,
+        "web_name": "Cook"
     },
     {
         "id": 72,
@@ -23837,7 +23907,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 16.9
+        "xp10": 16.9,
+        "web_name": "Gannon-Doak"
     },
     {
         "id": 73,
@@ -24171,7 +24242,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35
+        "xp10": 35,
+        "web_name": "Adams"
     },
     {
         "id": 74,
@@ -24505,7 +24577,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 41.6
+        "xp10": 41.6,
+        "web_name": "Brooks"
     },
     {
         "id": 75,
@@ -24839,7 +24912,8 @@ export const PLAYERS = [
         "news": "Suspended until 29 Aug",
         "status": "s",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Christie"
     },
     {
         "id": 76,
@@ -25173,7 +25247,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 17.1
+        "xp10": 17.1,
+        "web_name": "Tóth.A"
     },
     {
         "id": 77,
@@ -25507,7 +25582,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.4
+        "xp10": 34.4,
+        "web_name": "Adli"
     },
     {
         "id": 78,
@@ -25841,7 +25917,8 @@ export const PLAYERS = [
         "news": "Foot injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Kroupi.Jr"
     },
     {
         "id": 79,
@@ -26175,7 +26252,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.4
+        "xp10": 35.4,
+        "web_name": "Evanilson"
     },
     {
         "id": 80,
@@ -26509,7 +26587,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 20.2
+        "xp10": 20.2,
+        "web_name": "Enes Ünal"
     },
     {
         "id": 81,
@@ -26843,7 +26922,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.1
+        "xp10": 34.1,
+        "web_name": "Rodríguez"
     },
     {
         "id": 566,
@@ -27177,7 +27257,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.1
+        "xp10": 23.1,
+        "web_name": "Silva"
     },
     {
         "id": 573,
@@ -27511,7 +27592,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.1
+        "xp10": 23.1,
+        "web_name": "Sanchez"
     },
     {
         "id": 82,
@@ -27845,7 +27927,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 46.2
+        "xp10": 46.2,
+        "web_name": "Kelleher"
     },
     {
         "id": 83,
@@ -28179,7 +28262,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 24.6
+        "xp10": 24.6,
+        "web_name": "Valdimarsson"
     },
     {
         "id": 84,
@@ -28513,7 +28597,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 32.2
+        "xp10": 32.2,
+        "web_name": "Collins"
     },
     {
         "id": 85,
@@ -28847,7 +28932,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 32
+        "xp10": 32,
+        "web_name": "Van den Berg"
     },
     {
         "id": 86,
@@ -29181,7 +29267,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 51.6
+        "xp10": 51.6,
+        "web_name": "Lewis-Potter"
     },
     {
         "id": 87,
@@ -29515,7 +29602,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.5
+        "xp10": 35.5,
+        "web_name": "Ajer"
     },
     {
         "id": 88,
@@ -29849,7 +29937,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.3
+        "xp10": 28.3,
+        "web_name": "Kayode"
     },
     {
         "id": 89,
@@ -30183,7 +30272,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.3
+        "xp10": 28.3,
+        "web_name": "Henry"
     },
     {
         "id": 90,
@@ -30517,7 +30607,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.6
+        "xp10": 42.6,
+        "web_name": "Hickey"
     },
     {
         "id": 91,
@@ -30851,7 +30942,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 17.7
+        "xp10": 17.7,
+        "web_name": "Pinnock"
     },
     {
         "id": 92,
@@ -31185,7 +31277,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.1
+        "xp10": 23.1,
+        "web_name": "Ji-soo"
     },
     {
         "id": 93,
@@ -31519,7 +31612,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.1
+        "xp10": 23.1,
+        "web_name": "Schuster"
     },
     {
         "id": 94,
@@ -31853,7 +31947,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.2
+        "xp10": 39.2,
+        "web_name": "Schade"
     },
     {
         "id": 95,
@@ -32187,7 +32282,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 52
+        "xp10": 52,
+        "web_name": "O.Dango"
     },
     {
         "id": 96,
@@ -32521,7 +32617,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 46.9
+        "xp10": 46.9,
+        "web_name": "Damsgaard"
     },
     {
         "id": 97,
@@ -32855,7 +32952,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37
+        "xp10": 37,
+        "web_name": "Jensen"
     },
     {
         "id": 98,
@@ -33189,7 +33287,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.1
+        "xp10": 38.1,
+        "web_name": "Janelt"
     },
     {
         "id": 99,
@@ -33523,7 +33622,8 @@ export const PLAYERS = [
         "news": "Knee injury - 75% chance of playing",
         "status": "d",
         "chanceOfPlaying": 75,
-        "xp10": 13
+        "xp10": 13,
+        "web_name": "Milambo"
     },
     {
         "id": 100,
@@ -33857,7 +33957,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 17.8
+        "xp10": 17.8,
+        "web_name": "Carvalho"
     },
     {
         "id": 102,
@@ -34191,7 +34292,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 33.7
+        "xp10": 33.7,
+        "web_name": "Yarmoliuk"
     },
     {
         "id": 103,
@@ -34525,7 +34627,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.4
+        "xp10": 17.4,
+        "web_name": "Dasilva"
     },
     {
         "id": 105,
@@ -34859,7 +34962,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.5
+        "xp10": 29.5,
+        "web_name": "Anthony"
     },
     {
         "id": 106,
@@ -35193,7 +35297,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 49.2
+        "xp10": 49.2,
+        "web_name": "Thiago"
     },
     {
         "id": 107,
@@ -35527,7 +35632,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 20
+        "xp10": 20,
+        "web_name": "Furo"
     },
     {
         "id": 108,
@@ -35861,7 +35967,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.8
+        "xp10": 34.8,
+        "web_name": "Wilson"
     },
     {
         "id": 565,
@@ -36195,7 +36302,8 @@ export const PLAYERS = [
         "news": "New signing expected to start for Brentford.",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 31.2
+        "xp10": 31.2,
+        "web_name": "Sangaré"
     },
     {
         "id": 109,
@@ -36529,7 +36637,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 40.1
+        "xp10": 40.1,
+        "web_name": "Verbruggen"
     },
     {
         "id": 111,
@@ -36863,7 +36972,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 36.8
+        "xp10": 36.8,
+        "web_name": "Steele"
     },
     {
         "id": 113,
@@ -37197,7 +37307,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 27.2
+        "xp10": 27.2,
+        "web_name": "F.Kadıoğlu"
     },
     {
         "id": 114,
@@ -37531,7 +37642,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.7
+        "xp10": 38.7,
+        "web_name": "Boscagli"
     },
     {
         "id": 115,
@@ -37865,7 +37977,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 40.3
+        "xp10": 40.3,
+        "web_name": "De Cuyper"
     },
     {
         "id": 116,
@@ -38199,7 +38312,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.5
+        "xp10": 26.5,
+        "web_name": "Dunk"
     },
     {
         "id": 117,
@@ -38533,7 +38647,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 14.6
+        "xp10": 14.6,
+        "web_name": "Coppola"
     },
     {
         "id": 118,
@@ -38867,7 +38982,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 14.6
+        "xp10": 14.6,
+        "web_name": "Igor"
     },
     {
         "id": 119,
@@ -39201,7 +39317,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 22.1
+        "xp10": 22.1,
+        "web_name": "Costinha"
     },
     {
         "id": 120,
@@ -39535,7 +39652,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 22.1
+        "xp10": 22.1,
+        "web_name": "Svoboda"
     },
     {
         "id": 121,
@@ -39869,7 +39987,8 @@ export const PLAYERS = [
         "news": "Hamstring injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Mitoma"
     },
     {
         "id": 122,
@@ -40203,7 +40322,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.6
+        "xp10": 39.6,
+        "web_name": "Minteh"
     },
     {
         "id": 123,
@@ -40537,7 +40657,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.1
+        "xp10": 43.1,
+        "web_name": "Hinshelwood"
     },
     {
         "id": 124,
@@ -40871,7 +40992,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39
+        "xp10": 39,
+        "web_name": "Groß"
     },
     {
         "id": 125,
@@ -41205,7 +41327,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.1
+        "xp10": 42.1,
+        "web_name": "Georginio"
     },
     {
         "id": 126,
@@ -41539,7 +41662,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 17.4
+        "xp10": 17.4,
+        "web_name": "O'Riley"
     },
     {
         "id": 127,
@@ -41873,7 +41997,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.4
+        "xp10": 35.4,
+        "web_name": "Gomez"
     },
     {
         "id": 128,
@@ -42207,7 +42332,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 16.8
+        "xp10": 16.8,
+        "web_name": "Buonanotte"
     },
     {
         "id": 129,
@@ -42541,7 +42667,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.4
+        "xp10": 35.4,
+        "web_name": "Ayari"
     },
     {
         "id": 130,
@@ -42875,7 +43002,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 36.1
+        "xp10": 36.1,
+        "web_name": "Wieffer"
     },
     {
         "id": 131,
@@ -43209,7 +43337,8 @@ export const PLAYERS = [
         "news": "Ankle injury - Expected back 23 Aug",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Baleba"
     },
     {
         "id": 132,
@@ -43543,7 +43672,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 16.8
+        "xp10": 16.8,
+        "web_name": "Howell"
     },
     {
         "id": 133,
@@ -43877,7 +44007,8 @@ export const PLAYERS = [
         "news": "Has joined Leicester City on loan for the rest of the season",
         "status": "u",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Watson"
     },
     {
         "id": 134,
@@ -44211,7 +44342,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 16.6
+        "xp10": 16.6,
+        "web_name": "Oriola"
     },
     {
         "id": 135,
@@ -44545,7 +44677,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 16.6
+        "xp10": 16.6,
+        "web_name": "Yohanna"
     },
     {
         "id": 137,
@@ -44879,7 +45012,8 @@ export const PLAYERS = [
         "news": "Knee injury - 75% chance of playing",
         "status": "d",
         "chanceOfPlaying": 75,
-        "xp10": 14.6
+        "xp10": 14.6,
+        "web_name": "Tzimas"
     },
     {
         "id": 138,
@@ -45213,7 +45347,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 19.8
+        "xp10": 19.8,
+        "web_name": "Kostoulas"
     },
     {
         "id": 139,
@@ -45547,7 +45682,8 @@ export const PLAYERS = [
         "news": "Ankle injury - Expected back 10 Oct",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Ferguson"
     },
     {
         "id": 328,
@@ -45881,7 +46017,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.6
+        "xp10": 28.6,
+        "web_name": "Struijk"
     },
     {
         "id": 504,
@@ -46215,7 +46352,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 22.1
+        "xp10": 22.1,
+        "web_name": "Vuskovic"
     },
     {
         "id": 40,
@@ -46549,7 +46687,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 44.5
+        "xp10": 44.5,
+        "web_name": "Rogers"
     },
     {
         "id": 101,
@@ -46883,7 +47022,8 @@ export const PLAYERS = [
         "news": "Backup/rotation option at Chelsea.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 25.6
+        "xp10": 25.6,
+        "web_name": "Henderson"
     },
     {
         "id": 136,
@@ -47217,7 +47357,8 @@ export const PLAYERS = [
         "news": "Backup forward at Chelsea behind Nicolas Jackson.",
         "status": "a",
         "chanceOfPlaying": 20,
-        "xp10": 48.1
+        "xp10": 48.1,
+        "web_name": "Welbeck"
     },
     {
         "id": 140,
@@ -47551,7 +47692,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.8
+        "xp10": 39.8,
+        "web_name": "Sánchez"
     },
     {
         "id": 141,
@@ -47885,7 +48027,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.3
+        "xp10": 42.3,
+        "web_name": "Jörgensen"
     },
     {
         "id": 142,
@@ -48219,7 +48362,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.7
+        "xp10": 38.7,
+        "web_name": "James"
     },
     {
         "id": 143,
@@ -48553,7 +48697,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 40.9
+        "xp10": 40.9,
+        "web_name": "Chalobah"
     },
     {
         "id": 144,
@@ -48887,7 +49032,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.1
+        "xp10": 34.1,
+        "web_name": "Gusto"
     },
     {
         "id": 145,
@@ -49221,7 +49367,8 @@ export const PLAYERS = [
         "news": "Suspended until 6 Sep",
         "status": "s",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Fofana"
     },
     {
         "id": 146,
@@ -49555,7 +49702,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 24.8
+        "xp10": 24.8,
+        "web_name": "B.Badiashile"
     },
     {
         "id": 147,
@@ -49889,7 +50037,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.7
+        "xp10": 39.7,
+        "web_name": "Tosin"
     },
     {
         "id": 148,
@@ -50223,7 +50372,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 14.6
+        "xp10": 14.6,
+        "web_name": "Hato"
     },
     {
         "id": 149,
@@ -50557,7 +50707,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 14.6
+        "xp10": 14.6,
+        "web_name": "Colwill"
     },
     {
         "id": 150,
@@ -50891,7 +51042,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 14.6
+        "xp10": 14.6,
+        "web_name": "M.Sarr"
     },
     {
         "id": 151,
@@ -51225,7 +51377,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.5
+        "xp10": 42.5,
+        "web_name": "Acheampong"
     },
     {
         "id": 152,
@@ -51559,7 +51712,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.7
+        "xp10": 23.7,
+        "web_name": "Palestra"
     },
     {
         "id": 153,
@@ -51893,7 +52047,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.7
+        "xp10": 23.7,
+        "web_name": "Disasi"
     },
     {
         "id": 154,
@@ -52227,7 +52382,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 46.7
+        "xp10": 46.7,
+        "web_name": "Palmer"
     },
     {
         "id": 155,
@@ -52561,7 +52717,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.9
+        "xp10": 43.9,
+        "web_name": "Enzo"
     },
     {
         "id": 156,
@@ -52895,7 +53052,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 40.7
+        "xp10": 40.7,
+        "web_name": "Neto"
     },
     {
         "id": 157,
@@ -53229,7 +53387,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 47.7
+        "xp10": 47.7,
+        "web_name": "Estêvão"
     },
     {
         "id": 158,
@@ -53563,7 +53722,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.1
+        "xp10": 23.1,
+        "web_name": "Gittens"
     },
     {
         "id": 159,
@@ -53897,7 +54057,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 33.6
+        "xp10": 33.6,
+        "web_name": "Caicedo"
     },
     {
         "id": 161,
@@ -54231,7 +54392,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 20.7
+        "xp10": 20.7,
+        "web_name": "Lavia"
     },
     {
         "id": 163,
@@ -54565,7 +54727,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.4
+        "xp10": 17.4,
+        "web_name": "D.Essugo"
     },
     {
         "id": 164,
@@ -54899,7 +55062,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3
+        "xp10": 29.3,
+        "web_name": "Quenda"
     },
     {
         "id": 165,
@@ -55233,7 +55397,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 56.9
+        "xp10": 56.9,
+        "web_name": "João Pedro"
     },
     {
         "id": 166,
@@ -55567,7 +55732,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.7
+        "xp10": 34.7,
+        "web_name": "N.Jackson"
     },
     {
         "id": 167,
@@ -55901,7 +56067,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.2
+        "xp10": 34.2,
+        "web_name": "Delap"
     },
     {
         "id": 168,
@@ -56235,7 +56402,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 20.3
+        "xp10": 20.3,
+        "web_name": "Marc Guiu"
     },
     {
         "id": 169,
@@ -56569,7 +56737,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 19.9
+        "xp10": 19.9,
+        "web_name": "Mheuka"
     },
     {
         "id": 170,
@@ -56903,7 +57072,8 @@ export const PLAYERS = [
         "news": "Hamstring injury - 75% chance of playing",
         "status": "d",
         "chanceOfPlaying": 75,
-        "xp10": 14.6
+        "xp10": 14.6,
+        "web_name": "Emegha"
     },
     {
         "id": 200,
@@ -57237,7 +57407,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 41.6
+        "xp10": 41.6,
+        "web_name": "Lacroix"
     },
     {
         "id": 560,
@@ -57571,7 +57742,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 40.3
+        "xp10": 40.3,
+        "web_name": "Penders"
     },
     {
         "id": 561,
@@ -57905,7 +58077,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.7
+        "xp10": 23.7,
+        "web_name": "Anselmino"
     },
     {
         "id": 568,
@@ -58239,7 +58412,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3
+        "xp10": 29.3,
+        "web_name": "Barco"
     },
     {
         "id": 104,
@@ -58573,7 +58747,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 17.9
+        "xp10": 17.9,
+        "web_name": "Onyeka"
     },
     {
         "id": 110,
@@ -58907,7 +59082,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.6
+        "xp10": 39.6,
+        "web_name": "Rushworth"
     },
     {
         "id": 171,
@@ -59241,7 +59417,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.6
+        "xp10": 39.6,
+        "web_name": "Dovin"
     },
     {
         "id": 172,
@@ -59575,7 +59752,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.6
+        "xp10": 39.6,
+        "web_name": "Wilson"
     },
     {
         "id": 173,
@@ -59909,7 +60087,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.5
+        "xp10": 26.5,
+        "web_name": "Thomas"
     },
     {
         "id": 174,
@@ -60243,7 +60422,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.5
+        "xp10": 26.5,
+        "web_name": "Kitching"
     },
     {
         "id": 175,
@@ -60577,7 +60757,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.5
+        "xp10": 26.5,
+        "web_name": "van Ewijk"
     },
     {
         "id": 176,
@@ -60911,7 +61092,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.5
+        "xp10": 26.5,
+        "web_name": "Dasilva"
     },
     {
         "id": 177,
@@ -61245,7 +61427,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.5
+        "xp10": 26.5,
+        "web_name": "Kesler-Hayden"
     },
     {
         "id": 178,
@@ -61579,7 +61762,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.5
+        "xp10": 26.5,
+        "web_name": "Bidwell"
     },
     {
         "id": 179,
@@ -61913,7 +62097,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.5
+        "xp10": 26.5,
+        "web_name": "Latibeaudiere"
     },
     {
         "id": 180,
@@ -62247,7 +62432,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.5
+        "xp10": 26.5,
+        "web_name": "Woolfenden"
     },
     {
         "id": 181,
@@ -62581,7 +62767,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.5
+        "xp10": 26.5,
+        "web_name": "Brau"
     },
     {
         "id": 182,
@@ -62915,7 +63102,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.5
+        "xp10": 26.5,
+        "web_name": "Amenda"
     },
     {
         "id": 183,
@@ -63249,7 +63437,8 @@ export const PLAYERS = [
         "news": "Shoulder injury - 75% chance of playing",
         "status": "d",
         "chanceOfPlaying": 75,
-        "xp10": 22.4
+        "xp10": 22.4,
+        "web_name": "Rudoni"
     },
     {
         "id": 184,
@@ -63583,7 +63772,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.1
+        "xp10": 30.1,
+        "web_name": "Grimes"
     },
     {
         "id": 185,
@@ -63917,7 +64107,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.1
+        "xp10": 30.1,
+        "web_name": "Sakamoto"
     },
     {
         "id": 186,
@@ -64251,7 +64442,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.1
+        "xp10": 30.1,
+        "web_name": "Mason-Clark"
     },
     {
         "id": 187,
@@ -64585,7 +64777,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.1
+        "xp10": 30.1,
+        "web_name": "Eccles"
     },
     {
         "id": 188,
@@ -64919,7 +65112,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.1
+        "xp10": 30.1,
+        "web_name": "Torp"
     },
     {
         "id": 189,
@@ -65253,7 +65447,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.1
+        "xp10": 30.1,
+        "web_name": "Shepherd"
     },
     {
         "id": 190,
@@ -65587,7 +65782,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.1
+        "xp10": 30.1,
+        "web_name": "Tchaouna"
     },
     {
         "id": 191,
@@ -65921,7 +66117,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.1
+        "xp10": 30.1,
+        "web_name": "Borges Rodrigues"
     },
     {
         "id": 192,
@@ -66255,7 +66452,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.1
+        "xp10": 30.1,
+        "web_name": "Andrews"
     },
     {
         "id": 193,
@@ -66589,7 +66787,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.3
+        "xp10": 35.3,
+        "web_name": "Wright"
     },
     {
         "id": 194,
@@ -66923,7 +67122,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.3
+        "xp10": 35.3,
+        "web_name": "Thomas-Asante"
     },
     {
         "id": 195,
@@ -67257,7 +67457,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.3
+        "xp10": 35.3,
+        "web_name": "Simms"
     },
     {
         "id": 196,
@@ -67591,7 +67792,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.3
+        "xp10": 35.3,
+        "web_name": "Markelo"
     },
     {
         "id": 197,
@@ -67925,7 +68127,8 @@ export const PLAYERS = [
         "news": "Has joined KVC Westerlo on loan for the rest of the season",
         "status": "u",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Bassette"
     },
     {
         "id": 198,
@@ -68259,7 +68462,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.2
+        "xp10": 43.2,
+        "web_name": "Henderson"
     },
     {
         "id": 199,
@@ -68593,7 +68797,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.9
+        "xp10": 26.9,
+        "web_name": "Benitez"
     },
     {
         "id": 201,
@@ -68927,7 +69132,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.7
+        "xp10": 43.7,
+        "web_name": "Muñoz"
     },
     {
         "id": 202,
@@ -69261,7 +69467,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37.1
+        "xp10": 37.1,
+        "web_name": "Richards"
     },
     {
         "id": 203,
@@ -69595,7 +69802,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.9
+        "xp10": 38.9,
+        "web_name": "Canvot"
     },
     {
         "id": 204,
@@ -69929,7 +70137,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.1
+        "xp10": 35.1,
+        "web_name": "Mitchell"
     },
     {
         "id": 205,
@@ -70263,7 +70472,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 13.9
+        "xp10": 13.9,
+        "web_name": "Sosa"
     },
     {
         "id": 206,
@@ -70597,7 +70807,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 25.1
+        "xp10": 25.1,
+        "web_name": "Chadi Riad"
     },
     {
         "id": 207,
@@ -70931,7 +71142,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.9
+        "xp10": 23.9,
+        "web_name": "Mingueza"
     },
     {
         "id": 208,
@@ -71265,7 +71477,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 47
+        "xp10": 47,
+        "web_name": "Sarr"
     },
     {
         "id": 209,
@@ -71599,7 +71812,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.2
+        "xp10": 34.2,
+        "web_name": "Johnson"
     },
     {
         "id": 210,
@@ -71933,7 +72147,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.6
+        "xp10": 38.6,
+        "web_name": "Wharton"
     },
     {
         "id": 211,
@@ -72267,7 +72482,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.8
+        "xp10": 29.8,
+        "web_name": "Yeremy"
     },
     {
         "id": 212,
@@ -72601,7 +72817,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.4
+        "xp10": 23.4,
+        "web_name": "Hughes"
     },
     {
         "id": 213,
@@ -72935,7 +73152,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.2
+        "xp10": 30.2,
+        "web_name": "Lerma"
     },
     {
         "id": 214,
@@ -73269,7 +73487,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.4
+        "xp10": 30.4,
+        "web_name": "Kamada"
     },
     {
         "id": 215,
@@ -73603,7 +73822,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 25
+        "xp10": 25,
+        "web_name": "Devenny"
     },
     {
         "id": 216,
@@ -73937,7 +74157,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.8
+        "xp10": 17.8,
+        "web_name": "Esse"
     },
     {
         "id": 217,
@@ -74271,7 +74492,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.8
+        "xp10": 17.8,
+        "web_name": "M.França"
     },
     {
         "id": 218,
@@ -74605,7 +74827,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.8
+        "xp10": 17.8,
+        "web_name": "Doucouré"
     },
     {
         "id": 219,
@@ -74939,7 +75162,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.8
+        "xp10": 17.8,
+        "web_name": "J.Rak-Sakyi"
     },
     {
         "id": 220,
@@ -75273,7 +75497,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 13.9
+        "xp10": 13.9,
+        "web_name": "Cardines"
     },
     {
         "id": 221,
@@ -75607,7 +75832,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.8
+        "xp10": 17.8,
+        "web_name": "Drakes-Thomas"
     },
     {
         "id": 222,
@@ -75941,7 +76167,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.1
+        "xp10": 29.1,
+        "web_name": "Strand Larsen"
     },
     {
         "id": 223,
@@ -76275,7 +76502,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 46.7
+        "xp10": 46.7,
+        "web_name": "Mateta"
     },
     {
         "id": 224,
@@ -76609,7 +76837,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 20.9
+        "xp10": 20.9,
+        "web_name": "Nketiah"
     },
     {
         "id": 225,
@@ -76943,7 +77172,8 @@ export const PLAYERS = [
         "news": "has returned to Getafe CF",
         "status": "u",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Uche"
     },
     {
         "id": 555,
@@ -77277,7 +77507,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.7
+        "xp10": 38.7,
+        "web_name": "Matthews"
     },
     {
         "id": 21,
@@ -77611,7 +77842,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 17.5
+        "xp10": 17.5,
+        "web_name": "Nørgaard"
     },
     {
         "id": 226,
@@ -77945,7 +78177,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.3
+        "xp10": 42.3,
+        "web_name": "Pickford"
     },
     {
         "id": 227,
@@ -78279,7 +78512,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.1
+        "xp10": 38.1,
+        "web_name": "Travers"
     },
     {
         "id": 228,
@@ -78613,7 +78847,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.1
+        "xp10": 38.1,
+        "web_name": "King"
     },
     {
         "id": 229,
@@ -78947,7 +79182,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.6
+        "xp10": 42.6,
+        "web_name": "Tarkowski"
     },
     {
         "id": 230,
@@ -79281,7 +79517,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.6
+        "xp10": 42.6,
+        "web_name": "Branthwaite"
     },
     {
         "id": 231,
@@ -79615,7 +79852,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.6
+        "xp10": 42.6,
+        "web_name": "Keane"
     },
     {
         "id": 232,
@@ -79949,7 +80187,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 31.2
+        "xp10": 31.2,
+        "web_name": "O'Brien"
     },
     {
         "id": 233,
@@ -80283,7 +80522,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.9
+        "xp10": 26.9,
+        "web_name": "Mykolenko"
     },
     {
         "id": 234,
@@ -80617,7 +80857,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 15.3
+        "xp10": 15.3,
+        "web_name": "Patterson"
     },
     {
         "id": 235,
@@ -80951,7 +81192,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 14
+        "xp10": 14,
+        "web_name": "Aznou"
     },
     {
         "id": 236,
@@ -81285,7 +81527,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 49.7
+        "xp10": 49.7,
+        "web_name": "Dewsbury-Hall"
     },
     {
         "id": 237,
@@ -81619,7 +81862,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.8
+        "xp10": 39.8,
+        "web_name": "Ndiaye"
     },
     {
         "id": 239,
@@ -81953,7 +82197,8 @@ export const PLAYERS = [
         "news": "Groin injury - Expected back 22 Aug",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Garner"
     },
     {
         "id": 240,
@@ -82287,7 +82532,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.1
+        "xp10": 39.1,
+        "web_name": "Iroegbunam"
     },
     {
         "id": 241,
@@ -82621,7 +82867,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37.2
+        "xp10": 37.2,
+        "web_name": "McNeil"
     },
     {
         "id": 242,
@@ -82955,7 +83202,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 18
+        "xp10": 18,
+        "web_name": "George"
     },
     {
         "id": 243,
@@ -83289,7 +83537,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 21.9
+        "xp10": 21.9,
+        "web_name": "Alcaraz"
     },
     {
         "id": 244,
@@ -83623,7 +83872,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.5
+        "xp10": 34.5,
+        "web_name": "Armstrong"
     },
     {
         "id": 245,
@@ -83957,7 +84207,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 22.8
+        "xp10": 22.8,
+        "web_name": "Dibling"
     },
     {
         "id": 246,
@@ -84291,7 +84542,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 21.1
+        "xp10": 21.1,
+        "web_name": "Röhl"
     },
     {
         "id": 247,
@@ -84625,7 +84877,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3
+        "xp10": 29.3,
+        "web_name": "Hackney"
     },
     {
         "id": 248,
@@ -84959,7 +85212,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 57.4
+        "xp10": 57.4,
+        "web_name": "Beto"
     },
     {
         "id": 249,
@@ -85293,7 +85547,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45.1
+        "xp10": 45.1,
+        "web_name": "Barry"
     },
     {
         "id": 250,
@@ -85627,7 +85882,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.6
+        "xp10": 39.6,
+        "web_name": "Leno"
     },
     {
         "id": 251,
@@ -85961,7 +86217,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 27.1
+        "xp10": 27.1,
+        "web_name": "Lecomte"
     },
     {
         "id": 252,
@@ -86295,7 +86552,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 27.1
+        "xp10": 27.1,
+        "web_name": "McNally"
     },
     {
         "id": 253,
@@ -86629,7 +86887,8 @@ export const PLAYERS = [
         "news": "Suspended until 30 Aug",
         "status": "s",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Andersen"
     },
     {
         "id": 254,
@@ -86963,7 +87222,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37.3
+        "xp10": 37.3,
+        "web_name": "Robinson"
     },
     {
         "id": 255,
@@ -87297,7 +87557,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.3
+        "xp10": 34.3,
+        "web_name": "J.Cuenca"
     },
     {
         "id": 256,
@@ -87631,7 +87892,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37.7
+        "xp10": 37.7,
+        "web_name": "Tete"
     },
     {
         "id": 257,
@@ -87965,7 +88227,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.3
+        "xp10": 34.3,
+        "web_name": "Bassey"
     },
     {
         "id": 258,
@@ -88299,7 +88562,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.7
+        "xp10": 26.7,
+        "web_name": "Castagne"
     },
     {
         "id": 261,
@@ -88633,7 +88897,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 36.2
+        "xp10": 36.2,
+        "web_name": "Iwobi"
     },
     {
         "id": 262,
@@ -88967,7 +89232,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 36.8
+        "xp10": 36.8,
+        "web_name": "Smith Rowe"
     },
     {
         "id": 263,
@@ -89301,7 +89567,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 25.2
+        "xp10": 25.2,
+        "web_name": "Kevin"
     },
     {
         "id": 264,
@@ -89635,7 +89902,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 33.2
+        "xp10": 33.2,
+        "web_name": "Bobb"
     },
     {
         "id": 265,
@@ -89969,7 +90237,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.4
+        "xp10": 26.4,
+        "web_name": "Berge"
     },
     {
         "id": 266,
@@ -90303,7 +90572,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 20.2
+        "xp10": 20.2,
+        "web_name": "Cairney"
     },
     {
         "id": 267,
@@ -90637,7 +90907,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.2
+        "xp10": 34.2,
+        "web_name": "Lukić"
     },
     {
         "id": 268,
@@ -90971,7 +91242,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.4
+        "xp10": 42.4,
+        "web_name": "King"
     },
     {
         "id": 269,
@@ -91305,7 +91577,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.9
+        "xp10": 43.9,
+        "web_name": "Sessegnon"
     },
     {
         "id": 270,
@@ -91639,7 +91912,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 18
+        "xp10": 18,
+        "web_name": "Reed"
     },
     {
         "id": 271,
@@ -91973,7 +92247,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.7
+        "xp10": 26.7,
+        "web_name": "Muniz"
     },
     {
         "id": 272,
@@ -92307,7 +92582,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 20.1
+        "xp10": 20.1,
+        "web_name": "Kusi-Asare"
     },
     {
         "id": 569,
@@ -92641,7 +92917,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.1
+        "xp10": 35.1,
+        "web_name": "García"
     },
     {
         "id": 570,
@@ -92975,7 +93252,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30
+        "xp10": 30,
+        "web_name": "Palacios"
     },
     {
         "id": 273,
@@ -93309,7 +93587,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37.4
+        "xp10": 37.4,
+        "web_name": "Phillips"
     },
     {
         "id": 274,
@@ -93643,7 +93922,8 @@ export const PLAYERS = [
         "news": "Arm injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Butland"
     },
     {
         "id": 275,
@@ -93977,7 +94257,8 @@ export const PLAYERS = [
         "news": "Has joined Grimsby Town on loan for the rest of the season",
         "status": "u",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Cartwright"
     },
     {
         "id": 276,
@@ -94311,7 +94592,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37.4
+        "xp10": 37.4,
+        "web_name": "Lo-Tutala"
     },
     {
         "id": 277,
@@ -94645,7 +94927,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 22.9
+        "xp10": 22.9,
+        "web_name": "Egan"
     },
     {
         "id": 278,
@@ -94979,7 +95262,8 @@ export const PLAYERS = [
         "news": "Groin injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Hughes"
     },
     {
         "id": 279,
@@ -95313,7 +95597,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 22.9
+        "xp10": 22.9,
+        "web_name": "Ajayi"
     },
     {
         "id": 280,
@@ -95647,7 +95932,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 22.9
+        "xp10": 22.9,
+        "web_name": "Coyle"
     },
     {
         "id": 281,
@@ -95981,7 +96267,8 @@ export const PLAYERS = [
         "news": "Hamstring injury - Expected back 29 Aug",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Drameh"
     },
     {
         "id": 282,
@@ -96315,7 +96602,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 22.9
+        "xp10": 22.9,
+        "web_name": "Giles"
     },
     {
         "id": 283,
@@ -96649,7 +96937,8 @@ export const PLAYERS = [
         "news": "Hip injury - 75% chance of playing",
         "status": "d",
         "chanceOfPlaying": 75,
-        "xp10": 16.3
+        "xp10": 16.3,
+        "web_name": "Jacob"
     },
     {
         "id": 284,
@@ -96983,7 +97272,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 22.9
+        "xp10": 22.9,
+        "web_name": "McCarthy"
     },
     {
         "id": 285,
@@ -97317,7 +97607,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 22.9
+        "xp10": 22.9,
+        "web_name": "McNair"
     },
     {
         "id": 286,
@@ -97651,7 +97942,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.8
+        "xp10": 28.8,
+        "web_name": "Belloumi"
     },
     {
         "id": 287,
@@ -97985,7 +98277,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.8
+        "xp10": 28.8,
+        "web_name": "Millar"
     },
     {
         "id": 288,
@@ -98319,7 +98612,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.8
+        "xp10": 28.8,
+        "web_name": "Dowell"
     },
     {
         "id": 289,
@@ -98653,7 +98947,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.8
+        "xp10": 28.8,
+        "web_name": "Crooks"
     },
     {
         "id": 290,
@@ -98987,7 +99282,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.8
+        "xp10": 28.8,
+        "web_name": "Slater"
     },
     {
         "id": 291,
@@ -99321,7 +99617,8 @@ export const PLAYERS = [
         "news": "Knee injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Matazo"
     },
     {
         "id": 292,
@@ -99655,7 +99952,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.8
+        "xp10": 28.8,
+        "web_name": "Ömür"
     },
     {
         "id": 293,
@@ -99989,7 +100287,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.8
+        "xp10": 28.8,
+        "web_name": "Kamara"
     },
     {
         "id": 294,
@@ -100323,7 +100622,8 @@ export const PLAYERS = [
         "news": "Thigh injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Zambrano"
     },
     {
         "id": 295,
@@ -100657,7 +100957,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.2
+        "xp10": 34.2,
+        "web_name": "McBurnie"
     },
     {
         "id": 296,
@@ -100991,7 +101292,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.8
+        "xp10": 28.8,
+        "web_name": "Akintola"
     },
     {
         "id": 297,
@@ -101325,7 +101627,8 @@ export const PLAYERS = [
         "news": "Thigh injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Gyabi"
     },
     {
         "id": 298,
@@ -101659,7 +101962,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.2
+        "xp10": 34.2,
+        "web_name": "Destan"
     },
     {
         "id": 299,
@@ -101993,7 +102297,8 @@ export const PLAYERS = [
         "news": "Has joined Sheffield Wednesday on loan for the rest of the season",
         "status": "u",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Burstow"
     },
     {
         "id": 556,
@@ -102327,7 +102632,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 22.9
+        "xp10": 22.9,
+        "web_name": "Targett"
     },
     {
         "id": 563,
@@ -102661,7 +102967,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.8
+        "xp10": 28.8,
+        "web_name": "Morita"
     },
     {
         "id": 572,
@@ -102995,7 +103302,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37.4
+        "xp10": 37.4,
+        "web_name": "Tzolakis"
     },
     {
         "id": 259,
@@ -103329,7 +103637,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.4
+        "xp10": 26.4,
+        "web_name": "Diop"
     },
     {
         "id": 300,
@@ -103663,7 +103972,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.1
+        "xp10": 38.1,
+        "web_name": "Walton"
     },
     {
         "id": 301,
@@ -103997,7 +104307,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.1
+        "xp10": 38.1,
+        "web_name": "Palmer"
     },
     {
         "id": 302,
@@ -104331,7 +104642,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.1
+        "xp10": 38.1,
+        "web_name": "Button"
     },
     {
         "id": 303,
@@ -104665,7 +104977,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.9
+        "xp10": 23.9,
+        "web_name": "Kipré"
     },
     {
         "id": 304,
@@ -104999,7 +105312,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.9
+        "xp10": 23.9,
+        "web_name": "O'Shea"
     },
     {
         "id": 305,
@@ -105333,7 +105647,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.9
+        "xp10": 23.9,
+        "web_name": "Davis"
     },
     {
         "id": 306,
@@ -105667,7 +105982,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.9
+        "xp10": 23.9,
+        "web_name": "Greaves"
     },
     {
         "id": 307,
@@ -106001,7 +106317,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.9
+        "xp10": 23.9,
+        "web_name": "Johnson"
     },
     {
         "id": 308,
@@ -106335,7 +106652,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.9
+        "xp10": 23.9,
+        "web_name": "Furlong"
     },
     {
         "id": 309,
@@ -106669,7 +106987,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3
+        "xp10": 29.3,
+        "web_name": "Núñez"
     },
     {
         "id": 310,
@@ -107003,7 +107322,8 @@ export const PLAYERS = [
         "news": "Muscular injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Matusiwa"
     },
     {
         "id": 311,
@@ -107337,7 +107657,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3
+        "xp10": 29.3,
+        "web_name": "Burns"
     },
     {
         "id": 312,
@@ -107671,7 +107992,8 @@ export const PLAYERS = [
         "news": "Knee injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Taylor"
     },
     {
         "id": 313,
@@ -108005,7 +108327,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3
+        "xp10": 29.3,
+        "web_name": "Clarke"
     },
     {
         "id": 314,
@@ -108339,7 +108662,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3
+        "xp10": 29.3,
+        "web_name": "Ogbene"
     },
     {
         "id": 315,
@@ -108673,7 +108997,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3
+        "xp10": 29.3,
+        "web_name": "Fatawu"
     },
     {
         "id": 316,
@@ -109007,7 +109332,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.6
+        "xp10": 34.6,
+        "web_name": "Emersonn"
     },
     {
         "id": 317,
@@ -109341,7 +109667,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.6
+        "xp10": 34.6,
+        "web_name": "Hirst"
     },
     {
         "id": 318,
@@ -109675,7 +110002,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3
+        "xp10": 29.3,
+        "web_name": "Philogene"
     },
     {
         "id": 319,
@@ -110009,7 +110337,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3
+        "xp10": 29.3,
+        "web_name": "Szmodics"
     },
     {
         "id": 320,
@@ -110343,7 +110672,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.6
+        "xp10": 34.6,
+        "web_name": "Akpom"
     },
     {
         "id": 321,
@@ -110677,7 +111007,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.6
+        "xp10": 34.6,
+        "web_name": "Walle Egeli"
     },
     {
         "id": 322,
@@ -111011,7 +111342,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.6
+        "xp10": 34.6,
+        "web_name": "Al-Hamadi"
     },
     {
         "id": 323,
@@ -111345,7 +111677,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3
+        "xp10": 29.3,
+        "web_name": "McAteer"
     },
     {
         "id": 324,
@@ -111679,7 +112012,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3
+        "xp10": 29.3,
+        "web_name": "Mehmeti"
     },
     {
         "id": 554,
@@ -112013,7 +112347,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.1
+        "xp10": 38.1,
+        "web_name": "Van Oevelen"
     },
     {
         "id": 562,
@@ -112347,7 +112682,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3
+        "xp10": 29.3,
+        "web_name": "Maeda"
     },
     {
         "id": 564,
@@ -112681,7 +113017,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.1
+        "xp10": 38.1,
+        "web_name": "Scherpen"
     },
     {
         "id": 571,
@@ -113015,7 +113352,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3
+        "xp10": 29.3,
+        "web_name": "Florentino"
     },
     {
         "id": 260,
@@ -113349,7 +113687,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 50.4
+        "xp10": 50.4,
+        "web_name": "Wilson"
     },
     {
         "id": 326,
@@ -113683,7 +114022,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 32
+        "xp10": 32,
+        "web_name": "Perri"
     },
     {
         "id": 327,
@@ -114017,7 +114357,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 41.3
+        "xp10": 41.3,
+        "web_name": "Bijol"
     },
     {
         "id": 329,
@@ -114351,7 +114692,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.9
+        "xp10": 29.9,
+        "web_name": "Rodon"
     },
     {
         "id": 330,
@@ -114685,7 +115027,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 27.1
+        "xp10": 27.1,
+        "web_name": "Bogle"
     },
     {
         "id": 331,
@@ -115019,7 +115362,8 @@ export const PLAYERS = [
         "news": "Hamstring injury - Expected back 30 Aug",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Gudmundsson"
     },
     {
         "id": 332,
@@ -115353,7 +115697,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 40.6
+        "xp10": 40.6,
+        "web_name": "Justin"
     },
     {
         "id": 333,
@@ -115687,7 +116032,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 21.8
+        "xp10": 21.8,
+        "web_name": "Bornauw"
     },
     {
         "id": 334,
@@ -116021,7 +116367,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 22.7
+        "xp10": 22.7,
+        "web_name": "Muharemović"
     },
     {
         "id": 335,
@@ -116355,7 +116702,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 46.5
+        "xp10": 46.5,
+        "web_name": "Stach"
     },
     {
         "id": 336,
@@ -116689,7 +117037,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 55.2
+        "xp10": 55.2,
+        "web_name": "Okafor"
     },
     {
         "id": 337,
@@ -117023,7 +117372,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 40.5
+        "xp10": 40.5,
+        "web_name": "Aaronson"
     },
     {
         "id": 338,
@@ -117357,7 +117707,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 36.6
+        "xp10": 36.6,
+        "web_name": "Ampadu"
     },
     {
         "id": 339,
@@ -117691,7 +118042,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.7
+        "xp10": 35.7,
+        "web_name": "Longstaff"
     },
     {
         "id": 340,
@@ -118025,7 +118377,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.8
+        "xp10": 28.8,
+        "web_name": "Gelhardt"
     },
     {
         "id": 341,
@@ -118359,7 +118712,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 17.1
+        "xp10": 17.1,
+        "web_name": "Gnonto"
     },
     {
         "id": 342,
@@ -118693,7 +119047,8 @@ export const PLAYERS = [
         "news": "Has joined New England Revolution permanently",
         "status": "u",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Harrison"
     },
     {
         "id": 343,
@@ -119027,7 +119382,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 36.7
+        "xp10": 36.7,
+        "web_name": "James"
     },
     {
         "id": 344,
@@ -119361,7 +119717,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.6
+        "xp10": 35.6,
+        "web_name": "Gruev"
     },
     {
         "id": 345,
@@ -119695,7 +120052,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.7
+        "xp10": 39.7,
+        "web_name": "Tanaka"
     },
     {
         "id": 346,
@@ -120029,7 +120387,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 44.3
+        "xp10": 44.3,
+        "web_name": "Calvert-Lewin"
     },
     {
         "id": 347,
@@ -120363,7 +120722,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.4
+        "xp10": 39.4,
+        "web_name": "Nmecha"
     },
     {
         "id": 348,
@@ -120697,7 +121057,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 19.8
+        "xp10": 19.8,
+        "web_name": "Piroe"
     },
     {
         "id": 349,
@@ -121031,7 +121392,8 @@ export const PLAYERS = [
         "news": "Knee injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Mateo Joseph"
     },
     {
         "id": 385,
@@ -121365,7 +121727,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 31.8
+        "xp10": 31.8,
+        "web_name": "Trafford"
     },
     {
         "id": 350,
@@ -121699,7 +122062,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 41.7
+        "xp10": 41.7,
+        "web_name": "A.Becker"
     },
     {
         "id": 351,
@@ -122033,7 +122397,8 @@ export const PLAYERS = [
         "news": "Backup GKP at Liverpool behind Alisson.",
         "status": "a",
         "chanceOfPlaying": 10,
-        "xp10": 44.8
+        "xp10": 44.8,
+        "web_name": "Mamardashvili"
     },
     {
         "id": 352,
@@ -122367,7 +122732,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 44.9
+        "xp10": 44.9,
+        "web_name": "Woodman"
     },
     {
         "id": 353,
@@ -122701,7 +123067,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 41.6
+        "xp10": 41.6,
+        "web_name": "Pecsi"
     },
     {
         "id": 354,
@@ -123035,7 +123402,8 @@ export const PLAYERS = [
         "news": "Knee injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Jaros"
     },
     {
         "id": 355,
@@ -123369,7 +123737,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 41.6
+        "xp10": 41.6,
+        "web_name": "Davies"
     },
     {
         "id": 356,
@@ -123703,7 +124072,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 44.9
+        "xp10": 44.9,
+        "web_name": "Virgil"
     },
     {
         "id": 357,
@@ -124037,7 +124407,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 44.9
+        "xp10": 44.9,
+        "web_name": "Frimpong"
     },
     {
         "id": 358,
@@ -124371,7 +124742,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 31
+        "xp10": 31,
+        "web_name": "Kerkez"
     },
     {
         "id": 359,
@@ -124705,7 +125077,8 @@ export const PLAYERS = [
         "news": "Muscular injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Gomez"
     },
     {
         "id": 360,
@@ -125039,7 +125412,8 @@ export const PLAYERS = [
         "news": "Knee injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Bradley"
     },
     {
         "id": 361,
@@ -125373,7 +125747,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 14.8
+        "xp10": 14.8,
+        "web_name": "Lucky"
     },
     {
         "id": 362,
@@ -125707,7 +126082,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 24.9
+        "xp10": 24.9,
+        "web_name": "Jacquet"
     },
     {
         "id": 363,
@@ -126041,7 +126417,8 @@ export const PLAYERS = [
         "news": "Knee injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Leoni"
     },
     {
         "id": 364,
@@ -126375,7 +126752,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 24.9
+        "xp10": 24.9,
+        "web_name": "Tsimikas"
     },
     {
         "id": 365,
@@ -126709,7 +127087,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 14.8
+        "xp10": 14.8,
+        "web_name": "Ramsay"
     },
     {
         "id": 366,
@@ -127043,7 +127422,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 47.9
+        "xp10": 47.9,
+        "web_name": "Wirtz"
     },
     {
         "id": 367,
@@ -127377,7 +127757,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.1
+        "xp10": 42.1,
+        "web_name": "Gakpo"
     },
     {
         "id": 368,
@@ -127711,7 +128092,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45.6
+        "xp10": 45.6,
+        "web_name": "Szoboszlai"
     },
     {
         "id": 369,
@@ -128045,7 +128427,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 21.4
+        "xp10": 21.4,
+        "web_name": "Ngumoha"
     },
     {
         "id": 370,
@@ -128379,7 +128762,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 19.3
+        "xp10": 19.3,
+        "web_name": "Chiesa"
     },
     {
         "id": 371,
@@ -128713,7 +129097,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.2
+        "xp10": 43.2,
+        "web_name": "Gravenberch"
     },
     {
         "id": 372,
@@ -129047,7 +129432,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.4
+        "xp10": 35.4,
+        "web_name": "Mac Allister"
     },
     {
         "id": 373,
@@ -129381,7 +129767,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 25.3
+        "xp10": 25.3,
+        "web_name": "C.Jones"
     },
     {
         "id": 374,
@@ -129715,7 +130102,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18.1
+        "xp10": 18.1,
+        "web_name": "Endo"
     },
     {
         "id": 375,
@@ -130049,7 +130437,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18.1
+        "xp10": 18.1,
+        "web_name": "Nyoni"
     },
     {
         "id": 376,
@@ -130383,7 +130772,8 @@ export const PLAYERS = [
         "news": "Hamstring injury - Expected back 23 Aug",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Bajcetic"
     },
     {
         "id": 377,
@@ -130717,7 +131107,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.5
+        "xp10": 30.5,
+        "web_name": "Munoz"
     },
     {
         "id": 378,
@@ -131051,7 +131442,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18.1
+        "xp10": 18.1,
+        "web_name": "McConnell"
     },
     {
         "id": 379,
@@ -131385,7 +131777,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 53
+        "xp10": 53,
+        "web_name": "Isak"
     },
     {
         "id": 380,
@@ -131719,7 +132112,8 @@ export const PLAYERS = [
         "news": "Achilles injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Ekitiké"
     },
     {
         "id": 381,
@@ -132053,7 +132447,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18.1
+        "xp10": 18.1,
+        "web_name": "Koumas"
     },
     {
         "id": 382,
@@ -132387,7 +132782,8 @@ export const PLAYERS = [
         "news": "Unspecified injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Danns"
     },
     {
         "id": 383,
@@ -132721,7 +133117,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 18.1
+        "xp10": 18.1,
+        "web_name": "Elliott"
     },
     {
         "id": 238,
@@ -133055,7 +133452,8 @@ export const PLAYERS = [
         "news": "Foot injury - 75% chance of playing",
         "status": "d",
         "chanceOfPlaying": 75,
-        "xp10": 34.3
+        "xp10": 34.3,
+        "web_name": "Grealish"
     },
     {
         "id": 384,
@@ -133389,7 +133787,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 47.4
+        "xp10": 47.4,
+        "web_name": "Donnarumma"
     },
     {
         "id": 386,
@@ -133723,7 +134122,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 41.9
+        "xp10": 41.9,
+        "web_name": "Bettinelli"
     },
     {
         "id": 387,
@@ -134057,7 +134457,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45
+        "xp10": 45,
+        "web_name": "O'Reilly"
     },
     {
         "id": 388,
@@ -134391,7 +134792,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45
+        "xp10": 45,
+        "web_name": "Guéhi"
     },
     {
         "id": 389,
@@ -134725,7 +135127,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45
+        "xp10": 45,
+        "web_name": "Matheus N."
     },
     {
         "id": 390,
@@ -135059,7 +135462,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45
+        "xp10": 45,
+        "web_name": "Rúben"
     },
     {
         "id": 391,
@@ -135393,7 +135797,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45
+        "xp10": 45,
+        "web_name": "Gvardiol"
     },
     {
         "id": 392,
@@ -135727,7 +136132,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45
+        "xp10": 45,
+        "web_name": "Aït-Nouri"
     },
     {
         "id": 393,
@@ -136061,7 +136467,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.2
+        "xp10": 35.2,
+        "web_name": "Khusanov"
     },
     {
         "id": 394,
@@ -136395,7 +136802,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 17.1
+        "xp10": 17.1,
+        "web_name": "Alleyne"
     },
     {
         "id": 395,
@@ -136729,7 +137137,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 18.5
+        "xp10": 18.5,
+        "web_name": "Lewis"
     },
     {
         "id": 396,
@@ -137063,7 +137472,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 25.1
+        "xp10": 25.1,
+        "web_name": "Vitor Reis"
     },
     {
         "id": 397,
@@ -137397,7 +137807,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 56.4
+        "xp10": 56.4,
+        "web_name": "Semenyo"
     },
     {
         "id": 398,
@@ -137731,7 +138142,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 58.8
+        "xp10": 58.8,
+        "web_name": "Foden"
     },
     {
         "id": 399,
@@ -138065,7 +138477,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 62.9
+        "xp10": 62.9,
+        "web_name": "Cherki"
     },
     {
         "id": 400,
@@ -138399,7 +138812,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 56.4
+        "xp10": 56.4,
+        "web_name": "Doku"
     },
     {
         "id": 401,
@@ -138733,7 +139147,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 62.1
+        "xp10": 62.1,
+        "web_name": "Marmoush"
     },
     {
         "id": 402,
@@ -139067,7 +139482,8 @@ export const PLAYERS = [
         "news": "Back injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Rodrigo"
     },
     {
         "id": 403,
@@ -139401,7 +139817,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 27.2
+        "xp10": 27.2,
+        "web_name": "Savinho"
     },
     {
         "id": 404,
@@ -139735,7 +140152,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 50.3
+        "xp10": 50.3,
+        "web_name": "Reijnders"
     },
     {
         "id": 405,
@@ -140069,7 +140487,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 33.6
+        "xp10": 33.6,
+        "web_name": "N.Gonzalez"
     },
     {
         "id": 406,
@@ -140403,7 +140822,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18.4
+        "xp10": 18.4,
+        "web_name": "Kovačić"
     },
     {
         "id": 407,
@@ -140737,7 +141157,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18
+        "xp10": 18,
+        "web_name": "Echeverri"
     },
     {
         "id": 408,
@@ -141071,7 +141492,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18
+        "xp10": 18,
+        "web_name": "Phillips"
     },
     {
         "id": 409,
@@ -141405,7 +141827,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18
+        "xp10": 18,
+        "web_name": "Mukasa"
     },
     {
         "id": 410,
@@ -141739,7 +142162,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18
+        "xp10": 18,
+        "web_name": "Monga"
     },
     {
         "id": 411,
@@ -142073,7 +142497,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 63.7
+        "xp10": 63.7,
+        "web_name": "Haaland"
     },
     {
         "id": 481,
@@ -142407,7 +142832,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 49.5
+        "xp10": 49.5,
+        "web_name": "Anderson"
     },
     {
         "id": 43,
@@ -142741,7 +143167,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 32.4
+        "xp10": 32.4,
+        "web_name": "Tielemans"
     },
     {
         "id": 162,
@@ -143075,7 +143502,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 27.6
+        "xp10": 27.6,
+        "web_name": "Andrey Santos"
     },
     {
         "id": 325,
@@ -143409,7 +143837,8 @@ export const PLAYERS = [
         "news": "Unspecified injury - 75% chance of playing",
         "status": "d",
         "chanceOfPlaying": 75,
-        "xp10": 29.9
+        "xp10": 29.9,
+        "web_name": "Darlow"
     },
     {
         "id": 412,
@@ -143743,7 +144172,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 40.9
+        "xp10": 40.9,
+        "web_name": "Lammens"
     },
     {
         "id": 413,
@@ -144077,7 +144507,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37.5
+        "xp10": 37.5,
+        "web_name": "Bayindir"
     },
     {
         "id": 414,
@@ -144411,7 +144842,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 40.8
+        "xp10": 40.8,
+        "web_name": "Heaton"
     },
     {
         "id": 415,
@@ -144745,7 +145177,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 47.6
+        "xp10": 47.6,
+        "web_name": "Dorgu"
     },
     {
         "id": 416,
@@ -145079,7 +145512,8 @@ export const PLAYERS = [
         "news": "Back injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "De Ligt"
     },
     {
         "id": 417,
@@ -145413,7 +145847,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 36.9
+        "xp10": 36.9,
+        "web_name": "Dalot"
     },
     {
         "id": 418,
@@ -145747,7 +146182,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.7
+        "xp10": 43.7,
+        "web_name": "Maguire"
     },
     {
         "id": 419,
@@ -146081,7 +146517,8 @@ export const PLAYERS = [
         "news": "Thigh injury - 75% chance of playing",
         "status": "d",
         "chanceOfPlaying": 75,
-        "xp10": 22.9
+        "xp10": 22.9,
+        "web_name": "Martinez"
     },
     {
         "id": 420,
@@ -146415,7 +146852,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 21.9
+        "xp10": 21.9,
+        "web_name": "Yoro"
     },
     {
         "id": 421,
@@ -146749,7 +147187,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 36.7
+        "xp10": 36.7,
+        "web_name": "Heaven"
     },
     {
         "id": 422,
@@ -147083,7 +147522,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.7
+        "xp10": 43.7,
+        "web_name": "Mazraoui"
     },
     {
         "id": 423,
@@ -147417,7 +147857,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.1
+        "xp10": 28.1,
+        "web_name": "Shaw"
     },
     {
         "id": 424,
@@ -147751,7 +148192,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 13.9
+        "xp10": 13.9,
+        "web_name": "Amass"
     },
     {
         "id": 425,
@@ -148085,7 +148527,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 13.9
+        "xp10": 13.9,
+        "web_name": "Fredricson"
     },
     {
         "id": 426,
@@ -148419,7 +148862,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 61
+        "xp10": 61,
+        "web_name": "B.Fernandes"
     },
     {
         "id": 427,
@@ -148753,7 +149197,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 48
+        "xp10": 48,
+        "web_name": "Mbeumo"
     },
     {
         "id": 428,
@@ -149087,7 +149532,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 49.6
+        "xp10": 49.6,
+        "web_name": "Cunha"
     },
     {
         "id": 429,
@@ -149421,7 +149867,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30
+        "xp10": 30,
+        "web_name": "Rashford"
     },
     {
         "id": 430,
@@ -149755,7 +150202,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 48.6
+        "xp10": 48.6,
+        "web_name": "Mount"
     },
     {
         "id": 431,
@@ -150089,7 +150537,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 33.8
+        "xp10": 33.8,
+        "web_name": "Amad"
     },
     {
         "id": 432,
@@ -150423,7 +150872,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 27
+        "xp10": 27,
+        "web_name": "Mainoo"
     },
     {
         "id": 433,
@@ -150757,7 +151207,8 @@ export const PLAYERS = [
         "news": "Knee injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Ugarte"
     },
     {
         "id": 434,
@@ -151091,7 +151542,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.8
+        "xp10": 17.8,
+        "web_name": "J.Fletcher"
     },
     {
         "id": 435,
@@ -151425,7 +151877,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.8
+        "xp10": 17.8,
+        "web_name": "Lacey"
     },
     {
         "id": 436,
@@ -151759,7 +152212,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.8
+        "xp10": 17.8,
+        "web_name": "Collyer"
     },
     {
         "id": 437,
@@ -152093,7 +152547,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.8
+        "xp10": 17.8,
+        "web_name": "Bendito Mantato"
     },
     {
         "id": 438,
@@ -152427,7 +152882,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.8
+        "xp10": 17.8,
+        "web_name": "Fletcher"
     },
     {
         "id": 439,
@@ -152761,7 +153217,8 @@ export const PLAYERS = [
         "news": "Shin injury - 75% chance of playing",
         "status": "d",
         "chanceOfPlaying": 75,
-        "xp10": 38.3
+        "xp10": 38.3,
+        "web_name": "Šeško"
     },
     {
         "id": 440,
@@ -153095,7 +153552,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 21.3
+        "xp10": 21.3,
+        "web_name": "Zirkzee"
     },
     {
         "id": 441,
@@ -153429,7 +153887,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 20.3
+        "xp10": 20.3,
+        "web_name": "Obi"
     },
     {
         "id": 442,
@@ -153763,7 +154222,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45.4
+        "xp10": 45.4,
+        "web_name": "Pope"
     },
     {
         "id": 443,
@@ -154097,7 +154557,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.2
+        "xp10": 39.2,
+        "web_name": "Gillespie"
     },
     {
         "id": 444,
@@ -154431,7 +154892,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.2
+        "xp10": 39.2,
+        "web_name": "Jaouen"
     },
     {
         "id": 445,
@@ -154765,7 +155227,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37.7
+        "xp10": 37.7,
+        "web_name": "Thiaw"
     },
     {
         "id": 446,
@@ -155099,7 +155562,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.9
+        "xp10": 30.9,
+        "web_name": "Schär"
     },
     {
         "id": 447,
@@ -155433,7 +155897,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 41.9
+        "xp10": 41.9,
+        "web_name": "Botman"
     },
     {
         "id": 448,
@@ -155767,7 +156232,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 36.7
+        "xp10": 36.7,
+        "web_name": "Burn"
     },
     {
         "id": 449,
@@ -156101,7 +156567,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.9
+        "xp10": 30.9,
+        "web_name": "Hall"
     },
     {
         "id": 450,
@@ -156435,7 +156902,8 @@ export const PLAYERS = [
         "news": "Calf injury - 75% chance of playing",
         "status": "d",
         "chanceOfPlaying": 75,
-        "xp10": 25.5
+        "xp10": 25.5,
+        "web_name": "Livramento"
     },
     {
         "id": 451,
@@ -156769,7 +157237,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 14.6
+        "xp10": 14.6,
+        "web_name": "A.Murphy"
     },
     {
         "id": 452,
@@ -157103,7 +157572,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 56.4
+        "xp10": 56.4,
+        "web_name": "Bruno G."
     },
     {
         "id": 453,
@@ -157437,7 +157907,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.2
+        "xp10": 35.2,
+        "web_name": "Barnes"
     },
     {
         "id": 454,
@@ -157771,7 +158242,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.9
+        "xp10": 30.9,
+        "web_name": "Elanga"
     },
     {
         "id": 456,
@@ -158105,7 +158577,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 31.7
+        "xp10": 31.7,
+        "web_name": "J.Ramsey"
     },
     {
         "id": 457,
@@ -158439,7 +158912,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 44.1
+        "xp10": 44.1,
+        "web_name": "J.Murphy"
     },
     {
         "id": 458,
@@ -158773,7 +159247,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 31.9
+        "xp10": 31.9,
+        "web_name": "Joelinton"
     },
     {
         "id": 459,
@@ -159107,7 +159582,8 @@ export const PLAYERS = [
         "news": "Leg injury - Expected back 30 Aug",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "L.Miley"
     },
     {
         "id": 460,
@@ -159441,7 +159917,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 27.7
+        "xp10": 27.7,
+        "web_name": "Willock"
     },
     {
         "id": 461,
@@ -159775,7 +160252,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.5
+        "xp10": 30.5,
+        "web_name": "Touré"
     },
     {
         "id": 462,
@@ -160109,7 +160587,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18.2
+        "xp10": 18.2,
+        "web_name": "Steur"
     },
     {
         "id": 463,
@@ -160443,7 +160922,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 46.5
+        "xp10": 46.5,
+        "web_name": "Woltemade"
     },
     {
         "id": 464,
@@ -160777,7 +161257,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 21.8
+        "xp10": 21.8,
+        "web_name": "Wissa"
     },
     {
         "id": 465,
@@ -161111,7 +161592,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 62.3
+        "xp10": 62.3,
+        "web_name": "Osula"
     },
     {
         "id": 466,
@@ -161445,7 +161927,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 20.6
+        "xp10": 20.6,
+        "web_name": "Neave"
     },
     {
         "id": 559,
@@ -161779,7 +162262,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18.2
+        "xp10": 18.2,
+        "web_name": "Bamba"
     },
     {
         "id": 567,
@@ -162113,7 +162597,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.2
+        "xp10": 39.2,
+        "web_name": "Horníček"
     },
     {
         "id": 467,
@@ -162447,7 +162932,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.7
+        "xp10": 43.7,
+        "web_name": "Sels"
     },
     {
         "id": 468,
@@ -162781,7 +163267,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.9
+        "xp10": 28.9,
+        "web_name": "John"
     },
     {
         "id": 469,
@@ -163115,7 +163602,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 33.5
+        "xp10": 33.5,
+        "web_name": "N.Williams"
     },
     {
         "id": 470,
@@ -163449,7 +163937,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 27.6
+        "xp10": 27.6,
+        "web_name": "Morato"
     },
     {
         "id": 471,
@@ -163783,7 +164272,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.6
+        "xp10": 28.6,
+        "web_name": "Milenković"
     },
     {
         "id": 472,
@@ -164117,7 +164607,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 31.2
+        "xp10": 31.2,
+        "web_name": "Murillo"
     },
     {
         "id": 473,
@@ -164451,7 +164942,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.8
+        "xp10": 34.8,
+        "web_name": "Aina"
     },
     {
         "id": 474,
@@ -164785,7 +165277,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 19.9
+        "xp10": 19.9,
+        "web_name": "Jair Cunha"
     },
     {
         "id": 475,
@@ -165119,7 +165612,8 @@ export const PLAYERS = [
         "news": "Knee injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Savona"
     },
     {
         "id": 476,
@@ -165453,7 +165947,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 13.4
+        "xp10": 13.4,
+        "web_name": "O.Richards"
     },
     {
         "id": 477,
@@ -165787,7 +166282,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 14.8
+        "xp10": 14.8,
+        "web_name": "Abbott"
     },
     {
         "id": 478,
@@ -166121,7 +166617,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 14.8
+        "xp10": 14.8,
+        "web_name": "Netz"
     },
     {
         "id": 479,
@@ -166455,7 +166952,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 13.4
+        "xp10": 13.4,
+        "web_name": "Bindon"
     },
     {
         "id": 480,
@@ -166789,7 +167287,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 53.8
+        "xp10": 53.8,
+        "web_name": "Gibbs-White"
     },
     {
         "id": 482,
@@ -167123,7 +167622,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 41.6
+        "xp10": 41.6,
+        "web_name": "Hudson-Odoi"
     },
     {
         "id": 483,
@@ -167457,7 +167957,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.4
+        "xp10": 35.4,
+        "web_name": "Ndoye"
     },
     {
         "id": 484,
@@ -167791,7 +168292,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34
+        "xp10": 34,
+        "web_name": "Hutchinson"
     },
     {
         "id": 485,
@@ -168125,7 +168627,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.9
+        "xp10": 42.9,
+        "web_name": "Bakwa"
     },
     {
         "id": 486,
@@ -168459,7 +168962,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.6
+        "xp10": 17.6,
+        "web_name": "McAtee"
     },
     {
         "id": 487,
@@ -168793,7 +169297,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 27.8
+        "xp10": 27.8,
+        "web_name": "Dominguez"
     },
     {
         "id": 488,
@@ -169127,7 +169632,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.1
+        "xp10": 35.1,
+        "web_name": "Sangaré"
     },
     {
         "id": 489,
@@ -169461,7 +169967,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.9
+        "xp10": 17.9,
+        "web_name": "Yates"
     },
     {
         "id": 490,
@@ -169795,7 +170302,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37.9
+        "xp10": 37.9,
+        "web_name": "Wood"
     },
     {
         "id": 491,
@@ -170129,7 +170637,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 40.9
+        "xp10": 40.9,
+        "web_name": "Igor Jesus"
     },
     {
         "id": 492,
@@ -170463,7 +170972,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 22
+        "xp10": 22,
+        "web_name": "Awoniyi"
     },
     {
         "id": 493,
@@ -170797,7 +171307,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 19.9
+        "xp10": 19.9,
+        "web_name": "Kalimuendo"
     },
     {
         "id": 558,
@@ -171131,7 +171642,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.3
+        "xp10": 17.3,
+        "web_name": "Schlager"
     },
     {
         "id": 112,
@@ -171465,7 +171977,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.9
+        "xp10": 39.9,
+        "web_name": "Van Hecke"
     },
     {
         "id": 455,
@@ -171799,7 +172312,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.2
+        "xp10": 26.2,
+        "web_name": "Tonali"
     },
     {
         "id": 494,
@@ -172133,7 +172647,8 @@ export const PLAYERS = [
         "news": "Lost starting spot to Kinsky. Unavailable.",
         "status": "u",
         "chanceOfPlaying": 0,
-        "xp10": 39.6
+        "xp10": 39.6,
+        "web_name": "Vicario"
     },
     {
         "id": 495,
@@ -172467,7 +172982,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 40.9
+        "xp10": 40.9,
+        "web_name": "Austin"
     },
     {
         "id": 496,
@@ -172801,7 +173317,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 31.9
+        "xp10": 31.9,
+        "web_name": "Kinsky"
     },
     {
         "id": 497,
@@ -173135,7 +173652,8 @@ export const PLAYERS = [
         "news": "Backup GKP at Spurs behind Kinsky.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 42.9
+        "xp10": 42.9,
+        "web_name": "Dubravka"
     },
     {
         "id": 498,
@@ -173469,7 +173987,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.7
+        "xp10": 43.7,
+        "web_name": "Senesi"
     },
     {
         "id": 499,
@@ -173803,7 +174322,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.1
+        "xp10": 35.1,
+        "web_name": "Pedro Porro"
     },
     {
         "id": 500,
@@ -174137,7 +174657,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.9
+        "xp10": 39.9,
+        "web_name": "Romero"
     },
     {
         "id": 501,
@@ -174471,7 +174992,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.7
+        "xp10": 35.7,
+        "web_name": "Danso"
     },
     {
         "id": 502,
@@ -174805,7 +175327,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.1
+        "xp10": 26.1,
+        "web_name": "Robertson"
     },
     {
         "id": 503,
@@ -175139,7 +175662,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 31.9
+        "xp10": 31.9,
+        "web_name": "Van de Ven"
     },
     {
         "id": 505,
@@ -175473,7 +175997,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 32.3
+        "xp10": 32.3,
+        "web_name": "Spence"
     },
     {
         "id": 506,
@@ -175807,7 +176332,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 16.1
+        "xp10": 16.1,
+        "web_name": "Udogie"
     },
     {
         "id": 507,
@@ -176141,7 +176667,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.9
+        "xp10": 23.9,
+        "web_name": "Phillips"
     },
     {
         "id": 508,
@@ -176475,7 +177002,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 15.3
+        "xp10": 15.3,
+        "web_name": "Davies"
     },
     {
         "id": 509,
@@ -176809,7 +177337,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 13.9
+        "xp10": 13.9,
+        "web_name": "Byfield"
     },
     {
         "id": 510,
@@ -177143,7 +177672,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 13.9
+        "xp10": 13.9,
+        "web_name": "Rowswell"
     },
     {
         "id": 511,
@@ -177477,7 +178007,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 15.3
+        "xp10": 15.3,
+        "web_name": "Souza"
     },
     {
         "id": 512,
@@ -177811,7 +178342,8 @@ export const PLAYERS = [
         "news": "Thigh injury - 75% chance of playing",
         "status": "d",
         "chanceOfPlaying": 75,
-        "xp10": 29.6
+        "xp10": 29.6,
+        "web_name": "Kudus"
     },
     {
         "id": 513,
@@ -178145,7 +178677,8 @@ export const PLAYERS = [
         "news": "Knee injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Xavi"
     },
     {
         "id": 514,
@@ -178479,7 +179012,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37.6
+        "xp10": 37.6,
+        "web_name": "Tel"
     },
     {
         "id": 515,
@@ -178813,7 +179347,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.8
+        "xp10": 17.8,
+        "web_name": "Maddison"
     },
     {
         "id": 516,
@@ -179147,7 +179682,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37
+        "xp10": 37,
+        "web_name": "Bentancur"
     },
     {
         "id": 517,
@@ -179481,7 +180017,8 @@ export const PLAYERS = [
         "news": "Knee injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Odobert"
     },
     {
         "id": 518,
@@ -179815,7 +180352,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.4
+        "xp10": 29.4,
+        "web_name": "P.M.Sarr"
     },
     {
         "id": 519,
@@ -180149,7 +180687,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 31.4
+        "xp10": 31.4,
+        "web_name": "Gallagher"
     },
     {
         "id": 520,
@@ -180483,7 +181022,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 44.4
+        "xp10": 44.4,
+        "web_name": "Bergvall"
     },
     {
         "id": 521,
@@ -180817,7 +181357,8 @@ export const PLAYERS = [
         "news": "Knee injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0
+        "xp10": 0,
+        "web_name": "Kulusevski"
     },
     {
         "id": 522,
@@ -181151,7 +181692,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 33.6
+        "xp10": 33.6,
+        "web_name": "Gray"
     },
     {
         "id": 523,
@@ -181485,7 +182027,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.8
+        "xp10": 17.8,
+        "web_name": "Moore"
     },
     {
         "id": 524,
@@ -181819,7 +182362,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.8
+        "xp10": 17.8,
+        "web_name": "Olusesi"
     },
     {
         "id": 525,
@@ -182153,7 +182697,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.4
+        "xp10": 38.4,
+        "web_name": "Fernandes"
     },
     {
         "id": 526,
@@ -182487,7 +183032,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 36.9
+        "xp10": 36.9,
+        "web_name": "Solanke"
     },
     {
         "id": 527,
@@ -182821,7 +183367,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.3
+        "xp10": 43.3,
+        "web_name": "Richarlison"
     },
     {
         "id": 528,
@@ -183155,7 +183702,8 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 20.3
+        "xp10": 20.3,
+        "web_name": "Scarlett"
     },
     {
         "id": 529,
@@ -183489,7 +184037,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 48.7
+        "xp10": 48.7,
+        "web_name": "Roefs"
     },
     {
         "id": 530,
@@ -183823,7 +184372,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.4
+        "xp10": 39.4,
+        "web_name": "Patterson"
     },
     {
         "id": 531,
@@ -184157,7 +184707,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.7
+        "xp10": 28.7,
+        "web_name": "Ellborg"
     },
     {
         "id": 532,
@@ -184491,7 +185042,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45
+        "xp10": 45,
+        "web_name": "Ballard"
     },
     {
         "id": 533,
@@ -184825,7 +185377,8 @@ export const PLAYERS = [
         "news": "Knock - 75% chance of playing",
         "status": "d",
         "chanceOfPlaying": 75,
-        "xp10": 33.9
+        "xp10": 33.9,
+        "web_name": "Mukiele"
     },
     {
         "id": 534,
@@ -185159,7 +185712,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 32.5
+        "xp10": 32.5,
+        "web_name": "Hume"
     },
     {
         "id": 535,
@@ -185493,7 +186047,8 @@ export const PLAYERS = [
         "news": "Knock - 75% chance of playing",
         "status": "d",
         "chanceOfPlaying": 75,
-        "xp10": 29.5
+        "xp10": 29.5,
+        "web_name": "Alderete"
     },
     {
         "id": 536,
@@ -185827,7 +186382,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 32.5
+        "xp10": 32.5,
+        "web_name": "Reinildo"
     },
     {
         "id": 537,
@@ -186161,7 +186717,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 15.8
+        "xp10": 15.8,
+        "web_name": "Seelt"
     },
     {
         "id": 538,
@@ -186495,7 +187052,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 25.9
+        "xp10": 25.9,
+        "web_name": "Hjelde"
     },
     {
         "id": 539,
@@ -186829,7 +187387,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 18.2
+        "xp10": 18.2,
+        "web_name": "O'Nien"
     },
     {
         "id": 540,
@@ -187163,7 +187722,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 16.6
+        "xp10": 16.6,
+        "web_name": "Masuaku"
     },
     {
         "id": 541,
@@ -187497,7 +188057,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 25.9
+        "xp10": 25.9,
+        "web_name": "Meunier"
     },
     {
         "id": 542,
@@ -187831,7 +188392,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45.8
+        "xp10": 45.8,
+        "web_name": "E.Le Fée"
     },
     {
         "id": 543,
@@ -188165,7 +188727,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37.3
+        "xp10": 37.3,
+        "web_name": "Diarra"
     },
     {
         "id": 544,
@@ -188499,7 +189062,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.4
+        "xp10": 38.4,
+        "web_name": "Xhaka"
     },
     {
         "id": 545,
@@ -188833,7 +189397,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 24.2
+        "xp10": 24.2,
+        "web_name": "Sadiki"
     },
     {
         "id": 546,
@@ -189167,7 +189732,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.6
+        "xp10": 38.6,
+        "web_name": "Adingra"
     },
     {
         "id": 547,
@@ -189501,7 +190067,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 19.2
+        "xp10": 19.2,
+        "web_name": "Mundle"
     },
     {
         "id": 548,
@@ -189835,7 +190402,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 33.7
+        "xp10": 33.7,
+        "web_name": "Rigg"
     },
     {
         "id": 549,
@@ -190169,7 +190737,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.6
+        "xp10": 38.6,
+        "web_name": "Talbi"
     },
     {
         "id": 550,
@@ -190503,7 +191072,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 17.9
+        "xp10": 17.9,
+        "web_name": "Jocelin.T"
     },
     {
         "id": 551,
@@ -190837,7 +191407,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 27.6
+        "xp10": 27.6,
+        "web_name": "Angulo"
     },
     {
         "id": 552,
@@ -191171,7 +191742,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.1
+        "xp10": 43.1,
+        "web_name": "Brobbey"
     },
     {
         "id": 553,
@@ -191505,7 +192077,8 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 40.3
+        "xp10": 40.3,
+        "web_name": "Isidor"
     }
 ];
 
