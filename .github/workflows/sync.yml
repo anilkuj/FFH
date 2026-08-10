@@ -42,6 +42,7 @@ jobs:
         env:
           NODE_OPTIONS: '--no-warnings'
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          BACKTEST_API_BASE_URL: https://ffh-production.up.railway.app
 
       # 5. Rebuild the production bundle with the fresh data.js
       - name: 🏗️ Rebuild production bundle
