@@ -68,13 +68,34 @@ export function getPlayerHistory(history, code) {
 
 Snapshot list per player is capped at the last **10** gameweeks (rolling window is 6, but keeping a
 few extra makes future window-size tuning possible without losing data — cheap to store, avoids a
-second migration later).
+second migration later). Each snapshot records the team the player was actually at for that
+gameweek, so the recent-window calculation (`getRecentWindow`, below) can filter to only games at
+the player's *current* team by simple equality check (`snapshot.team === currentTeam`) — no separate
+"team changed at GW X" bookkeeping needed.
 
-Team-change detection: comparing `players[code].currentTeam` (from the most recent snapshot) against
-the incoming snapshot's `team` — if different, the player's snapshot history before the change is
-kept (still useful as "proven Prem quality") but flagged via `isNewToCurrentTeam: true` for the
-current team's context, and the rolling *recency* window used for start-probability purposes only
-counts games played *at the current team*.
+**Correction made during planning (catching this now rather than mid-implementation):** the
+original draft of this section planned to detect team changes by diffing each new snapshot against
+the previous one. That has a cold-start gap — on the very first sync after this phase deploys,
+there's no prior snapshot to diff against, so it would fail to recognize *any* of this transfer
+window's signings as new, including the ones that matter most right now. Fixed by using
+`team_join_date`, a field already confirmed present in `bootstrap-static` (verified live before
+writing this doc) that FPL maintains directly and is available immediately, with no bootstrapping
+period. `isNewToCurrentTeam` is computed in `sync.js` as `daysSinceJoin <= 75` (roughly one transfer
+window), independent of `lib/rotationHistory.js` entirely. This also directly replaces
+`KNOWN_TRANSFERS`' other job (detecting `transferredThisSeason`) with the same generic, always-available
+signal — one less thing `lib/rotationHistory.js` needs to track, and it now has a single job: recent
+minutes/starts windowing.
+
+```js
+export function getRecentWindow(history, code, { asOfGw, windowSize = 6 }) {
+  const p = getPlayerHistory(history, code);
+  if (!p) return { starts: 0, games: 0 };
+  const relevant = p.snapshots.filter(s =>
+    s.team === p.currentTeam && s.gw <= asOfGw && s.gw > asOfGw - windowSize
+  );
+  return { games: relevant.length, starts: relevant.filter(s => s.started).length };
+}
+```
 
 ### 2. `lib/startProbability.js` (new) — the actual algorithm
 
@@ -130,8 +151,8 @@ export function computeStartProbability({
 }
 ```
 
-`recentWindow.games` counts only finished GWs at the player's *current* team (per the team-change
-handling above) — so a domestic transfer's window resets to 0 the moment they change clubs, correctly
+`recentWindow.games` counts only finished GWs at the player's *current* team (via `getRecentWindow`'s
+team-equality filter above) — so a domestic transfer's window resets to 0 the moment they change clubs, correctly
 routing them through branch 4 (prior-season rate as-is, since zero games exist yet at the new club)
 immediately after the move, then into branch 3's blend once a game or two is actually played there,
 rather than branch 2 (which would wrongly assume a full trusted current-team window).
@@ -140,9 +161,15 @@ rather than branch 2 (which would wrongly assume a full trusted current-team win
 
 ```js
 export function detectDisplacementRisk(playersWithProbabilities) {
-  // For each player P: find teammates Q where Q.team === P.team, Q.position === P.position,
-  // Q.isNewToCurrentTeam === true, and Q.startProbability - P.startProbability > 0.15.
-  // Returns a map: { [P.code]: { threatenedByCode: Q.code, threatenedByName, gap } }
+  // playersWithProbabilities: [{ code, name, team, position, startProbability, isNewToCurrentTeam }]
+  // isNewToCurrentTeam is computed by sync.js from bootstrap-static's team_join_date (see the
+  // sync.js changes section below) and passed in here -- this function itself has no notion of
+  // "recent," it just consumes the flag.
+  // For each player P (not itself new): find teammates Q where Q.team === P.team,
+  // Q.position === P.position, Q.isNewToCurrentTeam === true, and
+  // Q.startProbability - P.startProbability > DISPLACEMENT_GAP_THRESHOLD (0.15). If multiple
+  // teammates qualify, P is flagged with whichever has the largest gap.
+  // Returns a map: { [P.code]: { threatenedByCode, threatenedByName, gap } }
 }
 ```
 
@@ -157,7 +184,15 @@ real gameweeks show whether it over- or under-fires.
   *client-side* Check Risks feature uses a *user-supplied* key from `localStorage`, a completely
   separate credential, unaffected by this removal).
 - Remove `ROLE_OVERRIDES`, `KNOWN_TRANSFERS`, and the `PROMOTED_TEAMS`-gated branch in the
-  zero-minutes fallback — replace with the generic `computeStartProbability` branch 5 logic.
+  zero-minutes fallback. `computeBasePPG`'s `isPromotedOrTransfer` input becomes simply
+  `minutes === 0` (season-cumulative, club-agnostic, already exactly what's needed for the
+  *productivity* baseline — a domestic transfer with real minutes at their old club already flows
+  correctly through `computeBasePPG`'s existing `minutes > 500`/`minutes > 0` branches without any
+  new logic, since those stats accumulate on the player regardless of which club earned them).
+  Separately, compute `isNewToCurrentTeam = daysSinceJoin(el.team_join_date) <= 75` per player —
+  this is the *availability* signal (feeds `computeStartProbability`'s window-reset and
+  `detectDisplacementRisk`), answering a different question than `isPromotedOrTransfer` and
+  computed independently.
 - Each sync: after determining `getLatestFinishedGw` (already computed today for backtest scoring —
   reused, not duplicated), if that GW hasn't been recorded in rotation history yet, fetch its
   per-player stats via the same `event/{gw}/live/` call already made for backtest actuals (one
