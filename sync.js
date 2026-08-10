@@ -96,9 +96,17 @@ async function parseAndWriteData(data, fixturesData) {
     // NOTE: this local PROMOTED_TEAMS is kept (not deleted) because it is still consumed
     // below by the "expected starter" zero-minutes/zero-starts fallback heuristic
     // (see `isPromoted` further down in this function), which is a separate, unrelated piece
-    // of logic that Task 4 (removal of ROLE_OVERRIDES/KNOWN_TRANSFERS/fetchAIPleayerNews) does
+    // of logic that Task 4 (removal of the AI-override and hardcoded-transfer tables) does
     // not touch. Deleting it here would break that heuristic.
     const PROMOTED_TEAMS = ['COV', 'HUL', 'SUN', 'IPS', 'LEE'];
+
+    // NEW_TO_TEAM_DAYS_THRESHOLD: 75 days is a rough approximation of one transfer window,
+    // not a precisely tuned value. Revisit it once the later displacement-detection task
+    // (which depends on this same "is new to team" signal) is live and can be checked against
+    // real rotation outcomes -- watch for false negatives (a genuinely new signing no longer
+    // flagged "new" too early) or false positives (an established player still flagged "new"
+    // too long).
+    const NEW_TO_TEAM_DAYS_THRESHOLD = 75;
 
     // Read existing players list from data.js
     let existingPlayers = [];
@@ -193,7 +201,6 @@ async function parseAndWriteData(data, fixturesData) {
         // isNewToCurrentTeam: generic, always-available signal from FPL's own team_join_date --
         // no hardcoded transfer list needed, and unlike diffing our own rotation history this
         // works immediately on the very first sync, including summer transfer window signings.
-        const NEW_TO_TEAM_DAYS_THRESHOLD = 75; // roughly one transfer window
         let isNewToCurrentTeam = false;
         if (el.team_join_date) {
             const joinedAt = new Date(el.team_join_date);
@@ -216,7 +223,11 @@ async function parseAndWriteData(data, fixturesData) {
         }
         changeTarget = Math.max(-100, Math.min(100, changeTarget));
 
-        const existingPlayer = existingPlayers.find(ep => ep.code === el.code);
+        // Prefer the stable `code` field for matching, but fall back to name matching if no
+        // code match is found (e.g. the first sync after this field started being written --
+        // existing data.js entries won't have a `code` yet, so this keeps last season's
+        // historical merge below working exactly as it did before, self-healing after one sync).
+        const existingPlayer = existingPlayers.find(ep => ep.code === el.code) || existingPlayers.find(ep => ep.name === playerName);
 
         if (isNewToCurrentTeam && existingPlayer && existingPlayer.team && existingPlayer.team !== teamShort) {
             oldTeam = existingPlayer.team;
@@ -424,9 +435,9 @@ async function parseAndWriteData(data, fixturesData) {
     // independent value regardless of any AI-provided news, so it always runs now (previously
     // gated behind "if no AI override" -- that AI-news path has been removed).
     playersList.forEach(p => {
-        const isPromotedOrTransfer = PROMOTED_TEAMS.includes(p.team) || p.transferredThisSeason;
+        const isPromotedOrRecentTransfer = PROMOTED_TEAMS.includes(p.team) || p.transferredThisSeason;
         const hasLowStarts = typeof p.GS === 'number' && p.GS < 8 && typeof p.MPPG === 'number' && p.MPPG < 45;
-        if (hasLowStarts && !p.news && p.status === 'a' && !isPromotedOrTransfer) {
+        if (hasLowStarts && !p.news && p.status === 'a' && !isPromotedOrRecentTransfer) {
             p.chanceOfPlaying = 15;
             p.news = "Backup/squad rotation option based on low historical starts.";
         }
