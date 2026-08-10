@@ -1915,7 +1915,7 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
             <div class="detail-left-column" style="display: flex; flex-direction: column; gap: 16px; min-width: 0;">
                 <div class="player-detail-profile" style="padding: 0; display: flex; align-items: center; gap: 16px;">
                     <div class="profile-avatar-shirt" style="width: 64px; height: 64px; flex-shrink: 0;">
-                        ${getShirtSVG(teamObj ? teamObj.color : "#ffffff", player.team)}
+                        ${getShirtSVG(teamObj ? teamObj.color : "#ffffff", player.team, player.position)}
                     </div>
                     <div class="detail-player-info">
                         <h4 style="margin: 0 0 4px 0; font-size: 18px; font-weight: 700; color: var(--text-main);">${player.name}</h4>
@@ -2586,448 +2586,50 @@ function openResetModal(state, actions) {
     });
 }
 
-// Authentic 3D Realistic Premier League Kit SVG Generator Engine
+// Official FPL Team Jersey Codes Map
+export const TEAM_SHIRT_CODES = {
+    'ARS': 3,   // Arsenal
+    'AVL': 7,   // Aston Villa
+    'BOU': 91,  // Bournemouth
+    'BRE': 94,  // Brentford
+    'BHA': 36,  // Brighton
+    'CHE': 8,   // Chelsea
+    'COV': 9,   // Coventry City
+    'CRY': 31,  // Crystal Palace
+    'EVE': 11,  // Everton
+    'FUL': 54,  // Fulham
+    'HUL': 88,  // Hull City
+    'IPS': 40,  // Ipswich Town
+    'LEE': 2,   // Leeds United
+    'LIV': 14,  // Liverpool
+    'MCI': 43,  // Manchester City
+    'MUN': 1,   // Manchester United
+    'NEW': 4,   // Newcastle United
+    'NFO': 17,  // Nottingham Forest
+    'TOT': 6,   // Tottenham Hotspur
+    'SUN': 56   // Sunderland
+};
+
+// Official Premier League Kit Image Generator Engine
 export function getShirtSVG(color, teamShortName = '', position = 'MID') {
-    // Shared 3D Lighting & Fabric Shading Defs
-    const defs = `
-        <defs>
-            <linearGradient id="fabricShading_${teamShortName}_${position}" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.30"/>
-                <stop offset="40%" stop-color="#ffffff" stop-opacity="0.05"/>
-                <stop offset="70%" stop-color="#000000" stop-opacity="0.15"/>
-                <stop offset="100%" stop-color="#000000" stop-opacity="0.45"/>
-            </linearGradient>
-            <linearGradient id="body3dGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.15"/>
-                <stop offset="50%" stop-color="#000000" stop-opacity="0"/>
-                <stop offset="100%" stop-color="#000000" stop-opacity="0.3"/>
-            </linearGradient>
-            <filter id="jerseyShadow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.6"/>
-            </filter>
-        </defs>
+    const isGKP = position === 'GKP';
+    const code = TEAM_SHIRT_CODES[teamShortName] || (typeof TEAMS !== 'undefined' ? TEAMS.find(t => t.shortName === teamShortName)?.id : 3) || 3;
+    
+    const shirtUrl = isGKP 
+        ? `https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_${code}_1-110.webp`
+        : `https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_${code}-110.webp`;
+    
+    return `
+        <img 
+            src="${shirtUrl}" 
+            alt="${teamShortName} ${position} jersey" 
+            class="shirt-svg fpl-official-jersey" 
+            loading="lazy"
+            draggable="false"
+            style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45));" 
+            onerror="this.onerror=null; this.src='https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_3-110.webp';"
+        />
     `;
-
-    // 1. GOALKEEPER (GKP) - 3D Neon Patterned Keeper Jersey
-    if (position === 'GKP') {
-        const gkColor = (color && color !== '#ffffff' && color !== '#FFFFFF') ? color : '#00e676';
-        return `
-            <svg viewBox="0 0 100 100" class="shirt-svg" style="filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.6));">
-                ${defs}
-                <!-- Left Sleeve -->
-                <path d="M 32 14 C 24 16, 14 22, 6 28 C 4 30, 6 36, 12 40 C 18 43, 26 38, 30 30 C 31 25, 32 18, 32 14 Z" fill="${gkColor}" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
-                <path d="M 12 40 L 17 38 L 22 42" stroke="rgba(0,0,0,0.4)" stroke-width="2" fill="none"/>
-                <!-- Right Sleeve -->
-                <path d="M 68 14 C 76 16, 86 22, 94 28 C 96 30, 94 36, 88 40 C 82 43, 74 38, 70 30 C 69 25, 68 18, 68 14 Z" fill="${gkColor}" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
-                <path d="M 88 40 L 83 38 L 78 42" stroke="rgba(0,0,0,0.4)" stroke-width="2" fill="none"/>
-                <!-- Body -->
-                <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="${gkColor}" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-                <!-- Geometric Hex Pattern -->
-                <polygon points="50,22 65,34 50,46 35,34" fill="rgba(0,0,0,0.18)"/>
-                <polygon points="50,46 65,58 50,70 35,58" fill="rgba(255,255,255,0.18)"/>
-                <circle cx="36" cy="28" r="3.5" fill="#ffd700" stroke="#111" stroke-width="0.8"/>
-                <!-- Collar -->
-                <path d="M 38 15 Q 50 25 62 15 Z" fill="#111111"/>
-                <!-- 3D Overlay -->
-                <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="url(#fabricShading_${teamShortName}_${position})"/>
-                <!-- Team Name -->
-                ${teamShortName ? `<text x="50" y="60" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9); letter-spacing: 0.5px;">${teamShortName}</text>` : ''}
-            </svg>
-        `;
-    }
-
-    // 2. OUTFIELD PLAYERS - REAL 20 TEAM 3D KITS
-    switch (teamShortName) {
-        case 'ARS': // ARSENAL: Deep Crimson Body, Raglan White Sleeves, Navy Collar, Gold Trim
-            return `
-                <svg viewBox="0 0 100 100" class="shirt-svg" style="filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.6));">
-                    ${defs}
-                    <!-- White Raglan Sleeves -->
-                    <path d="M 32 14 C 24 16, 14 22, 6 28 C 4 30, 6 36, 12 40 C 18 43, 26 38, 30 30 C 31 25, 32 18, 32 14 Z" fill="#FFFFFF"/>
-                    <path d="M 68 14 C 76 16, 86 22, 94 28 C 96 30, 94 36, 88 40 C 82 43, 74 38, 70 30 C 69 25, 68 18, 68 14 Z" fill="#FFFFFF"/>
-                    <!-- Gold Cuff Rings -->
-                    <path d="M 6 28 L 12 40" stroke="#DBA111" stroke-width="2.5"/>
-                    <path d="M 94 28 L 88 40" stroke="#DBA111" stroke-width="2.5"/>
-                    <!-- Crimson Body -->
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="#DB0007"/>
-                    <!-- Subtle Jacquard Vertical Pinstripes -->
-                    <line x1="42" y1="20" x2="42" y2="82" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
-                    <line x1="50" y1="20" x2="50" y2="82" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
-                    <line x1="58" y1="20" x2="58" y2="82" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
-                    <!-- Navy V-Neck Collar -->
-                    <path d="M 38 15 Q 50 25 62 15 Z" fill="#132257"/>
-                    <!-- Gold Cannon Badge -->
-                    <circle cx="36" cy="27" r="3" fill="#DBA111"/>
-                    <!-- 3D Shading Overlay -->
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="url(#fabricShading_${teamShortName}_${position})"/>
-                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">ARS</text>
-                </svg>
-            `;
-
-        case 'AVL': // ASTON VILLA: Deep Claret Body, Sky Blue Sleeves & Yellow Cuff Trim
-            return `
-                <svg viewBox="0 0 100 100" class="shirt-svg" style="filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.6));">
-                    ${defs}
-                    <path d="M 32 14 C 24 16, 14 22, 6 28 C 4 30, 6 36, 12 40 C 18 43, 26 38, 30 30 C 31 25, 32 18, 32 14 Z" fill="#95BFE5"/>
-                    <path d="M 68 14 C 76 16, 86 22, 94 28 C 96 30, 94 36, 88 40 C 82 43, 74 38, 70 30 C 69 25, 68 18, 68 14 Z" fill="#95BFE5"/>
-                    <!-- Yellow Sleeve Cuffs -->
-                    <path d="M 6 28 L 12 40" stroke="#F0C239" stroke-width="2.5"/>
-                    <path d="M 94 28 L 88 40" stroke="#F0C239" stroke-width="2.5"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="#7A003C"/>
-                    <path d="M 38 15 Q 50 25 62 15 Z" fill="#F0C239"/>
-                    <!-- Lion Shield Crest -->
-                    <polygon points="36,25 40,25 38,30" fill="#F0C239"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="url(#fabricShading_${teamShortName}_${position})"/>
-                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">AVL</text>
-                </svg>
-            `;
-
-        case 'BOU': // BOURNEMOUTH: Red & Black 3D Vertical Stripes
-            return `
-                <svg viewBox="0 0 100 100" class="shirt-svg" style="filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.6));">
-                    ${defs}
-                    <path d="M 32 14 C 24 16, 14 22, 6 28 C 4 30, 6 36, 12 40 C 18 43, 26 38, 30 30 C 31 25, 32 18, 32 14 Z" fill="#111111"/>
-                    <path d="M 68 14 C 76 16, 86 22, 94 28 C 96 30, 94 36, 88 40 C 82 43, 74 38, 70 30 C 69 25, 68 18, 68 14 Z" fill="#111111"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="#DA291C"/>
-                    <!-- 3 Vertical Black Stripes -->
-                    <path d="M 34 16 L 36 84 L 44 84 L 42 16 Z" fill="#111111"/>
-                    <path d="M 46 16 L 47 84 L 53 84 L 54 16 Z" fill="#111111"/>
-                    <path d="M 58 16 L 56 84 L 64 84 L 66 16 Z" fill="#111111"/>
-                    <path d="M 38 15 Q 50 25 62 15 Z" fill="#DA291C"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="url(#fabricShading_${teamShortName}_${position})"/>
-                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">BOU</text>
-                </svg>
-            `;
-
-        case 'BRE': // BRENTFORD: Authentic 2024/25 Red-to-Black Gradient Hem with Black Raglan Sleeves & Golden Bee Badge
-            return `
-                <svg viewBox="0 0 100 100" class="shirt-svg" style="filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.6));">
-                    <defs>
-                        ${defs}
-                        <linearGradient id="breGradient_${position}" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stop-color="#E30613"/>
-                            <stop offset="55%" stop-color="#E30613"/>
-                            <stop offset="90%" stop-color="#111111"/>
-                            <stop offset="100%" stop-color="#000000"/>
-                        </linearGradient>
-                    </defs>
-                    <!-- Solid Black Raglan Sleeves -->
-                    <path d="M 32 14 C 24 16, 14 22, 6 28 C 4 30, 6 36, 12 40 C 18 43, 26 38, 30 30 C 31 25, 32 18, 32 14 Z" fill="#111111"/>
-                    <path d="M 68 14 C 76 16, 86 22, 94 28 C 96 30, 94 36, 88 40 C 82 43, 74 38, 70 30 C 69 25, 68 18, 68 14 Z" fill="#111111"/>
-                    <!-- Red Cuff Ring on Black Sleeves -->
-                    <path d="M 6 28 L 12 40" stroke="#E30613" stroke-width="2.5"/>
-                    <path d="M 94 28 L 88 40" stroke="#E30613" stroke-width="2.5"/>
-                    <!-- Gradient Body (Red top fading to Black bottom) -->
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="url(#breGradient_${position})"/>
-                    <!-- White Vertical Stripes fading into lower black hem -->
-                    <path d="M 36 16 L 37 68 L 43 68 L 42 16 Z" fill="#FFFFFF" opacity="0.95"/>
-                    <path d="M 47 16 L 48 68 L 52 68 L 53 16 Z" fill="#FFFFFF" opacity="0.95"/>
-                    <path d="M 58 16 L 57 68 L 63 68 L 64 16 Z" fill="#FFFFFF" opacity="0.95"/>
-                    <!-- Black V-Neck Collar -->
-                    <path d="M 38 15 Q 50 25 62 15 Z" fill="#111111"/>
-                    <!-- Golden Bee Badge -->
-                    <circle cx="36" cy="27" r="3" fill="#FDB913"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="url(#fabricShading_${teamShortName}_${position})"/>
-                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">BRE</text>
-                </svg>
-            `;
-
-
-        case 'BHA': // BRIGHTON: Royal Blue & White 3D Stripes with Yellow Trim
-            return `
-                <svg viewBox="0 0 100 100" class="shirt-svg" style="filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.6));">
-                    ${defs}
-                    <path d="M 32 14 C 24 16, 14 22, 6 28 C 4 30, 6 36, 12 40 C 18 43, 26 38, 30 30 C 31 25, 32 18, 32 14 Z" fill="#0057B8"/>
-                    <path d="M 68 14 C 76 16, 86 22, 94 28 C 96 30, 94 36, 88 40 C 82 43, 74 38, 70 30 C 69 25, 68 18, 68 14 Z" fill="#0057B8"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="#0057B8"/>
-                    <path d="M 34 16 L 36 84 L 43 84 L 41 16 Z" fill="#FFFFFF"/>
-                    <path d="M 47 16 L 48 84 L 52 84 L 53 16 Z" fill="#FFFFFF"/>
-                    <path d="M 59 16 L 57 84 L 64 84 L 66 16 Z" fill="#FFFFFF"/>
-                    <path d="M 38 15 Q 50 25 62 15 Z" fill="#FFCD00"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="url(#fabricShading_${teamShortName}_${position})"/>
-                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">BHA</text>
-                </svg>
-            `;
-
-        case 'CHE': // CHELSEA: Royal Blue Body, Iridescent Wave Pattern, Gold Badge
-            return `
-                <svg viewBox="0 0 100 100" class="shirt-svg" style="filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.6));">
-                    ${defs}
-                    <path d="M 32 14 C 24 16, 14 22, 6 28 C 4 30, 6 36, 12 40 C 18 43, 26 38, 30 30 C 31 25, 32 18, 32 14 Z" fill="#034694"/>
-                    <path d="M 68 14 C 76 16, 86 22, 94 28 C 96 30, 94 36, 88 40 C 82 43, 74 38, 70 30 C 69 25, 68 18, 68 14 Z" fill="#034694"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="#034694"/>
-                    <!-- Iridescent Melt Graphic Lines -->
-                    <path d="M 30 30 Q 50 45 70 30" stroke="rgba(255,255,255,0.15)" stroke-width="2" fill="none"/>
-                    <path d="M 28 50 Q 50 65 72 50" stroke="rgba(255,255,255,0.15)" stroke-width="2" fill="none"/>
-                    <!-- Gold Collar Ring & Badge -->
-                    <path d="M 38 15 Q 50 25 62 15 Z" fill="#DBA111"/>
-                    <circle cx="36" cy="27" r="3" fill="#DBA111"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="url(#fabricShading_${teamShortName}_${position})"/>
-                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">CHE</text>
-                </svg>
-            `;
-
-        case 'COV': // COVENTRY: Sky Blue Body, Navy Raglan Sleeves
-            return `
-                <svg viewBox="0 0 100 100" class="shirt-svg" style="filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.6));">
-                    ${defs}
-                    <path d="M 32 14 C 24 16, 14 22, 6 28 C 4 30, 6 36, 12 40 C 18 43, 26 38, 30 30 C 31 25, 32 18, 32 14 Z" fill="#132257"/>
-                    <path d="M 68 14 C 76 16, 86 22, 94 28 C 96 30, 94 36, 88 40 C 82 43, 74 38, 70 30 C 69 25, 68 18, 68 14 Z" fill="#132257"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="#00A3E0"/>
-                    <path d="M 38 15 Q 50 25 62 15 Z" fill="#132257"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="url(#fabricShading_${teamShortName}_${position})"/>
-                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">COV</text>
-                </svg>
-            `;
-
-        case 'CRY': // CRYSTAL PALACE: Red & Blue 3D Vertical Stripes with Gold Trim
-            return `
-                <svg viewBox="0 0 100 100" class="shirt-svg" style="filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.6));">
-                    ${defs}
-                    <path d="M 32 14 C 24 16, 14 22, 6 28 C 4 30, 6 36, 12 40 C 18 43, 26 38, 30 30 C 31 25, 32 18, 32 14 Z" fill="#1B458F"/>
-                    <path d="M 68 14 C 76 16, 86 22, 94 28 C 96 30, 94 36, 88 40 C 82 43, 74 38, 70 30 C 69 25, 68 18, 68 14 Z" fill="#1B458F"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="#C4122E"/>
-                    <path d="M 34 16 L 36 84 L 43 84 L 41 16 Z" fill="#1B458F"/>
-                    <path d="M 47 16 L 48 84 L 52 84 L 53 16 Z" fill="#1B458F"/>
-                    <path d="M 59 16 L 57 84 L 64 84 L 66 16 Z" fill="#1B458F"/>
-                    <path d="M 38 15 Q 50 25 62 15 Z" fill="#F0C239"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="url(#fabricShading_${teamShortName}_${position})"/>
-                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">CRY</text>
-                </svg>
-            `;
-
-        case 'EVE': // EVERTON: Royal Blue Body, White Collar Pattern
-            return `
-                <svg viewBox="0 0 100 100" class="shirt-svg" style="filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.6));">
-                    ${defs}
-                    <path d="M 32 14 C 24 16, 14 22, 6 28 C 4 30, 6 36, 12 40 C 18 43, 26 38, 30 30 C 31 25, 32 18, 32 14 Z" fill="#003399"/>
-                    <path d="M 68 14 C 76 16, 86 22, 94 28 C 96 30, 94 36, 88 40 C 82 43, 74 38, 70 30 C 69 25, 68 18, 68 14 Z" fill="#003399"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="#003399"/>
-                    <!-- White Collar & Cuff Ring -->
-                    <path d="M 38 15 Q 50 25 62 15 Z" fill="#ffffff"/>
-                    <path d="M 6 28 L 12 40" stroke="#ffffff" stroke-width="2"/>
-                    <path d="M 94 28 L 88 40" stroke="#ffffff" stroke-width="2"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="url(#fabricShading_${teamShortName}_${position})"/>
-                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">EVE</text>
-                </svg>
-            `;
-
-        case 'FUL': // FULHAM: White Body, Contrast Black Raglan Sleeves
-            return `
-                <svg viewBox="0 0 100 100" class="shirt-svg" style="filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.6));">
-                    ${defs}
-                    <path d="M 32 14 C 24 16, 14 22, 6 28 C 4 30, 6 36, 12 40 C 18 43, 26 38, 30 30 C 31 25, 32 18, 32 14 Z" fill="#111111"/>
-                    <path d="M 68 14 C 76 16, 86 22, 94 28 C 96 30, 94 36, 88 40 C 82 43, 74 38, 70 30 C 69 25, 68 18, 68 14 Z" fill="#111111"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="#ffffff" stroke="rgba(0,0,0,0.15)"/>
-                    <path d="M 38 15 Q 50 25 62 15 Z" fill="#111111"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="url(#fabricShading_${teamShortName}_${position})"/>
-                    <text x="50" y="58" text-anchor="middle" fill="#111111" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 0px 2px #ffffff;">FUL</text>
-                </svg>
-            `;
-
-        case 'HUL': // HULL CITY: Amber & Black 3D Stripes
-            return `
-                <svg viewBox="0 0 100 100" class="shirt-svg" style="filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.6));">
-                    ${defs}
-                    <path d="M 32 14 C 24 16, 14 22, 6 28 C 4 30, 6 36, 12 40 C 18 43, 26 38, 30 30 C 31 25, 32 18, 32 14 Z" fill="#111111"/>
-                    <path d="M 68 14 C 76 16, 86 22, 94 28 C 96 30, 94 36, 88 40 C 82 43, 74 38, 70 30 C 69 25, 68 18, 68 14 Z" fill="#111111"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="#FF8A00"/>
-                    <path d="M 34 16 L 36 84 L 43 84 L 41 16 Z" fill="#111111"/>
-                    <path d="M 47 16 L 48 84 L 52 84 L 53 16 Z" fill="#111111"/>
-                    <path d="M 59 16 L 57 84 L 64 84 L 66 16 Z" fill="#111111"/>
-                    <path d="M 38 15 Q 50 25 62 15 Z" fill="#FF8A00"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="url(#fabricShading_${teamShortName}_${position})"/>
-                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">HUL</text>
-                </svg>
-            `;
-
-        case 'IPS': // IPSWICH: Royal Blue Body, White Collar & Subtle Pinstripes
-            return `
-                <svg viewBox="0 0 100 100" class="shirt-svg" style="filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.6));">
-                    ${defs}
-                    <path d="M 32 14 C 24 16, 14 22, 6 28 C 4 30, 6 36, 12 40 C 18 43, 26 38, 30 30 C 31 25, 32 18, 32 14 Z" fill="#0000FF"/>
-                    <path d="M 68 14 C 76 16, 86 22, 94 28 C 96 30, 94 36, 88 40 C 82 43, 74 38, 70 30 C 69 25, 68 18, 68 14 Z" fill="#0000FF"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="#0000FF"/>
-                    <line x1="40" y1="20" x2="40" y2="82" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
-                    <line x1="50" y1="20" x2="50" y2="82" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
-                    <line x1="60" y1="20" x2="60" y2="82" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
-                    <path d="M 38 15 Q 50 25 62 15 Z" fill="#ffffff"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="url(#fabricShading_${teamShortName}_${position})"/>
-                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">IPS</text>
-                </svg>
-            `;
-
-        case 'LEE': // LEEDS: Pure White Body, Yellow & Royal Blue Shoulder Stripes
-            return `
-                <svg viewBox="0 0 100 100" class="shirt-svg" style="filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.6));">
-                    ${defs}
-                    <path d="M 32 14 C 24 16, 14 22, 6 28 C 4 30, 6 36, 12 40 C 18 43, 26 38, 30 30 C 31 25, 32 18, 32 14 Z" fill="#ffffff" stroke="rgba(0,0,0,0.1)"/>
-                    <path d="M 68 14 C 76 16, 86 22, 94 28 C 96 30, 94 36, 88 40 C 82 43, 74 38, 70 30 C 69 25, 68 18, 68 14 Z" fill="#ffffff" stroke="rgba(0,0,0,0.1)"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="#ffffff" stroke="rgba(0,0,0,0.15)"/>
-                    <!-- Shoulder 3-Stripes -->
-                    <path d="M 32 14 L 14 22" stroke="#FFCD00" stroke-width="2"/>
-                    <path d="M 32 17 L 16 25" stroke="#1D428A" stroke-width="2"/>
-                    <path d="M 68 14 L 86 22" stroke="#FFCD00" stroke-width="2"/>
-                    <path d="M 68 17 L 84 25" stroke="#1D428A" stroke-width="2"/>
-                    <path d="M 38 15 Q 50 25 62 15 Z" fill="#FFCD00"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="url(#fabricShading_${teamShortName}_${position})"/>
-                    <text x="50" y="58" text-anchor="middle" fill="#1D428A" font-size="11px" font-weight="900" font-family="sans-serif">LEE</text>
-                </svg>
-            `;
-
-        case 'LIV': // LIVERPOOL: Deep Crimson Red, Gold Liverbird Badge & Pinstripe Texture
-            return `
-                <svg viewBox="0 0 100 100" class="shirt-svg" style="filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.6));">
-                    ${defs}
-                    <path d="M 32 14 C 24 16, 14 22, 6 28 C 4 30, 6 36, 12 40 C 18 43, 26 38, 30 30 C 31 25, 32 18, 32 14 Z" fill="#C8102E"/>
-                    <path d="M 68 14 C 76 16, 86 22, 94 28 C 96 30, 94 36, 88 40 C 82 43, 74 38, 70 30 C 69 25, 68 18, 68 14 Z" fill="#C8102E"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="#C8102E"/>
-                    <!-- Gold Jacquard Pattern -->
-                    <line x1="38" y1="20" x2="38" y2="82" stroke="rgba(240,194,57,0.25)" stroke-width="1.2"/>
-                    <line x1="50" y1="20" x2="50" y2="82" stroke="rgba(240,194,57,0.25)" stroke-width="1.2"/>
-                    <line x1="62" y1="20" x2="62" y2="82" stroke="rgba(240,194,57,0.25)" stroke-width="1.2"/>
-                    <!-- Gold Collar Ring & Liverbird -->
-                    <path d="M 38 15 Q 50 25 62 15 Z" fill="#F0C239"/>
-                    <circle cx="36" cy="27" r="3" fill="#F0C239"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="url(#fabricShading_${teamShortName}_${position})"/>
-                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">LIV</text>
-                </svg>
-            `;
-
-        case 'MCI': // MAN CITY: Sky Blue Body, Navy/White 0161 Collar Detail
-            return `
-                <svg viewBox="0 0 100 100" class="shirt-svg" style="filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.6));">
-                    ${defs}
-                    <path d="M 32 14 C 24 16, 14 22, 6 28 C 4 30, 6 36, 12 40 C 18 43, 26 38, 30 30 C 31 25, 32 18, 32 14 Z" fill="#6CABDD"/>
-                    <path d="M 68 14 C 76 16, 86 22, 94 28 C 96 30, 94 36, 88 40 C 82 43, 74 38, 70 30 C 69 25, 68 18, 68 14 Z" fill="#6CABDD"/>
-                    <!-- White Sleeve Cuffs -->
-                    <path d="M 6 28 L 12 40" stroke="#ffffff" stroke-width="2.5"/>
-                    <path d="M 94 28 L 88 40" stroke="#ffffff" stroke-width="2.5"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="#6CABDD"/>
-                    <!-- Navy/White Ribbed Collar -->
-                    <path d="M 38 15 Q 50 25 62 15 Z" fill="#1C2C5B"/>
-                    <circle cx="36" cy="27" r="3" fill="#ffffff"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="url(#fabricShading_${teamShortName}_${position})"/>
-                    <text x="50" y="58" text-anchor="middle" fill="#1C2C5B" font-size="11px" font-weight="900" font-family="sans-serif">MCI</text>
-                </svg>
-            `;
-
-        case 'MUN': // MAN UTD: Deep Red Body, White Shoulder 3-Stripes, Black Collar
-            return `
-                <svg viewBox="0 0 100 100" class="shirt-svg" style="filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.6));">
-                    ${defs}
-                    <path d="M 32 14 C 24 16, 14 22, 6 28 C 4 30, 6 36, 12 40 C 18 43, 26 38, 30 30 C 31 25, 32 18, 32 14 Z" fill="#DA291C"/>
-                    <path d="M 68 14 C 76 16, 86 22, 94 28 C 96 30, 94 36, 88 40 C 82 43, 74 38, 70 30 C 69 25, 68 18, 68 14 Z" fill="#DA291C"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="#DA291C"/>
-                    <!-- White Shoulder Stripes -->
-                    <path d="M 32 14 L 14 22" stroke="#ffffff" stroke-width="2"/>
-                    <path d="M 32 17 L 16 25" stroke="#ffffff" stroke-width="2"/>
-                    <path d="M 68 14 L 86 22" stroke="#ffffff" stroke-width="2"/>
-                    <path d="M 68 17 L 84 25" stroke="#ffffff" stroke-width="2"/>
-                    <!-- Black V-Neck -->
-                    <path d="M 38 15 Q 50 25 62 15 Z" fill="#111111"/>
-                    <circle cx="36" cy="27" r="3" fill="#FFE600"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="url(#fabricShading_${teamShortName}_${position})"/>
-                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">MUN</text>
-                </svg>
-            `;
-
-        case 'NEW': // NEWCASTLE: 5 Iconic Black & White Vertical Stripes, Red Collar Accent
-            return `
-                <svg viewBox="0 0 100 100" class="shirt-svg" style="filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.6));">
-                    ${defs}
-                    <path d="M 32 14 C 24 16, 14 22, 6 28 C 4 30, 6 36, 12 40 C 18 43, 26 38, 30 30 C 31 25, 32 18, 32 14 Z" fill="#111111"/>
-                    <path d="M 68 14 C 76 16, 86 22, 94 28 C 96 30, 94 36, 88 40 C 82 43, 74 38, 70 30 C 69 25, 68 18, 68 14 Z" fill="#111111"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="#111111"/>
-                    <!-- 3 White Stripes -->
-                    <path d="M 34 16 L 36 84 L 43 84 L 41 16 Z" fill="#FFFFFF"/>
-                    <path d="M 47 16 L 48 84 L 52 84 L 53 16 Z" fill="#FFFFFF"/>
-                    <path d="M 59 16 L 57 84 L 64 84 L 66 16 Z" fill="#FFFFFF"/>
-                    <!-- Red Collar Accent -->
-                    <path d="M 38 15 Q 50 25 62 15 Z" fill="#C8102E"/>
-                    <!-- Gold Crest Shield -->
-                    <circle cx="36" cy="27" r="3" fill="#DBA111"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="url(#fabricShading_${teamShortName}_${position})"/>
-                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 0px 3px #000000, 0px 0px 3px #000000;">NEW</text>
-                </svg>
-            `;
-
-        case 'NFO': // NOTT'M FOREST: Garibaldi Red Body, White Collar Ring & Cuffs
-            return `
-                <svg viewBox="0 0 100 100" class="shirt-svg" style="filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.6));">
-                    ${defs}
-                    <path d="M 32 14 C 24 16, 14 22, 6 28 C 4 30, 6 36, 12 40 C 18 43, 26 38, 30 30 C 31 25, 32 18, 32 14 Z" fill="#DD0000"/>
-                    <path d="M 68 14 C 76 16, 86 22, 94 28 C 96 30, 94 36, 88 40 C 82 43, 74 38, 70 30 C 69 25, 68 18, 68 14 Z" fill="#DD0000"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="#DD0000"/>
-                    <path d="M 38 15 Q 50 25 62 15 Z" fill="#ffffff"/>
-                    <path d="M 6 28 L 12 40" stroke="#ffffff" stroke-width="2.5"/>
-                    <path d="M 94 28 L 88 40" stroke="#ffffff" stroke-width="2.5"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="url(#fabricShading_${teamShortName}_${position})"/>
-                    <text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">NFO</text>
-                </svg>
-            `;
-
-        case 'TOT': // SPURS: Pure White Body, Navy Raglan Sleeve Cuffs & Collar
-            return `
-                <svg viewBox="0 0 100 100" class="shirt-svg" style="filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.6));">
-                    ${defs}
-                    <path d="M 32 14 C 24 16, 14 22, 6 28 C 4 30, 6 36, 12 40 C 18 43, 26 38, 30 30 C 31 25, 32 18, 32 14 Z" fill="#ffffff" stroke="rgba(0,0,0,0.1)"/>
-                    <path d="M 68 14 C 76 16, 86 22, 94 28 C 96 30, 94 36, 88 40 C 82 43, 74 38, 70 30 C 69 25, 68 18, 68 14 Z" fill="#ffffff" stroke="rgba(0,0,0,0.1)"/>
-                    <path d="M 6 28 L 12 40" stroke="#132257" stroke-width="3"/>
-                    <path d="M 94 28 L 88 40" stroke="#132257" stroke-width="3"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="#ffffff" stroke="rgba(0,0,0,0.15)"/>
-                    <path d="M 38 15 Q 50 25 62 15 Z" fill="#132257"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="url(#fabricShading_${teamShortName}_${position})"/>
-                    <text x="50" y="58" text-anchor="middle" fill="#132257" font-size="11px" font-weight="900" font-family="sans-serif">TOT</text>
-                </svg>
-            `;
-
-        case 'SUN': // SUNDERLAND: Authentic Fine Red & White Stripes, Hummel White Shoulder Chevrons & Twin Lions Shield Badge
-            return `
-                <svg viewBox="0 0 100 100" class="shirt-svg" style="filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.6));">
-                    ${defs}
-                    <!-- Red Sleeves with Hummel White Shoulder Chevrons -->
-                    <path d="M 32 14 C 24 16, 14 22, 6 28 C 4 30, 6 36, 12 40 C 18 43, 26 38, 30 30 C 31 25, 32 18, 32 14 Z" fill="#EB1C24"/>
-                    <path d="M 68 14 C 76 16, 86 22, 94 28 C 96 30, 94 36, 88 40 C 82 43, 74 38, 70 30 C 69 25, 68 18, 68 14 Z" fill="#EB1C24"/>
-                    <!-- White Hummel Chevrons on Shoulders -->
-                    <path d="M 28 17 L 18 23 L 20 25 L 29 20 Z" fill="#FFFFFF"/>
-                    <path d="M 72 17 L 82 23 L 80 25 L 71 20 Z" fill="#FFFFFF"/>
-                    <!-- Pure White Sleeve Cuffs with Black Ring -->
-                    <path d="M 6 28 L 12 40" stroke="#FFFFFF" stroke-width="3"/>
-                    <path d="M 94 28 L 88 40" stroke="#FFFFFF" stroke-width="3"/>
-                    <path d="M 7 29 L 11 39" stroke="#111111" stroke-width="1"/>
-                    <path d="M 93 29 L 89 39" stroke="#111111" stroke-width="1"/>
-                    <!-- Pure Red Body with 5 Crisp Fine Stripes -->
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="#EB1C24"/>
-                    <path d="M 32 16 L 33 84 L 38 84 L 37 16 Z" fill="#FFFFFF"/>
-                    <path d="M 42 16 L 43 84 L 47 84 L 46 16 Z" fill="#FFFFFF"/>
-                    <path d="M 52 16 L 53 84 L 57 84 L 56 16 Z" fill="#FFFFFF"/>
-                    <path d="M 62 16 L 63 84 L 68 84 L 67 16 Z" fill="#FFFFFF"/>
-                    <!-- Black Crewneck Collar with Inner White Ring -->
-                    <path d="M 38 15 Q 50 25 62 15 Z" fill="#111111"/>
-                    <path d="M 41 17 Q 50 24 59 17" stroke="#FFFFFF" stroke-width="1.5" fill="none"/>
-                    <!-- Red & Gold Twin Lions Shield Crest Badge -->
-                    <polygon points="36,25 40,25 38,30" fill="#EB1C24" stroke="#DBA111" stroke-width="0.8"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="url(#fabricShading_${teamShortName}_${position})"/>
-                    <text x="50" y="58" text-anchor="middle" fill="#111111" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 0px 3px #ffffff, 0px 0px 3px #ffffff;">SUN</text>
-                </svg>
-            `;
-
-
-        default:
-            const c = color || '#00ff88';
-            return `
-                <svg viewBox="0 0 100 100" class="shirt-svg" style="filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.6));">
-                    ${defs}
-                    <path d="M 32 14 C 24 16, 14 22, 6 28 C 4 30, 6 36, 12 40 C 18 43, 26 38, 30 30 C 31 25, 32 18, 32 14 Z" fill="${c}"/>
-                    <path d="M 68 14 C 76 16, 86 22, 94 28 C 96 30, 94 36, 88 40 C 82 43, 74 38, 70 30 C 69 25, 68 18, 68 14 Z" fill="${c}"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="${c}"/>
-                    <path d="M 38 15 Q 50 25 62 15 Z" fill="#111111"/>
-                    <path d="M 32 14 C 42 17, 58 17, 68 14 C 70 24, 73 40, 75 84 C 75 87, 25 87, 25 84 C 27 40, 30 24, 32 14 Z" fill="url(#fabricShading_${teamShortName}_${position})"/>
-                    ${teamShortName ? `<text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="11px" font-weight="900" font-family="sans-serif" style="text-shadow: 0px 1px 3px rgba(0,0,0,0.9);">${teamShortName}</text>` : ''}
-                </svg>
-            `;
-    }
 }
 
 
