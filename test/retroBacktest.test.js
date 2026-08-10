@@ -66,3 +66,36 @@ test('buildRetroPairs: a validation player with no baseline-season history is tr
     });
     assert.equal(pairs[0].predictedPts, expected.pts);
 });
+
+test('buildRetroPairs: a fixture with a non-numeric team_h_difficulty is excluded for the home team only, not turned into diff: NaN', () => {
+    const baselineRows = [
+        { code: '111', element_type: '3', minutes: '3000', starts: '35', total_points: '175', expected_goals_per_90: '0.30', expected_assists_per_90: '0.20', saves_per_90: '0' },
+        { code: '333', element_type: '3', minutes: '3000', starts: '35', total_points: '175', expected_goals_per_90: '0.30', expected_assists_per_90: '0.20', saves_per_90: '0' }
+    ];
+    const validationPlayersRows = [
+        { id: '50', code: '111', element_type: '3', team: '1', now_cost: '80' }, // home team (ARS)
+        { id: '51', code: '333', element_type: '3', team: '2', now_cost: '80' }  // away team (BHA)
+    ];
+    const validationTeamsRows = [
+        { id: '1', short_name: 'ARS' },
+        { id: '2', short_name: 'BHA' }
+    ];
+    // team_h_difficulty is malformed; team_a_difficulty is fine.
+    const validationFixturesRows = [
+        { event: '1', team_h: '1', team_a: '2', team_h_difficulty: 'N/A', team_a_difficulty: '3' }
+    ];
+    const validationGwRows = [
+        { element: '50', GW: '1', total_points: '8', minutes: '90' },
+        { element: '51', GW: '1', total_points: '6', minutes: '90' }
+    ];
+
+    const pairs = buildRetroPairs({ baselineRows, validationPlayersRows, validationTeamsRows, validationFixturesRows, validationGwRows });
+
+    // Only the away-team (BHA) pair should be produced; the home-team (ARS) fixture
+    // entry was dropped because its difficulty didn't parse, so no pair with diff: NaN
+    // is ever built for it.
+    assert.equal(pairs.length, 1);
+    assert.equal(pairs[0].position, 'MID');
+    assert.equal(pairs[0].actualPts, 6);
+    assert.ok(!Number.isNaN(pairs[0].predictedPts));
+});

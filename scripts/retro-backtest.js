@@ -21,8 +21,10 @@ export function buildRetroPairs({ baselineRows, validationPlayersRows, validatio
         if (!gw) return;
         const homeShort = teamShortById.get(f.team_h);
         const awayShort = teamShortById.get(f.team_a);
-        if (homeShort) fixturesSchedule[homeShort].push({ gw, opp: awayShort, loc: 'H', diff: parseInt(f.team_h_difficulty, 10) });
-        if (awayShort) fixturesSchedule[awayShort].push({ gw, opp: homeShort, loc: 'A', diff: parseInt(f.team_a_difficulty, 10) });
+        const homeDiff = parseInt(f.team_h_difficulty, 10);
+        const awayDiff = parseInt(f.team_a_difficulty, 10);
+        if (homeShort && !Number.isNaN(homeDiff)) fixturesSchedule[homeShort].push({ gw, opp: awayShort, loc: 'H', diff: homeDiff });
+        if (awayShort && !Number.isNaN(awayDiff)) fixturesSchedule[awayShort].push({ gw, opp: homeShort, loc: 'A', diff: awayDiff });
     });
 
     // Real actual points/minutes per validation-season element id per GW.
