@@ -538,6 +538,14 @@ export function renderOptimizer(container, state, actions) {
                                 <span class="setting-help">Boosts GKPs, DEFs, and MIDs with elite Defcon Potential (A/B rating) and favors easiest fixture difficulties (FDR).</span>
                             </div>
 
+                            <div class="setting-group" id="prioritizeSpotKicksGroup">
+                                <label for="prioritizeSpotKicksCheckbox" style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12px; font-weight: 700; color: var(--text-main); line-height: 1.3;">
+                                    <input type="checkbox" id="prioritizeSpotKicksCheckbox" ${state.prioritizeSpotKicks ? 'checked' : ''} style="width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0;">
+                                    🎯 Prioritize Spot-Kick & Set-Piece Takers
+                                </label>
+                                <span class="setting-help">Prioritizes designated penalty takers (spot kicks), direct free-kick specialists, and corner takers across all positions.</span>
+                            </div>
+
                             <div class="setting-group">
                                 <label style="font-size: 12px; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 2px;">Force Include Players</label>
                                 <div style="display: flex; gap: 8px; margin-bottom: 4px;">
@@ -723,6 +731,17 @@ export function renderOptimizer(container, state, actions) {
             const isChecked = e.target.checked;
             state.prioritizeDefcon = isChecked;
             localStorage.setItem('fpl_hub_prioritize_defcon', isChecked ? 'true' : 'false');
+            state.saveState();
+        });
+    }
+
+    // Wire Prioritize Spot-Kick & Set-Piece Takers listener
+    const prioritizeSpotKicksCheckbox = container.querySelector('#prioritizeSpotKicksCheckbox');
+    if (prioritizeSpotKicksCheckbox) {
+        prioritizeSpotKicksCheckbox.addEventListener('change', (e) => {
+            const isChecked = e.target.checked;
+            state.prioritizeSpotKicks = isChecked;
+            localStorage.setItem('fpl_hub_prioritize_spot_kicks', isChecked ? 'true' : 'false');
             state.saveState();
         });
     }
@@ -1079,6 +1098,9 @@ export function renderOptimizer(container, state, actions) {
         const prioritizeDefconCheckbox = container.querySelector('#prioritizeDefconCheckbox');
         if (prioritizeDefconCheckbox) state.prioritizeDefcon = prioritizeDefconCheckbox.checked;
 
+        const prioritizeSpotKicksCheckbox = container.querySelector('#prioritizeSpotKicksCheckbox');
+        if (prioritizeSpotKicksCheckbox) state.prioritizeSpotKicks = prioritizeSpotKicksCheckbox.checked;
+
         state.saveState();
         const mode = phaseSelect.value;
 
@@ -1356,9 +1378,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
 
         const duty = getPlayerSetPieceDuty(player);
         let setPieceBonus = 0;
-        if (duty.pk) setPieceBonus += 0.8;
-        if (duty.fk) setPieceBonus += 0.4;
-        if (duty.ck) setPieceBonus += 0.35;
+        if (duty.pk) setPieceBonus += state.prioritizeSpotKicks ? 3.5 : 0.8;
+        if (duty.fk) setPieceBonus += state.prioritizeSpotKicks ? 1.8 : 0.4;
+        if (duty.ck) setPieceBonus += state.prioritizeSpotKicks ? 1.2 : 0.35;
 
         let baseScore = 0;
         if (objective === 'efficiency') {
@@ -1410,6 +1432,12 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 const avgFdr = parseFloat(getAvgFDR(p)) || 3.0;
                 score += 15.0 + (5.0 - avgFdr) * 3.0;
             }
+        }
+        if (includeHeuristics && state.prioritizeSpotKicks) {
+            const duty = getPlayerSetPieceDuty(p);
+            if (duty.pk) score += 3.5;
+            else if (duty.fk) score += 1.8;
+            else if (duty.ck) score += 1.2;
         }
         _scoreCache.set(key, score);
         return score;

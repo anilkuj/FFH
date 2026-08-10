@@ -1,5 +1,5 @@
 import { PLAYERS, TEAMS, getPlayerRatings } from '../data.js';
-import { renderSetPieceBadges, renderSetPieceLegend } from './optimizer.js';
+import { renderSetPieceBadges, renderSetPieceLegend, getPlayerSetPieceDuty } from './optimizer.js';
 
 
 
@@ -2261,7 +2261,17 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
                         </select>
                     </div>
 
-                    <!-- Row 2: Attacking | Defcon | Avg Mins | Starts -->
+                    <!-- Row 2: Spot Kicks | Attacking | Defcon | Avg Mins | Starts -->
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <label style="font-size: 10px; font-weight: 600; color: #ffd700; text-transform: uppercase; letter-spacing: 0.5px;">🎯 Spot Kicks / Set Pieces</label>
+                        <select class="panel-price-select" id="modalSetPieceSelect" style="width: 100%; box-sizing: border-box; font-size: 12px; padding: 8px 6px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
+                            <option value="">Any</option>
+                            <option value="pk">🎯 Spot-Kicks / Penalties (PK)</option>
+                            <option value="fk">⚡ Direct Free-Kicks (FK)</option>
+                            <option value="ck">🚩 Corners (CK)</option>
+                            <option value="any">🎯/⚡/🚩 Any Set-Piece Duty</option>
+                        </select>
+                    </div>
                     <div style="display: flex; flex-direction: column; gap: 4px;">
                         <label style="font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Attacking Rating</label>
                         <select class="panel-price-select" id="modalAttSelect" style="width: 100%; box-sizing: border-box; font-size: 12px; padding: 8px 6px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
@@ -2292,17 +2302,6 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
                             <option value="15">15+ mins</option>
                         </select>
                     </div>
-                    <div style="display: flex; flex-direction: column; gap: 4px;">
-                        <label style="font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Starts (Last Season)</label>
-                        <select class="panel-price-select" id="modalGsSelect" style="width: 100%; box-sizing: border-box; font-size: 12px; padding: 8px 6px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px;">
-                            <option value="">Any</option>
-                            <option value="30">30+ starts</option>
-                            <option value="20">20+ starts</option>
-                            <option value="10">10+ starts</option>
-                            <option value="5">5+ starts</option>
-                            <option value="1">1+ starts</option>
-                        </select>
-                    </div>
                 </div>
             </div>
 
@@ -2330,6 +2329,7 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
         const gwWindowSelect = document.getElementById('modalGwWindowSelect');
         const teamSelect = document.getElementById('modalTeamSelect');
         const priceSelect = document.getElementById('modalPriceSelect');
+        const setPieceSelect = document.getElementById('modalSetPieceSelect');
         const attSelect = document.getElementById('modalAttSelect');
         const defconSelect = document.getElementById('modalDefconSelect');
         const mppgSelect = document.getElementById('modalMppgSelect');
@@ -2343,6 +2343,7 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
                 const selectedTeam = teamSelect ? teamSelect.value : "";
                 const maxPriceStr = priceSelect ? priceSelect.value : "";
                 const maxPrice = maxPriceStr ? parseFloat(maxPriceStr) : Infinity;
+                const selectedSetPiece = setPieceSelect ? setPieceSelect.value : "";
                 
                 const minAttGrade = attSelect ? attSelect.value : "";
                 const minDefconGrade = defconSelect ? defconSelect.value : "";
@@ -2360,6 +2361,14 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
                     if (p.price > maxPrice) return false;
                     if (minMins > 0 && (p.MPPG || 0) < minMins) return false;
                     if (minGs > 0 && (p.GS || 0) < minGs) return false;
+                    
+                    if (selectedSetPiece) {
+                        const duty = getPlayerSetPieceDuty(p);
+                        if (selectedSetPiece === 'pk' && !duty.pk) return false;
+                        if (selectedSetPiece === 'fk' && !duty.fk) return false;
+                        if (selectedSetPiece === 'ck' && !duty.ck) return false;
+                        if (selectedSetPiece === 'any' && !duty.hasDuty) return false;
+                    }
                     
                     const ratings = getPlayerRatings(p, state.currentGw);
                     
@@ -2428,6 +2437,7 @@ function openAddPlayerModal(container, state, actions, slotIndex, position) {
         if (gwWindowSelect) gwWindowSelect.addEventListener('change', applyFilters);
         if (teamSelect) teamSelect.addEventListener('change', applyFilters);
         if (priceSelect) priceSelect.addEventListener('change', applyFilters);
+        if (setPieceSelect) setPieceSelect.addEventListener('change', applyFilters);
         if (attSelect) attSelect.addEventListener('change', applyFilters);
         if (defconSelect) defconSelect.addEventListener('change', applyFilters);
         if (mppgSelect) mppgSelect.addEventListener('change', applyFilters);

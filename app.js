@@ -235,6 +235,9 @@ class AppState {
         const savedPrioritizeDefcon = localStorage.getItem('fpl_hub_prioritize_defcon');
         this.prioritizeDefcon = savedPrioritizeDefcon ? (savedPrioritizeDefcon === 'true') : false;
 
+        const savedPrioritizeSpotKicks = localStorage.getItem('fpl_hub_prioritize_spot_kicks');
+        this.prioritizeSpotKicks = savedPrioritizeSpotKicks ? (savedPrioritizeSpotKicks === 'true') : false;
+
         const savedPlanBenchBoost = localStorage.getItem('fpl_hub_plan_bench_boost');
         this.planBenchBoost = savedPlanBenchBoost ? (savedPlanBenchBoost === 'true') : false;
 
@@ -398,6 +401,7 @@ class AppState {
         localStorage.setItem('fpl_hub_guaranteed_start', this.guaranteedStart.toString());
         localStorage.setItem('fpl_hub_min_fwd_price', (this.minFwdPrice || 6.0).toString());
         localStorage.setItem('fpl_hub_prioritize_defcon', (this.prioritizeDefcon || false).toString());
+        localStorage.setItem('fpl_hub_prioritize_spot_kicks', (this.prioritizeSpotKicks || false).toString());
         localStorage.setItem('fpl_hub_optimizer_objective', this.optimizerObjective || 'xp');
         localStorage.setItem('fpl_hub_active_chips', JSON.stringify(this.chips));
         localStorage.setItem('fpl_hub_plan_bench_boost', (this.planBenchBoost || false).toString());
@@ -1023,6 +1027,7 @@ class AppState {
         this.guaranteedStart = 60;
         this.minFwdPrice = 6.0;
         this.prioritizeDefcon = false;
+        this.prioritizeSpotKicks = false;
         this.optimizerObjective = 'xp';
         this.chips = {
             wildcard: false,
