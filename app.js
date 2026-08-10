@@ -1,4 +1,12 @@
-import { PLAYERS, DEFAULT_SQUAD, XP_CALIBRATION_FACTOR as SYNCED_XP_CALIBRATION_FACTOR } from './data.js';
+import { PLAYERS, DEFAULT_SQUAD } from './data.js';
+// Namespace import (not a named import) for XP_CALIBRATION_FACTOR: data.js is a generated file
+// that may not always have this export yet (e.g. before the first sync.js run that bakes it in,
+// or if a sync run fails). A named `import { XP_CALIBRATION_FACTOR }` is a hard build-time error
+// in bundlers (and native ESM) if the export doesn't statically exist -- there is no way to
+// runtime-fall-back from a named import. Property access on a namespace object degrades to
+// `undefined` instead, which is what the fallback below actually needs.
+import * as DataModule from './data.js';
+const SYNCED_XP_CALIBRATION_FACTOR = DataModule.XP_CALIBRATION_FACTOR;
 import { renderPlanner } from './components/planner.js';
 import { renderOptimizer } from './components/optimizer.js';
 import { renderStats } from './components/stats.js';
