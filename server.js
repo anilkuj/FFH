@@ -13,37 +13,25 @@ const DIST_DIR = path.join(__dirname, 'dist');
 
 const PERSIST_DIR = process.env.FFH_PERSIST_DIR || (fs.existsSync('/data') ? '/data' : __dirname);
 
-let STORAGE_FILE = path.join(PERSIST_DIR, 'cloud_drafts_store.json');
-try {
-    fs.writeFileSync(STORAGE_FILE + '.test', 'ok');
-    fs.unlinkSync(STORAGE_FILE + '.test');
-} catch (e) {
-    STORAGE_FILE = '/tmp/cloud_drafts_store.json';
+// Resolves a persistent-storage filename against PERSIST_DIR, probing with a
+// throwaway write to confirm the directory is actually writable (e.g. a
+// read-only filesystem in some deployment environments) and falling back to
+// /tmp when it isn't.
+function resolvePersistentFile(filename) {
+    const primary = path.join(PERSIST_DIR, filename);
+    try {
+        fs.writeFileSync(primary + '.test', 'ok');
+        fs.unlinkSync(primary + '.test');
+        return primary;
+    } catch (e) {
+        return path.join('/tmp', filename);
+    }
 }
 
-let BACKTEST_STORE_FILE = path.join(PERSIST_DIR, 'backtest_log.json');
-try {
-    fs.writeFileSync(BACKTEST_STORE_FILE + '.test', 'ok');
-    fs.unlinkSync(BACKTEST_STORE_FILE + '.test');
-} catch (e) {
-    BACKTEST_STORE_FILE = '/tmp/backtest_log.json';
-}
-
-let RETRO_REPORT_FILE = path.join(PERSIST_DIR, 'retro_backtest_report.json');
-try {
-    fs.writeFileSync(RETRO_REPORT_FILE + '.test', 'ok');
-    fs.unlinkSync(RETRO_REPORT_FILE + '.test');
-} catch (e) {
-    RETRO_REPORT_FILE = '/tmp/retro_backtest_report.json';
-}
-
-let ROTATION_HISTORY_FILE = path.join(PERSIST_DIR, 'rotation_history.json');
-try {
-    fs.writeFileSync(ROTATION_HISTORY_FILE + '.test', 'ok');
-    fs.unlinkSync(ROTATION_HISTORY_FILE + '.test');
-} catch (e) {
-    ROTATION_HISTORY_FILE = '/tmp/rotation_history.json';
-}
+const STORAGE_FILE = resolvePersistentFile('cloud_drafts_store.json');
+const BACKTEST_STORE_FILE = resolvePersistentFile('backtest_log.json');
+const RETRO_REPORT_FILE = resolvePersistentFile('retro_backtest_report.json');
+const ROTATION_HISTORY_FILE = resolvePersistentFile('rotation_history.json');
 
 // In-memory cache
 let cloudDraftsStore = {};
@@ -106,16 +94,27 @@ function saveRotationHistory() {
 // an `id`/`pts`-shaped payload for the backtest routes rather than the
 // `code`/`team`/`position`/`minutesThisGw` shape rotation snapshots use).
 function validateRotationPlayersPayload(players) {
-    if (!Array.isArray(players)) return false;
-    return players.every(p =>
-        p && typeof p === 'object' &&
-        typeof p.code === 'number' && !Number.isNaN(p.code) &&
-        typeof p.team === 'string' &&
-        typeof p.position === 'string' &&
-        typeof p.minutesThisGw === 'number' && !Number.isNaN(p.minutesThisGw)
-    );
+    if (!Array.isArray(players)) return 'players must be an array';
+    for (let i = 0; i < players.length; i++) {
+        const p = players[i];
+        if (!p || typeof p !== 'object') {
+            return `players[${i}] is not an object`;
+        }
+        if (typeof p.code !== 'number' || Number.isNaN(p.code)) {
+            return `players[${i}] has a non-numeric code`;
+        }
+        if (typeof p.team !== 'string') {
+            return `players[${i}] is missing a string team`;
+        }
+        if (typeof p.position !== 'string') {
+            return `players[${i}] is missing a string position`;
+        }
+        if (typeof p.minutesThisGw !== 'number' || Number.isNaN(p.minutesThisGw)) {
+            return `players[${i}] has a non-numeric minutesThisGw`;
+        }
+    }
+    return null;
 }
-
 
 // Validates the shape of an incoming `players` array at the HTTP boundary.
 // `extraNumericField` (e.g. 'pts' or 'actualPts') is checked in addition to
@@ -367,7 +366,6 @@ const server = http.createServer((req, res) => {
         return;
     }
 
-
     // API Route: Record a Rotation History Snapshot (one per real finished gameweek)
     if (req.method === 'POST' && pathname === '/api/rotation/snapshot') {
         let body = '';
@@ -375,9 +373,15 @@ const server = http.createServer((req, res) => {
         req.on('end', () => {
             try {
                 const data = JSON.parse(body);
-                if (typeof data.gw !== 'number' || !validateRotationPlayersPayload(data.players)) {
+                if (typeof data.gw !== 'number') {
                     res.writeHead(400, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ error: 'Missing gw or malformed players array' }));
+                    res.end(JSON.stringify({ error: 'Missing gw' }));
+                    return;
+                }
+                const playersError = validateRotationPlayersPayload(data.players);
+                if (playersError) {
+                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: playersError }));
                     return;
                 }
                 const result = recordGwSnapshot(rotationHistory, { gw: data.gw, players: data.players });
@@ -395,7 +399,7 @@ const server = http.createServer((req, res) => {
 
     // API Route: Get a Player's Rotation History (debugging/inspection)
     if (req.method === 'GET' && pathname === '/api/rotation/history') {
-        const code = parseInt(reqUrl.searchParams.get('code'), 10);
+        const code = Number(reqUrl.searchParams.get('code'));
         const playerHistory = Number.isFinite(code) ? getPlayerHistory(rotationHistory, code) : null;
         res.writeHead(200, { 'Content-Type': 'application/json' });
         if (playerHistory) {
@@ -413,7 +417,6 @@ const server = http.createServer((req, res) => {
         res.end(JSON.stringify({ success: true, data: rotationHistory }));
         return;
     }
-
 
     // Static File Serving
     let filePath = path.join(DIST_DIR, pathname === '/' ? 'index.html' : pathname);

@@ -44,6 +44,32 @@ test('GET /api/rotation/history for an unknown code returns success:false, not a
     assert.equal(body.success, false);
 });
 
+test('POST /api/rotation/snapshot then GET /api/rotation/history-bulk returns the full document keyed by stringified code', async () => {
+    // Uses a player code not touched by any other test in this file (the
+    // store is shared across tests), so the resulting snapshot count is
+    // deterministic regardless of test execution order.
+    const postRes = await fetch(`${baseUrl()}/api/rotation/snapshot`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            gw: 5,
+            players: [{ code: 200, team: 'ARS', position: 'MID', minutesThisGw: 90, startedThisGw: true }]
+        })
+    });
+    assert.equal(postRes.status, 200);
+
+    const getRes = await fetch(`${baseUrl()}/api/rotation/history-bulk`);
+    assert.equal(getRes.status, 200);
+    const body = await getRes.json();
+    assert.equal(body.success, true);
+    // Numeric object keys are stringified by JSON, so the player's `code`
+    // (200, a number) is looked up as the string key '200'.
+    assert.ok(body.data.players['200']);
+    assert.equal(body.data.players['200'].currentTeam, 'ARS');
+    assert.equal(body.data.players['200'].snapshots.length, 1);
+    assert.equal(body.data.players['200'].snapshots[0].gw, 5);
+});
+
 test('POST /api/rotation/snapshot rejects malformed player entries (non-numeric code)', async () => {
     const res = await fetch(`${baseUrl()}/api/rotation/snapshot`, {
         method: 'POST',
