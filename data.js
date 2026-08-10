@@ -128,6 +128,7 @@ export const PLAYERS = [
     {
         "id": 1,
         "name": "David Raya Martín",
+        "web_name": "Raya",
         "team": "ARS",
         "position": "GKP",
         "price": 6,
@@ -139,7 +140,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.07,
         "ictIndex": 57.5,
-        "priceChangeTarget": -71.15990836459387,
+        "priceChangeTarget": 96.63260357185078,
         "predictions": [
             {
                 "gw": 1,
@@ -457,12 +458,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45.9,
-        "web_name": "Raya"
+        "xp10": 45.9
     },
     {
         "id": 2,
         "name": "Kepa Arrizabalaga Revuelta",
+        "web_name": "Arrizabalaga",
         "team": "ARS",
         "position": "GKP",
         "price": 5,
@@ -474,7 +475,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 2,
-        "priceChangeTarget": 50.714076173470005,
+        "priceChangeTarget": 49.78467335204164,
         "predictions": [
             {
                 "gw": 1,
@@ -792,12 +793,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 40.1,
-        "web_name": "Arrizabalaga"
+        "xp10": 40.1
     },
     {
         "id": 3,
         "name": "Illan Meslier",
+        "web_name": "Meslier",
         "team": "ARS",
         "position": "GKP",
         "price": 5,
@@ -809,7 +810,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -29.39110413326138,
+        "priceChangeTarget": -6.214899196400751,
         "predictions": [
             {
                 "gw": 1,
@@ -1127,12 +1128,12 @@ export const PLAYERS = [
         "news": "Backup GK behind David Raya.",
         "status": "a",
         "chanceOfPlaying": 5,
-        "xp10": 41.1,
-        "web_name": "Meslier"
+        "xp10": 41.1
     },
     {
         "id": 4,
         "name": "Gabriel dos Santos Magalhães",
+        "web_name": "Gabriel",
         "team": "ARS",
         "position": "DEF",
         "price": 8,
@@ -1144,7 +1145,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 4.69,
         "ictIndex": 125,
-        "priceChangeTarget": 51.18590249193113,
+        "priceChangeTarget": 92.96939826550212,
         "predictions": [
             {
                 "gw": 1,
@@ -1462,12 +1463,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.8,
-        "web_name": "Gabriel"
+        "xp10": 43.8
     },
     {
         "id": 5,
         "name": "Jurriën Timber",
+        "web_name": "J.Timber",
         "team": "ARS",
         "position": "DEF",
         "price": 6.5,
@@ -1479,7 +1480,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 6.24,
         "ictIndex": 125.7,
-        "priceChangeTarget": 81.9585668904962,
+        "priceChangeTarget": 96.99777244961075,
         "predictions": [
             {
                 "gw": 1,
@@ -1797,12 +1798,12 @@ export const PLAYERS = [
         "news": "Groin injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "J.Timber"
+        "xp10": 0
     },
     {
         "id": 6,
         "name": "William Saliba",
+        "web_name": "Saliba",
         "team": "ARS",
         "position": "DEF",
         "price": 6,
@@ -1814,7 +1815,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 2.09,
         "ictIndex": 84.3,
-        "priceChangeTarget": 19.966165803682713,
+        "priceChangeTarget": -10.985816005217202,
         "predictions": [
             {
                 "gw": 1,
@@ -2132,12 +2133,12 @@ export const PLAYERS = [
         "news": "Back injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Saliba"
+        "xp10": 0
     },
     {
         "id": 7,
         "name": "Myles Lewis-Skelly",
+        "web_name": "Lewis-Skelly",
         "team": "ARS",
         "position": "MID",
         "price": 5.5,
@@ -2149,7 +2150,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.3,
         "ictIndex": 17.6,
-        "priceChangeTarget": -55.36340994146727,
+        "priceChangeTarget": -18.728592444919684,
         "predictions": [
             {
                 "gw": 1,
@@ -2467,12 +2468,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.7,
-        "web_name": "Lewis-Skelly"
+        "xp10": 17.7
     },
     {
         "id": 8,
         "name": "Riccardo Calafiori",
+        "web_name": "Calafiori",
         "team": "ARS",
         "position": "DEF",
         "price": 5.5,
@@ -2484,7 +2485,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 4.12,
         "ictIndex": 77.9,
-        "priceChangeTarget": -94.35771335100344,
+        "priceChangeTarget": -48.4519399657509,
         "predictions": [
             {
                 "gw": 1,
@@ -2802,12 +2803,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.8,
-        "web_name": "Calafiori"
+        "xp10": 43.8
     },
     {
         "id": 9,
         "name": "Piero Hincapié",
+        "web_name": "Hincapie",
         "team": "ARS",
         "position": "DEF",
         "price": 5.5,
@@ -2819,7 +2820,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 2.03,
         "ictIndex": 70.9,
-        "priceChangeTarget": -30.469670249311648,
+        "priceChangeTarget": -57.8898165276859,
         "predictions": [
             {
                 "gw": 1,
@@ -3137,16 +3138,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.1,
-        "web_name": "Hincapie"
+        "xp10": 42.1
     },
     {
         "id": 10,
         "name": "Benjamin White",
+        "web_name": "White",
         "team": "ARS",
         "position": "DEF",
         "price": 5.5,
-        "ownership": 0.5,
+        "ownership": 0.6,
         "points": 45,
         "xG": 0.45,
         "xA": 0.69,
@@ -3154,7 +3155,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 1.14,
         "ictIndex": 34.3,
-        "priceChangeTarget": 71.29160207972157,
+        "priceChangeTarget": 3.69562959792718,
         "predictions": [
             {
                 "gw": 1,
@@ -3472,16 +3473,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.8,
-        "web_name": "White"
+        "xp10": 43.8
     },
     {
         "id": 11,
         "name": "Cristhian Mosquera",
+        "web_name": "Mosquera",
         "team": "ARS",
         "position": "DEF",
         "price": 5.5,
-        "ownership": 15.3,
+        "ownership": 15.2,
         "points": 40,
         "xG": 0.1,
         "xA": 0.63,
@@ -3489,7 +3490,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 0.73,
         "ictIndex": 32.9,
-        "priceChangeTarget": 54.2322940040103,
+        "priceChangeTarget": -89.21788366820329,
         "predictions": [
             {
                 "gw": 1,
@@ -3807,12 +3808,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 21.3,
-        "web_name": "Mosquera"
+        "xp10": 21.3
     },
     {
         "id": 12,
         "name": "Bukayo Saka",
+        "web_name": "Saka",
         "team": "ARS",
         "position": "MID",
         "price": 9.5,
@@ -3824,7 +3825,7 @@ export const PLAYERS = [
         "xA90": 0.29,
         "xGI": 14.73,
         "ictIndex": 230.6,
-        "priceChangeTarget": 67.69518335798804,
+        "priceChangeTarget": -8.571005199027809,
         "predictions": [
             {
                 "gw": 1,
@@ -4142,12 +4143,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 61.2,
-        "web_name": "Saka"
+        "xp10": 61.2
     },
     {
         "id": 13,
         "name": "Declan Rice",
+        "web_name": "Rice",
         "team": "ARS",
         "position": "MID",
         "price": 7.5,
@@ -4159,7 +4160,7 @@ export const PLAYERS = [
         "xA90": 0.21,
         "xGI": 10.47,
         "ictIndex": 215.4,
-        "priceChangeTarget": 86.33074735275724,
+        "priceChangeTarget": 92.07323911280963,
         "predictions": [
             {
                 "gw": 1,
@@ -4477,12 +4478,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 53.2,
-        "web_name": "Rice"
+        "xp10": 53.2
     },
     {
         "id": 14,
         "name": "Eberechi Eze",
+        "web_name": "Eze",
         "team": "ARS",
         "position": "MID",
         "price": 6.5,
@@ -4494,7 +4495,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 7.84,
         "ictIndex": 115.1,
-        "priceChangeTarget": 57.74116383909646,
+        "priceChangeTarget": -80.45333383172206,
         "predictions": [
             {
                 "gw": 1,
@@ -4812,12 +4813,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 52.2,
-        "web_name": "Eze"
+        "xp10": 52.2
     },
     {
         "id": 15,
         "name": "Martin Ødegaard",
+        "web_name": "Ødegaard",
         "team": "ARS",
         "position": "MID",
         "price": 6.5,
@@ -4829,7 +4830,7 @@ export const PLAYERS = [
         "xA90": 0.24,
         "xGI": 4.9,
         "ictIndex": 104.4,
-        "priceChangeTarget": 42.798604222629024,
+        "priceChangeTarget": -67.04137856719714,
         "predictions": [
             {
                 "gw": 1,
@@ -5147,12 +5148,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 46.9,
-        "web_name": "Ødegaard"
+        "xp10": 46.9
     },
     {
         "id": 16,
         "name": "Noni Madueke",
+        "web_name": "Madueke",
         "team": "ARS",
         "position": "MID",
         "price": 6.5,
@@ -5164,7 +5165,7 @@ export const PLAYERS = [
         "xA90": 0.21,
         "xGI": 4.09,
         "ictIndex": 101.3,
-        "priceChangeTarget": -79.79988092712959,
+        "priceChangeTarget": 31.76847952529451,
         "predictions": [
             {
                 "gw": 1,
@@ -5482,12 +5483,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45.6,
-        "web_name": "Madueke"
+        "xp10": 45.6
     },
     {
         "id": 17,
         "name": "Mikel Merino Zazón",
+        "web_name": "Merino",
         "team": "ARS",
         "position": "MID",
         "price": 6,
@@ -5499,7 +5500,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 4.81,
         "ictIndex": 73.6,
-        "priceChangeTarget": 94.89100784072488,
+        "priceChangeTarget": 31.557563961015234,
         "predictions": [
             {
                 "gw": 1,
@@ -5817,12 +5818,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.5,
-        "web_name": "Merino"
+        "xp10": 42.5
     },
     {
         "id": 18,
         "name": "Gabriel Martinelli Silva",
+        "web_name": "Martinelli",
         "team": "ARS",
         "position": "MID",
         "price": 6.5,
@@ -5834,7 +5835,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 5.39,
         "ictIndex": 79,
-        "priceChangeTarget": -6.419120039875111,
+        "priceChangeTarget": -84.85677058959165,
         "predictions": [
             {
                 "gw": 1,
@@ -6152,12 +6153,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.1,
-        "web_name": "Martinelli"
+        "xp10": 39.1
     },
     {
         "id": 19,
         "name": "Martín Zubimendi Ibáñez",
+        "web_name": "Zubimendi",
         "team": "ARS",
         "position": "MID",
         "price": 5.5,
@@ -6169,7 +6170,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 5.11,
         "ictIndex": 126.2,
-        "priceChangeTarget": -21.769334876559213,
+        "priceChangeTarget": 5.801540279838278,
         "predictions": [
             {
                 "gw": 1,
@@ -6487,12 +6488,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.3,
-        "web_name": "Zubimendi"
+        "xp10": 39.3
     },
     {
         "id": 20,
         "name": "Max Dowman",
+        "web_name": "Dowman",
         "team": "ARS",
         "position": "MID",
         "price": 5.5,
@@ -6504,7 +6505,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 1.49,
         "ictIndex": 16.6,
-        "priceChangeTarget": 2.5888577781446855,
+        "priceChangeTarget": -86.62663651001105,
         "predictions": [
             {
                 "gw": 1,
@@ -6822,12 +6823,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18.6,
-        "web_name": "Dowman"
+        "xp10": 18.6
     },
     {
         "id": 22,
         "name": "Ethan Nwaneri",
+        "web_name": "Nwaneri",
         "team": "ARS",
         "position": "MID",
         "price": 5.5,
@@ -6839,7 +6840,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.31,
         "ictIndex": 5.4,
-        "priceChangeTarget": -16.59220329541364,
+        "priceChangeTarget": 73.91679966182045,
         "predictions": [
             {
                 "gw": 1,
@@ -7157,12 +7158,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.7,
-        "web_name": "Nwaneri"
+        "xp10": 17.7
     },
     {
         "id": 23,
         "name": "Fábio Ferreira Vieira",
+        "web_name": "Fábio Vieira",
         "team": "ARS",
         "position": "MID",
         "price": 5.5,
@@ -7174,7 +7175,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 8.606943729464206,
+        "priceChangeTarget": -4.948980532539338,
         "predictions": [
             {
                 "gw": 1,
@@ -7492,12 +7493,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30,
-        "web_name": "Fábio Vieira"
+        "xp10": 30
     },
     {
         "id": 24,
         "name": "Reiss Nelson",
+        "web_name": "Nelson",
         "team": "ARS",
         "position": "MID",
         "price": 5.5,
@@ -7509,7 +7510,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.82,
         "ictIndex": 10,
-        "priceChangeTarget": 10.859547195024888,
+        "priceChangeTarget": -13.906364793311482,
         "predictions": [
             {
                 "gw": 1,
@@ -7827,12 +7828,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18.3,
-        "web_name": "Nelson"
+        "xp10": 18.3
     },
     {
         "id": 25,
         "name": "Viktor Gyökeres",
+        "web_name": "Gyökeres",
         "team": "ARS",
         "position": "FWD",
         "price": 7.5,
@@ -7844,7 +7845,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 14.19,
         "ictIndex": 157.5,
-        "priceChangeTarget": 95.045781069616,
+        "priceChangeTarget": -48.41252960564262,
         "predictions": [
             {
                 "gw": 1,
@@ -8162,12 +8163,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 50.7,
-        "web_name": "Gyökeres"
+        "xp10": 50.7
     },
     {
         "id": 26,
         "name": "Kai Havertz",
+        "web_name": "Havertz",
         "team": "ARS",
         "position": "FWD",
         "price": 7.5,
@@ -8179,7 +8180,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 3.95,
         "ictIndex": 49.9,
-        "priceChangeTarget": -57.886689746590434,
+        "priceChangeTarget": 84.7866237854542,
         "predictions": [
             {
                 "gw": 1,
@@ -8497,12 +8498,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 53,
-        "web_name": "Havertz"
+        "xp10": 53
     },
     {
         "id": 27,
         "name": "Gabriel Fernando de Jesus",
+        "web_name": "G.Jesus",
         "team": "ARS",
         "position": "FWD",
         "price": 6,
@@ -8514,7 +8515,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 2.97,
         "ictIndex": 47.5,
-        "priceChangeTarget": -91.98008123322433,
+        "priceChangeTarget": 50.44399333415376,
         "predictions": [
             {
                 "gw": 1,
@@ -8832,16 +8833,16 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 21.7,
-        "web_name": "G.Jesus"
+        "xp10": 21.7
     },
     {
         "id": 557,
         "name": "Christos Tzolis",
+        "web_name": "Tzolis",
         "team": "ARS",
         "position": "MID",
         "price": 6.5,
-        "ownership": 2.9,
+        "ownership": 3.1,
         "points": 75,
         "xG": 0,
         "xA": 0,
@@ -8849,7 +8850,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -20.5267107006557,
+        "priceChangeTarget": 19.990270352676063,
         "predictions": [
             {
                 "gw": 1,
@@ -9167,12 +9168,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30,
-        "web_name": "Tzolis"
+        "xp10": 30
     },
     {
         "id": 28,
         "name": "Emiliano Martínez Romero",
+        "web_name": "Martinez",
         "team": "AVL",
         "position": "GKP",
         "price": 5,
@@ -9184,7 +9185,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.08,
         "ictIndex": 79.2,
-        "priceChangeTarget": -53.459374196108286,
+        "priceChangeTarget": -26.852535767899482,
         "predictions": [
             {
                 "gw": 1,
@@ -9502,12 +9503,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45.4,
-        "web_name": "Martinez"
+        "xp10": 45.4
     },
     {
         "id": 29,
         "name": "Marco Bizot",
+        "web_name": "M.Bizot",
         "team": "AVL",
         "position": "GKP",
         "price": 4.5,
@@ -9519,7 +9520,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 13.9,
-        "priceChangeTarget": 51.53719483504662,
+        "priceChangeTarget": -34.560904655551994,
         "predictions": [
             {
                 "gw": 1,
@@ -9837,16 +9838,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38,
-        "web_name": "M.Bizot"
+        "xp10": 38
     },
     {
         "id": 30,
         "name": "Lucas Digne",
+        "web_name": "Digne",
         "team": "AVL",
         "position": "DEF",
         "price": 4.5,
-        "ownership": 1.4,
+        "ownership": 1.3,
         "points": 97,
         "xG": 0.67,
         "xA": 3.28,
@@ -9854,7 +9855,7 @@ export const PLAYERS = [
         "xA90": 0.16,
         "xGI": 3.95,
         "ictIndex": 98.5,
-        "priceChangeTarget": -1.7244451041597273,
+        "priceChangeTarget": 3.5236487984620055,
         "predictions": [
             {
                 "gw": 1,
@@ -10172,16 +10173,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.6,
-        "web_name": "Digne"
+        "xp10": 42.6
     },
     {
         "id": 31,
         "name": "Ezri Konsa Ngoyo",
+        "web_name": "Konsa",
         "team": "AVL",
         "position": "DEF",
         "price": 4.5,
-        "ownership": 16.5,
+        "ownership": 16.4,
         "points": 100,
         "xG": 1.27,
         "xA": 0.59,
@@ -10189,7 +10190,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 1.86,
         "ictIndex": 84,
-        "priceChangeTarget": 31.248166762227925,
+        "priceChangeTarget": 59.96561306541187,
         "predictions": [
             {
                 "gw": 1,
@@ -10507,12 +10508,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 27.3,
-        "web_name": "Konsa"
+        "xp10": 27.3
     },
     {
         "id": 32,
         "name": "Matty Cash",
+        "web_name": "Cash",
         "team": "AVL",
         "position": "DEF",
         "price": 4.5,
@@ -10524,7 +10525,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 4.08,
         "ictIndex": 137.5,
-        "priceChangeTarget": -93.4993547941223,
+        "priceChangeTarget": -86.85337672325275,
         "predictions": [
             {
                 "gw": 1,
@@ -10842,12 +10843,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 32,
-        "web_name": "Cash"
+        "xp10": 32
     },
     {
         "id": 33,
         "name": "Tyrone Mings",
+        "web_name": "Mings",
         "team": "AVL",
         "position": "DEF",
         "price": 4.5,
@@ -10859,7 +10860,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 1.72,
         "ictIndex": 46.8,
-        "priceChangeTarget": 43.908335978247806,
+        "priceChangeTarget": 67.71128277529016,
         "predictions": [
             {
                 "gw": 1,
@@ -11177,12 +11178,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 31,
-        "web_name": "Mings"
+        "xp10": 31
     },
     {
         "id": 34,
         "name": "Pau Torres",
+        "web_name": "Pau",
         "team": "AVL",
         "position": "DEF",
         "price": 4.5,
@@ -11194,7 +11195,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 1.72,
         "ictIndex": 45.1,
-        "priceChangeTarget": -76.87543202448697,
+        "priceChangeTarget": -97.29397845855186,
         "predictions": [
             {
                 "gw": 1,
@@ -11512,12 +11513,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.3,
-        "web_name": "Pau"
+        "xp10": 28.3
     },
     {
         "id": 35,
         "name": "Lamare Bogarde",
+        "web_name": "Bogarde",
         "team": "AVL",
         "position": "MID",
         "price": 5,
@@ -11529,7 +11530,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.2,
         "ictIndex": 20.6,
-        "priceChangeTarget": 32.38256097314962,
+        "priceChangeTarget": -43.27231373100307,
         "predictions": [
             {
                 "gw": 1,
@@ -11847,12 +11848,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 27.5,
-        "web_name": "Bogarde"
+        "xp10": 27.5
     },
     {
         "id": 36,
         "name": "Ian Maatsen",
+        "web_name": "Maatsen",
         "team": "AVL",
         "position": "DEF",
         "price": 4.5,
@@ -11864,7 +11865,7 @@ export const PLAYERS = [
         "xA90": 0.14,
         "xGI": 3.65,
         "ictIndex": 94.3,
-        "priceChangeTarget": 53.059779759703844,
+        "priceChangeTarget": -34.43453088169494,
         "predictions": [
             {
                 "gw": 1,
@@ -12182,12 +12183,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 24.8,
-        "web_name": "Maatsen"
+        "xp10": 24.8
     },
     {
         "id": 37,
         "name": "Victor Lindelöf",
+        "web_name": "Lindelöf",
         "team": "AVL",
         "position": "DEF",
         "price": 4.5,
@@ -12199,7 +12200,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.38,
         "ictIndex": 22.7,
-        "priceChangeTarget": 92.37813024373719,
+        "priceChangeTarget": 97.37016929528494,
         "predictions": [
             {
                 "gw": 1,
@@ -12517,12 +12518,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 24.1,
-        "web_name": "Lindelöf"
+        "xp10": 24.1
     },
     {
         "id": 38,
         "name": "Andrés García",
+        "web_name": "A.García",
         "team": "AVL",
         "position": "DEF",
         "price": 4,
@@ -12534,7 +12535,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.01,
         "ictIndex": 2.3,
-        "priceChangeTarget": -10.907953245118264,
+        "priceChangeTarget": -11.111000316558034,
         "predictions": [
             {
                 "gw": 1,
@@ -12852,12 +12853,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 13.9,
-        "web_name": "A.García"
+        "xp10": 13.9
     },
     {
         "id": 39,
         "name": "Kosta Nedeljkovic",
+        "web_name": "Nedeljkovic",
         "team": "AVL",
         "position": "DEF",
         "price": 4,
@@ -12869,7 +12870,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -76.80858135253388,
+        "priceChangeTarget": -15.66455600908077,
         "predictions": [
             {
                 "gw": 1,
@@ -13187,12 +13188,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 13.2,
-        "web_name": "Nedeljkovic"
+        "xp10": 13.2
     },
     {
         "id": 41,
         "name": "Emiliano Buendía Stati",
+        "web_name": "Buendía",
         "team": "AVL",
         "position": "MID",
         "price": 6,
@@ -13204,7 +13205,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 5.61,
         "ictIndex": 121.4,
-        "priceChangeTarget": -76.33494269818395,
+        "priceChangeTarget": -49.05020343026685,
         "predictions": [
             {
                 "gw": 1,
@@ -13522,12 +13523,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 47.9,
-        "web_name": "Buendía"
+        "xp10": 47.9
     },
     {
         "id": 42,
         "name": "Evann Guessand",
+        "web_name": "Guessand",
         "team": "AVL",
         "position": "MID",
         "price": 5.5,
@@ -13539,7 +13540,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 2.41,
         "ictIndex": 42,
-        "priceChangeTarget": 31.482760204212127,
+        "priceChangeTarget": 50.28290549256246,
         "predictions": [
             {
                 "gw": 1,
@@ -13857,12 +13858,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.9,
-        "web_name": "Guessand"
+        "xp10": 30.9
     },
     {
         "id": 44,
         "name": "Leon Bailey",
+        "web_name": "Bailey",
         "team": "AVL",
         "position": "MID",
         "price": 5.5,
@@ -13874,7 +13875,7 @@ export const PLAYERS = [
         "xA90": 0.29,
         "xGI": 1.96,
         "ictIndex": 30.1,
-        "priceChangeTarget": 83.3335485935807,
+        "priceChangeTarget": 20.73488495139175,
         "predictions": [
             {
                 "gw": 1,
@@ -14192,12 +14193,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18.2,
-        "web_name": "Bailey"
+        "xp10": 18.2
     },
     {
         "id": 45,
         "name": "John McGinn",
+        "web_name": "McGinn",
         "team": "AVL",
         "position": "MID",
         "price": 5.5,
@@ -14209,7 +14210,7 @@ export const PLAYERS = [
         "xA90": 0.17,
         "xGI": 7.11,
         "ictIndex": 137.3,
-        "priceChangeTarget": 6.251115622042661,
+        "priceChangeTarget": -14.12767849530674,
         "predictions": [
             {
                 "gw": 1,
@@ -14527,12 +14528,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 36.3,
-        "web_name": "McGinn"
+        "xp10": 36.3
     },
     {
         "id": 46,
         "name": "Ross Barkley",
+        "web_name": "Barkley",
         "team": "AVL",
         "position": "MID",
         "price": 5,
@@ -14544,7 +14545,7 @@ export const PLAYERS = [
         "xA90": 0.25,
         "xGI": 2.84,
         "ictIndex": 58.1,
-        "priceChangeTarget": -22.748637171965896,
+        "priceChangeTarget": 15.401992652316522,
         "predictions": [
             {
                 "gw": 1,
@@ -14862,12 +14863,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 22.6,
-        "web_name": "Barkley"
+        "xp10": 22.6
     },
     {
         "id": 47,
         "name": "Boubacar Kamara",
+        "web_name": "Kamara",
         "team": "AVL",
         "position": "MID",
         "price": 5,
@@ -14879,7 +14880,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 1.36,
         "ictIndex": 64.2,
-        "priceChangeTarget": -70.64831709125289,
+        "priceChangeTarget": 47.786051357523945,
         "predictions": [
             {
                 "gw": 1,
@@ -15197,12 +15198,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.7,
-        "web_name": "Kamara"
+        "xp10": 34.7
     },
     {
         "id": 48,
         "name": "Amadou Onana",
+        "web_name": "Onana",
         "team": "AVL",
         "position": "MID",
         "price": 5,
@@ -15214,7 +15215,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 2.37,
         "ictIndex": 74.4,
-        "priceChangeTarget": -11.076111473459704,
+        "priceChangeTarget": 99.83155292747844,
         "predictions": [
             {
                 "gw": 1,
@@ -15532,12 +15533,12 @@ export const PLAYERS = [
         "news": "Knee injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Onana"
+        "xp10": 0
     },
     {
         "id": 49,
         "name": "Samuel Iling-Junior",
+        "web_name": "Iling Jr",
         "team": "AVL",
         "position": "MID",
         "price": 5,
@@ -15549,7 +15550,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 34.34894082174392,
+        "priceChangeTarget": -63.57375567231047,
         "predictions": [
             {
                 "gw": 1,
@@ -15867,12 +15868,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.4,
-        "web_name": "Iling Jr"
+        "xp10": 17.4
     },
     {
         "id": 50,
         "name": "Bradley Burrowes",
+        "web_name": "Burrowes",
         "team": "AVL",
         "position": "MID",
         "price": 4.5,
@@ -15884,7 +15885,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 34.1012822012122,
+        "priceChangeTarget": 95.15698334636448,
         "predictions": [
             {
                 "gw": 1,
@@ -16202,12 +16203,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.4,
-        "web_name": "Burrowes"
+        "xp10": 17.4
     },
     {
         "id": 51,
         "name": "George Hemmings",
+        "web_name": "George Hemmings",
         "team": "AVL",
         "position": "MID",
         "price": 4.5,
@@ -16219,7 +16220,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.05,
         "ictIndex": 0.3,
-        "priceChangeTarget": 23.507037598736417,
+        "priceChangeTarget": -48.159251621686174,
         "predictions": [
             {
                 "gw": 1,
@@ -16537,12 +16538,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.4,
-        "web_name": "George Hemmings"
+        "xp10": 17.4
     },
     {
         "id": 52,
         "name": "Alysson Edward Franco da Rocha dos Santos",
+        "web_name": "Alysson",
         "team": "AVL",
         "position": "MID",
         "price": 5,
@@ -16554,7 +16555,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.1,
         "ictIndex": 1.5,
-        "priceChangeTarget": -90.66318885747742,
+        "priceChangeTarget": 92.97891376379286,
         "predictions": [
             {
                 "gw": 1,
@@ -16872,16 +16873,16 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.4,
-        "web_name": "Alysson"
+        "xp10": 17.4
     },
     {
         "id": 53,
         "name": "Johan Manzambi",
+        "web_name": "Manzambi",
         "team": "AVL",
         "position": "MID",
         "price": 6,
-        "ownership": 2.1,
+        "ownership": 2,
         "points": 75,
         "xG": 0,
         "xA": 0,
@@ -16889,7 +16890,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -59.06849787513559,
+        "priceChangeTarget": -57.75750844835823,
         "predictions": [
             {
                 "gw": 1,
@@ -17207,12 +17208,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.5,
-        "web_name": "Manzambi"
+        "xp10": 29.5
     },
     {
         "id": 54,
         "name": "Joao Gomes",
+        "web_name": "Gomes",
         "team": "AVL",
         "position": "MID",
         "price": 5.5,
@@ -17224,7 +17225,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 2.49,
         "ictIndex": 102,
-        "priceChangeTarget": -47.08234107419855,
+        "priceChangeTarget": -44.750224830548206,
         "predictions": [
             {
                 "gw": 1,
@@ -17542,12 +17543,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 33.1,
-        "web_name": "Gomes"
+        "xp10": 33.1
     },
     {
         "id": 55,
         "name": "Ollie Watkins",
+        "web_name": "Watkins",
         "team": "AVL",
         "position": "FWD",
         "price": 8,
@@ -17559,7 +17560,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 16.58,
         "ictIndex": 225.2,
-        "priceChangeTarget": -62.24107075958787,
+        "priceChangeTarget": -84.96858146118522,
         "predictions": [
             {
                 "gw": 1,
@@ -17877,12 +17878,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 50.7,
-        "web_name": "Watkins"
+        "xp10": 50.7
     },
     {
         "id": 56,
         "name": "Tammy Abraham",
+        "web_name": "Abraham",
         "team": "AVL",
         "position": "FWD",
         "price": 5.5,
@@ -17894,7 +17895,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 2.41,
         "ictIndex": 27.1,
-        "priceChangeTarget": 48.29206003076942,
+        "priceChangeTarget": 38.99218779319932,
         "predictions": [
             {
                 "gw": 1,
@@ -18212,12 +18213,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 20.8,
-        "web_name": "Abraham"
+        "xp10": 20.8
     },
     {
         "id": 160,
         "name": "Alejandro Garnacho Ferreyra",
+        "web_name": "Garnacho",
         "team": "AVL",
         "position": "MID",
         "price": 6,
@@ -18229,7 +18230,7 @@ export const PLAYERS = [
         "xA90": 0.26,
         "xGI": 7.12,
         "ictIndex": 100.5,
-        "priceChangeTarget": 32.43720866805643,
+        "priceChangeTarget": 63.28111758127571,
         "predictions": [
             {
                 "gw": 1,
@@ -18547,12 +18548,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 40.2,
-        "web_name": "Garnacho"
+        "xp10": 40.2
     },
     {
         "id": 57,
         "name": "Đorđe Petrović",
+        "web_name": "Petrović",
         "team": "BOU",
         "position": "GKP",
         "price": 4.5,
@@ -18564,7 +18565,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 82.4,
-        "priceChangeTarget": 74.85725390884318,
+        "priceChangeTarget": 42.36178017969539,
         "predictions": [
             {
                 "gw": 1,
@@ -18882,12 +18883,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.7,
-        "web_name": "Petrović"
+        "xp10": 39.7
     },
     {
         "id": 58,
         "name": "Fraser Forster",
+        "web_name": "Forster",
         "team": "BOU",
         "position": "GKP",
         "price": 4,
@@ -18899,7 +18900,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -66.34980763538682,
+        "priceChangeTarget": -91.01568630679986,
         "predictions": [
             {
                 "gw": 1,
@@ -19217,12 +19218,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37.5,
-        "web_name": "Forster"
+        "xp10": 37.5
     },
     {
         "id": 59,
         "name": "Will Dennis",
+        "web_name": "Dennis",
         "team": "BOU",
         "position": "GKP",
         "price": 4,
@@ -19234,7 +19235,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -4.568539662514098,
+        "priceChangeTarget": -76.51298909094271,
         "predictions": [
             {
                 "gw": 1,
@@ -19552,12 +19553,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 26.2,
-        "web_name": "Dennis"
+        "xp10": 26.2
     },
     {
         "id": 60,
         "name": "James Hill",
+        "web_name": "Hill",
         "team": "BOU",
         "position": "DEF",
         "price": 5.5,
@@ -19569,7 +19570,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 2.04,
         "ictIndex": 86.3,
-        "priceChangeTarget": -84.67780922931692,
+        "priceChangeTarget": 5.4119724324380485,
         "predictions": [
             {
                 "gw": 1,
@@ -19887,12 +19888,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 36,
-        "web_name": "Hill"
+        "xp10": 36
     },
     {
         "id": 61,
         "name": "Adrien Truffert",
+        "web_name": "Truffert",
         "team": "BOU",
         "position": "DEF",
         "price": 5.5,
@@ -19904,7 +19905,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 4.42,
         "ictIndex": 162.6,
-        "priceChangeTarget": -11.99745897951425,
+        "priceChangeTarget": -41.41128491490691,
         "predictions": [
             {
                 "gw": 1,
@@ -20222,12 +20223,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.9,
-        "web_name": "Truffert"
+        "xp10": 39.9
     },
     {
         "id": 62,
         "name": "Bafodé Diakité",
+        "web_name": "Diakité",
         "team": "BOU",
         "position": "DEF",
         "price": 5,
@@ -20239,7 +20240,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.21,
         "ictIndex": 34.4,
-        "priceChangeTarget": 47.10709745571441,
+        "priceChangeTarget": 62.82370355667214,
         "predictions": [
             {
                 "gw": 1,
@@ -20557,12 +20558,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 27.9,
-        "web_name": "Diakité"
+        "xp10": 27.9
     },
     {
         "id": 63,
         "name": "Veljko Milosavljevic",
+        "web_name": "Milosavljević",
         "team": "BOU",
         "position": "DEF",
         "price": 5,
@@ -20574,7 +20575,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.34,
         "ictIndex": 12.2,
-        "priceChangeTarget": 91.47644583127831,
+        "priceChangeTarget": -93.02905625946245,
         "predictions": [
             {
                 "gw": 1,
@@ -20892,12 +20893,12 @@ export const PLAYERS = [
         "news": "Unspecified injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Milosavljević"
+        "xp10": 0
     },
     {
         "id": 64,
         "name": "Adam Smith",
+        "web_name": "Smith",
         "team": "BOU",
         "position": "DEF",
         "price": 4.5,
@@ -20909,7 +20910,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.23,
         "ictIndex": 27.1,
-        "priceChangeTarget": 61.43740489820618,
+        "priceChangeTarget": 40.779505363348534,
         "predictions": [
             {
                 "gw": 1,
@@ -21227,12 +21228,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38,
-        "web_name": "Smith"
+        "xp10": 38
     },
     {
         "id": 65,
         "name": "Julián Araujo Zúñiga",
+        "web_name": "J.Araujo",
         "team": "BOU",
         "position": "DEF",
         "price": 4.5,
@@ -21244,7 +21245,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 52.65483789307464,
+        "priceChangeTarget": 38.36937078818269,
         "predictions": [
             {
                 "gw": 1,
@@ -21562,12 +21563,12 @@ export const PLAYERS = [
         "news": "Thigh injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "J.Araujo"
+        "xp10": 0
     },
     {
         "id": 66,
         "name": "Julio Soler Barreto",
+        "web_name": "Soler",
         "team": "BOU",
         "position": "DEF",
         "price": 4,
@@ -21579,7 +21580,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.6,
-        "priceChangeTarget": -16.71984228065915,
+        "priceChangeTarget": -8.120886628239305,
         "predictions": [
             {
                 "gw": 1,
@@ -21897,12 +21898,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 13.3,
-        "web_name": "Soler"
+        "xp10": 13.3
     },
     {
         "id": 67,
         "name": "Rayan Vitor Simplício Rocha",
+        "web_name": "Rayan",
         "team": "BOU",
         "position": "MID",
         "price": 6.5,
@@ -21914,7 +21915,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 4.51,
         "ictIndex": 75.3,
-        "priceChangeTarget": -8.231297333433346,
+        "priceChangeTarget": -95.79202691960683,
         "predictions": [
             {
                 "gw": 1,
@@ -22232,12 +22233,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 50.2,
-        "web_name": "Rayan"
+        "xp10": 50.2
     },
     {
         "id": 68,
         "name": "Marcus Tavernier",
+        "web_name": "Tavernier",
         "team": "BOU",
         "position": "MID",
         "price": 6,
@@ -22249,7 +22250,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 13.66,
         "ictIndex": 207.9,
-        "priceChangeTarget": 47.00039958366048,
+        "priceChangeTarget": -39.94359409867205,
         "predictions": [
             {
                 "gw": 1,
@@ -22567,12 +22568,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.1,
-        "web_name": "Tavernier"
+        "xp10": 43.1
     },
     {
         "id": 69,
         "name": "Alex Scott",
+        "web_name": "Scott",
         "team": "BOU",
         "position": "MID",
         "price": 6,
@@ -22584,7 +22585,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 6.74,
         "ictIndex": 139,
-        "priceChangeTarget": 72.25930887592727,
+        "priceChangeTarget": 29.725216300689084,
         "predictions": [
             {
                 "gw": 1,
@@ -22902,12 +22903,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39,
-        "web_name": "Scott"
+        "xp10": 39
     },
     {
         "id": 70,
         "name": "Justin Kluivert",
+        "web_name": "Kluivert",
         "team": "BOU",
         "position": "MID",
         "price": 6,
@@ -22919,7 +22920,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 3.86,
         "ictIndex": 58.8,
-        "priceChangeTarget": -12.204550187707767,
+        "priceChangeTarget": -72.51318004072198,
         "predictions": [
             {
                 "gw": 1,
@@ -23237,12 +23238,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 33.4,
-        "web_name": "Kluivert"
+        "xp10": 33.4
     },
     {
         "id": 71,
         "name": "Lewis Cook",
+        "web_name": "Cook",
         "team": "BOU",
         "position": "MID",
         "price": 5,
@@ -23254,7 +23255,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 0.59,
         "ictIndex": 40.6,
-        "priceChangeTarget": 38.629773020278606,
+        "priceChangeTarget": -10.491944132435236,
         "predictions": [
             {
                 "gw": 1,
@@ -23572,12 +23573,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 27.2,
-        "web_name": "Cook"
+        "xp10": 27.2
     },
     {
         "id": 72,
         "name": "Ben Gannon-Doak",
+        "web_name": "Gannon-Doak",
         "team": "BOU",
         "position": "MID",
         "price": 5,
@@ -23589,7 +23590,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.39,
         "ictIndex": 8.9,
-        "priceChangeTarget": 13.385494071070653,
+        "priceChangeTarget": -72.22930321411192,
         "predictions": [
             {
                 "gw": 1,
@@ -23907,12 +23908,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 16.9,
-        "web_name": "Gannon-Doak"
+        "xp10": 16.9
     },
     {
         "id": 73,
         "name": "Tyler Adams",
+        "web_name": "Adams",
         "team": "BOU",
         "position": "MID",
         "price": 5,
@@ -23924,7 +23925,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 1.26,
         "ictIndex": 66.3,
-        "priceChangeTarget": -73.62942681027027,
+        "priceChangeTarget": 17.44758554815462,
         "predictions": [
             {
                 "gw": 1,
@@ -24242,12 +24243,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35,
-        "web_name": "Adams"
+        "xp10": 35
     },
     {
         "id": 74,
         "name": "David Brooks",
+        "web_name": "Brooks",
         "team": "BOU",
         "position": "MID",
         "price": 5,
@@ -24259,7 +24260,7 @@ export const PLAYERS = [
         "xA90": 0.26,
         "xGI": 9.21,
         "ictIndex": 104.1,
-        "priceChangeTarget": -93.58971781624396,
+        "priceChangeTarget": 66.36527489612175,
         "predictions": [
             {
                 "gw": 1,
@@ -24577,12 +24578,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 41.6,
-        "web_name": "Brooks"
+        "xp10": 41.6
     },
     {
         "id": 75,
         "name": "Ryan Christie",
+        "web_name": "Christie",
         "team": "BOU",
         "position": "MID",
         "price": 5,
@@ -24594,7 +24595,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 2.6,
         "ictIndex": 64.7,
-        "priceChangeTarget": -15.276258668821185,
+        "priceChangeTarget": 10.466928757625297,
         "predictions": [
             {
                 "gw": 1,
@@ -24912,12 +24913,12 @@ export const PLAYERS = [
         "news": "Suspended until 29 Aug",
         "status": "s",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Christie"
+        "xp10": 0
     },
     {
         "id": 76,
         "name": "Alex Tóth",
+        "web_name": "Tóth.A",
         "team": "BOU",
         "position": "MID",
         "price": 5,
@@ -24929,7 +24930,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 0.44,
         "ictIndex": 9.6,
-        "priceChangeTarget": 75.10732453296609,
+        "priceChangeTarget": 17.632193772721166,
         "predictions": [
             {
                 "gw": 1,
@@ -25247,12 +25248,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 17.1,
-        "web_name": "Tóth.A"
+        "xp10": 17.1
     },
     {
         "id": 77,
         "name": "Amine Adli",
+        "web_name": "Adli",
         "team": "BOU",
         "position": "MID",
         "price": 5,
@@ -25264,7 +25265,7 @@ export const PLAYERS = [
         "xA90": 0.14,
         "xGI": 4.22,
         "ictIndex": 76.1,
-        "priceChangeTarget": -3.154803099800361,
+        "priceChangeTarget": 0.4217769478641884,
         "predictions": [
             {
                 "gw": 1,
@@ -25582,16 +25583,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.4,
-        "web_name": "Adli"
+        "xp10": 34.4
     },
     {
         "id": 78,
         "name": "Junior Kroupi",
+        "web_name": "Kroupi.Jr",
         "team": "BOU",
         "position": "MID",
         "price": 7.5,
-        "ownership": 3.8,
+        "ownership": 3.7,
         "points": 113,
         "xG": 8.31,
         "xA": 1.51,
@@ -25599,7 +25600,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 9.82,
         "ictIndex": 139.9,
-        "priceChangeTarget": 10.219814512506133,
+        "priceChangeTarget": -46.110813051244115,
         "predictions": [
             {
                 "gw": 1,
@@ -25917,12 +25918,12 @@ export const PLAYERS = [
         "news": "Foot injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Kroupi.Jr"
+        "xp10": 0
     },
     {
         "id": 79,
         "name": "Francisco Evanilson de Lima Barbosa",
+        "web_name": "Evanilson",
         "team": "BOU",
         "position": "FWD",
         "price": 6,
@@ -25934,7 +25935,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 12.12,
         "ictIndex": 155.5,
-        "priceChangeTarget": -45.937497558168246,
+        "priceChangeTarget": -58.604432591436726,
         "predictions": [
             {
                 "gw": 1,
@@ -26252,12 +26253,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.4,
-        "web_name": "Evanilson"
+        "xp10": 35.4
     },
     {
         "id": 80,
         "name": "Enes Ünal",
+        "web_name": "Enes Ünal",
         "team": "BOU",
         "position": "FWD",
         "price": 5.5,
@@ -26269,7 +26270,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 2.07,
         "ictIndex": 19.1,
-        "priceChangeTarget": -66.23580725268634,
+        "priceChangeTarget": 57.00783068259088,
         "predictions": [
             {
                 "gw": 1,
@@ -26587,12 +26588,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 20.2,
-        "web_name": "Enes Ünal"
+        "xp10": 20.2
     },
     {
         "id": 81,
         "name": "Álvaro Rodríguez",
+        "web_name": "Rodríguez",
         "team": "BOU",
         "position": "FWD",
         "price": 6,
@@ -26604,7 +26605,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 48.52277786673659,
+        "priceChangeTarget": 41.41021454892976,
         "predictions": [
             {
                 "gw": 1,
@@ -26922,12 +26923,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.1,
-        "web_name": "Rodríguez"
+        "xp10": 34.1
     },
     {
         "id": 566,
         "name": "António João Pereira de Albuquerque Tavares da Silva",
+        "web_name": "Silva",
         "team": "BOU",
         "position": "DEF",
         "price": 5,
@@ -26939,7 +26940,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -32.72288411926732,
+        "priceChangeTarget": -14.1101106967553,
         "predictions": [
             {
                 "gw": 1,
@@ -27257,12 +27258,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.1,
-        "web_name": "Silva"
+        "xp10": 23.1
     },
     {
         "id": 573,
         "name": "Juanlu Sánchez",
+        "web_name": "Sanchez",
         "team": "BOU",
         "position": "DEF",
         "price": 4.5,
@@ -27274,7 +27275,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 17.763292671027074,
+        "priceChangeTarget": -4.25673402046192,
         "predictions": [
             {
                 "gw": 1,
@@ -27592,12 +27593,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.1,
-        "web_name": "Sanchez"
+        "xp10": 23.1
     },
     {
         "id": 82,
         "name": "Caoimhín Kelleher",
+        "web_name": "Kelleher",
         "team": "BRE",
         "position": "GKP",
         "price": 5,
@@ -27609,7 +27610,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.22,
         "ictIndex": 93.8,
-        "priceChangeTarget": 9.708554744744276,
+        "priceChangeTarget": 74.45671038611198,
         "predictions": [
             {
                 "gw": 1,
@@ -27927,12 +27928,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 46.2,
-        "web_name": "Kelleher"
+        "xp10": 46.2
     },
     {
         "id": 83,
         "name": "Hákon Rafn Valdimarsson",
+        "web_name": "Valdimarsson",
         "team": "BRE",
         "position": "GKP",
         "price": 4.5,
@@ -27944,7 +27945,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 1.3,
-        "priceChangeTarget": -92.33581841743468,
+        "priceChangeTarget": -53.11697481586579,
         "predictions": [
             {
                 "gw": 1,
@@ -28262,12 +28263,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 24.6,
-        "web_name": "Valdimarsson"
+        "xp10": 24.6
     },
     {
         "id": 84,
         "name": "Nathan Collins",
+        "web_name": "Collins",
         "team": "BRE",
         "position": "DEF",
         "price": 5.5,
@@ -28279,7 +28280,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 3.95,
         "ictIndex": 131.9,
-        "priceChangeTarget": -97.89189034467913,
+        "priceChangeTarget": -67.23897954215005,
         "predictions": [
             {
                 "gw": 1,
@@ -28597,12 +28598,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 32.2,
-        "web_name": "Collins"
+        "xp10": 32.2
     },
     {
         "id": 85,
         "name": "Sepp van den Berg",
+        "web_name": "Van den Berg",
         "team": "BRE",
         "position": "DEF",
         "price": 5,
@@ -28614,7 +28615,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 4.81,
         "ictIndex": 106.3,
-        "priceChangeTarget": -67.26307546683925,
+        "priceChangeTarget": 44.96418650972913,
         "predictions": [
             {
                 "gw": 1,
@@ -28932,12 +28933,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 32,
-        "web_name": "Van den Berg"
+        "xp10": 32
     },
     {
         "id": 86,
         "name": "Keane Lewis-Potter",
+        "web_name": "Lewis-Potter",
         "team": "BRE",
         "position": "MID",
         "price": 5.5,
@@ -28949,7 +28950,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 5.52,
         "ictIndex": 106.4,
-        "priceChangeTarget": -61.146423692692274,
+        "priceChangeTarget": 42.00406424981878,
         "predictions": [
             {
                 "gw": 1,
@@ -29267,16 +29268,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 51.6,
-        "web_name": "Lewis-Potter"
+        "xp10": 51.6
     },
     {
         "id": 87,
         "name": "Kristoffer Ajer",
+        "web_name": "Ajer",
         "team": "BRE",
         "position": "DEF",
         "price": 4.5,
-        "ownership": 1.6,
+        "ownership": 1.7,
         "points": 76,
         "xG": 0.69,
         "xA": 0.73,
@@ -29284,7 +29285,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 1.42,
         "ictIndex": 62.7,
-        "priceChangeTarget": 62.215849011536704,
+        "priceChangeTarget": -59.3650527016544,
         "predictions": [
             {
                 "gw": 1,
@@ -29602,12 +29603,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.5,
-        "web_name": "Ajer"
+        "xp10": 35.5
     },
     {
         "id": 88,
         "name": "Michael Kayode",
+        "web_name": "Kayode",
         "team": "BRE",
         "position": "DEF",
         "price": 4.5,
@@ -29619,7 +29620,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 4.17,
         "ictIndex": 121.7,
-        "priceChangeTarget": 37.125595063943706,
+        "priceChangeTarget": 75.50915194667604,
         "predictions": [
             {
                 "gw": 1,
@@ -29937,12 +29938,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.3,
-        "web_name": "Kayode"
+        "xp10": 28.3
     },
     {
         "id": 89,
         "name": "Rico Henry",
+        "web_name": "Henry",
         "team": "BRE",
         "position": "DEF",
         "price": 4.5,
@@ -29954,7 +29955,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.72,
         "ictIndex": 26.9,
-        "priceChangeTarget": 13.545940950724585,
+        "priceChangeTarget": -4.463584821267119,
         "predictions": [
             {
                 "gw": 1,
@@ -30272,12 +30273,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.3,
-        "web_name": "Henry"
+        "xp10": 28.3
     },
     {
         "id": 90,
         "name": "Aaron Hickey",
+        "web_name": "Hickey",
         "team": "BRE",
         "position": "DEF",
         "price": 4.5,
@@ -30289,7 +30290,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.61,
         "ictIndex": 16,
-        "priceChangeTarget": -24.746337672362003,
+        "priceChangeTarget": -87.30999130583558,
         "predictions": [
             {
                 "gw": 1,
@@ -30607,12 +30608,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.6,
-        "web_name": "Hickey"
+        "xp10": 42.6
     },
     {
         "id": 91,
         "name": "Ethan Pinnock",
+        "web_name": "Pinnock",
         "team": "BRE",
         "position": "DEF",
         "price": 4.5,
@@ -30624,7 +30625,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.07,
         "ictIndex": 12.3,
-        "priceChangeTarget": -18.114886261990733,
+        "priceChangeTarget": -62.69881075351695,
         "predictions": [
             {
                 "gw": 1,
@@ -30942,12 +30943,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 17.7,
-        "web_name": "Pinnock"
+        "xp10": 17.7
     },
     {
         "id": 92,
         "name": "Kim Ji-soo",
+        "web_name": "Ji-soo",
         "team": "BRE",
         "position": "DEF",
         "price": 4.5,
@@ -30959,7 +30960,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 38.58370127858936,
+        "priceChangeTarget": -98.71982949408368,
         "predictions": [
             {
                 "gw": 1,
@@ -31277,12 +31278,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.1,
-        "web_name": "Ji-soo"
+        "xp10": 23.1
     },
     {
         "id": 93,
         "name": "Jannik Schuster",
+        "web_name": "Schuster",
         "team": "BRE",
         "position": "DEF",
         "price": 4.5,
@@ -31294,7 +31295,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 34.958564215165694,
+        "priceChangeTarget": 65.01896354778864,
         "predictions": [
             {
                 "gw": 1,
@@ -31612,12 +31613,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.1,
-        "web_name": "Schuster"
+        "xp10": 23.1
     },
     {
         "id": 94,
         "name": "Kevin Schade",
+        "web_name": "Schade",
         "team": "BRE",
         "position": "MID",
         "price": 6,
@@ -31629,7 +31630,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 14.13,
         "ictIndex": 172.8,
-        "priceChangeTarget": 73.10585382492553,
+        "priceChangeTarget": 69.1125403088121,
         "predictions": [
             {
                 "gw": 1,
@@ -31947,12 +31948,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.2,
-        "web_name": "Schade"
+        "xp10": 39.2
     },
     {
         "id": 95,
         "name": "Dango Ouattara",
+        "web_name": "O.Dango",
         "team": "BRE",
         "position": "MID",
         "price": 6.5,
@@ -31964,7 +31965,7 @@ export const PLAYERS = [
         "xA90": 0.16,
         "xGI": 12.06,
         "ictIndex": 162.8,
-        "priceChangeTarget": 15.911576658874083,
+        "priceChangeTarget": -42.13163243914697,
         "predictions": [
             {
                 "gw": 1,
@@ -32282,12 +32283,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 52,
-        "web_name": "O.Dango"
+        "xp10": 52
     },
     {
         "id": 96,
         "name": "Mikkel Damsgaard",
+        "web_name": "Damsgaard",
         "team": "BRE",
         "position": "MID",
         "price": 5.5,
@@ -32299,7 +32300,7 @@ export const PLAYERS = [
         "xA90": 0.24,
         "xGI": 8.04,
         "ictIndex": 155,
-        "priceChangeTarget": -78.46903034885008,
+        "priceChangeTarget": -29.245167136750013,
         "predictions": [
             {
                 "gw": 1,
@@ -32617,12 +32618,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 46.9,
-        "web_name": "Damsgaard"
+        "xp10": 46.9
     },
     {
         "id": 97,
         "name": "Mathias Jensen",
+        "web_name": "Jensen",
         "team": "BRE",
         "position": "MID",
         "price": 5.5,
@@ -32634,7 +32635,7 @@ export const PLAYERS = [
         "xA90": 0.24,
         "xGI": 8.27,
         "ictIndex": 126.9,
-        "priceChangeTarget": 35.585931164008514,
+        "priceChangeTarget": -35.124438671897806,
         "predictions": [
             {
                 "gw": 1,
@@ -32952,12 +32953,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37,
-        "web_name": "Jensen"
+        "xp10": 37
     },
     {
         "id": 98,
         "name": "Vitaly Janelt",
+        "web_name": "Janelt",
         "team": "BRE",
         "position": "MID",
         "price": 5,
@@ -32969,7 +32970,7 @@ export const PLAYERS = [
         "xA90": 0.14,
         "xGI": 3.09,
         "ictIndex": 79,
-        "priceChangeTarget": 41.60542518460457,
+        "priceChangeTarget": -54.45396417412716,
         "predictions": [
             {
                 "gw": 1,
@@ -33287,12 +33288,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.1,
-        "web_name": "Janelt"
+        "xp10": 38.1
     },
     {
         "id": 99,
         "name": "Antoni Milambo",
+        "web_name": "Milambo",
         "team": "BRE",
         "position": "MID",
         "price": 5,
@@ -33304,7 +33305,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.01,
         "ictIndex": 0.6,
-        "priceChangeTarget": 85.67984005424859,
+        "priceChangeTarget": 40.716859451197166,
         "predictions": [
             {
                 "gw": 1,
@@ -33622,12 +33623,12 @@ export const PLAYERS = [
         "news": "Knee injury - 75% chance of playing",
         "status": "d",
         "chanceOfPlaying": 75,
-        "xp10": 13,
-        "web_name": "Milambo"
+        "xp10": 13
     },
     {
         "id": 100,
         "name": "Fábio Freitas Gouveia Carvalho",
+        "web_name": "Carvalho",
         "team": "BRE",
         "position": "MID",
         "price": 5,
@@ -33639,7 +33640,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.73,
         "ictIndex": 8.1,
-        "priceChangeTarget": 58.70400851666844,
+        "priceChangeTarget": -6.163145014333523,
         "predictions": [
             {
                 "gw": 1,
@@ -33957,12 +33958,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 17.8,
-        "web_name": "Carvalho"
+        "xp10": 17.8
     },
     {
         "id": 102,
         "name": "Yehor Yarmoliuk",
+        "web_name": "Yarmoliuk",
         "team": "BRE",
         "position": "MID",
         "price": 5,
@@ -33974,7 +33975,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 2.61,
         "ictIndex": 83.4,
-        "priceChangeTarget": -35.41940561029931,
+        "priceChangeTarget": 89.49199305451171,
         "predictions": [
             {
                 "gw": 1,
@@ -34292,12 +34293,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 33.7,
-        "web_name": "Yarmoliuk"
+        "xp10": 33.7
     },
     {
         "id": 103,
         "name": "Josh Dasilva",
+        "web_name": "Dasilva",
         "team": "BRE",
         "position": "MID",
         "price": 5,
@@ -34309,7 +34310,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.08,
         "ictIndex": 1.6,
-        "priceChangeTarget": -94.68639797978523,
+        "priceChangeTarget": -84.6100664572222,
         "predictions": [
             {
                 "gw": 1,
@@ -34627,12 +34628,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.4,
-        "web_name": "Dasilva"
+        "xp10": 17.4
     },
     {
         "id": 105,
         "name": "Jaidon Anthony",
+        "web_name": "Anthony",
         "team": "BRE",
         "position": "MID",
         "price": 6,
@@ -34644,7 +34645,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -63.10657305949255,
+        "priceChangeTarget": 97.06683428991298,
         "predictions": [
             {
                 "gw": 1,
@@ -34962,12 +34963,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.5,
-        "web_name": "Anthony"
+        "xp10": 29.5
     },
     {
         "id": 106,
         "name": "Igor Thiago Nascimento Rodrigues",
+        "web_name": "Thiago",
         "team": "BRE",
         "position": "FWD",
         "price": 8,
@@ -34979,7 +34980,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 22.43,
         "ictIndex": 256.9,
-        "priceChangeTarget": 72.37877746268114,
+        "priceChangeTarget": -21.763120995825773,
         "predictions": [
             {
                 "gw": 1,
@@ -35297,12 +35298,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 49.2,
-        "web_name": "Thiago"
+        "xp10": 49.2
     },
     {
         "id": 107,
         "name": "Kaye Furo",
+        "web_name": "Furo",
         "team": "BRE",
         "position": "FWD",
         "price": 4.5,
@@ -35314,7 +35315,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 97.45907924487221,
+        "priceChangeTarget": 44.68288730551174,
         "predictions": [
             {
                 "gw": 1,
@@ -35632,12 +35633,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 20,
-        "web_name": "Furo"
+        "xp10": 20
     },
     {
         "id": 108,
         "name": "Callum Wilson",
+        "web_name": "Wilson",
         "team": "BRE",
         "position": "FWD",
         "price": 5.5,
@@ -35649,7 +35650,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -42.551865282079774,
+        "priceChangeTarget": -36.35617379196545,
         "predictions": [
             {
                 "gw": 1,
@@ -35967,16 +35968,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.8,
-        "web_name": "Wilson"
+        "xp10": 34.8
     },
     {
         "id": 565,
         "name": "Mamadou Sangaré",
+        "web_name": "Sangaré",
         "team": "BRE",
         "position": "MID",
         "price": 5.5,
-        "ownership": 1.3,
+        "ownership": 1.4,
         "points": 75,
         "xG": 0,
         "xA": 0,
@@ -35984,7 +35985,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -31.740072145183973,
+        "priceChangeTarget": 62.06655867534198,
         "predictions": [
             {
                 "gw": 1,
@@ -36302,16 +36303,16 @@ export const PLAYERS = [
         "news": "New signing expected to start for Brentford.",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 31.2,
-        "web_name": "Sangaré"
+        "xp10": 31.2
     },
     {
         "id": 109,
         "name": "Bart Verbruggen",
+        "web_name": "Verbruggen",
         "team": "BHA",
         "position": "GKP",
         "price": 4.5,
-        "ownership": 17.2,
+        "ownership": 17.3,
         "points": 130,
         "xG": 0,
         "xA": 0.06,
@@ -36319,7 +36320,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.06,
         "ictIndex": 94.7,
-        "priceChangeTarget": 55.59763554402912,
+        "priceChangeTarget": -82.93965944861066,
         "predictions": [
             {
                 "gw": 1,
@@ -36637,12 +36638,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 40.1,
-        "web_name": "Verbruggen"
+        "xp10": 40.1
     },
     {
         "id": 111,
         "name": "Jason Steele",
+        "web_name": "Steele",
         "team": "BHA",
         "position": "GKP",
         "price": 4,
@@ -36654,7 +36655,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 42.073920898772855,
+        "priceChangeTarget": -39.0027146130377,
         "predictions": [
             {
                 "gw": 1,
@@ -36972,16 +36973,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 36.8,
-        "web_name": "Steele"
+        "xp10": 36.8
     },
     {
         "id": 113,
         "name": "Ferdi Kadıoğlu",
+        "web_name": "F.Kadıoğlu",
         "team": "BHA",
         "position": "DEF",
         "price": 4.5,
-        "ownership": 2.9,
+        "ownership": 3,
         "points": 118,
         "xG": 2.06,
         "xA": 3.31,
@@ -36989,7 +36990,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 5.37,
         "ictIndex": 123.7,
-        "priceChangeTarget": 75.72380473062529,
+        "priceChangeTarget": -85.85104254535261,
         "predictions": [
             {
                 "gw": 1,
@@ -37307,16 +37308,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 27.2,
-        "web_name": "F.Kadıoğlu"
+        "xp10": 27.2
     },
     {
         "id": 114,
         "name": "Olivier Boscagli",
+        "web_name": "Boscagli",
         "team": "BHA",
         "position": "DEF",
         "price": 4.5,
-        "ownership": 0.1,
+        "ownership": 0.2,
         "points": 39,
         "xG": 0.05,
         "xA": 0.47,
@@ -37324,7 +37325,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.52,
         "ictIndex": 31.1,
-        "priceChangeTarget": -67.62717996311495,
+        "priceChangeTarget": 51.366868399794186,
         "predictions": [
             {
                 "gw": 1,
@@ -37642,12 +37643,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.7,
-        "web_name": "Boscagli"
+        "xp10": 38.7
     },
     {
         "id": 115,
         "name": "Maxim De Cuyper",
+        "web_name": "De Cuyper",
         "team": "BHA",
         "position": "DEF",
         "price": 4.5,
@@ -37659,7 +37660,7 @@ export const PLAYERS = [
         "xA90": 0.26,
         "xGI": 5.74,
         "ictIndex": 99.9,
-        "priceChangeTarget": -72.3950167334852,
+        "priceChangeTarget": -23.600704743379936,
         "predictions": [
             {
                 "gw": 1,
@@ -37977,12 +37978,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 40.3,
-        "web_name": "De Cuyper"
+        "xp10": 40.3
     },
     {
         "id": 116,
         "name": "Lewis Dunk",
+        "web_name": "Dunk",
         "team": "BHA",
         "position": "DEF",
         "price": 4.5,
@@ -37994,7 +37995,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 2.39,
         "ictIndex": 98.7,
-        "priceChangeTarget": -13.7586261750088,
+        "priceChangeTarget": 40.79182336703627,
         "predictions": [
             {
                 "gw": 1,
@@ -38312,12 +38313,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.5,
-        "web_name": "Dunk"
+        "xp10": 26.5
     },
     {
         "id": 117,
         "name": "Diego Coppola",
+        "web_name": "Coppola",
         "team": "BHA",
         "position": "DEF",
         "price": 4.5,
@@ -38329,7 +38330,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.01,
         "ictIndex": 4.8,
-        "priceChangeTarget": -96.72805582884645,
+        "priceChangeTarget": 84.16348083663632,
         "predictions": [
             {
                 "gw": 1,
@@ -38647,12 +38648,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 14.6,
-        "web_name": "Coppola"
+        "xp10": 14.6
     },
     {
         "id": 118,
         "name": "Igor Julio dos Santos de Paulo",
+        "web_name": "Igor",
         "team": "BHA",
         "position": "DEF",
         "price": 4.5,
@@ -38664,7 +38665,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 3.6,
-        "priceChangeTarget": -90.7922653849913,
+        "priceChangeTarget": -42.98279066885655,
         "predictions": [
             {
                 "gw": 1,
@@ -38982,12 +38983,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 14.6,
-        "web_name": "Igor"
+        "xp10": 14.6
     },
     {
         "id": 119,
         "name": "João Pedro Loureiro da Costa",
+        "web_name": "Costinha",
         "team": "BHA",
         "position": "DEF",
         "price": 4.5,
@@ -38999,7 +39000,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -22.281946566466445,
+        "priceChangeTarget": -86.81805845155495,
         "predictions": [
             {
                 "gw": 1,
@@ -39317,12 +39318,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 22.1,
-        "web_name": "Costinha"
+        "xp10": 22.1
     },
     {
         "id": 120,
         "name": "Michael Svoboda",
+        "web_name": "Svoboda",
         "team": "BHA",
         "position": "DEF",
         "price": 5,
@@ -39334,7 +39335,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -65.19347985785542,
+        "priceChangeTarget": 73.5035782860341,
         "predictions": [
             {
                 "gw": 1,
@@ -39652,12 +39653,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 22.1,
-        "web_name": "Svoboda"
+        "xp10": 22.1
     },
     {
         "id": 121,
         "name": "Mitoma Kaoru",
+        "web_name": "Mitoma",
         "team": "BHA",
         "position": "MID",
         "price": 6,
@@ -39669,7 +39670,7 @@ export const PLAYERS = [
         "xA90": 0.14,
         "xGI": 6.78,
         "ictIndex": 112.3,
-        "priceChangeTarget": -87.1747881532555,
+        "priceChangeTarget": -5.49958439103149,
         "predictions": [
             {
                 "gw": 1,
@@ -39987,12 +39988,12 @@ export const PLAYERS = [
         "news": "Hamstring injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Mitoma"
+        "xp10": 0
     },
     {
         "id": 122,
         "name": "Yankuba Minteh",
+        "web_name": "Minteh",
         "team": "BHA",
         "position": "MID",
         "price": 6,
@@ -40004,7 +40005,7 @@ export const PLAYERS = [
         "xA90": 0.19,
         "xGI": 8.87,
         "ictIndex": 180.3,
-        "priceChangeTarget": 78.57849229601746,
+        "priceChangeTarget": 38.323666893835366,
         "predictions": [
             {
                 "gw": 1,
@@ -40322,12 +40323,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.6,
-        "web_name": "Minteh"
+        "xp10": 39.6
     },
     {
         "id": 123,
         "name": "Jack Hinshelwood",
+        "web_name": "Hinshelwood",
         "team": "BHA",
         "position": "MID",
         "price": 6,
@@ -40339,7 +40340,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 7.28,
         "ictIndex": 94.8,
-        "priceChangeTarget": 3.462086670344405,
+        "priceChangeTarget": 26.82753612125346,
         "predictions": [
             {
                 "gw": 1,
@@ -40657,16 +40658,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.1,
-        "web_name": "Hinshelwood"
+        "xp10": 43.1
     },
     {
         "id": 124,
         "name": "Pascal Groß",
+        "web_name": "Groß",
         "team": "BHA",
         "position": "MID",
         "price": 5.5,
-        "ownership": 9.6,
+        "ownership": 9.7,
         "points": 78,
         "xG": 1.39,
         "xA": 3.95,
@@ -40674,7 +40675,7 @@ export const PLAYERS = [
         "xA90": 0.22,
         "xGI": 5.34,
         "ictIndex": 128.5,
-        "priceChangeTarget": -60.86379709777865,
+        "priceChangeTarget": 27.551977347701623,
         "predictions": [
             {
                 "gw": 1,
@@ -40992,12 +40993,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39,
-        "web_name": "Groß"
+        "xp10": 39
     },
     {
         "id": 125,
         "name": "Georginio Rutter",
+        "web_name": "Georginio",
         "team": "BHA",
         "position": "FWD",
         "price": 5.5,
@@ -41009,7 +41010,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 5.8,
         "ictIndex": 113.5,
-        "priceChangeTarget": -92.78662807277551,
+        "priceChangeTarget": -43.299644300189044,
         "predictions": [
             {
                 "gw": 1,
@@ -41327,12 +41328,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.1,
-        "web_name": "Georginio"
+        "xp10": 42.1
     },
     {
         "id": 126,
         "name": "Matt O'Riley",
+        "web_name": "O'Riley",
         "team": "BHA",
         "position": "MID",
         "price": 5.5,
@@ -41344,7 +41345,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 1.39,
         "ictIndex": 19.6,
-        "priceChangeTarget": -99.18004924576249,
+        "priceChangeTarget": -33.28760278398386,
         "predictions": [
             {
                 "gw": 1,
@@ -41662,12 +41663,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 17.4,
-        "web_name": "O'Riley"
+        "xp10": 17.4
     },
     {
         "id": 127,
         "name": "Diego Gómez Amarilla",
+        "web_name": "Gomez",
         "team": "BHA",
         "position": "MID",
         "price": 5,
@@ -41679,7 +41680,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 7.96,
         "ictIndex": 119,
-        "priceChangeTarget": -25.000635554605253,
+        "priceChangeTarget": 81.37583638270897,
         "predictions": [
             {
                 "gw": 1,
@@ -41997,12 +41998,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.4,
-        "web_name": "Gomez"
+        "xp10": 35.4
     },
     {
         "id": 128,
         "name": "Facundo Buonanotte",
+        "web_name": "Buonanotte",
         "team": "BHA",
         "position": "MID",
         "price": 5,
@@ -42014,7 +42015,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 0.34,
         "ictIndex": 7.4,
-        "priceChangeTarget": -27.00068917942859,
+        "priceChangeTarget": 1.560717513482416,
         "predictions": [
             {
                 "gw": 1,
@@ -42332,12 +42333,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 16.8,
-        "web_name": "Buonanotte"
+        "xp10": 16.8
     },
     {
         "id": 129,
         "name": "Yasin Ayari",
+        "web_name": "Ayari",
         "team": "BHA",
         "position": "MID",
         "price": 5.5,
@@ -42349,7 +42350,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 3.85,
         "ictIndex": 84.5,
-        "priceChangeTarget": -28.4469759928935,
+        "priceChangeTarget": -77.9961714534413,
         "predictions": [
             {
                 "gw": 1,
@@ -42667,12 +42668,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.4,
-        "web_name": "Ayari"
+        "xp10": 35.4
     },
     {
         "id": 130,
         "name": "Mats Wieffer",
+        "web_name": "Wieffer",
         "team": "BHA",
         "position": "DEF",
         "price": 5,
@@ -42684,7 +42685,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 3.78,
         "ictIndex": 97.7,
-        "priceChangeTarget": -23.034444043143637,
+        "priceChangeTarget": 62.258990331640746,
         "predictions": [
             {
                 "gw": 1,
@@ -43002,12 +43003,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 36.1,
-        "web_name": "Wieffer"
+        "xp10": 36.1
     },
     {
         "id": 131,
         "name": "Carlos Baleba",
+        "web_name": "Baleba",
         "team": "BHA",
         "position": "MID",
         "price": 5,
@@ -43019,7 +43020,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 1.5,
         "ictIndex": 36.8,
-        "priceChangeTarget": 20.446235890627747,
+        "priceChangeTarget": -19.67828974887817,
         "predictions": [
             {
                 "gw": 1,
@@ -43337,12 +43338,12 @@ export const PLAYERS = [
         "news": "Ankle injury - Expected back 23 Aug",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Baleba"
+        "xp10": 0
     },
     {
         "id": 132,
         "name": "Harry Howell",
+        "web_name": "Howell",
         "team": "BHA",
         "position": "MID",
         "price": 4.5,
@@ -43354,7 +43355,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.03,
         "ictIndex": 1.8,
-        "priceChangeTarget": -68.74719659049816,
+        "priceChangeTarget": 90.11357508344275,
         "predictions": [
             {
                 "gw": 1,
@@ -43672,12 +43673,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 16.8,
-        "web_name": "Howell"
+        "xp10": 16.8
     },
     {
         "id": 133,
         "name": "Tom Watson",
+        "web_name": "Watson",
         "team": "BHA",
         "position": "MID",
         "price": 5,
@@ -43689,7 +43690,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.07,
         "ictIndex": 1.6,
-        "priceChangeTarget": 93.66365128983625,
+        "priceChangeTarget": 95.03575379008257,
         "predictions": [
             {
                 "gw": 1,
@@ -44007,12 +44008,12 @@ export const PLAYERS = [
         "news": "Has joined Leicester City on loan for the rest of the season",
         "status": "u",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Watson"
+        "xp10": 0
     },
     {
         "id": 134,
         "name": "Nehemiah Oriola",
+        "web_name": "Oriola",
         "team": "BHA",
         "position": "MID",
         "price": 4.5,
@@ -44024,7 +44025,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -25.26677844156579,
+        "priceChangeTarget": 58.29755667502715,
         "predictions": [
             {
                 "gw": 1,
@@ -44342,12 +44343,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 16.6,
-        "web_name": "Oriola"
+        "xp10": 16.6
     },
     {
         "id": 135,
         "name": "Zadok Yohanna",
+        "web_name": "Yohanna",
         "team": "BHA",
         "position": "MID",
         "price": 5,
@@ -44359,7 +44360,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 35.722256260506924,
+        "priceChangeTarget": -96.28767445836304,
         "predictions": [
             {
                 "gw": 1,
@@ -44677,12 +44678,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 16.6,
-        "web_name": "Yohanna"
+        "xp10": 16.6
     },
     {
         "id": 137,
         "name": "Stefanos Tzimas",
+        "web_name": "Tzimas",
         "team": "BHA",
         "position": "FWD",
         "price": 5.5,
@@ -44694,7 +44695,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.55,
         "ictIndex": 17.7,
-        "priceChangeTarget": -84.63027759069361,
+        "priceChangeTarget": 61.56804566871409,
         "predictions": [
             {
                 "gw": 1,
@@ -45012,12 +45013,12 @@ export const PLAYERS = [
         "news": "Knee injury - 75% chance of playing",
         "status": "d",
         "chanceOfPlaying": 75,
-        "xp10": 14.6,
-        "web_name": "Tzimas"
+        "xp10": 14.6
     },
     {
         "id": 138,
         "name": "Charalampos Kostoulas",
+        "web_name": "Kostoulas",
         "team": "BHA",
         "position": "FWD",
         "price": 5.5,
@@ -45029,7 +45030,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 2.66,
         "ictIndex": 52.4,
-        "priceChangeTarget": 41.18275741483731,
+        "priceChangeTarget": 87.01165069995378,
         "predictions": [
             {
                 "gw": 1,
@@ -45347,12 +45348,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 19.8,
-        "web_name": "Kostoulas"
+        "xp10": 19.8
     },
     {
         "id": 139,
         "name": "Evan Ferguson",
+        "web_name": "Ferguson",
         "team": "BHA",
         "position": "FWD",
         "price": 5,
@@ -45364,7 +45365,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 12.235216116803997,
+        "priceChangeTarget": -64.98207922419309,
         "predictions": [
             {
                 "gw": 1,
@@ -45682,12 +45683,12 @@ export const PLAYERS = [
         "news": "Ankle injury - Expected back 10 Oct",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Ferguson"
+        "xp10": 0
     },
     {
         "id": 328,
         "name": "Pascal Struijk",
+        "web_name": "Struijk",
         "team": "BHA",
         "position": "DEF",
         "price": 5,
@@ -45699,7 +45700,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 3.82,
         "ictIndex": 113.1,
-        "priceChangeTarget": -6.743042519671235,
+        "priceChangeTarget": 28.770170302003805,
         "predictions": [
             {
                 "gw": 1,
@@ -46017,16 +46018,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.6,
-        "web_name": "Struijk"
+        "xp10": 28.6
     },
     {
         "id": 504,
         "name": "Luka Vušković",
+        "web_name": "Vuskovic",
         "team": "BHA",
         "position": "DEF",
         "price": 5,
-        "ownership": 2.9,
+        "ownership": 2.8,
         "points": 62.5,
         "xG": 0,
         "xA": 0,
@@ -46034,7 +46035,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 93.84596356258422,
+        "priceChangeTarget": -53.63896607083576,
         "predictions": [
             {
                 "gw": 1,
@@ -46352,16 +46353,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 22.1,
-        "web_name": "Vuskovic"
+        "xp10": 22.1
     },
     {
         "id": 40,
         "name": "Morgan Rogers",
+        "web_name": "Rogers",
         "team": "CHE",
         "position": "MID",
         "price": 7.5,
-        "ownership": 28.1,
+        "ownership": 28,
         "points": 169,
         "xG": 6.84,
         "xA": 4.32,
@@ -46369,7 +46370,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 11.16,
         "ictIndex": 232,
-        "priceChangeTarget": -52.265961249860915,
+        "priceChangeTarget": -90.61714228950954,
         "predictions": [
             {
                 "gw": 1,
@@ -46687,12 +46688,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 44.5,
-        "web_name": "Rogers"
+        "xp10": 44.5
     },
     {
         "id": 101,
         "name": "Jordan Henderson",
+        "web_name": "Henderson",
         "team": "CHE",
         "position": "MID",
         "price": 5,
@@ -46704,7 +46705,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 2.64,
         "ictIndex": 74.4,
-        "priceChangeTarget": 27.5879239977927,
+        "priceChangeTarget": 19.177262470879967,
         "predictions": [
             {
                 "gw": 1,
@@ -47022,12 +47023,12 @@ export const PLAYERS = [
         "news": "Backup/rotation option at Chelsea.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 25.6,
-        "web_name": "Henderson"
+        "xp10": 25.6
     },
     {
         "id": 136,
         "name": "Danny Welbeck",
+        "web_name": "Welbeck",
         "team": "CHE",
         "position": "FWD",
         "price": 6,
@@ -47039,7 +47040,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 13.76,
         "ictIndex": 168.2,
-        "priceChangeTarget": 57.64482836247856,
+        "priceChangeTarget": -42.46325817239889,
         "predictions": [
             {
                 "gw": 1,
@@ -47357,12 +47358,12 @@ export const PLAYERS = [
         "news": "Backup forward at Chelsea behind Nicolas Jackson.",
         "status": "a",
         "chanceOfPlaying": 20,
-        "xp10": 48.1,
-        "web_name": "Welbeck"
+        "xp10": 48.1
     },
     {
         "id": 140,
         "name": "Robert Lynch Sánchez",
+        "web_name": "Sánchez",
         "team": "CHE",
         "position": "GKP",
         "price": 5,
@@ -47374,7 +47375,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.04,
         "ictIndex": 86.7,
-        "priceChangeTarget": -60.97470862624781,
+        "priceChangeTarget": -52.954842418677515,
         "predictions": [
             {
                 "gw": 1,
@@ -47692,12 +47693,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.8,
-        "web_name": "Sánchez"
+        "xp10": 39.8
     },
     {
         "id": 141,
         "name": "Filip Jörgensen",
+        "web_name": "Jörgensen",
         "team": "CHE",
         "position": "GKP",
         "price": 5,
@@ -47709,7 +47710,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 7.9,
-        "priceChangeTarget": 70.02961948526587,
+        "priceChangeTarget": 99.23697808685813,
         "predictions": [
             {
                 "gw": 1,
@@ -48027,12 +48028,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.3,
-        "web_name": "Jörgensen"
+        "xp10": 42.3
     },
     {
         "id": 142,
         "name": "Reece James",
+        "web_name": "James",
         "team": "CHE",
         "position": "DEF",
         "price": 5.5,
@@ -48044,7 +48045,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 4.24,
         "ictIndex": 106.1,
-        "priceChangeTarget": 93.08359915934093,
+        "priceChangeTarget": 72.13237578036927,
         "predictions": [
             {
                 "gw": 1,
@@ -48362,12 +48363,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.7,
-        "web_name": "James"
+        "xp10": 38.7
     },
     {
         "id": 143,
         "name": "Trevoh Chalobah",
+        "web_name": "Chalobah",
         "team": "CHE",
         "position": "DEF",
         "price": 5.5,
@@ -48379,7 +48380,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 2.47,
         "ictIndex": 99.1,
-        "priceChangeTarget": 35.96166376994461,
+        "priceChangeTarget": 85.64748307154724,
         "predictions": [
             {
                 "gw": 1,
@@ -48697,12 +48698,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 40.9,
-        "web_name": "Chalobah"
+        "xp10": 40.9
     },
     {
         "id": 144,
         "name": "Malo Gusto",
+        "web_name": "Gusto",
         "team": "CHE",
         "position": "DEF",
         "price": 5,
@@ -48714,7 +48715,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 4.53,
         "ictIndex": 109.8,
-        "priceChangeTarget": 83.84398691836577,
+        "priceChangeTarget": 3.9893318838949625,
         "predictions": [
             {
                 "gw": 1,
@@ -49032,12 +49033,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.1,
-        "web_name": "Gusto"
+        "xp10": 34.1
     },
     {
         "id": 145,
         "name": "Wesley Fofana",
+        "web_name": "Fofana",
         "team": "CHE",
         "position": "DEF",
         "price": 5,
@@ -49049,7 +49050,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 1.32,
         "ictIndex": 60.4,
-        "priceChangeTarget": -51.834119023703806,
+        "priceChangeTarget": -53.413502582935514,
         "predictions": [
             {
                 "gw": 1,
@@ -49367,12 +49368,12 @@ export const PLAYERS = [
         "news": "Suspended until 6 Sep",
         "status": "s",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Fofana"
+        "xp10": 0
     },
     {
         "id": 146,
         "name": "Benoît Badiashile Mukinayi",
+        "web_name": "B.Badiashile",
         "team": "CHE",
         "position": "DEF",
         "price": 4.5,
@@ -49384,7 +49385,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.06,
         "ictIndex": 11.4,
-        "priceChangeTarget": -99.65019612356332,
+        "priceChangeTarget": -92.85252768458187,
         "predictions": [
             {
                 "gw": 1,
@@ -49702,12 +49703,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 24.8,
-        "web_name": "B.Badiashile"
+        "xp10": 24.8
     },
     {
         "id": 147,
         "name": "Tosin Adarabioyo",
+        "web_name": "Tosin",
         "team": "CHE",
         "position": "DEF",
         "price": 4.5,
@@ -49719,7 +49720,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 0.5,
         "ictIndex": 29.3,
-        "priceChangeTarget": -23.590889936254158,
+        "priceChangeTarget": 64.02229996953292,
         "predictions": [
             {
                 "gw": 1,
@@ -50037,12 +50038,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.7,
-        "web_name": "Tosin"
+        "xp10": 39.7
     },
     {
         "id": 148,
         "name": "Jorrel Hato",
+        "web_name": "Hato",
         "team": "CHE",
         "position": "DEF",
         "price": 4.5,
@@ -50054,7 +50055,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.91,
         "ictIndex": 38.4,
-        "priceChangeTarget": -54.62142567459214,
+        "priceChangeTarget": -51.153924472857824,
         "predictions": [
             {
                 "gw": 1,
@@ -50372,12 +50373,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 14.6,
-        "web_name": "Hato"
+        "xp10": 14.6
     },
     {
         "id": 149,
         "name": "Levi Samuels Colwill",
+        "web_name": "Colwill",
         "team": "CHE",
         "position": "DEF",
         "price": 5,
@@ -50389,7 +50390,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.12,
         "ictIndex": 8,
-        "priceChangeTarget": -39.912245497643895,
+        "priceChangeTarget": 74.56498593317326,
         "predictions": [
             {
                 "gw": 1,
@@ -50707,12 +50708,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 14.6,
-        "web_name": "Colwill"
+        "xp10": 14.6
     },
     {
         "id": 150,
         "name": "Mamadou Sarr",
+        "web_name": "M.Sarr",
         "team": "CHE",
         "position": "DEF",
         "price": 4.5,
@@ -50724,7 +50725,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.35,
         "ictIndex": 1.3,
-        "priceChangeTarget": 48.18901525086457,
+        "priceChangeTarget": -45.33642194699588,
         "predictions": [
             {
                 "gw": 1,
@@ -51042,12 +51043,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 14.6,
-        "web_name": "M.Sarr"
+        "xp10": 14.6
     },
     {
         "id": 151,
         "name": "Josh Acheampong",
+        "web_name": "Acheampong",
         "team": "CHE",
         "position": "DEF",
         "price": 4.5,
@@ -51059,7 +51060,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.75,
         "ictIndex": 24.4,
-        "priceChangeTarget": -98.95396380974431,
+        "priceChangeTarget": -6.886388580313081,
         "predictions": [
             {
                 "gw": 1,
@@ -51377,12 +51378,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.5,
-        "web_name": "Acheampong"
+        "xp10": 42.5
     },
     {
         "id": 152,
         "name": "Marco Palestra",
+        "web_name": "Palestra",
         "team": "CHE",
         "position": "DEF",
         "price": 5.5,
@@ -51394,7 +51395,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 4.886465773319728,
+        "priceChangeTarget": 73.07581746653713,
         "predictions": [
             {
                 "gw": 1,
@@ -51712,12 +51713,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.7,
-        "web_name": "Palestra"
+        "xp10": 23.7
     },
     {
         "id": 153,
         "name": "Axel Disasi",
+        "web_name": "Disasi",
         "team": "CHE",
         "position": "DEF",
         "price": 4.5,
@@ -51729,7 +51730,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -92.92906391394365,
+        "priceChangeTarget": -25.931669360971156,
         "predictions": [
             {
                 "gw": 1,
@@ -52047,16 +52048,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.7,
-        "web_name": "Disasi"
+        "xp10": 23.7
     },
     {
         "id": 154,
         "name": "Cole Palmer",
+        "web_name": "Palmer",
         "team": "CHE",
         "position": "MID",
         "price": 9.5,
-        "ownership": 11.5,
+        "ownership": 11.4,
         "points": 114,
         "xG": 10.55,
         "xA": 2.49,
@@ -52064,7 +52065,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 13.04,
         "ictIndex": 147.7,
-        "priceChangeTarget": 88.7295841117921,
+        "priceChangeTarget": -94.89544575948439,
         "predictions": [
             {
                 "gw": 1,
@@ -52382,12 +52383,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 46.7,
-        "web_name": "Palmer"
+        "xp10": 46.7
     },
     {
         "id": 155,
         "name": "Enzo Fernández",
+        "web_name": "Enzo",
         "team": "CHE",
         "position": "MID",
         "price": 7,
@@ -52399,7 +52400,7 @@ export const PLAYERS = [
         "xA90": 0.21,
         "xGI": 18.52,
         "ictIndex": 264.6,
-        "priceChangeTarget": -9.943353025905566,
+        "priceChangeTarget": 17.80662076086989,
         "predictions": [
             {
                 "gw": 1,
@@ -52717,12 +52718,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.9,
-        "web_name": "Enzo"
+        "xp10": 43.9
     },
     {
         "id": 156,
         "name": "Pedro Lomba Neto",
+        "web_name": "Neto",
         "team": "CHE",
         "position": "MID",
         "price": 6.5,
@@ -52734,7 +52735,7 @@ export const PLAYERS = [
         "xA90": 0.23,
         "xGI": 11.43,
         "ictIndex": 186.7,
-        "priceChangeTarget": -92.06696665493506,
+        "priceChangeTarget": 12.105658579444395,
         "predictions": [
             {
                 "gw": 1,
@@ -53052,12 +53053,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 40.7,
-        "web_name": "Neto"
+        "xp10": 40.7
     },
     {
         "id": 157,
         "name": "Estêvão Almeida de Oliveira Gonçalves",
+        "web_name": "Estêvão",
         "team": "CHE",
         "position": "MID",
         "price": 6.5,
@@ -53069,7 +53070,7 @@ export const PLAYERS = [
         "xA90": 0.23,
         "xGI": 5.05,
         "ictIndex": 72.6,
-        "priceChangeTarget": 79.38767941641564,
+        "priceChangeTarget": 19.58252197540324,
         "predictions": [
             {
                 "gw": 1,
@@ -53387,12 +53388,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 47.7,
-        "web_name": "Estêvão"
+        "xp10": 47.7
     },
     {
         "id": 158,
         "name": "Jamie Bynoe-Gittens",
+        "web_name": "Gittens",
         "team": "CHE",
         "position": "MID",
         "price": 6,
@@ -53404,7 +53405,7 @@ export const PLAYERS = [
         "xA90": 0.19,
         "xGI": 1.75,
         "ictIndex": 31.3,
-        "priceChangeTarget": 20.298277424307003,
+        "priceChangeTarget": -21.10675698288165,
         "predictions": [
             {
                 "gw": 1,
@@ -53722,16 +53723,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.1,
-        "web_name": "Gittens"
+        "xp10": 23.1
     },
     {
         "id": 159,
         "name": "Moisés Caicedo Corozo",
+        "web_name": "Caicedo",
         "team": "CHE",
         "position": "MID",
         "price": 5.5,
-        "ownership": 4,
+        "ownership": 4.1,
         "points": 110,
         "xG": 1.45,
         "xA": 2.38,
@@ -53739,7 +53740,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 3.83,
         "ictIndex": 109.2,
-        "priceChangeTarget": 35.970087574975736,
+        "priceChangeTarget": 78.86312241710303,
         "predictions": [
             {
                 "gw": 1,
@@ -54057,12 +54058,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 33.6,
-        "web_name": "Caicedo"
+        "xp10": 33.6
     },
     {
         "id": 161,
         "name": "Roméo Lavia",
+        "web_name": "Lavia",
         "team": "CHE",
         "position": "MID",
         "price": 5,
@@ -54074,7 +54075,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 0.76,
         "ictIndex": 9.5,
-        "priceChangeTarget": -19.45103845367808,
+        "priceChangeTarget": 6.307984152640202,
         "predictions": [
             {
                 "gw": 1,
@@ -54392,12 +54393,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 20.7,
-        "web_name": "Lavia"
+        "xp10": 20.7
     },
     {
         "id": 163,
         "name": "Dário Luís Essugo",
+        "web_name": "D.Essugo",
         "team": "CHE",
         "position": "MID",
         "price": 4.5,
@@ -54409,7 +54410,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.01,
         "ictIndex": 1.6,
-        "priceChangeTarget": -56.78174511949634,
+        "priceChangeTarget": 21.3330261105733,
         "predictions": [
             {
                 "gw": 1,
@@ -54727,12 +54728,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.4,
-        "web_name": "D.Essugo"
+        "xp10": 17.4
     },
     {
         "id": 164,
         "name": "Geovany Quenda",
+        "web_name": "Quenda",
         "team": "CHE",
         "position": "MID",
         "price": 5.5,
@@ -54744,7 +54745,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -7.461782710269603,
+        "priceChangeTarget": -95.87456974159588,
         "predictions": [
             {
                 "gw": 1,
@@ -55062,12 +55063,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3,
-        "web_name": "Quenda"
+        "xp10": 29.3
     },
     {
         "id": 165,
         "name": "João Pedro Junqueira de Jesus",
+        "web_name": "João Pedro",
         "team": "CHE",
         "position": "FWD",
         "price": 7.5,
@@ -55079,7 +55080,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 16.87,
         "ictIndex": 212.1,
-        "priceChangeTarget": -63.858570216007315,
+        "priceChangeTarget": 79.0970201805865,
         "predictions": [
             {
                 "gw": 1,
@@ -55397,12 +55398,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 56.9,
-        "web_name": "João Pedro"
+        "xp10": 56.9
     },
     {
         "id": 166,
         "name": "Nicolas Jackson",
+        "web_name": "N.Jackson",
         "team": "CHE",
         "position": "FWD",
         "price": 6.5,
@@ -55414,7 +55415,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -1.6861641869002426,
+        "priceChangeTarget": -20.60772125609587,
         "predictions": [
             {
                 "gw": 1,
@@ -55732,12 +55733,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.7,
-        "web_name": "N.Jackson"
+        "xp10": 34.7
     },
     {
         "id": 167,
         "name": "Liam Delap",
+        "web_name": "Delap",
         "team": "CHE",
         "position": "FWD",
         "price": 5.5,
@@ -55749,7 +55750,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 4.76,
         "ictIndex": 47.3,
-        "priceChangeTarget": 65.67546199258953,
+        "priceChangeTarget": -80.6301213413029,
         "predictions": [
             {
                 "gw": 1,
@@ -56067,12 +56068,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.2,
-        "web_name": "Delap"
+        "xp10": 34.2
     },
     {
         "id": 168,
         "name": "Marc Guiu Paz",
+        "web_name": "Marc Guiu",
         "team": "CHE",
         "position": "FWD",
         "price": 5,
@@ -56084,7 +56085,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 1.83,
         "ictIndex": 13.1,
-        "priceChangeTarget": 88.23836680615659,
+        "priceChangeTarget": 11.592410831865777,
         "predictions": [
             {
                 "gw": 1,
@@ -56402,12 +56403,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 20.3,
-        "web_name": "Marc Guiu"
+        "xp10": 20.3
     },
     {
         "id": 169,
         "name": "Shumaira Mheuka",
+        "web_name": "Mheuka",
         "team": "CHE",
         "position": "FWD",
         "price": 4.5,
@@ -56419,7 +56420,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.2,
-        "priceChangeTarget": -2.289692131718013,
+        "priceChangeTarget": -25.605707509282055,
         "predictions": [
             {
                 "gw": 1,
@@ -56737,16 +56738,16 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 19.9,
-        "web_name": "Mheuka"
+        "xp10": 19.9
     },
     {
         "id": 170,
         "name": "Emmanuel Emegha",
+        "web_name": "Emegha",
         "team": "CHE",
         "position": "FWD",
         "price": 5,
-        "ownership": 0.2,
+        "ownership": 0.1,
         "points": 0,
         "xG": 0,
         "xA": 0,
@@ -56754,7 +56755,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -5.066610463917698,
+        "priceChangeTarget": 82.09403091892523,
         "predictions": [
             {
                 "gw": 1,
@@ -57072,12 +57073,12 @@ export const PLAYERS = [
         "news": "Hamstring injury - 75% chance of playing",
         "status": "d",
         "chanceOfPlaying": 75,
-        "xp10": 14.6,
-        "web_name": "Emegha"
+        "xp10": 14.6
     },
     {
         "id": 200,
         "name": "Maxence Lacroix",
+        "web_name": "Lacroix",
         "team": "CHE",
         "position": "DEF",
         "price": 6,
@@ -57089,7 +57090,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 3.28,
         "ictIndex": 124.3,
-        "priceChangeTarget": -11.005176093152784,
+        "priceChangeTarget": -28.817703091659922,
         "predictions": [
             {
                 "gw": 1,
@@ -57407,12 +57408,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 41.6,
-        "web_name": "Lacroix"
+        "xp10": 41.6
     },
     {
         "id": 560,
         "name": "Mike Penders",
+        "web_name": "Penders",
         "team": "CHE",
         "position": "GKP",
         "price": 4.5,
@@ -57424,7 +57425,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 33.79677861542575,
+        "priceChangeTarget": -77.32792654536541,
         "predictions": [
             {
                 "gw": 1,
@@ -57742,12 +57743,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 40.3,
-        "web_name": "Penders"
+        "xp10": 40.3
     },
     {
         "id": 561,
         "name": "Aaron Anselmino",
+        "web_name": "Anselmino",
         "team": "CHE",
         "position": "DEF",
         "price": 4.5,
@@ -57759,7 +57760,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -0.2863491852343856,
+        "priceChangeTarget": 83.46368491672652,
         "predictions": [
             {
                 "gw": 1,
@@ -58077,12 +58078,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.7,
-        "web_name": "Anselmino"
+        "xp10": 23.7
     },
     {
         "id": 568,
         "name": "Valentín Barco",
+        "web_name": "Barco",
         "team": "CHE",
         "position": "MID",
         "price": 5.5,
@@ -58094,7 +58095,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 64.66784534517615,
+        "priceChangeTarget": -57.96006302132311,
         "predictions": [
             {
                 "gw": 1,
@@ -58412,12 +58413,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3,
-        "web_name": "Barco"
+        "xp10": 29.3
     },
     {
         "id": 104,
         "name": "Frank Onyeka",
+        "web_name": "Onyeka",
         "team": "COV",
         "position": "MID",
         "price": 5,
@@ -58429,7 +58430,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 0.36,
         "ictIndex": 4.6,
-        "priceChangeTarget": -17.828899222532925,
+        "priceChangeTarget": 70.47336149775748,
         "predictions": [
             {
                 "gw": 1,
@@ -58747,12 +58748,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 17.9,
-        "web_name": "Onyeka"
+        "xp10": 17.9
     },
     {
         "id": 110,
         "name": "Carl Rushworth",
+        "web_name": "Rushworth",
         "team": "COV",
         "position": "GKP",
         "price": 4.5,
@@ -58764,7 +58765,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 58.38197332969989,
+        "priceChangeTarget": 3.967843478054874,
         "predictions": [
             {
                 "gw": 1,
@@ -59082,16 +59083,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.6,
-        "web_name": "Rushworth"
+        "xp10": 39.6
     },
     {
         "id": 171,
         "name": "Oliver Dovin",
+        "web_name": "Dovin",
         "team": "COV",
         "position": "GKP",
         "price": 4,
-        "ownership": 2.6,
+        "ownership": 2.5,
         "points": 75,
         "xG": 0,
         "xA": 0,
@@ -59099,7 +59100,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -44.82929957692172,
+        "priceChangeTarget": -58.496870636358665,
         "predictions": [
             {
                 "gw": 1,
@@ -59417,12 +59418,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.6,
-        "web_name": "Dovin"
+        "xp10": 39.6
     },
     {
         "id": 172,
         "name": "Ben Wilson",
+        "web_name": "Wilson",
         "team": "COV",
         "position": "GKP",
         "price": 4.5,
@@ -59434,7 +59435,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 55.57494862233301,
+        "priceChangeTarget": 84.8159637868643,
         "predictions": [
             {
                 "gw": 1,
@@ -59752,16 +59753,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.6,
-        "web_name": "Wilson"
+        "xp10": 39.6
     },
     {
         "id": 173,
         "name": "Bobby Thomas",
+        "web_name": "Thomas",
         "team": "COV",
         "position": "DEF",
         "price": 4,
-        "ownership": 8.7,
+        "ownership": 8.6,
         "points": 62.5,
         "xG": 0,
         "xA": 0,
@@ -59769,7 +59770,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 15.921451697791994,
+        "priceChangeTarget": 56.88314598549579,
         "predictions": [
             {
                 "gw": 1,
@@ -60087,12 +60088,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.5,
-        "web_name": "Thomas"
+        "xp10": 26.5
     },
     {
         "id": 174,
         "name": "Liam Kitching",
+        "web_name": "Kitching",
         "team": "COV",
         "position": "DEF",
         "price": 4,
@@ -60104,7 +60105,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 42.19994296138756,
+        "priceChangeTarget": -71.00534427302634,
         "predictions": [
             {
                 "gw": 1,
@@ -60422,16 +60423,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.5,
-        "web_name": "Kitching"
+        "xp10": 26.5
     },
     {
         "id": 175,
         "name": "Milan van Ewijk",
+        "web_name": "van Ewijk",
         "team": "COV",
         "position": "DEF",
         "price": 4,
-        "ownership": 15.8,
+        "ownership": 15.7,
         "points": 62.5,
         "xG": 0,
         "xA": 0,
@@ -60439,7 +60440,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -86.73491006499803,
+        "priceChangeTarget": -99.04058157350293,
         "predictions": [
             {
                 "gw": 1,
@@ -60757,12 +60758,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.5,
-        "web_name": "van Ewijk"
+        "xp10": 26.5
     },
     {
         "id": 176,
         "name": "Jay Dasilva",
+        "web_name": "Dasilva",
         "team": "COV",
         "position": "DEF",
         "price": 4,
@@ -60774,7 +60775,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -74.84332259713847,
+        "priceChangeTarget": -80.79282672141845,
         "predictions": [
             {
                 "gw": 1,
@@ -61092,12 +61093,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.5,
-        "web_name": "Dasilva"
+        "xp10": 26.5
     },
     {
         "id": 177,
         "name": "Kaine Kesler-Hayden",
+        "web_name": "Kesler-Hayden",
         "team": "COV",
         "position": "DEF",
         "price": 4,
@@ -61109,7 +61110,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 82.54205821380464,
+        "priceChangeTarget": -54.209658205503516,
         "predictions": [
             {
                 "gw": 1,
@@ -61427,12 +61428,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.5,
-        "web_name": "Kesler-Hayden"
+        "xp10": 26.5
     },
     {
         "id": 178,
         "name": "Jake Bidwell",
+        "web_name": "Bidwell",
         "team": "COV",
         "position": "DEF",
         "price": 4,
@@ -61444,7 +61445,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 26.638279440712992,
+        "priceChangeTarget": -75.26122949669048,
         "predictions": [
             {
                 "gw": 1,
@@ -61762,12 +61763,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.5,
-        "web_name": "Bidwell"
+        "xp10": 26.5
     },
     {
         "id": 179,
         "name": "Joel Latibeaudiere",
+        "web_name": "Latibeaudiere",
         "team": "COV",
         "position": "DEF",
         "price": 4,
@@ -61779,7 +61780,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -92.55234578454,
+        "priceChangeTarget": -79.92593678382201,
         "predictions": [
             {
                 "gw": 1,
@@ -62097,12 +62098,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.5,
-        "web_name": "Latibeaudiere"
+        "xp10": 26.5
     },
     {
         "id": 180,
         "name": "Luke Woolfenden",
+        "web_name": "Woolfenden",
         "team": "COV",
         "position": "DEF",
         "price": 4,
@@ -62114,7 +62115,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -70.51163779749956,
+        "priceChangeTarget": 13.44396091841719,
         "predictions": [
             {
                 "gw": 1,
@@ -62432,12 +62433,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.5,
-        "web_name": "Woolfenden"
+        "xp10": 26.5
     },
     {
         "id": 181,
         "name": "Miguel Brau",
+        "web_name": "Brau",
         "team": "COV",
         "position": "DEF",
         "price": 4,
@@ -62449,7 +62450,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -81.91146300464997,
+        "priceChangeTarget": -35.7651506795456,
         "predictions": [
             {
                 "gw": 1,
@@ -62767,12 +62768,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.5,
-        "web_name": "Brau"
+        "xp10": 26.5
     },
     {
         "id": 182,
         "name": "Aurèle Amenda",
+        "web_name": "Amenda",
         "team": "COV",
         "position": "DEF",
         "price": 4,
@@ -62784,7 +62785,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 87.80919937297486,
+        "priceChangeTarget": 34.99637691087091,
         "predictions": [
             {
                 "gw": 1,
@@ -63102,12 +63103,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.5,
-        "web_name": "Amenda"
+        "xp10": 26.5
     },
     {
         "id": 183,
         "name": "Jack Rudoni",
+        "web_name": "Rudoni",
         "team": "COV",
         "position": "MID",
         "price": 5,
@@ -63119,7 +63120,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -53.5499606081916,
+        "priceChangeTarget": 5.592357540119195,
         "predictions": [
             {
                 "gw": 1,
@@ -63437,12 +63438,12 @@ export const PLAYERS = [
         "news": "Shoulder injury - 75% chance of playing",
         "status": "d",
         "chanceOfPlaying": 75,
-        "xp10": 22.4,
-        "web_name": "Rudoni"
+        "xp10": 22.4
     },
     {
         "id": 184,
         "name": "Matt Grimes",
+        "web_name": "Grimes",
         "team": "COV",
         "position": "MID",
         "price": 5,
@@ -63454,7 +63455,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 28.724203988467963,
+        "priceChangeTarget": 70.9645495948736,
         "predictions": [
             {
                 "gw": 1,
@@ -63772,16 +63773,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.1,
-        "web_name": "Grimes"
+        "xp10": 30.1
     },
     {
         "id": 185,
         "name": "Tatsuhiro Sakamoto",
+        "web_name": "Sakamoto",
         "team": "COV",
         "position": "MID",
         "price": 5,
-        "ownership": 0.1,
+        "ownership": 0.2,
         "points": 75,
         "xG": 0,
         "xA": 0,
@@ -63789,7 +63790,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 65.77006090633404,
+        "priceChangeTarget": -6.048604311590736,
         "predictions": [
             {
                 "gw": 1,
@@ -64107,12 +64108,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.1,
-        "web_name": "Sakamoto"
+        "xp10": 30.1
     },
     {
         "id": 186,
         "name": "Ephron Mason-Clark",
+        "web_name": "Mason-Clark",
         "team": "COV",
         "position": "MID",
         "price": 5.5,
@@ -64124,7 +64125,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -48.28977111192159,
+        "priceChangeTarget": -26.51329072974562,
         "predictions": [
             {
                 "gw": 1,
@@ -64442,12 +64443,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.1,
-        "web_name": "Mason-Clark"
+        "xp10": 30.1
     },
     {
         "id": 187,
         "name": "Josh Eccles",
+        "web_name": "Eccles",
         "team": "COV",
         "position": "MID",
         "price": 5,
@@ -64459,7 +64460,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -26.199874156544567,
+        "priceChangeTarget": -17.616360061925377,
         "predictions": [
             {
                 "gw": 1,
@@ -64777,12 +64778,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.1,
-        "web_name": "Eccles"
+        "xp10": 30.1
     },
     {
         "id": 188,
         "name": "Victor Torp",
+        "web_name": "Torp",
         "team": "COV",
         "position": "MID",
         "price": 5.5,
@@ -64794,7 +64795,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 30.19572782020444,
+        "priceChangeTarget": -89.60873024989083,
         "predictions": [
             {
                 "gw": 1,
@@ -65112,12 +65113,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.1,
-        "web_name": "Torp"
+        "xp10": 30.1
     },
     {
         "id": 189,
         "name": "George Shepherd",
+        "web_name": "Shepherd",
         "team": "COV",
         "position": "MID",
         "price": 4.5,
@@ -65129,7 +65130,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 34.411819731835976,
+        "priceChangeTarget": -42.44234137505853,
         "predictions": [
             {
                 "gw": 1,
@@ -65447,12 +65448,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.1,
-        "web_name": "Shepherd"
+        "xp10": 30.1
     },
     {
         "id": 190,
         "name": "Loum Tchaouna",
+        "web_name": "Tchaouna",
         "team": "COV",
         "position": "MID",
         "price": 5.5,
@@ -65464,7 +65465,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 70.95486675130087,
+        "priceChangeTarget": -87.00846841082006,
         "predictions": [
             {
                 "gw": 1,
@@ -65782,12 +65783,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.1,
-        "web_name": "Tchaouna"
+        "xp10": 30.1
     },
     {
         "id": 191,
         "name": "Raphael Borges Rodrigues",
+        "web_name": "Borges Rodrigues",
         "team": "COV",
         "position": "MID",
         "price": 4.5,
@@ -65799,7 +65800,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -12.003015867758876,
+        "priceChangeTarget": -15.924782812172026,
         "predictions": [
             {
                 "gw": 1,
@@ -66117,12 +66118,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.1,
-        "web_name": "Borges Rodrigues"
+        "xp10": 30.1
     },
     {
         "id": 192,
         "name": "Kaine Andrews",
+        "web_name": "Andrews",
         "team": "COV",
         "position": "MID",
         "price": 4.5,
@@ -66134,7 +66135,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 61.357579098450174,
+        "priceChangeTarget": 9.62920109146043,
         "predictions": [
             {
                 "gw": 1,
@@ -66452,12 +66453,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.1,
-        "web_name": "Andrews"
+        "xp10": 30.1
     },
     {
         "id": 193,
         "name": "Haji Wright",
+        "web_name": "Wright",
         "team": "COV",
         "position": "FWD",
         "price": 5.5,
@@ -66469,7 +66470,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -41.45670041750118,
+        "priceChangeTarget": 66.84000960117112,
         "predictions": [
             {
                 "gw": 1,
@@ -66787,12 +66788,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.3,
-        "web_name": "Wright"
+        "xp10": 35.3
     },
     {
         "id": 194,
         "name": "Brandon Thomas-Asante",
+        "web_name": "Thomas-Asante",
         "team": "COV",
         "position": "FWD",
         "price": 5,
@@ -66804,7 +66805,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -13.488032403008091,
+        "priceChangeTarget": 27.238964569159833,
         "predictions": [
             {
                 "gw": 1,
@@ -67122,12 +67123,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.3,
-        "web_name": "Thomas-Asante"
+        "xp10": 35.3
     },
     {
         "id": 195,
         "name": "Ellis Simms",
+        "web_name": "Simms",
         "team": "COV",
         "position": "FWD",
         "price": 5,
@@ -67139,7 +67140,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -32.378686697667675,
+        "priceChangeTarget": 70.60989562406132,
         "predictions": [
             {
                 "gw": 1,
@@ -67457,12 +67458,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.3,
-        "web_name": "Simms"
+        "xp10": 35.3
     },
     {
         "id": 196,
         "name": "Jahnoah Markelo",
+        "web_name": "Markelo",
         "team": "COV",
         "position": "FWD",
         "price": 5,
@@ -67474,7 +67475,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -48.37611968174005,
+        "priceChangeTarget": -42.39704152289416,
         "predictions": [
             {
                 "gw": 1,
@@ -67792,16 +67793,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.3,
-        "web_name": "Markelo"
+        "xp10": 35.3
     },
     {
         "id": 197,
         "name": "Norman Bassette",
+        "web_name": "Bassette",
         "team": "COV",
         "position": "FWD",
         "price": 4.5,
-        "ownership": 0.4,
+        "ownership": 0.3,
         "points": 87.5,
         "xG": 0,
         "xA": 0,
@@ -67809,7 +67810,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 75.89576148883114,
+        "priceChangeTarget": 5.99599075163853,
         "predictions": [
             {
                 "gw": 1,
@@ -68127,12 +68128,12 @@ export const PLAYERS = [
         "news": "Has joined KVC Westerlo on loan for the rest of the season",
         "status": "u",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Bassette"
+        "xp10": 0
     },
     {
         "id": 198,
         "name": "Dean Henderson",
+        "web_name": "Henderson",
         "team": "CRY",
         "position": "GKP",
         "price": 5,
@@ -68144,7 +68145,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.11,
         "ictIndex": 84.7,
-        "priceChangeTarget": -19.925003749379485,
+        "priceChangeTarget": -95.13724370095682,
         "predictions": [
             {
                 "gw": 1,
@@ -68462,12 +68463,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.2,
-        "web_name": "Henderson"
+        "xp10": 43.2
     },
     {
         "id": 199,
         "name": "Walter Benítez",
+        "web_name": "Benitez",
         "team": "CRY",
         "position": "GKP",
         "price": 4.5,
@@ -68479,7 +68480,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 2.3,
-        "priceChangeTarget": -99.891459246034,
+        "priceChangeTarget": 18.45064368390203,
         "predictions": [
             {
                 "gw": 1,
@@ -68797,12 +68798,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.9,
-        "web_name": "Benitez"
+        "xp10": 26.9
     },
     {
         "id": 201,
         "name": "Daniel Muñoz Mejía",
+        "web_name": "Muñoz",
         "team": "CRY",
         "position": "DEF",
         "price": 5.5,
@@ -68814,7 +68815,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 6.39,
         "ictIndex": 139.5,
-        "priceChangeTarget": -89.35970256433241,
+        "priceChangeTarget": -80.74880754540126,
         "predictions": [
             {
                 "gw": 1,
@@ -69132,12 +69133,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.7,
-        "web_name": "Muñoz"
+        "xp10": 43.7
     },
     {
         "id": 202,
         "name": "Chris Richards",
+        "web_name": "Richards",
         "team": "CRY",
         "position": "DEF",
         "price": 5,
@@ -69149,7 +69150,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 3.98,
         "ictIndex": 107.6,
-        "priceChangeTarget": -97.46341570199336,
+        "priceChangeTarget": -11.531663125479469,
         "predictions": [
             {
                 "gw": 1,
@@ -69467,12 +69468,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37.1,
-        "web_name": "Richards"
+        "xp10": 37.1
     },
     {
         "id": 203,
         "name": "Jaydee Canvot",
+        "web_name": "Canvot",
         "team": "CRY",
         "position": "DEF",
         "price": 5,
@@ -69484,7 +69485,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 1.81,
         "ictIndex": 48.1,
-        "priceChangeTarget": 27.6751441696387,
+        "priceChangeTarget": 91.7588618506798,
         "predictions": [
             {
                 "gw": 1,
@@ -69802,12 +69803,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.9,
-        "web_name": "Canvot"
+        "xp10": 38.9
     },
     {
         "id": 204,
         "name": "Tyrick Mitchell",
+        "web_name": "Mitchell",
         "team": "CRY",
         "position": "DEF",
         "price": 4.5,
@@ -69819,7 +69820,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 4.12,
         "ictIndex": 136,
-        "priceChangeTarget": -14.313654788468227,
+        "priceChangeTarget": 12.119508888950435,
         "predictions": [
             {
                 "gw": 1,
@@ -70137,12 +70138,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.1,
-        "web_name": "Mitchell"
+        "xp10": 35.1
     },
     {
         "id": 205,
         "name": "Borna Sosa",
+        "web_name": "Sosa",
         "team": "CRY",
         "position": "DEF",
         "price": 4.5,
@@ -70154,7 +70155,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.11,
         "ictIndex": 4.5,
-        "priceChangeTarget": -36.32694191724042,
+        "priceChangeTarget": -52.1231107673302,
         "predictions": [
             {
                 "gw": 1,
@@ -70472,12 +70473,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 13.9,
-        "web_name": "Sosa"
+        "xp10": 13.9
     },
     {
         "id": 206,
         "name": "Chadi Riad Dnanou",
+        "web_name": "Chadi Riad",
         "team": "CRY",
         "position": "DEF",
         "price": 4.5,
@@ -70489,7 +70490,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.46,
         "ictIndex": 18.3,
-        "priceChangeTarget": 12.302582298618958,
+        "priceChangeTarget": 69.65728810829876,
         "predictions": [
             {
                 "gw": 1,
@@ -70807,12 +70808,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 25.1,
-        "web_name": "Chadi Riad"
+        "xp10": 25.1
     },
     {
         "id": 207,
         "name": "Oscar Mingueza",
+        "web_name": "Mingueza",
         "team": "CRY",
         "position": "DEF",
         "price": 4.5,
@@ -70824,7 +70825,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 4.2131747453166355,
+        "priceChangeTarget": -74.0228707780747,
         "predictions": [
             {
                 "gw": 1,
@@ -71142,16 +71143,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.9,
-        "web_name": "Mingueza"
+        "xp10": 23.9
     },
     {
         "id": 208,
         "name": "Ismaïla Sarr",
+        "web_name": "Sarr",
         "team": "CRY",
         "position": "MID",
         "price": 6.5,
-        "ownership": 8.6,
+        "ownership": 8.5,
         "points": 117,
         "xG": 10.93,
         "xA": 1.17,
@@ -71159,7 +71160,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 12.09,
         "ictIndex": 135.1,
-        "priceChangeTarget": 51.645631413300976,
+        "priceChangeTarget": 77.87652274402507,
         "predictions": [
             {
                 "gw": 1,
@@ -71477,16 +71478,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 47,
-        "web_name": "Sarr"
+        "xp10": 47
     },
     {
         "id": 209,
         "name": "Brennan Johnson",
+        "web_name": "Johnson",
         "team": "CRY",
         "position": "MID",
         "price": 6,
-        "ownership": 0.1,
+        "ownership": 0.2,
         "points": 65,
         "xG": 2.45,
         "xA": 1.31,
@@ -71494,7 +71495,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 3.76,
         "ictIndex": 75.8,
-        "priceChangeTarget": 33.981202170789174,
+        "priceChangeTarget": 88.0520152256289,
         "predictions": [
             {
                 "gw": 1,
@@ -71812,12 +71813,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.2,
-        "web_name": "Johnson"
+        "xp10": 34.2
     },
     {
         "id": 210,
         "name": "Adam Wharton",
+        "web_name": "Wharton",
         "team": "CRY",
         "position": "MID",
         "price": 5.5,
@@ -71829,7 +71830,7 @@ export const PLAYERS = [
         "xA90": 0.26,
         "xGI": 8.98,
         "ictIndex": 139.6,
-        "priceChangeTarget": -32.81237488628412,
+        "priceChangeTarget": -23.91156083946413,
         "predictions": [
             {
                 "gw": 1,
@@ -72147,12 +72148,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.6,
-        "web_name": "Wharton"
+        "xp10": 38.6
     },
     {
         "id": 211,
         "name": "Yéremy Pino Santos",
+        "web_name": "Yeremy",
         "team": "CRY",
         "position": "MID",
         "price": 5.5,
@@ -72164,7 +72165,7 @@ export const PLAYERS = [
         "xA90": 0.27,
         "xGI": 10.65,
         "ictIndex": 141.4,
-        "priceChangeTarget": 39.19387602565729,
+        "priceChangeTarget": 85.72736945176095,
         "predictions": [
             {
                 "gw": 1,
@@ -72482,12 +72483,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.8,
-        "web_name": "Yeremy"
+        "xp10": 29.8
     },
     {
         "id": 212,
         "name": "Will Hughes",
+        "web_name": "Hughes",
         "team": "CRY",
         "position": "MID",
         "price": 4.5,
@@ -72499,7 +72500,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 3.05,
         "ictIndex": 60.9,
-        "priceChangeTarget": 91.81852505295888,
+        "priceChangeTarget": -59.34279627789576,
         "predictions": [
             {
                 "gw": 1,
@@ -72817,12 +72818,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.4,
-        "web_name": "Hughes"
+        "xp10": 23.4
     },
     {
         "id": 213,
         "name": "Jefferson Lerma Solís",
+        "web_name": "Lerma",
         "team": "CRY",
         "position": "MID",
         "price": 5,
@@ -72834,7 +72835,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 3.32,
         "ictIndex": 72.5,
-        "priceChangeTarget": -90.82755334035286,
+        "priceChangeTarget": 84.06489362665641,
         "predictions": [
             {
                 "gw": 1,
@@ -73152,12 +73153,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.2,
-        "web_name": "Lerma"
+        "xp10": 30.2
     },
     {
         "id": 214,
         "name": "Daichi Kamada",
+        "web_name": "Kamada",
         "team": "CRY",
         "position": "MID",
         "price": 5,
@@ -73169,7 +73170,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 4.88,
         "ictIndex": 74.5,
-        "priceChangeTarget": -73.84069270878214,
+        "priceChangeTarget": -23.44487324113858,
         "predictions": [
             {
                 "gw": 1,
@@ -73487,12 +73488,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.4,
-        "web_name": "Kamada"
+        "xp10": 30.4
     },
     {
         "id": 215,
         "name": "Justin Devenny",
+        "web_name": "Devenny",
         "team": "CRY",
         "position": "MID",
         "price": 5,
@@ -73504,7 +73505,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 2.77,
         "ictIndex": 38.4,
-        "priceChangeTarget": -44.443382522651746,
+        "priceChangeTarget": 88.26292703099165,
         "predictions": [
             {
                 "gw": 1,
@@ -73822,12 +73823,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 25,
-        "web_name": "Devenny"
+        "xp10": 25
     },
     {
         "id": 216,
         "name": "Romain Esse",
+        "web_name": "Esse",
         "team": "CRY",
         "position": "MID",
         "price": 5,
@@ -73839,7 +73840,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.04,
         "ictIndex": 1.5,
-        "priceChangeTarget": -48.52094282261983,
+        "priceChangeTarget": 39.315131617666225,
         "predictions": [
             {
                 "gw": 1,
@@ -74157,12 +74158,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.8,
-        "web_name": "Esse"
+        "xp10": 17.8
     },
     {
         "id": 217,
         "name": "Matheus França de Oliveira",
+        "web_name": "M.França",
         "team": "CRY",
         "position": "MID",
         "price": 5,
@@ -74174,7 +74175,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -64.03383827381836,
+        "priceChangeTarget": 32.80138777019502,
         "predictions": [
             {
                 "gw": 1,
@@ -74492,12 +74493,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.8,
-        "web_name": "M.França"
+        "xp10": 17.8
     },
     {
         "id": 218,
         "name": "Cheick Doucouré",
+        "web_name": "Doucouré",
         "team": "CRY",
         "position": "MID",
         "price": 5,
@@ -74509,7 +74510,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -5.5920340839722655,
+        "priceChangeTarget": 0.4460479353715243,
         "predictions": [
             {
                 "gw": 1,
@@ -74827,12 +74828,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.8,
-        "web_name": "Doucouré"
+        "xp10": 17.8
     },
     {
         "id": 219,
         "name": "Jesurun Rak-Sakyi",
+        "web_name": "J.Rak-Sakyi",
         "team": "CRY",
         "position": "MID",
         "price": 5,
@@ -74844,7 +74845,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 18.80952853728752,
+        "priceChangeTarget": 70.56968093170832,
         "predictions": [
             {
                 "gw": 1,
@@ -75162,12 +75163,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.8,
-        "web_name": "J.Rak-Sakyi"
+        "xp10": 17.8
     },
     {
         "id": 220,
         "name": "Rio Cardines",
+        "web_name": "Cardines",
         "team": "CRY",
         "position": "DEF",
         "price": 4.5,
@@ -75179,7 +75180,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.18,
         "ictIndex": 4.9,
-        "priceChangeTarget": -32.60856359021234,
+        "priceChangeTarget": -84.28577642353461,
         "predictions": [
             {
                 "gw": 1,
@@ -75497,12 +75498,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 13.9,
-        "web_name": "Cardines"
+        "xp10": 13.9
     },
     {
         "id": 221,
         "name": "Joél Drakes-Thomas",
+        "web_name": "Drakes-Thomas",
         "team": "CRY",
         "position": "MID",
         "price": 4.5,
@@ -75514,7 +75515,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.3,
-        "priceChangeTarget": 32.223329640608256,
+        "priceChangeTarget": -69.37883110042615,
         "predictions": [
             {
                 "gw": 1,
@@ -75832,12 +75833,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.8,
-        "web_name": "Drakes-Thomas"
+        "xp10": 17.8
     },
     {
         "id": 222,
         "name": "Jørgen Strand Larsen",
+        "web_name": "Strand Larsen",
         "team": "CRY",
         "position": "FWD",
         "price": 6,
@@ -75849,7 +75850,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 6.42,
         "ictIndex": 91.5,
-        "priceChangeTarget": 64.78178925751536,
+        "priceChangeTarget": -85.88928867717334,
         "predictions": [
             {
                 "gw": 1,
@@ -76167,12 +76168,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.1,
-        "web_name": "Strand Larsen"
+        "xp10": 29.1
     },
     {
         "id": 223,
         "name": "Jean-Philippe Mateta",
+        "web_name": "Mateta",
         "team": "CRY",
         "position": "FWD",
         "price": 6.5,
@@ -76184,7 +76185,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 15.74,
         "ictIndex": 150.8,
-        "priceChangeTarget": -60.297577733286055,
+        "priceChangeTarget": 23.012296137512095,
         "predictions": [
             {
                 "gw": 1,
@@ -76502,12 +76503,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 46.7,
-        "web_name": "Mateta"
+        "xp10": 46.7
     },
     {
         "id": 224,
         "name": "Eddie Nketiah",
+        "web_name": "Nketiah",
         "team": "CRY",
         "position": "FWD",
         "price": 5.5,
@@ -76519,7 +76520,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 2.23,
         "ictIndex": 37.8,
-        "priceChangeTarget": -41.72645409803191,
+        "priceChangeTarget": -80.27568848178302,
         "predictions": [
             {
                 "gw": 1,
@@ -76837,12 +76838,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 20.9,
-        "web_name": "Nketiah"
+        "xp10": 20.9
     },
     {
         "id": 225,
         "name": "Christantus Uche",
+        "web_name": "Uche",
         "team": "CRY",
         "position": "FWD",
         "price": 5,
@@ -76854,7 +76855,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.5,
         "ictIndex": 8.8,
-        "priceChangeTarget": -41.09670639593111,
+        "priceChangeTarget": 17.35451393653942,
         "predictions": [
             {
                 "gw": 1,
@@ -77172,12 +77173,12 @@ export const PLAYERS = [
         "news": "has returned to Getafe CF",
         "status": "u",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Uche"
+        "xp10": 0
     },
     {
         "id": 555,
         "name": "Remi Matthews",
+        "web_name": "Matthews",
         "team": "CRY",
         "position": "GKP",
         "price": 4,
@@ -77189,7 +77190,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -79.49764469656785,
+        "priceChangeTarget": 39.161497090320296,
         "predictions": [
             {
                 "gw": 1,
@@ -77507,12 +77508,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.7,
-        "web_name": "Matthews"
+        "xp10": 38.7
     },
     {
         "id": 21,
         "name": "Christian Nørgaard",
+        "web_name": "Nørgaard",
         "team": "EVE",
         "position": "MID",
         "price": 5,
@@ -77524,7 +77525,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.12,
         "ictIndex": 4,
-        "priceChangeTarget": -64.427340326435,
+        "priceChangeTarget": -22.943609327536848,
         "predictions": [
             {
                 "gw": 1,
@@ -77842,12 +77843,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 17.5,
-        "web_name": "Nørgaard"
+        "xp10": 17.5
     },
     {
         "id": 226,
         "name": "Jordan Pickford",
+        "web_name": "Pickford",
         "team": "EVE",
         "position": "GKP",
         "price": 5.5,
@@ -77859,7 +77860,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.2,
         "ictIndex": 90.8,
-        "priceChangeTarget": 37.023534703439736,
+        "priceChangeTarget": -85.88219261007288,
         "predictions": [
             {
                 "gw": 1,
@@ -78177,12 +78178,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.3,
-        "web_name": "Pickford"
+        "xp10": 42.3
     },
     {
         "id": 227,
         "name": "Mark Travers",
+        "web_name": "Travers",
         "team": "EVE",
         "position": "GKP",
         "price": 5,
@@ -78194,7 +78195,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 81.92425763376752,
+        "priceChangeTarget": -15.666291559487348,
         "predictions": [
             {
                 "gw": 1,
@@ -78512,12 +78513,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.1,
-        "web_name": "Travers"
+        "xp10": 38.1
     },
     {
         "id": 228,
         "name": "Tom King",
+        "web_name": "King",
         "team": "EVE",
         "position": "GKP",
         "price": 4.5,
@@ -78529,7 +78530,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -10.517711451935824,
+        "priceChangeTarget": -27.773734407945398,
         "predictions": [
             {
                 "gw": 1,
@@ -78847,12 +78848,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.1,
-        "web_name": "King"
+        "xp10": 38.1
     },
     {
         "id": 229,
         "name": "James Tarkowski",
+        "web_name": "Tarkowski",
         "team": "EVE",
         "position": "DEF",
         "price": 6,
@@ -78864,7 +78865,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 4.63,
         "ictIndex": 165.7,
-        "priceChangeTarget": 34.249095759716255,
+        "priceChangeTarget": -51.21011641385604,
         "predictions": [
             {
                 "gw": 1,
@@ -79182,12 +79183,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.6,
-        "web_name": "Tarkowski"
+        "xp10": 42.6
     },
     {
         "id": 230,
         "name": "Jarrad Branthwaite",
+        "web_name": "Branthwaite",
         "team": "EVE",
         "position": "DEF",
         "price": 5.5,
@@ -79199,7 +79200,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.45,
         "ictIndex": 29.3,
-        "priceChangeTarget": -50.11472939323305,
+        "priceChangeTarget": 90.33862516606979,
         "predictions": [
             {
                 "gw": 1,
@@ -79517,12 +79518,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.6,
-        "web_name": "Branthwaite"
+        "xp10": 42.6
     },
     {
         "id": 231,
         "name": "Michael Keane",
+        "web_name": "Keane",
         "team": "EVE",
         "position": "DEF",
         "price": 5,
@@ -79534,7 +79535,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 2.79,
         "ictIndex": 111.7,
-        "priceChangeTarget": 18.95675773824297,
+        "priceChangeTarget": 63.34286004022238,
         "predictions": [
             {
                 "gw": 1,
@@ -79852,12 +79853,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.6,
-        "web_name": "Keane"
+        "xp10": 42.6
     },
     {
         "id": 232,
         "name": "Jake O'Brien",
+        "web_name": "O'Brien",
         "team": "EVE",
         "position": "DEF",
         "price": 5,
@@ -79869,7 +79870,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 2.67,
         "ictIndex": 107.5,
-        "priceChangeTarget": -67.66534904213711,
+        "priceChangeTarget": -1.0568771439824616,
         "predictions": [
             {
                 "gw": 1,
@@ -80187,12 +80188,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 31.2,
-        "web_name": "O'Brien"
+        "xp10": 31.2
     },
     {
         "id": 233,
         "name": "Vitalii Mykolenko",
+        "web_name": "Mykolenko",
         "team": "EVE",
         "position": "DEF",
         "price": 4.5,
@@ -80204,7 +80205,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 2.74,
         "ictIndex": 102.3,
-        "priceChangeTarget": -18.08865424526664,
+        "priceChangeTarget": 39.97206954364495,
         "predictions": [
             {
                 "gw": 1,
@@ -80522,12 +80523,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.9,
-        "web_name": "Mykolenko"
+        "xp10": 26.9
     },
     {
         "id": 234,
         "name": "Nathan Patterson",
+        "web_name": "Patterson",
         "team": "EVE",
         "position": "DEF",
         "price": 4.5,
@@ -80539,7 +80540,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.07,
         "ictIndex": 8.8,
-        "priceChangeTarget": 13.23065323107042,
+        "priceChangeTarget": 29.057274083141806,
         "predictions": [
             {
                 "gw": 1,
@@ -80857,12 +80858,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 15.3,
-        "web_name": "Patterson"
+        "xp10": 15.3
     },
     {
         "id": 235,
         "name": "Adam Aznou",
+        "web_name": "Aznou",
         "team": "EVE",
         "position": "DEF",
         "price": 4,
@@ -80874,7 +80875,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -11.895476938768155,
+        "priceChangeTarget": -43.40712144798795,
         "predictions": [
             {
                 "gw": 1,
@@ -81192,12 +81193,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 14,
-        "web_name": "Aznou"
+        "xp10": 14
     },
     {
         "id": 236,
         "name": "Kiernan Dewsbury-Hall",
+        "web_name": "Dewsbury-Hall",
         "team": "EVE",
         "position": "MID",
         "price": 6.5,
@@ -81209,7 +81210,7 @@ export const PLAYERS = [
         "xA90": 0.18,
         "xGI": 9.69,
         "ictIndex": 166,
-        "priceChangeTarget": 57.32422259499813,
+        "priceChangeTarget": -62.89380171814778,
         "predictions": [
             {
                 "gw": 1,
@@ -81527,16 +81528,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 49.7,
-        "web_name": "Dewsbury-Hall"
+        "xp10": 49.7
     },
     {
         "id": 237,
         "name": "Iliman Ndiaye",
+        "web_name": "Ndiaye",
         "team": "EVE",
         "position": "MID",
         "price": 6,
-        "ownership": 15.6,
+        "ownership": 15.5,
         "points": 128,
         "xG": 6.68,
         "xA": 4.41,
@@ -81544,7 +81545,7 @@ export const PLAYERS = [
         "xA90": 0.14,
         "xGI": 11.09,
         "ictIndex": 166.5,
-        "priceChangeTarget": 55.476701133308865,
+        "priceChangeTarget": 93.59868920909031,
         "predictions": [
             {
                 "gw": 1,
@@ -81862,16 +81863,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.8,
-        "web_name": "Ndiaye"
+        "xp10": 39.8
     },
     {
         "id": 239,
         "name": "James Garner",
+        "web_name": "Garner",
         "team": "EVE",
         "position": "MID",
         "price": 6,
-        "ownership": 0.6,
+        "ownership": 0.5,
         "points": 159,
         "xG": 2.1,
         "xA": 6.18,
@@ -81879,7 +81880,7 @@ export const PLAYERS = [
         "xA90": 0.16,
         "xGI": 8.28,
         "ictIndex": 208.4,
-        "priceChangeTarget": -43.99117735942295,
+        "priceChangeTarget": -22.29731718346146,
         "predictions": [
             {
                 "gw": 1,
@@ -82197,12 +82198,12 @@ export const PLAYERS = [
         "news": "Groin injury - Expected back 22 Aug",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Garner"
+        "xp10": 0
     },
     {
         "id": 240,
         "name": "Tim Iroegbunam",
+        "web_name": "Iroegbunam",
         "team": "EVE",
         "position": "MID",
         "price": 5,
@@ -82214,7 +82215,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 1.25,
         "ictIndex": 45.9,
-        "priceChangeTarget": 82.28379281968463,
+        "priceChangeTarget": -54.34852402370427,
         "predictions": [
             {
                 "gw": 1,
@@ -82532,12 +82533,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.1,
-        "web_name": "Iroegbunam"
+        "xp10": 39.1
     },
     {
         "id": 241,
         "name": "Dwight McNeil",
+        "web_name": "McNeil",
         "team": "EVE",
         "position": "MID",
         "price": 5.5,
@@ -82549,7 +82550,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 3.28,
         "ictIndex": 52.2,
-        "priceChangeTarget": 26.594377766055374,
+        "priceChangeTarget": -4.902908146401458,
         "predictions": [
             {
                 "gw": 1,
@@ -82867,12 +82868,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37.2,
-        "web_name": "McNeil"
+        "xp10": 37.2
     },
     {
         "id": 242,
         "name": "Tyrique George",
+        "web_name": "George",
         "team": "EVE",
         "position": "MID",
         "price": 5.5,
@@ -82884,7 +82885,7 @@ export const PLAYERS = [
         "xA90": 0.24,
         "xGI": 1.83,
         "ictIndex": 23.9,
-        "priceChangeTarget": 79.06099990146069,
+        "priceChangeTarget": -8.155340854886362,
         "predictions": [
             {
                 "gw": 1,
@@ -83202,12 +83203,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 18,
-        "web_name": "George"
+        "xp10": 18
     },
     {
         "id": 243,
         "name": "Carlos Alcaraz Durán",
+        "web_name": "Alcaraz",
         "team": "EVE",
         "position": "MID",
         "price": 5,
@@ -83219,7 +83220,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 1.71,
         "ictIndex": 41.8,
-        "priceChangeTarget": 79.5469912616932,
+        "priceChangeTarget": 68.30448762949516,
         "predictions": [
             {
                 "gw": 1,
@@ -83537,12 +83538,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 21.9,
-        "web_name": "Alcaraz"
+        "xp10": 21.9
     },
     {
         "id": 244,
         "name": "Harrison Armstrong",
+        "web_name": "Armstrong",
         "team": "EVE",
         "position": "MID",
         "price": 5,
@@ -83554,7 +83555,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 1.01,
         "ictIndex": 21,
-        "priceChangeTarget": 23.349299747623903,
+        "priceChangeTarget": 48.92933631811135,
         "predictions": [
             {
                 "gw": 1,
@@ -83872,12 +83873,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.5,
-        "web_name": "Armstrong"
+        "xp10": 34.5
     },
     {
         "id": 245,
         "name": "Tyler Dibling",
+        "web_name": "Dibling",
         "team": "EVE",
         "position": "MID",
         "price": 5.5,
@@ -83889,7 +83890,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.34,
         "ictIndex": 13.6,
-        "priceChangeTarget": 15.723178915134767,
+        "priceChangeTarget": -57.1159512578959,
         "predictions": [
             {
                 "gw": 1,
@@ -84207,12 +84208,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 22.8,
-        "web_name": "Dibling"
+        "xp10": 22.8
     },
     {
         "id": 246,
         "name": "Merlin Röhl",
+        "web_name": "Röhl",
         "team": "EVE",
         "position": "MID",
         "price": 5,
@@ -84224,7 +84225,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 1.02,
         "ictIndex": 26.3,
-        "priceChangeTarget": -93.12944402611532,
+        "priceChangeTarget": 25.311449928038556,
         "predictions": [
             {
                 "gw": 1,
@@ -84542,12 +84543,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 21.1,
-        "web_name": "Röhl"
+        "xp10": 21.1
     },
     {
         "id": 247,
         "name": "Hayden Hackney",
+        "web_name": "Hackney",
         "team": "EVE",
         "position": "MID",
         "price": 5.5,
@@ -84559,7 +84560,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 30.869775582808984,
+        "priceChangeTarget": 67.51526006596151,
         "predictions": [
             {
                 "gw": 1,
@@ -84877,12 +84878,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3,
-        "web_name": "Hackney"
+        "xp10": 29.3
     },
     {
         "id": 248,
         "name": "Norberto Bercique Gomes Betuncal",
+        "web_name": "Beto",
         "team": "EVE",
         "position": "FWD",
         "price": 5.5,
@@ -84894,7 +84895,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 9.13,
         "ictIndex": 124.5,
-        "priceChangeTarget": -92.8182685306969,
+        "priceChangeTarget": -46.85968886757408,
         "predictions": [
             {
                 "gw": 1,
@@ -85212,12 +85213,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 57.4,
-        "web_name": "Beto"
+        "xp10": 57.4
     },
     {
         "id": 249,
         "name": "Thierno Barry",
+        "web_name": "Barry",
         "team": "EVE",
         "position": "FWD",
         "price": 5.5,
@@ -85229,7 +85230,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 8.61,
         "ictIndex": 102.5,
-        "priceChangeTarget": 93.21742894937418,
+        "priceChangeTarget": -88.15172638120008,
         "predictions": [
             {
                 "gw": 1,
@@ -85547,12 +85548,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45.1,
-        "web_name": "Barry"
+        "xp10": 45.1
     },
     {
         "id": 250,
         "name": "Bernd Leno",
+        "web_name": "Leno",
         "team": "FUL",
         "position": "GKP",
         "price": 4.5,
@@ -85564,7 +85565,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.02,
         "ictIndex": 81.5,
-        "priceChangeTarget": -69.30470828284676,
+        "priceChangeTarget": 72.90688962582675,
         "predictions": [
             {
                 "gw": 1,
@@ -85882,12 +85883,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.6,
-        "web_name": "Leno"
+        "xp10": 39.6
     },
     {
         "id": 251,
         "name": "Benjamin Lecomte",
+        "web_name": "Lecomte",
         "team": "FUL",
         "position": "GKP",
         "price": 4,
@@ -85899,7 +85900,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 62.68013087732979,
+        "priceChangeTarget": 16.360929841244868,
         "predictions": [
             {
                 "gw": 1,
@@ -86217,12 +86218,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 27.1,
-        "web_name": "Lecomte"
+        "xp10": 27.1
     },
     {
         "id": 252,
         "name": "Alfie McNally",
+        "web_name": "McNally",
         "team": "FUL",
         "position": "GKP",
         "price": 4,
@@ -86234,7 +86235,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -24.688388557790475,
+        "priceChangeTarget": -62.71753854446054,
         "predictions": [
             {
                 "gw": 1,
@@ -86552,12 +86553,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 27.1,
-        "web_name": "McNally"
+        "xp10": 27.1
     },
     {
         "id": 253,
         "name": "Joachim Andersen",
+        "web_name": "Andersen",
         "team": "FUL",
         "position": "DEF",
         "price": 5,
@@ -86569,7 +86570,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 3.26,
         "ictIndex": 107,
-        "priceChangeTarget": -33.430149647440516,
+        "priceChangeTarget": 75.7263507373165,
         "predictions": [
             {
                 "gw": 1,
@@ -86887,12 +86888,12 @@ export const PLAYERS = [
         "news": "Suspended until 30 Aug",
         "status": "s",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Andersen"
+        "xp10": 0
     },
     {
         "id": 254,
         "name": "Antonee Robinson",
+        "web_name": "Robinson",
         "team": "FUL",
         "position": "DEF",
         "price": 4.5,
@@ -86904,7 +86905,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 2.65,
         "ictIndex": 79.3,
-        "priceChangeTarget": 50.95665346994343,
+        "priceChangeTarget": -37.12073274270216,
         "predictions": [
             {
                 "gw": 1,
@@ -87222,12 +87223,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37.3,
-        "web_name": "Robinson"
+        "xp10": 37.3
     },
     {
         "id": 255,
         "name": "Jorge Cuenca Barreno",
+        "web_name": "J.Cuenca",
         "team": "FUL",
         "position": "DEF",
         "price": 4.5,
@@ -87239,7 +87240,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.58,
         "ictIndex": 31.2,
-        "priceChangeTarget": -88.53379239968842,
+        "priceChangeTarget": -90.92794106740226,
         "predictions": [
             {
                 "gw": 1,
@@ -87557,12 +87558,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.3,
-        "web_name": "J.Cuenca"
+        "xp10": 34.3
     },
     {
         "id": 256,
         "name": "Kenny Tete",
+        "web_name": "Tete",
         "team": "FUL",
         "position": "DEF",
         "price": 4.5,
@@ -87574,7 +87575,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 2.38,
         "ictIndex": 73.9,
-        "priceChangeTarget": -97.6632165338422,
+        "priceChangeTarget": 87.95580076604622,
         "predictions": [
             {
                 "gw": 1,
@@ -87892,12 +87893,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37.7,
-        "web_name": "Tete"
+        "xp10": 37.7
     },
     {
         "id": 257,
         "name": "Calvin Bassey",
+        "web_name": "Bassey",
         "team": "FUL",
         "position": "DEF",
         "price": 4.5,
@@ -87909,7 +87910,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 2.05,
         "ictIndex": 84.5,
-        "priceChangeTarget": -90.14406196762579,
+        "priceChangeTarget": 30.313071400952822,
         "predictions": [
             {
                 "gw": 1,
@@ -88227,12 +88228,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.3,
-        "web_name": "Bassey"
+        "xp10": 34.3
     },
     {
         "id": 258,
         "name": "Timothy Castagne",
+        "web_name": "Castagne",
         "team": "FUL",
         "position": "DEF",
         "price": 4.5,
@@ -88244,7 +88245,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 2.97,
         "ictIndex": 86.2,
-        "priceChangeTarget": 63.29633885938088,
+        "priceChangeTarget": -90.12142764529708,
         "predictions": [
             {
                 "gw": 1,
@@ -88562,12 +88563,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.7,
-        "web_name": "Castagne"
+        "xp10": 26.7
     },
     {
         "id": 261,
         "name": "Alex Iwobi",
+        "web_name": "Iwobi",
         "team": "FUL",
         "position": "MID",
         "price": 5.5,
@@ -88579,7 +88580,7 @@ export const PLAYERS = [
         "xA90": 0.17,
         "xGI": 6.61,
         "ictIndex": 159.4,
-        "priceChangeTarget": -25.202095308940997,
+        "priceChangeTarget": 14.980059235314911,
         "predictions": [
             {
                 "gw": 1,
@@ -88897,12 +88898,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 36.2,
-        "web_name": "Iwobi"
+        "xp10": 36.2
     },
     {
         "id": 262,
         "name": "Emile Smith Rowe",
+        "web_name": "Smith Rowe",
         "team": "FUL",
         "position": "MID",
         "price": 5.5,
@@ -88914,7 +88915,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 5.83,
         "ictIndex": 102.6,
-        "priceChangeTarget": 17.44666331710185,
+        "priceChangeTarget": 57.04408498052592,
         "predictions": [
             {
                 "gw": 1,
@@ -89232,12 +89233,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 36.8,
-        "web_name": "Smith Rowe"
+        "xp10": 36.8
     },
     {
         "id": 263,
         "name": "Kevin Santos Lopes de Macedo",
+        "web_name": "Kevin",
         "team": "FUL",
         "position": "MID",
         "price": 5.5,
@@ -89249,7 +89250,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 2.68,
         "ictIndex": 70.4,
-        "priceChangeTarget": 35.35374148413149,
+        "priceChangeTarget": 48.23486577558097,
         "predictions": [
             {
                 "gw": 1,
@@ -89567,12 +89568,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 25.2,
-        "web_name": "Kevin"
+        "xp10": 25.2
     },
     {
         "id": 264,
         "name": "Oscar Bobb",
+        "web_name": "Bobb",
         "team": "FUL",
         "position": "MID",
         "price": 5.5,
@@ -89584,7 +89585,7 @@ export const PLAYERS = [
         "xA90": 0.18,
         "xGI": 3.57,
         "ictIndex": 66.4,
-        "priceChangeTarget": 39.77779243073809,
+        "priceChangeTarget": 9.65454512117799,
         "predictions": [
             {
                 "gw": 1,
@@ -89902,12 +89903,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 33.2,
-        "web_name": "Bobb"
+        "xp10": 33.2
     },
     {
         "id": 265,
         "name": "Sander Berge",
+        "web_name": "Berge",
         "team": "FUL",
         "position": "MID",
         "price": 5,
@@ -89919,7 +89920,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 3.04,
         "ictIndex": 91,
-        "priceChangeTarget": 77.99382177176119,
+        "priceChangeTarget": -15.325299136685103,
         "predictions": [
             {
                 "gw": 1,
@@ -90237,12 +90238,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.4,
-        "web_name": "Berge"
+        "xp10": 26.4
     },
     {
         "id": 266,
         "name": "Tom Cairney",
+        "web_name": "Cairney",
         "team": "FUL",
         "position": "MID",
         "price": 5,
@@ -90254,7 +90255,7 @@ export const PLAYERS = [
         "xA90": 0.16,
         "xGI": 2.02,
         "ictIndex": 41.4,
-        "priceChangeTarget": -92.15690240187233,
+        "priceChangeTarget": 87.9376665422447,
         "predictions": [
             {
                 "gw": 1,
@@ -90572,12 +90573,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 20.2,
-        "web_name": "Cairney"
+        "xp10": 20.2
     },
     {
         "id": 267,
         "name": "Saša Lukić",
+        "web_name": "Lukić",
         "team": "FUL",
         "position": "MID",
         "price": 5,
@@ -90589,7 +90590,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 4.14,
         "ictIndex": 93.4,
-        "priceChangeTarget": 42.47530396141755,
+        "priceChangeTarget": 65.31317974031805,
         "predictions": [
             {
                 "gw": 1,
@@ -90907,12 +90908,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.2,
-        "web_name": "Lukić"
+        "xp10": 34.2
     },
     {
         "id": 268,
         "name": "Josh King",
+        "web_name": "King",
         "team": "FUL",
         "position": "MID",
         "price": 5.5,
@@ -90924,7 +90925,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 3.13,
         "ictIndex": 73.3,
-        "priceChangeTarget": -2.26309883347038,
+        "priceChangeTarget": -77.26776021943427,
         "predictions": [
             {
                 "gw": 1,
@@ -91242,12 +91243,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.4,
-        "web_name": "King"
+        "xp10": 42.4
     },
     {
         "id": 269,
         "name": "Ryan Sessegnon",
+        "web_name": "Sessegnon",
         "team": "FUL",
         "position": "DEF",
         "price": 4.5,
@@ -91259,7 +91260,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 3.4,
         "ictIndex": 86.7,
-        "priceChangeTarget": -96.79966425868388,
+        "priceChangeTarget": -48.76352408156106,
         "predictions": [
             {
                 "gw": 1,
@@ -91577,12 +91578,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.9,
-        "web_name": "Sessegnon"
+        "xp10": 43.9
     },
     {
         "id": 270,
         "name": "Harrison Reed",
+        "web_name": "Reed",
         "team": "FUL",
         "position": "MID",
         "price": 4.5,
@@ -91594,7 +91595,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 0.58,
         "ictIndex": 9.7,
-        "priceChangeTarget": -90.34921030083689,
+        "priceChangeTarget": -99.49726200088729,
         "predictions": [
             {
                 "gw": 1,
@@ -91912,12 +91913,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 18,
-        "web_name": "Reed"
+        "xp10": 18
     },
     {
         "id": 271,
         "name": "Rodrigo Muniz Carvalho",
+        "web_name": "Muniz",
         "team": "FUL",
         "position": "FWD",
         "price": 5.5,
@@ -91929,7 +91930,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 3.45,
         "ictIndex": 47.3,
-        "priceChangeTarget": -58.51551914989961,
+        "priceChangeTarget": -25.73537544858624,
         "predictions": [
             {
                 "gw": 1,
@@ -92247,12 +92248,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.7,
-        "web_name": "Muniz"
+        "xp10": 26.7
     },
     {
         "id": 272,
         "name": "Jonah Kusi-Asare",
+        "web_name": "Kusi-Asare",
         "team": "FUL",
         "position": "FWD",
         "price": 4.5,
@@ -92264,7 +92265,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.07,
         "ictIndex": 2.3,
-        "priceChangeTarget": -53.427362174607794,
+        "priceChangeTarget": 97.10477924702445,
         "predictions": [
             {
                 "gw": 1,
@@ -92582,12 +92583,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 20.1,
-        "web_name": "Kusi-Asare"
+        "xp10": 20.1
     },
     {
         "id": 569,
         "name": "Gonzalo García",
+        "web_name": "García",
         "team": "FUL",
         "position": "FWD",
         "price": 6,
@@ -92599,7 +92600,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 41.37958832508593,
+        "priceChangeTarget": -61.6739613663416,
         "predictions": [
             {
                 "gw": 1,
@@ -92917,12 +92918,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.1,
-        "web_name": "García"
+        "xp10": 35.1
     },
     {
         "id": 570,
         "name": "César Palacios",
+        "web_name": "Palacios",
         "team": "FUL",
         "position": "MID",
         "price": 5.5,
@@ -92934,7 +92935,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 51.39537589960304,
+        "priceChangeTarget": -72.71716746853221,
         "predictions": [
             {
                 "gw": 1,
@@ -93252,12 +93253,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30,
-        "web_name": "Palacios"
+        "xp10": 30
     },
     {
         "id": 273,
         "name": "Dillon Phillips",
+        "web_name": "Phillips",
         "team": "HUL",
         "position": "GKP",
         "price": 4,
@@ -93269,7 +93270,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 68.76274768525278,
+        "priceChangeTarget": -73.32579626009962,
         "predictions": [
             {
                 "gw": 1,
@@ -93587,12 +93588,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37.4,
-        "web_name": "Phillips"
+        "xp10": 37.4
     },
     {
         "id": 274,
         "name": "Jack Butland",
+        "web_name": "Butland",
         "team": "HUL",
         "position": "GKP",
         "price": 4.5,
@@ -93604,7 +93605,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 3.332152735305499,
+        "priceChangeTarget": -8.911002770547015,
         "predictions": [
             {
                 "gw": 1,
@@ -93922,12 +93923,12 @@ export const PLAYERS = [
         "news": "Arm injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Butland"
+        "xp10": 0
     },
     {
         "id": 275,
         "name": "Harvey Cartwright",
+        "web_name": "Cartwright",
         "team": "HUL",
         "position": "GKP",
         "price": 4,
@@ -93939,7 +93940,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -81.84487116707126,
+        "priceChangeTarget": -54.473413808368235,
         "predictions": [
             {
                 "gw": 1,
@@ -94257,12 +94258,12 @@ export const PLAYERS = [
         "news": "Has joined Grimsby Town on loan for the rest of the season",
         "status": "u",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Cartwright"
+        "xp10": 0
     },
     {
         "id": 276,
         "name": "Thimothée Lo-Tutala",
+        "web_name": "Lo-Tutala",
         "team": "HUL",
         "position": "GKP",
         "price": 4,
@@ -94274,7 +94275,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -60.90982840699537,
+        "priceChangeTarget": 5.990214036439667,
         "predictions": [
             {
                 "gw": 1,
@@ -94592,12 +94593,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37.4,
-        "web_name": "Lo-Tutala"
+        "xp10": 37.4
     },
     {
         "id": 277,
         "name": "John Egan",
+        "web_name": "Egan",
         "team": "HUL",
         "position": "DEF",
         "price": 4,
@@ -94609,7 +94610,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -85.80102407407657,
+        "priceChangeTarget": 93.67850516144506,
         "predictions": [
             {
                 "gw": 1,
@@ -94927,12 +94928,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 22.9,
-        "web_name": "Egan"
+        "xp10": 22.9
     },
     {
         "id": 278,
         "name": "Charlie Hughes",
+        "web_name": "Hughes",
         "team": "HUL",
         "position": "DEF",
         "price": 4,
@@ -94944,7 +94945,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -32.6701769564866,
+        "priceChangeTarget": -8.212279784690594,
         "predictions": [
             {
                 "gw": 1,
@@ -95262,12 +95263,12 @@ export const PLAYERS = [
         "news": "Groin injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Hughes"
+        "xp10": 0
     },
     {
         "id": 279,
         "name": "Semi Ajayi",
+        "web_name": "Ajayi",
         "team": "HUL",
         "position": "DEF",
         "price": 4,
@@ -95279,7 +95280,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 8.266396689036569,
+        "priceChangeTarget": -35.40189711117931,
         "predictions": [
             {
                 "gw": 1,
@@ -95597,12 +95598,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 22.9,
-        "web_name": "Ajayi"
+        "xp10": 22.9
     },
     {
         "id": 280,
         "name": "Lewie Coyle",
+        "web_name": "Coyle",
         "team": "HUL",
         "position": "DEF",
         "price": 4,
@@ -95614,7 +95615,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -31.22411922593642,
+        "priceChangeTarget": -31.431378416160257,
         "predictions": [
             {
                 "gw": 1,
@@ -95932,12 +95933,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 22.9,
-        "web_name": "Coyle"
+        "xp10": 22.9
     },
     {
         "id": 281,
         "name": "Cody Drameh",
+        "web_name": "Drameh",
         "team": "HUL",
         "position": "DEF",
         "price": 4,
@@ -95949,7 +95950,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 1.4399844496259249,
+        "priceChangeTarget": 12.742342533776394,
         "predictions": [
             {
                 "gw": 1,
@@ -96267,12 +96268,12 @@ export const PLAYERS = [
         "news": "Hamstring injury - Expected back 29 Aug",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Drameh"
+        "xp10": 0
     },
     {
         "id": 282,
         "name": "Ryan Giles",
+        "web_name": "Giles",
         "team": "HUL",
         "position": "DEF",
         "price": 4,
@@ -96284,7 +96285,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -5.404457376113044,
+        "priceChangeTarget": -92.66427020470518,
         "predictions": [
             {
                 "gw": 1,
@@ -96602,12 +96603,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 22.9,
-        "web_name": "Giles"
+        "xp10": 22.9
     },
     {
         "id": 283,
         "name": "Matty Jacob",
+        "web_name": "Jacob",
         "team": "HUL",
         "position": "DEF",
         "price": 4,
@@ -96619,7 +96620,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 5.326425850187462,
+        "priceChangeTarget": -80.27967213962893,
         "predictions": [
             {
                 "gw": 1,
@@ -96937,12 +96938,12 @@ export const PLAYERS = [
         "news": "Hip injury - 75% chance of playing",
         "status": "d",
         "chanceOfPlaying": 75,
-        "xp10": 16.3,
-        "web_name": "Jacob"
+        "xp10": 16.3
     },
     {
         "id": 284,
         "name": "Cathal McCarthy",
+        "web_name": "McCarthy",
         "team": "HUL",
         "position": "DEF",
         "price": 4,
@@ -96954,7 +96955,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -14.019189608365906,
+        "priceChangeTarget": 53.73117519506124,
         "predictions": [
             {
                 "gw": 1,
@@ -97272,12 +97273,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 22.9,
-        "web_name": "McCarthy"
+        "xp10": 22.9
     },
     {
         "id": 285,
         "name": "Paddy McNair",
+        "web_name": "McNair",
         "team": "HUL",
         "position": "DEF",
         "price": 4,
@@ -97289,7 +97290,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -46.528275620032474,
+        "priceChangeTarget": -27.12789767046874,
         "predictions": [
             {
                 "gw": 1,
@@ -97607,12 +97608,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 22.9,
-        "web_name": "McNair"
+        "xp10": 22.9
     },
     {
         "id": 286,
         "name": "Mohamed Belloumi",
+        "web_name": "Belloumi",
         "team": "HUL",
         "position": "MID",
         "price": 5,
@@ -97624,7 +97625,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -97.35231016670554,
+        "priceChangeTarget": 59.91676647165721,
         "predictions": [
             {
                 "gw": 1,
@@ -97942,12 +97943,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.8,
-        "web_name": "Belloumi"
+        "xp10": 28.8
     },
     {
         "id": 287,
         "name": "Liam Millar",
+        "web_name": "Millar",
         "team": "HUL",
         "position": "MID",
         "price": 5,
@@ -97959,7 +97960,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -64.98011539171343,
+        "priceChangeTarget": 77.79480092166509,
         "predictions": [
             {
                 "gw": 1,
@@ -98277,12 +98278,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.8,
-        "web_name": "Millar"
+        "xp10": 28.8
     },
     {
         "id": 288,
         "name": "Kieran Dowell",
+        "web_name": "Dowell",
         "team": "HUL",
         "position": "MID",
         "price": 4.5,
@@ -98294,7 +98295,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 96.91457336163145,
+        "priceChangeTarget": -31.399667921992517,
         "predictions": [
             {
                 "gw": 1,
@@ -98612,12 +98613,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.8,
-        "web_name": "Dowell"
+        "xp10": 28.8
     },
     {
         "id": 289,
         "name": "Matt Crooks",
+        "web_name": "Crooks",
         "team": "HUL",
         "position": "MID",
         "price": 4.5,
@@ -98629,7 +98630,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -16.21237435600689,
+        "priceChangeTarget": -13.453200961968165,
         "predictions": [
             {
                 "gw": 1,
@@ -98947,16 +98948,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.8,
-        "web_name": "Crooks"
+        "xp10": 28.8
     },
     {
         "id": 290,
         "name": "Regan Slater",
+        "web_name": "Slater",
         "team": "HUL",
         "position": "MID",
         "price": 4.5,
-        "ownership": 2,
+        "ownership": 2.1,
         "points": 75,
         "xG": 0,
         "xA": 0,
@@ -98964,7 +98965,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -18.917848078210838,
+        "priceChangeTarget": 17.247407055013042,
         "predictions": [
             {
                 "gw": 1,
@@ -99282,12 +99283,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.8,
-        "web_name": "Slater"
+        "xp10": 28.8
     },
     {
         "id": 291,
         "name": "Eliot Matazo",
+        "web_name": "Matazo",
         "team": "HUL",
         "position": "MID",
         "price": 4.5,
@@ -99299,7 +99300,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -8.20521176495106,
+        "priceChangeTarget": 30.475768431719672,
         "predictions": [
             {
                 "gw": 1,
@@ -99617,12 +99618,12 @@ export const PLAYERS = [
         "news": "Knee injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Matazo"
+        "xp10": 0
     },
     {
         "id": 292,
         "name": "Abdülkadir Ömür",
+        "web_name": "Ömür",
         "team": "HUL",
         "position": "MID",
         "price": 5,
@@ -99634,7 +99635,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 75.33554908380563,
+        "priceChangeTarget": -98.7061932020863,
         "predictions": [
             {
                 "gw": 1,
@@ -99952,12 +99953,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.8,
-        "web_name": "Ömür"
+        "xp10": 28.8
     },
     {
         "id": 293,
         "name": "Abu Kamara",
+        "web_name": "Kamara",
         "team": "HUL",
         "position": "MID",
         "price": 5,
@@ -99969,7 +99970,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -29.206018190899073,
+        "priceChangeTarget": -62.12614561685168,
         "predictions": [
             {
                 "gw": 1,
@@ -100287,12 +100288,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.8,
-        "web_name": "Kamara"
+        "xp10": 28.8
     },
     {
         "id": 294,
         "name": "Óscar Zambrano",
+        "web_name": "Zambrano",
         "team": "HUL",
         "position": "MID",
         "price": 4.5,
@@ -100304,7 +100305,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -66.71773042416449,
+        "priceChangeTarget": 96.46450976290484,
         "predictions": [
             {
                 "gw": 1,
@@ -100622,12 +100623,12 @@ export const PLAYERS = [
         "news": "Thigh injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Zambrano"
+        "xp10": 0
     },
     {
         "id": 295,
         "name": "Oli McBurnie",
+        "web_name": "McBurnie",
         "team": "HUL",
         "position": "FWD",
         "price": 5.5,
@@ -100639,7 +100640,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -59.44468342451019,
+        "priceChangeTarget": -74.78010847277572,
         "predictions": [
             {
                 "gw": 1,
@@ -100957,12 +100958,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.2,
-        "web_name": "McBurnie"
+        "xp10": 34.2
     },
     {
         "id": 296,
         "name": "David Akintola",
+        "web_name": "Akintola",
         "team": "HUL",
         "position": "MID",
         "price": 5,
@@ -100974,7 +100975,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -43.67574887269585,
+        "priceChangeTarget": 89.56656843227151,
         "predictions": [
             {
                 "gw": 1,
@@ -101292,12 +101293,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.8,
-        "web_name": "Akintola"
+        "xp10": 28.8
     },
     {
         "id": 297,
         "name": "Darko Gyabi",
+        "web_name": "Gyabi",
         "team": "HUL",
         "position": "MID",
         "price": 4.5,
@@ -101309,7 +101310,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 77.64395704256935,
+        "priceChangeTarget": -63.456774114747546,
         "predictions": [
             {
                 "gw": 1,
@@ -101627,12 +101628,12 @@ export const PLAYERS = [
         "news": "Thigh injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Gyabi"
+        "xp10": 0
     },
     {
         "id": 298,
         "name": "Enis Destan",
+        "web_name": "Destan",
         "team": "HUL",
         "position": "FWD",
         "price": 4.5,
@@ -101644,7 +101645,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -58.89414251730734,
+        "priceChangeTarget": 71.00315154581494,
         "predictions": [
             {
                 "gw": 1,
@@ -101962,12 +101963,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.2,
-        "web_name": "Destan"
+        "xp10": 34.2
     },
     {
         "id": 299,
         "name": "Mason Burstow",
+        "web_name": "Burstow",
         "team": "HUL",
         "position": "FWD",
         "price": 4.5,
@@ -101979,7 +101980,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -35.81472580858795,
+        "priceChangeTarget": -11.456429451338806,
         "predictions": [
             {
                 "gw": 1,
@@ -102297,12 +102298,12 @@ export const PLAYERS = [
         "news": "Has joined Sheffield Wednesday on loan for the rest of the season",
         "status": "u",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Burstow"
+        "xp10": 0
     },
     {
         "id": 556,
         "name": "Matt Targett",
+        "web_name": "Targett",
         "team": "HUL",
         "position": "DEF",
         "price": 4,
@@ -102314,7 +102315,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 50.68456291547844,
+        "priceChangeTarget": -61.65634145599492,
         "predictions": [
             {
                 "gw": 1,
@@ -102632,12 +102633,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 22.9,
-        "web_name": "Targett"
+        "xp10": 22.9
     },
     {
         "id": 563,
         "name": "Hidemasa Morita",
+        "web_name": "Morita",
         "team": "HUL",
         "position": "MID",
         "price": 5,
@@ -102649,7 +102650,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -91.65807735213303,
+        "priceChangeTarget": 9.23323142930812,
         "predictions": [
             {
                 "gw": 1,
@@ -102967,12 +102968,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.8,
-        "web_name": "Morita"
+        "xp10": 28.8
     },
     {
         "id": 572,
         "name": "Konstantinos Tzolakis",
+        "web_name": "Tzolakis",
         "team": "HUL",
         "position": "GKP",
         "price": 4.5,
@@ -102984,7 +102985,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 64.42992912676772,
+        "priceChangeTarget": 1.66705184670883,
         "predictions": [
             {
                 "gw": 1,
@@ -103302,12 +103303,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37.4,
-        "web_name": "Tzolakis"
+        "xp10": 37.4
     },
     {
         "id": 259,
         "name": "Issa Diop",
+        "web_name": "Diop",
         "team": "IPS",
         "position": "DEF",
         "price": 4,
@@ -103319,7 +103320,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.85,
         "ictIndex": 23,
-        "priceChangeTarget": -23.69886101253917,
+        "priceChangeTarget": -41.54509872849172,
         "predictions": [
             {
                 "gw": 1,
@@ -103637,12 +103638,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.4,
-        "web_name": "Diop"
+        "xp10": 26.4
     },
     {
         "id": 300,
         "name": "Christian Walton",
+        "web_name": "Walton",
         "team": "IPS",
         "position": "GKP",
         "price": 4.5,
@@ -103654,7 +103655,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 5.2642872030970125,
+        "priceChangeTarget": -57.567644247095906,
         "predictions": [
             {
                 "gw": 1,
@@ -103972,12 +103973,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.1,
-        "web_name": "Walton"
+        "xp10": 38.1
     },
     {
         "id": 301,
         "name": "Alex Palmer",
+        "web_name": "Palmer",
         "team": "IPS",
         "position": "GKP",
         "price": 4,
@@ -103989,7 +103990,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 1.1311864849666193,
+        "priceChangeTarget": 61.66648142256338,
         "predictions": [
             {
                 "gw": 1,
@@ -104307,12 +104308,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.1,
-        "web_name": "Palmer"
+        "xp10": 38.1
     },
     {
         "id": 302,
         "name": "David Button",
+        "web_name": "Button",
         "team": "IPS",
         "position": "GKP",
         "price": 4,
@@ -104324,7 +104325,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -3.4476879657012347,
+        "priceChangeTarget": -49.903947801110604,
         "predictions": [
             {
                 "gw": 1,
@@ -104642,16 +104643,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.1,
-        "web_name": "Button"
+        "xp10": 38.1
     },
     {
         "id": 303,
         "name": "Cédric Kipré",
+        "web_name": "Kipré",
         "team": "IPS",
         "position": "DEF",
         "price": 4,
-        "ownership": 0.4,
+        "ownership": 0.5,
         "points": 62.5,
         "xG": 0,
         "xA": 0,
@@ -104659,7 +104660,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 12.521014631226322,
+        "priceChangeTarget": 75.98012533882698,
         "predictions": [
             {
                 "gw": 1,
@@ -104977,12 +104978,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.9,
-        "web_name": "Kipré"
+        "xp10": 23.9
     },
     {
         "id": 304,
         "name": "Dara O'Shea",
+        "web_name": "O'Shea",
         "team": "IPS",
         "position": "DEF",
         "price": 4,
@@ -104994,7 +104995,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -87.64603396377875,
+        "priceChangeTarget": 35.50264948844574,
         "predictions": [
             {
                 "gw": 1,
@@ -105312,12 +105313,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.9,
-        "web_name": "O'Shea"
+        "xp10": 23.9
     },
     {
         "id": 305,
         "name": "Leif Davis",
+        "web_name": "Davis",
         "team": "IPS",
         "position": "DEF",
         "price": 4,
@@ -105329,7 +105330,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 54.14112458038039,
+        "priceChangeTarget": 64.47383451387591,
         "predictions": [
             {
                 "gw": 1,
@@ -105647,12 +105648,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.9,
-        "web_name": "Davis"
+        "xp10": 23.9
     },
     {
         "id": 306,
         "name": "Jacob Greaves",
+        "web_name": "Greaves",
         "team": "IPS",
         "position": "DEF",
         "price": 4,
@@ -105664,7 +105665,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 65.31799072683978,
+        "priceChangeTarget": 31.29293545840318,
         "predictions": [
             {
                 "gw": 1,
@@ -105982,12 +105983,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.9,
-        "web_name": "Greaves"
+        "xp10": 23.9
     },
     {
         "id": 307,
         "name": "Ben Johnson",
+        "web_name": "Johnson",
         "team": "IPS",
         "position": "DEF",
         "price": 4,
@@ -105999,7 +106000,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 27.966110884319576,
+        "priceChangeTarget": -45.56128390590928,
         "predictions": [
             {
                 "gw": 1,
@@ -106317,12 +106318,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.9,
-        "web_name": "Johnson"
+        "xp10": 23.9
     },
     {
         "id": 308,
         "name": "Darnell Furlong",
+        "web_name": "Furlong",
         "team": "IPS",
         "position": "DEF",
         "price": 4,
@@ -106334,7 +106335,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -5.995201318070144,
+        "priceChangeTarget": 45.927961861050505,
         "predictions": [
             {
                 "gw": 1,
@@ -106652,12 +106653,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.9,
-        "web_name": "Furlong"
+        "xp10": 23.9
     },
     {
         "id": 309,
         "name": "Marcelino Núñez",
+        "web_name": "Núñez",
         "team": "IPS",
         "position": "MID",
         "price": 5,
@@ -106669,7 +106670,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 19.78991653749938,
+        "priceChangeTarget": -60.78756327386712,
         "predictions": [
             {
                 "gw": 1,
@@ -106987,12 +106988,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3,
-        "web_name": "Núñez"
+        "xp10": 29.3
     },
     {
         "id": 310,
         "name": "Azor Matusiwa",
+        "web_name": "Matusiwa",
         "team": "IPS",
         "position": "MID",
         "price": 5,
@@ -107004,7 +107005,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -19.937407272975037,
+        "priceChangeTarget": -83.28774891686454,
         "predictions": [
             {
                 "gw": 1,
@@ -107322,12 +107323,12 @@ export const PLAYERS = [
         "news": "Muscular injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Matusiwa"
+        "xp10": 0
     },
     {
         "id": 311,
         "name": "Wes Burns",
+        "web_name": "Burns",
         "team": "IPS",
         "position": "MID",
         "price": 5,
@@ -107339,7 +107340,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 84.11086847863584,
+        "priceChangeTarget": -76.89947486738814,
         "predictions": [
             {
                 "gw": 1,
@@ -107657,12 +107658,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3,
-        "web_name": "Burns"
+        "xp10": 29.3
     },
     {
         "id": 312,
         "name": "Jack Taylor",
+        "web_name": "Taylor",
         "team": "IPS",
         "position": "MID",
         "price": 4.5,
@@ -107674,7 +107675,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -90.76919753649047,
+        "priceChangeTarget": -12.746723004997179,
         "predictions": [
             {
                 "gw": 1,
@@ -107992,12 +107993,12 @@ export const PLAYERS = [
         "news": "Knee injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Taylor"
+        "xp10": 0
     },
     {
         "id": 313,
         "name": "Jack Clarke",
+        "web_name": "Clarke",
         "team": "IPS",
         "position": "MID",
         "price": 5.5,
@@ -108009,7 +108010,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -47.28020103556556,
+        "priceChangeTarget": 73.7055462237087,
         "predictions": [
             {
                 "gw": 1,
@@ -108327,12 +108328,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3,
-        "web_name": "Clarke"
+        "xp10": 29.3
     },
     {
         "id": 314,
         "name": "Chiedozie Ogbene",
+        "web_name": "Ogbene",
         "team": "IPS",
         "position": "MID",
         "price": 5,
@@ -108344,7 +108345,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 85.9874880624426,
+        "priceChangeTarget": 31.75380466190768,
         "predictions": [
             {
                 "gw": 1,
@@ -108662,12 +108663,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3,
-        "web_name": "Ogbene"
+        "xp10": 29.3
     },
     {
         "id": 315,
         "name": "Abdul Fatawu",
+        "web_name": "Fatawu",
         "team": "IPS",
         "position": "MID",
         "price": 5.5,
@@ -108679,7 +108680,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -41.04874375110046,
+        "priceChangeTarget": 87.37782474092774,
         "predictions": [
             {
                 "gw": 1,
@@ -108997,12 +108998,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3,
-        "web_name": "Fatawu"
+        "xp10": 29.3
     },
     {
         "id": 316,
         "name": "Emersonn Correia da Silva",
+        "web_name": "Emersonn",
         "team": "IPS",
         "position": "FWD",
         "price": 5.5,
@@ -109014,7 +109015,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 27.919221562302937,
+        "priceChangeTarget": 52.61210241776203,
         "predictions": [
             {
                 "gw": 1,
@@ -109332,12 +109333,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.6,
-        "web_name": "Emersonn"
+        "xp10": 34.6
     },
     {
         "id": 317,
         "name": "George Hirst",
+        "web_name": "Hirst",
         "team": "IPS",
         "position": "FWD",
         "price": 5,
@@ -109349,7 +109350,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -90.56360974286939,
+        "priceChangeTarget": 77.7893497674282,
         "predictions": [
             {
                 "gw": 1,
@@ -109667,12 +109668,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.6,
-        "web_name": "Hirst"
+        "xp10": 34.6
     },
     {
         "id": 318,
         "name": "Jaden Philogene",
+        "web_name": "Philogene",
         "team": "IPS",
         "position": "MID",
         "price": 5.5,
@@ -109684,7 +109685,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -72.6607667899358,
+        "priceChangeTarget": 74.13845044805382,
         "predictions": [
             {
                 "gw": 1,
@@ -110002,12 +110003,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3,
-        "web_name": "Philogene"
+        "xp10": 29.3
     },
     {
         "id": 319,
         "name": "Sam Szmodics",
+        "web_name": "Szmodics",
         "team": "IPS",
         "position": "MID",
         "price": 5,
@@ -110019,7 +110020,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 64.9489400708153,
+        "priceChangeTarget": -94.32179385801108,
         "predictions": [
             {
                 "gw": 1,
@@ -110337,12 +110338,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3,
-        "web_name": "Szmodics"
+        "xp10": 29.3
     },
     {
         "id": 320,
         "name": "Chuba Akpom",
+        "web_name": "Akpom",
         "team": "IPS",
         "position": "FWD",
         "price": 5,
@@ -110354,7 +110355,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -40.6328266363214,
+        "priceChangeTarget": 37.15706972243663,
         "predictions": [
             {
                 "gw": 1,
@@ -110672,12 +110673,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.6,
-        "web_name": "Akpom"
+        "xp10": 34.6
     },
     {
         "id": 321,
         "name": "Sindre Walle Egeli",
+        "web_name": "Walle Egeli",
         "team": "IPS",
         "position": "FWD",
         "price": 4.5,
@@ -110689,7 +110690,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 58.975513617878505,
+        "priceChangeTarget": 16.354447243908027,
         "predictions": [
             {
                 "gw": 1,
@@ -111007,12 +111008,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.6,
-        "web_name": "Walle Egeli"
+        "xp10": 34.6
     },
     {
         "id": 322,
         "name": "Ali Al-Hamadi",
+        "web_name": "Al-Hamadi",
         "team": "IPS",
         "position": "FWD",
         "price": 5,
@@ -111024,7 +111025,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -12.923170630025325,
+        "priceChangeTarget": -0.2890284398950911,
         "predictions": [
             {
                 "gw": 1,
@@ -111342,12 +111343,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.6,
-        "web_name": "Al-Hamadi"
+        "xp10": 34.6
     },
     {
         "id": 323,
         "name": "Kasey McAteer",
+        "web_name": "McAteer",
         "team": "IPS",
         "position": "MID",
         "price": 4.5,
@@ -111359,7 +111360,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 37.63048836367102,
+        "priceChangeTarget": -34.488255476443584,
         "predictions": [
             {
                 "gw": 1,
@@ -111677,12 +111678,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3,
-        "web_name": "McAteer"
+        "xp10": 29.3
     },
     {
         "id": 324,
         "name": "Anis Mehmeti",
+        "web_name": "Mehmeti",
         "team": "IPS",
         "position": "MID",
         "price": 5,
@@ -111694,7 +111695,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 65.82567795348152,
+        "priceChangeTarget": -78.33485084101466,
         "predictions": [
             {
                 "gw": 1,
@@ -112012,12 +112013,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3,
-        "web_name": "Mehmeti"
+        "xp10": 29.3
     },
     {
         "id": 554,
         "name": "Kayne van Oevelen",
+        "web_name": "Van Oevelen",
         "team": "IPS",
         "position": "GKP",
         "price": 4.5,
@@ -112029,7 +112030,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -85.31833974345658,
+        "priceChangeTarget": 61.48394409790984,
         "predictions": [
             {
                 "gw": 1,
@@ -112347,12 +112348,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.1,
-        "web_name": "Van Oevelen"
+        "xp10": 38.1
     },
     {
         "id": 562,
         "name": "Daizen Maeda",
+        "web_name": "Maeda",
         "team": "IPS",
         "position": "MID",
         "price": 5.5,
@@ -112364,7 +112365,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -74.93787048184623,
+        "priceChangeTarget": 42.25686519599074,
         "predictions": [
             {
                 "gw": 1,
@@ -112682,12 +112683,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3,
-        "web_name": "Maeda"
+        "xp10": 29.3
     },
     {
         "id": 564,
         "name": "Kjell Scherpen",
+        "web_name": "Scherpen",
         "team": "IPS",
         "position": "GKP",
         "price": 4.5,
@@ -112699,7 +112700,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -78.91404254921488,
+        "priceChangeTarget": -88.47001880360872,
         "predictions": [
             {
                 "gw": 1,
@@ -113017,12 +113018,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.1,
-        "web_name": "Scherpen"
+        "xp10": 38.1
     },
     {
         "id": 571,
         "name": "Florentino Ibrain Morris Luís",
+        "web_name": "Florentino",
         "team": "IPS",
         "position": "MID",
         "price": 5,
@@ -113034,7 +113035,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 40.46071852903873,
+        "priceChangeTarget": 17.311386669590107,
         "predictions": [
             {
                 "gw": 1,
@@ -113352,12 +113353,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.3,
-        "web_name": "Florentino"
+        "xp10": 29.3
     },
     {
         "id": 260,
         "name": "Harry Wilson",
+        "web_name": "Wilson",
         "team": "LEE",
         "position": "MID",
         "price": 6.5,
@@ -113369,7 +113370,7 @@ export const PLAYERS = [
         "xA90": 0.16,
         "xGI": 10.65,
         "ictIndex": 196.9,
-        "priceChangeTarget": 44.672299930684034,
+        "priceChangeTarget": 92.20710833782877,
         "predictions": [
             {
                 "gw": 1,
@@ -113687,12 +113688,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 50.4,
-        "web_name": "Wilson"
+        "xp10": 50.4
     },
     {
         "id": 326,
         "name": "Lucas Estella Perri",
+        "web_name": "Perri",
         "team": "LEE",
         "position": "GKP",
         "price": 4.5,
@@ -113704,7 +113705,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 32.2,
-        "priceChangeTarget": -14.604558826808585,
+        "priceChangeTarget": 38.847799747374324,
         "predictions": [
             {
                 "gw": 1,
@@ -114022,12 +114023,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 32,
-        "web_name": "Perri"
+        "xp10": 32
     },
     {
         "id": 327,
         "name": "Jaka Bijol",
+        "web_name": "Bijol",
         "team": "LEE",
         "position": "DEF",
         "price": 5,
@@ -114039,7 +114040,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 1.65,
         "ictIndex": 86,
-        "priceChangeTarget": 4.0010051333387935,
+        "priceChangeTarget": -15.351100647906662,
         "predictions": [
             {
                 "gw": 1,
@@ -114357,12 +114358,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 41.3,
-        "web_name": "Bijol"
+        "xp10": 41.3
     },
     {
         "id": 329,
         "name": "Joe Rodon",
+        "web_name": "Rodon",
         "team": "LEE",
         "position": "DEF",
         "price": 4.5,
@@ -114374,7 +114375,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 1.96,
         "ictIndex": 109.1,
-        "priceChangeTarget": 99.79067071487901,
+        "priceChangeTarget": -49.26911321837775,
         "predictions": [
             {
                 "gw": 1,
@@ -114692,12 +114693,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.9,
-        "web_name": "Rodon"
+        "xp10": 29.9
     },
     {
         "id": 330,
         "name": "Jayden Bogle",
+        "web_name": "Bogle",
         "team": "LEE",
         "position": "DEF",
         "price": 4.5,
@@ -114709,7 +114710,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 5.19,
         "ictIndex": 100.3,
-        "priceChangeTarget": -97.24041287114025,
+        "priceChangeTarget": 78.36935007025073,
         "predictions": [
             {
                 "gw": 1,
@@ -115027,12 +115028,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 27.1,
-        "web_name": "Bogle"
+        "xp10": 27.1
     },
     {
         "id": 331,
         "name": "Gabriel Gudmundsson",
+        "web_name": "Gudmundsson",
         "team": "LEE",
         "position": "DEF",
         "price": 4.5,
@@ -115044,7 +115045,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 3.98,
         "ictIndex": 96.4,
-        "priceChangeTarget": 4.20693096887446,
+        "priceChangeTarget": -55.07887324747864,
         "predictions": [
             {
                 "gw": 1,
@@ -115362,12 +115363,12 @@ export const PLAYERS = [
         "news": "Hamstring injury - Expected back 30 Aug",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Gudmundsson"
+        "xp10": 0
     },
     {
         "id": 332,
         "name": "James Justin",
+        "web_name": "Justin",
         "team": "LEE",
         "position": "DEF",
         "price": 4.5,
@@ -115379,7 +115380,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 2.99,
         "ictIndex": 88.3,
-        "priceChangeTarget": -39.23326030979304,
+        "priceChangeTarget": -88.93566550461634,
         "predictions": [
             {
                 "gw": 1,
@@ -115697,12 +115698,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 40.6,
-        "web_name": "Justin"
+        "xp10": 40.6
     },
     {
         "id": 333,
         "name": "Sebastiaan Bornauw",
+        "web_name": "Bornauw",
         "team": "LEE",
         "position": "DEF",
         "price": 4.5,
@@ -115714,7 +115715,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.21,
         "ictIndex": 12.2,
-        "priceChangeTarget": 55.35352364562303,
+        "priceChangeTarget": 52.734826955726305,
         "predictions": [
             {
                 "gw": 1,
@@ -116032,12 +116033,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 21.8,
-        "web_name": "Bornauw"
+        "xp10": 21.8
     },
     {
         "id": 334,
         "name": "Tarik Muharemović",
+        "web_name": "Muharemović",
         "team": "LEE",
         "position": "DEF",
         "price": 5,
@@ -116049,7 +116050,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 56.93169271583071,
+        "priceChangeTarget": -82.33828887362179,
         "predictions": [
             {
                 "gw": 1,
@@ -116367,12 +116368,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 22.7,
-        "web_name": "Muharemović"
+        "xp10": 22.7
     },
     {
         "id": 335,
         "name": "Anton Stach",
+        "web_name": "Stach",
         "team": "LEE",
         "position": "MID",
         "price": 6,
@@ -116384,7 +116385,7 @@ export const PLAYERS = [
         "xA90": 0.17,
         "xGI": 7.35,
         "ictIndex": 188.8,
-        "priceChangeTarget": -16.97968502948956,
+        "priceChangeTarget": 20.316822743288697,
         "predictions": [
             {
                 "gw": 1,
@@ -116702,12 +116703,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 46.5,
-        "web_name": "Stach"
+        "xp10": 46.5
     },
     {
         "id": 336,
         "name": "Noah Okafor",
+        "web_name": "Okafor",
         "team": "LEE",
         "position": "MID",
         "price": 6,
@@ -116719,7 +116720,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 6.57,
         "ictIndex": 115,
-        "priceChangeTarget": -41.54741984872774,
+        "priceChangeTarget": -37.30435698732184,
         "predictions": [
             {
                 "gw": 1,
@@ -117037,12 +117038,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 55.2,
-        "web_name": "Okafor"
+        "xp10": 55.2
     },
     {
         "id": 337,
         "name": "Brenden Aaronson",
+        "web_name": "Aaronson",
         "team": "LEE",
         "position": "MID",
         "price": 5.5,
@@ -117054,7 +117055,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 8.13,
         "ictIndex": 146.7,
-        "priceChangeTarget": 5.840388678350948,
+        "priceChangeTarget": -47.78593698699041,
         "predictions": [
             {
                 "gw": 1,
@@ -117372,12 +117373,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 40.5,
-        "web_name": "Aaronson"
+        "xp10": 40.5
     },
     {
         "id": 338,
         "name": "Ethan Ampadu",
+        "web_name": "Ampadu",
         "team": "LEE",
         "position": "MID",
         "price": 5.5,
@@ -117389,7 +117390,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 4.67,
         "ictIndex": 114.7,
-        "priceChangeTarget": 47.0660315442793,
+        "priceChangeTarget": -28.966920778638354,
         "predictions": [
             {
                 "gw": 1,
@@ -117707,12 +117708,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 36.6,
-        "web_name": "Ampadu"
+        "xp10": 36.6
     },
     {
         "id": 339,
         "name": "Sean Longstaff",
+        "web_name": "Longstaff",
         "team": "LEE",
         "position": "MID",
         "price": 5,
@@ -117724,7 +117725,7 @@ export const PLAYERS = [
         "xA90": 0.17,
         "xGI": 3.1,
         "ictIndex": 81.2,
-        "priceChangeTarget": 85.33916086768946,
+        "priceChangeTarget": -10.99802462059452,
         "predictions": [
             {
                 "gw": 1,
@@ -118042,12 +118043,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.7,
-        "web_name": "Longstaff"
+        "xp10": 35.7
     },
     {
         "id": 340,
         "name": "Joe Gelhardt",
+        "web_name": "Gelhardt",
         "team": "LEE",
         "position": "MID",
         "price": 5,
@@ -118059,7 +118060,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -83.63200966626682,
+        "priceChangeTarget": 14.728253507210326,
         "predictions": [
             {
                 "gw": 1,
@@ -118377,12 +118378,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.8,
-        "web_name": "Gelhardt"
+        "xp10": 28.8
     },
     {
         "id": 341,
         "name": "Wilfried Gnonto",
+        "web_name": "Gnonto",
         "team": "LEE",
         "position": "MID",
         "price": 5,
@@ -118394,7 +118395,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 1.17,
         "ictIndex": 27.5,
-        "priceChangeTarget": 51.17490815759379,
+        "priceChangeTarget": 15.22141548839069,
         "predictions": [
             {
                 "gw": 1,
@@ -118712,12 +118713,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 17.1,
-        "web_name": "Gnonto"
+        "xp10": 17.1
     },
     {
         "id": 342,
         "name": "Jack Harrison",
+        "web_name": "Harrison",
         "team": "LEE",
         "position": "MID",
         "price": 5,
@@ -118729,7 +118730,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.51,
         "ictIndex": 11.5,
-        "priceChangeTarget": -60.03089189946178,
+        "priceChangeTarget": -8.074225108482082,
         "predictions": [
             {
                 "gw": 1,
@@ -119047,12 +119048,12 @@ export const PLAYERS = [
         "news": "Has joined New England Revolution permanently",
         "status": "u",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Harrison"
+        "xp10": 0
     },
     {
         "id": 343,
         "name": "Daniel James",
+        "web_name": "James",
         "team": "LEE",
         "position": "MID",
         "price": 5,
@@ -119064,7 +119065,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 1.62,
         "ictIndex": 33.9,
-        "priceChangeTarget": -52.71714197726642,
+        "priceChangeTarget": 8.55542236349666,
         "predictions": [
             {
                 "gw": 1,
@@ -119382,12 +119383,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 36.7,
-        "web_name": "James"
+        "xp10": 36.7
     },
     {
         "id": 344,
         "name": "Ilia Gruev",
+        "web_name": "Gruev",
         "team": "LEE",
         "position": "MID",
         "price": 5,
@@ -119399,7 +119400,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 1.35,
         "ictIndex": 43.2,
-        "priceChangeTarget": 52.50291345604134,
+        "priceChangeTarget": 92.35637275793019,
         "predictions": [
             {
                 "gw": 1,
@@ -119717,12 +119718,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.6,
-        "web_name": "Gruev"
+        "xp10": 35.6
     },
     {
         "id": 345,
         "name": "Tanaka Ao",
+        "web_name": "Tanaka",
         "team": "LEE",
         "position": "MID",
         "price": 5,
@@ -119734,7 +119735,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 2.83,
         "ictIndex": 63.6,
-        "priceChangeTarget": -12.726150451600262,
+        "priceChangeTarget": 87.96097154957684,
         "predictions": [
             {
                 "gw": 1,
@@ -120052,16 +120053,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.7,
-        "web_name": "Tanaka"
+        "xp10": 39.7
     },
     {
         "id": 346,
         "name": "Dominic Calvert-Lewin",
+        "web_name": "Calvert-Lewin",
         "team": "LEE",
         "position": "FWD",
         "price": 6,
-        "ownership": 24.4,
+        "ownership": 24.5,
         "points": 142,
         "xG": 15.57,
         "xA": 1.06,
@@ -120069,7 +120070,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 16.62,
         "ictIndex": 194.7,
-        "priceChangeTarget": 27.122093570794405,
+        "priceChangeTarget": -53.92131243305571,
         "predictions": [
             {
                 "gw": 1,
@@ -120387,12 +120388,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 44.3,
-        "web_name": "Calvert-Lewin"
+        "xp10": 44.3
     },
     {
         "id": 347,
         "name": "Lukas Nmecha",
+        "web_name": "Nmecha",
         "team": "LEE",
         "position": "FWD",
         "price": 5.5,
@@ -120404,7 +120405,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 8.83,
         "ictIndex": 87.8,
-        "priceChangeTarget": -41.15980804704606,
+        "priceChangeTarget": -54.41339163020058,
         "predictions": [
             {
                 "gw": 1,
@@ -120722,12 +120723,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.4,
-        "web_name": "Nmecha"
+        "xp10": 39.4
     },
     {
         "id": 348,
         "name": "Joël Piroe",
+        "web_name": "Piroe",
         "team": "LEE",
         "position": "FWD",
         "price": 5,
@@ -120739,7 +120740,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 1.03,
         "ictIndex": 16.5,
-        "priceChangeTarget": -87.94677494645069,
+        "priceChangeTarget": 58.80484095829718,
         "predictions": [
             {
                 "gw": 1,
@@ -121057,12 +121058,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 19.8,
-        "web_name": "Piroe"
+        "xp10": 19.8
     },
     {
         "id": 349,
         "name": "Mateo Joseph Fernández-Regatillo",
+        "web_name": "Mateo Joseph",
         "team": "LEE",
         "position": "FWD",
         "price": 4.5,
@@ -121074,7 +121075,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -1.0656302213950255,
+        "priceChangeTarget": 49.51732889651953,
         "predictions": [
             {
                 "gw": 1,
@@ -121392,12 +121393,12 @@ export const PLAYERS = [
         "news": "Knee injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Mateo Joseph"
+        "xp10": 0
     },
     {
         "id": 385,
         "name": "James Trafford",
+        "web_name": "Trafford",
         "team": "LEE",
         "position": "GKP",
         "price": 5,
@@ -121409,7 +121410,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 11.9,
-        "priceChangeTarget": 21.482513350228146,
+        "priceChangeTarget": -33.657666965232465,
         "predictions": [
             {
                 "gw": 1,
@@ -121727,12 +121728,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 31.8,
-        "web_name": "Trafford"
+        "xp10": 31.8
     },
     {
         "id": 350,
         "name": "Alisson Becker",
+        "web_name": "A.Becker",
         "team": "LIV",
         "position": "GKP",
         "price": 5.5,
@@ -121744,7 +121745,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.03,
         "ictIndex": 47.8,
-        "priceChangeTarget": -0.8749102021989472,
+        "priceChangeTarget": 44.01725119578211,
         "predictions": [
             {
                 "gw": 1,
@@ -122062,12 +122063,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 41.7,
-        "web_name": "A.Becker"
+        "xp10": 41.7
     },
     {
         "id": 351,
         "name": "Giorgi Mamardashvili",
+        "web_name": "Mamardashvili",
         "team": "LIV",
         "position": "GKP",
         "price": 5,
@@ -122079,7 +122080,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 27.5,
-        "priceChangeTarget": -78.65629207236427,
+        "priceChangeTarget": -65.92851214795544,
         "predictions": [
             {
                 "gw": 1,
@@ -122397,12 +122398,12 @@ export const PLAYERS = [
         "news": "Backup GKP at Liverpool behind Alisson.",
         "status": "a",
         "chanceOfPlaying": 10,
-        "xp10": 44.8,
-        "web_name": "Mamardashvili"
+        "xp10": 44.8
     },
     {
         "id": 352,
         "name": "Freddie Woodman",
+        "web_name": "Woodman",
         "team": "LIV",
         "position": "GKP",
         "price": 4,
@@ -122414,7 +122415,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 8.4,
-        "priceChangeTarget": -6.880710785551699,
+        "priceChangeTarget": 55.91257404093767,
         "predictions": [
             {
                 "gw": 1,
@@ -122732,12 +122733,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 44.9,
-        "web_name": "Woodman"
+        "xp10": 44.9
     },
     {
         "id": 353,
         "name": "Armin Pecsi",
+        "web_name": "Pecsi",
         "team": "LIV",
         "position": "GKP",
         "price": 4,
@@ -122749,7 +122750,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 7.639763285942848,
+        "priceChangeTarget": -88.84918966488327,
         "predictions": [
             {
                 "gw": 1,
@@ -123067,12 +123068,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 41.6,
-        "web_name": "Pecsi"
+        "xp10": 41.6
     },
     {
         "id": 354,
         "name": "Vitezslav Jaros",
+        "web_name": "Jaros",
         "team": "LIV",
         "position": "GKP",
         "price": 4,
@@ -123084,7 +123085,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -76.93898943728152,
+        "priceChangeTarget": 39.543854751294475,
         "predictions": [
             {
                 "gw": 1,
@@ -123402,12 +123403,12 @@ export const PLAYERS = [
         "news": "Knee injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Jaros"
+        "xp10": 0
     },
     {
         "id": 355,
         "name": "Harvey Davies",
+        "web_name": "Davies",
         "team": "LIV",
         "position": "GKP",
         "price": 4,
@@ -123419,7 +123420,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -28.12843772214579,
+        "priceChangeTarget": -64.55906466388753,
         "predictions": [
             {
                 "gw": 1,
@@ -123737,12 +123738,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 41.6,
-        "web_name": "Davies"
+        "xp10": 41.6
     },
     {
         "id": 356,
         "name": "Virgil van Dijk",
+        "web_name": "Virgil",
         "team": "LIV",
         "position": "DEF",
         "price": 6.5,
@@ -123754,7 +123755,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 5.21,
         "ictIndex": 187.6,
-        "priceChangeTarget": -64.35426661256312,
+        "priceChangeTarget": -36.00607382496204,
         "predictions": [
             {
                 "gw": 1,
@@ -124072,12 +124073,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 44.9,
-        "web_name": "Virgil"
+        "xp10": 44.9
     },
     {
         "id": 357,
         "name": "Jeremie Frimpong",
+        "web_name": "Frimpong",
         "team": "LIV",
         "position": "DEF",
         "price": 5.5,
@@ -124089,7 +124090,7 @@ export const PLAYERS = [
         "xA90": 0.14,
         "xGI": 2.05,
         "ictIndex": 56.5,
-        "priceChangeTarget": 19.77310022984922,
+        "priceChangeTarget": 36.88144269462913,
         "predictions": [
             {
                 "gw": 1,
@@ -124407,16 +124408,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 44.9,
-        "web_name": "Frimpong"
+        "xp10": 44.9
     },
     {
         "id": 358,
         "name": "Milos Kerkez",
+        "web_name": "Kerkez",
         "team": "LIV",
         "position": "DEF",
         "price": 5.5,
-        "ownership": 5.4,
+        "ownership": 5.3,
         "points": 85,
         "xG": 1.5,
         "xA": 0.69,
@@ -124424,7 +124425,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 2.19,
         "ictIndex": 99.4,
-        "priceChangeTarget": 79.87430867004826,
+        "priceChangeTarget": -80.08263338044416,
         "predictions": [
             {
                 "gw": 1,
@@ -124742,12 +124743,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 31,
-        "web_name": "Kerkez"
+        "xp10": 31
     },
     {
         "id": 359,
         "name": "Joe Gomez",
+        "web_name": "Gomez",
         "team": "LIV",
         "position": "DEF",
         "price": 5,
@@ -124759,7 +124760,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 0.92,
         "ictIndex": 23.2,
-        "priceChangeTarget": -64.57778642468335,
+        "priceChangeTarget": 55.25244334223723,
         "predictions": [
             {
                 "gw": 1,
@@ -125077,12 +125078,12 @@ export const PLAYERS = [
         "news": "Muscular injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Gomez"
+        "xp10": 0
     },
     {
         "id": 360,
         "name": "Conor Bradley",
+        "web_name": "Bradley",
         "team": "LIV",
         "position": "DEF",
         "price": 5,
@@ -125094,7 +125095,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 1.02,
         "ictIndex": 32.3,
-        "priceChangeTarget": -25.31174226181099,
+        "priceChangeTarget": -27.489983747406697,
         "predictions": [
             {
                 "gw": 1,
@@ -125412,12 +125413,12 @@ export const PLAYERS = [
         "news": "Knee injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Bradley"
+        "xp10": 0
     },
     {
         "id": 361,
         "name": "Wellity Lucky",
+        "web_name": "Lucky",
         "team": "LIV",
         "position": "DEF",
         "price": 4,
@@ -125429,7 +125430,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -25.521107240648718,
+        "priceChangeTarget": -90.7047851430919,
         "predictions": [
             {
                 "gw": 1,
@@ -125747,12 +125748,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 14.8,
-        "web_name": "Lucky"
+        "xp10": 14.8
     },
     {
         "id": 362,
         "name": "Jeremy Jacquet",
+        "web_name": "Jacquet",
         "team": "LIV",
         "position": "DEF",
         "price": 5,
@@ -125764,7 +125765,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -85.77704252949854,
+        "priceChangeTarget": 14.843148532293341,
         "predictions": [
             {
                 "gw": 1,
@@ -126082,12 +126083,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 24.9,
-        "web_name": "Jacquet"
+        "xp10": 24.9
     },
     {
         "id": 363,
         "name": "Giovanni Leoni",
+        "web_name": "Leoni",
         "team": "LIV",
         "position": "DEF",
         "price": 4,
@@ -126099,7 +126100,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 96.67634282938539,
+        "priceChangeTarget": 7.937886118924268,
         "predictions": [
             {
                 "gw": 1,
@@ -126417,12 +126418,12 @@ export const PLAYERS = [
         "news": "Knee injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Leoni"
+        "xp10": 0
     },
     {
         "id": 364,
         "name": "Kostas Tsimikas",
+        "web_name": "Tsimikas",
         "team": "LIV",
         "position": "DEF",
         "price": 5,
@@ -126434,7 +126435,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -10.885820202053509,
+        "priceChangeTarget": -98.24552285417694,
         "predictions": [
             {
                 "gw": 1,
@@ -126752,12 +126753,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 24.9,
-        "web_name": "Tsimikas"
+        "xp10": 24.9
     },
     {
         "id": 365,
         "name": "Calvin Ramsay",
+        "web_name": "Ramsay",
         "team": "LIV",
         "position": "DEF",
         "price": 4,
@@ -126769,7 +126770,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 5.2420391802947535,
+        "priceChangeTarget": 75.73112034884954,
         "predictions": [
             {
                 "gw": 1,
@@ -127087,16 +127088,16 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 14.8,
-        "web_name": "Ramsay"
+        "xp10": 14.8
     },
     {
         "id": 366,
         "name": "Florian Wirtz",
+        "web_name": "Wirtz",
         "team": "LIV",
         "position": "MID",
         "price": 7.5,
-        "ownership": 13.4,
+        "ownership": 13.6,
         "points": 125,
         "xG": 6.83,
         "xA": 5.14,
@@ -127104,7 +127105,7 @@ export const PLAYERS = [
         "xA90": 0.19,
         "xGI": 11.96,
         "ictIndex": 210,
-        "priceChangeTarget": -4.488931699526333,
+        "priceChangeTarget": -92.06385826927263,
         "predictions": [
             {
                 "gw": 1,
@@ -127422,12 +127423,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 47.9,
-        "web_name": "Wirtz"
+        "xp10": 47.9
     },
     {
         "id": 367,
         "name": "Cody Gakpo",
+        "web_name": "Gakpo",
         "team": "LIV",
         "position": "MID",
         "price": 7,
@@ -127439,7 +127440,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 13.02,
         "ictIndex": 208.4,
-        "priceChangeTarget": 70.853165376302,
+        "priceChangeTarget": 17.246401014620844,
         "predictions": [
             {
                 "gw": 1,
@@ -127757,16 +127758,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.1,
-        "web_name": "Gakpo"
+        "xp10": 42.1
     },
     {
         "id": 368,
         "name": "Dominik Szoboszlai",
+        "web_name": "Szoboszlai",
         "team": "LIV",
         "position": "MID",
         "price": 7,
-        "ownership": 45.4,
+        "ownership": 45.1,
         "points": 160,
         "xG": 4.76,
         "xA": 6.83,
@@ -127774,7 +127775,7 @@ export const PLAYERS = [
         "xA90": 0.19,
         "xGI": 11.59,
         "ictIndex": 260.9,
-        "priceChangeTarget": 55.18198966252018,
+        "priceChangeTarget": 30.233150211753042,
         "predictions": [
             {
                 "gw": 1,
@@ -128092,16 +128093,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45.6,
-        "web_name": "Szoboszlai"
+        "xp10": 45.6
     },
     {
         "id": 369,
         "name": "Rio Ngumoha",
+        "web_name": "Ngumoha",
         "team": "LIV",
         "position": "MID",
         "price": 6,
-        "ownership": 1.6,
+        "ownership": 1.5,
         "points": 43,
         "xG": 1.34,
         "xA": 2.01,
@@ -128109,7 +128110,7 @@ export const PLAYERS = [
         "xA90": 0.4,
         "xGI": 3.35,
         "ictIndex": 60.1,
-        "priceChangeTarget": 39.51820568418026,
+        "priceChangeTarget": 56.697391737181135,
         "predictions": [
             {
                 "gw": 1,
@@ -128427,12 +128428,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 21.4,
-        "web_name": "Ngumoha"
+        "xp10": 21.4
     },
     {
         "id": 370,
         "name": "Federico Chiesa",
+        "web_name": "Chiesa",
         "team": "LIV",
         "position": "MID",
         "price": 5.5,
@@ -128444,7 +128445,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 2.06,
         "ictIndex": 34.9,
-        "priceChangeTarget": -26.368733306253574,
+        "priceChangeTarget": -0.8672221783079692,
         "predictions": [
             {
                 "gw": 1,
@@ -128762,12 +128763,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 19.3,
-        "web_name": "Chiesa"
+        "xp10": 19.3
     },
     {
         "id": 371,
         "name": "Ryan Gravenberch",
+        "web_name": "Gravenberch",
         "team": "LIV",
         "position": "MID",
         "price": 6,
@@ -128779,7 +128780,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 4.15,
         "ictIndex": 140.1,
-        "priceChangeTarget": -74.61561041425648,
+        "priceChangeTarget": 14.391995054411794,
         "predictions": [
             {
                 "gw": 1,
@@ -129097,12 +129098,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.2,
-        "web_name": "Gravenberch"
+        "xp10": 43.2
     },
     {
         "id": 372,
         "name": "Alexis Mac Allister",
+        "web_name": "Mac Allister",
         "team": "LIV",
         "position": "MID",
         "price": 5.5,
@@ -129114,7 +129115,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 5.58,
         "ictIndex": 139.9,
-        "priceChangeTarget": 60.86103852013554,
+        "priceChangeTarget": -81.06165361934141,
         "predictions": [
             {
                 "gw": 1,
@@ -129432,12 +129433,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.4,
-        "web_name": "Mac Allister"
+        "xp10": 35.4
     },
     {
         "id": 373,
         "name": "Curtis Jones",
+        "web_name": "C.Jones",
         "team": "LIV",
         "position": "MID",
         "price": 5.5,
@@ -129449,7 +129450,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 4.98,
         "ictIndex": 104.6,
-        "priceChangeTarget": -82.8166968749712,
+        "priceChangeTarget": 28.072790216877507,
         "predictions": [
             {
                 "gw": 1,
@@ -129767,12 +129768,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 25.3,
-        "web_name": "C.Jones"
+        "xp10": 25.3
     },
     {
         "id": 374,
         "name": "Endo Wataru",
+        "web_name": "Endo",
         "team": "LIV",
         "position": "MID",
         "price": 5,
@@ -129784,7 +129785,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.09,
         "ictIndex": 8,
-        "priceChangeTarget": 4.542454870708482,
+        "priceChangeTarget": -2.3818307437811086,
         "predictions": [
             {
                 "gw": 1,
@@ -130102,12 +130103,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18.1,
-        "web_name": "Endo"
+        "xp10": 18.1
     },
     {
         "id": 375,
         "name": "Trey Nyoni",
+        "web_name": "Nyoni",
         "team": "LIV",
         "position": "MID",
         "price": 5,
@@ -130119,7 +130120,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.39,
         "ictIndex": 2.1,
-        "priceChangeTarget": -28.45867166905846,
+        "priceChangeTarget": 6.212719616733821,
         "predictions": [
             {
                 "gw": 1,
@@ -130437,12 +130438,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18.1,
-        "web_name": "Nyoni"
+        "xp10": 18.1
     },
     {
         "id": 376,
         "name": "Stefan Bajčetić Maquieira",
+        "web_name": "Bajcetic",
         "team": "LIV",
         "position": "MID",
         "price": 5,
@@ -130454,7 +130455,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -89.0828889110939,
+        "priceChangeTarget": -36.36279902836495,
         "predictions": [
             {
                 "gw": 1,
@@ -130772,12 +130773,12 @@ export const PLAYERS = [
         "news": "Hamstring injury - Expected back 23 Aug",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Bajcetic"
+        "xp10": 0
     },
     {
         "id": 377,
         "name": "Victor Munoz",
+        "web_name": "Munoz",
         "team": "LIV",
         "position": "MID",
         "price": 6.5,
@@ -130789,7 +130790,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 43.170377720438694,
+        "priceChangeTarget": -2.8139432066639642,
         "predictions": [
             {
                 "gw": 1,
@@ -131107,12 +131108,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.5,
-        "web_name": "Munoz"
+        "xp10": 30.5
     },
     {
         "id": 378,
         "name": "James McConnell",
+        "web_name": "McConnell",
         "team": "LIV",
         "position": "MID",
         "price": 4.5,
@@ -131124,7 +131125,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -50.68904108878471,
+        "priceChangeTarget": -7.107559222040834,
         "predictions": [
             {
                 "gw": 1,
@@ -131442,16 +131443,16 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18.1,
-        "web_name": "McConnell"
+        "xp10": 18.1
     },
     {
         "id": 379,
         "name": "Alexander Isak",
+        "web_name": "Isak",
         "team": "LIV",
         "position": "FWD",
         "price": 9,
-        "ownership": 12.2,
+        "ownership": 12.4,
         "points": 41,
         "xG": 2.59,
         "xA": 0.08,
@@ -131459,7 +131460,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 2.67,
         "ictIndex": 36.9,
-        "priceChangeTarget": 96.89854275050607,
+        "priceChangeTarget": 24.07967041416947,
         "predictions": [
             {
                 "gw": 1,
@@ -131777,12 +131778,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 53,
-        "web_name": "Isak"
+        "xp10": 53
     },
     {
         "id": 380,
         "name": "Hugo Ekitiké",
+        "web_name": "Ekitiké",
         "team": "LIV",
         "position": "FWD",
         "price": 7.5,
@@ -131794,7 +131795,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 12.55,
         "ictIndex": 156.2,
-        "priceChangeTarget": 8.715779356903042,
+        "priceChangeTarget": -24.012385917204867,
         "predictions": [
             {
                 "gw": 1,
@@ -132112,12 +132113,12 @@ export const PLAYERS = [
         "news": "Achilles injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Ekitiké"
+        "xp10": 0
     },
     {
         "id": 381,
         "name": "Lewis Koumas",
+        "web_name": "Koumas",
         "team": "LIV",
         "position": "MID",
         "price": 5,
@@ -132129,7 +132130,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -2.734516991941632,
+        "priceChangeTarget": -59.376435314319394,
         "predictions": [
             {
                 "gw": 1,
@@ -132447,12 +132448,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18.1,
-        "web_name": "Koumas"
+        "xp10": 18.1
     },
     {
         "id": 382,
         "name": "Jayden Danns",
+        "web_name": "Danns",
         "team": "LIV",
         "position": "FWD",
         "price": 4.5,
@@ -132464,7 +132465,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -76.50954934900528,
+        "priceChangeTarget": 47.531197817880866,
         "predictions": [
             {
                 "gw": 1,
@@ -132782,12 +132783,12 @@ export const PLAYERS = [
         "news": "Unspecified injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Danns"
+        "xp10": 0
     },
     {
         "id": 383,
         "name": "Harvey Elliott",
+        "web_name": "Elliott",
         "team": "LIV",
         "position": "MID",
         "price": 5.5,
@@ -132799,7 +132800,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.37,
         "ictIndex": 7.4,
-        "priceChangeTarget": 3.2322621255747492,
+        "priceChangeTarget": 98.34486123049984,
         "predictions": [
             {
                 "gw": 1,
@@ -133117,12 +133118,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 18.1,
-        "web_name": "Elliott"
+        "xp10": 18.1
     },
     {
         "id": 238,
         "name": "Jack Grealish",
+        "web_name": "Grealish",
         "team": "MCI",
         "position": "MID",
         "price": 6.5,
@@ -133134,7 +133135,7 @@ export const PLAYERS = [
         "xA90": 0.19,
         "xGI": 5.41,
         "ictIndex": 129.2,
-        "priceChangeTarget": -5.1847484489387625,
+        "priceChangeTarget": 75.94613134880154,
         "predictions": [
             {
                 "gw": 1,
@@ -133452,12 +133453,12 @@ export const PLAYERS = [
         "news": "Foot injury - 75% chance of playing",
         "status": "d",
         "chanceOfPlaying": 75,
-        "xp10": 34.3,
-        "web_name": "Grealish"
+        "xp10": 34.3
     },
     {
         "id": 384,
         "name": "Gianluigi Donnarumma",
+        "web_name": "Donnarumma",
         "team": "MCI",
         "position": "GKP",
         "price": 5.5,
@@ -133469,7 +133470,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.13,
         "ictIndex": 68,
-        "priceChangeTarget": 74.85685671537809,
+        "priceChangeTarget": 38.36735913486487,
         "predictions": [
             {
                 "gw": 1,
@@ -133787,12 +133788,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 47.4,
-        "web_name": "Donnarumma"
+        "xp10": 47.4
     },
     {
         "id": 386,
         "name": "Marcus Bettinelli",
+        "web_name": "Bettinelli",
         "team": "MCI",
         "position": "GKP",
         "price": 4.5,
@@ -133804,7 +133805,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -82.44198104760363,
+        "priceChangeTarget": -31.909059825531244,
         "predictions": [
             {
                 "gw": 1,
@@ -134122,12 +134123,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 41.9,
-        "web_name": "Bettinelli"
+        "xp10": 41.9
     },
     {
         "id": 387,
         "name": "Nico O'Reilly",
+        "web_name": "O'Reilly",
         "team": "MCI",
         "position": "DEF",
         "price": 6.5,
@@ -134139,7 +134140,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 8.79,
         "ictIndex": 164.1,
-        "priceChangeTarget": 49.82877880681983,
+        "priceChangeTarget": -21.43686984350191,
         "predictions": [
             {
                 "gw": 1,
@@ -134457,12 +134458,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45,
-        "web_name": "O'Reilly"
+        "xp10": 45
     },
     {
         "id": 388,
         "name": "Marc Guéhi",
+        "web_name": "Guéhi",
         "team": "MCI",
         "position": "DEF",
         "price": 6,
@@ -134474,7 +134475,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 6.42,
         "ictIndex": 160.9,
-        "priceChangeTarget": 32.49862195516394,
+        "priceChangeTarget": 56.9940324248125,
         "predictions": [
             {
                 "gw": 1,
@@ -134792,12 +134793,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45,
-        "web_name": "Guéhi"
+        "xp10": 45
     },
     {
         "id": 389,
         "name": "Matheus Nunes",
+        "web_name": "Matheus N.",
         "team": "MCI",
         "position": "DEF",
         "price": 6,
@@ -134809,7 +134810,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 2.57,
         "ictIndex": 137.6,
-        "priceChangeTarget": 2.182306776309062,
+        "priceChangeTarget": 53.248176754400106,
         "predictions": [
             {
                 "gw": 1,
@@ -135127,12 +135128,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45,
-        "web_name": "Matheus N."
+        "xp10": 45
     },
     {
         "id": 390,
         "name": "Rúben dos Santos Gato Alves Dias",
+        "web_name": "Rúben",
         "team": "MCI",
         "position": "DEF",
         "price": 5.5,
@@ -135144,7 +135145,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 1.22,
         "ictIndex": 81,
-        "priceChangeTarget": -62.91716060172141,
+        "priceChangeTarget": 31.814900449006956,
         "predictions": [
             {
                 "gw": 1,
@@ -135462,16 +135463,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45,
-        "web_name": "Rúben"
+        "xp10": 45
     },
     {
         "id": 391,
         "name": "Joško Gvardiol",
+        "web_name": "Gvardiol",
         "team": "MCI",
         "position": "DEF",
         "price": 5.5,
-        "ownership": 13,
+        "ownership": 13.1,
         "points": 79,
         "xG": 2.25,
         "xA": 0.7,
@@ -135479,7 +135480,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 2.95,
         "ictIndex": 69.8,
-        "priceChangeTarget": -83.62234297287543,
+        "priceChangeTarget": -8.873865734028954,
         "predictions": [
             {
                 "gw": 1,
@@ -135797,12 +135798,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45,
-        "web_name": "Gvardiol"
+        "xp10": 45
     },
     {
         "id": 392,
         "name": "Rayan Aït-Nouri",
+        "web_name": "Aït-Nouri",
         "team": "MCI",
         "position": "DEF",
         "price": 5.5,
@@ -135814,7 +135815,7 @@ export const PLAYERS = [
         "xA90": 0.19,
         "xGI": 2.54,
         "ictIndex": 50.2,
-        "priceChangeTarget": 5.550545137975504,
+        "priceChangeTarget": 14.181764258807931,
         "predictions": [
             {
                 "gw": 1,
@@ -136132,12 +136133,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45,
-        "web_name": "Aït-Nouri"
+        "xp10": 45
     },
     {
         "id": 393,
         "name": "Abdukodir Khusanov",
+        "web_name": "Khusanov",
         "team": "MCI",
         "position": "DEF",
         "price": 5.5,
@@ -136149,7 +136150,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 1.86,
         "ictIndex": 43.9,
-        "priceChangeTarget": 3.6455652933709928,
+        "priceChangeTarget": -10.270486366879254,
         "predictions": [
             {
                 "gw": 1,
@@ -136467,12 +136468,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.2,
-        "web_name": "Khusanov"
+        "xp10": 35.2
     },
     {
         "id": 394,
         "name": "Max Alleyne",
+        "web_name": "Alleyne",
         "team": "MCI",
         "position": "DEF",
         "price": 5,
@@ -136484,7 +136485,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.32,
         "ictIndex": 7.5,
-        "priceChangeTarget": 71.7290841393934,
+        "priceChangeTarget": -47.507413867719265,
         "predictions": [
             {
                 "gw": 1,
@@ -136802,12 +136803,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 17.1,
-        "web_name": "Alleyne"
+        "xp10": 17.1
     },
     {
         "id": 395,
         "name": "Rico Lewis",
+        "web_name": "Lewis",
         "team": "MCI",
         "position": "DEF",
         "price": 4.5,
@@ -136819,7 +136820,7 @@ export const PLAYERS = [
         "xA90": 0.28,
         "xGI": 1.58,
         "ictIndex": 23.8,
-        "priceChangeTarget": -19.734734876046815,
+        "priceChangeTarget": -49.37049288854154,
         "predictions": [
             {
                 "gw": 1,
@@ -137137,12 +137138,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 18.5,
-        "web_name": "Lewis"
+        "xp10": 18.5
     },
     {
         "id": 396,
         "name": "Vitor de Oliveira Nunes dos Reis",
+        "web_name": "Vitor Reis",
         "team": "MCI",
         "position": "DEF",
         "price": 4.5,
@@ -137154,7 +137155,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -76.27674013474439,
+        "priceChangeTarget": -24.709668417334953,
         "predictions": [
             {
                 "gw": 1,
@@ -137472,16 +137473,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 25.1,
-        "web_name": "Vitor Reis"
+        "xp10": 25.1
     },
     {
         "id": 397,
         "name": "Antoine Semenyo",
+        "web_name": "Semenyo",
         "team": "MCI",
         "position": "MID",
         "price": 8.5,
-        "ownership": 24.7,
+        "ownership": 25,
         "points": 202,
         "xG": 11.1,
         "xA": 3.12,
@@ -137489,7 +137490,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 14.21,
         "ictIndex": 257.7,
-        "priceChangeTarget": 6.517599589782634,
+        "priceChangeTarget": 87.76521242965006,
         "predictions": [
             {
                 "gw": 1,
@@ -137807,12 +137808,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 56.4,
-        "web_name": "Semenyo"
+        "xp10": 56.4
     },
     {
         "id": 398,
         "name": "Phil Foden",
+        "web_name": "Foden",
         "team": "MCI",
         "position": "MID",
         "price": 7,
@@ -137824,7 +137825,7 @@ export const PLAYERS = [
         "xA90": 0.21,
         "xGI": 10.79,
         "ictIndex": 201.9,
-        "priceChangeTarget": 84.024631746967,
+        "priceChangeTarget": -67.12048704631547,
         "predictions": [
             {
                 "gw": 1,
@@ -138142,12 +138143,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 58.8,
-        "web_name": "Foden"
+        "xp10": 58.8
     },
     {
         "id": 399,
         "name": "Rayan Cherki",
+        "web_name": "Cherki",
         "team": "MCI",
         "position": "MID",
         "price": 7.5,
@@ -138159,7 +138160,7 @@ export const PLAYERS = [
         "xA90": 0.45,
         "xGI": 13.14,
         "ictIndex": 218.1,
-        "priceChangeTarget": -28.017634155729795,
+        "priceChangeTarget": -27.40529713604056,
         "predictions": [
             {
                 "gw": 1,
@@ -138477,12 +138478,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 62.9,
-        "web_name": "Cherki"
+        "xp10": 62.9
     },
     {
         "id": 400,
         "name": "Jérémy Doku",
+        "web_name": "Doku",
         "team": "MCI",
         "position": "MID",
         "price": 7.5,
@@ -138494,7 +138495,7 @@ export const PLAYERS = [
         "xA90": 0.3,
         "xGI": 8.73,
         "ictIndex": 202.5,
-        "priceChangeTarget": 9.577256061315879,
+        "priceChangeTarget": 82.52781921643782,
         "predictions": [
             {
                 "gw": 1,
@@ -138812,12 +138813,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 56.4,
-        "web_name": "Doku"
+        "xp10": 56.4
     },
     {
         "id": 401,
         "name": "Omar Marmoush",
+        "web_name": "Marmoush",
         "team": "MCI",
         "position": "FWD",
         "price": 7,
@@ -138829,7 +138830,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 3.55,
         "ictIndex": 64.4,
-        "priceChangeTarget": -89.72685660435556,
+        "priceChangeTarget": -26.80735803188061,
         "predictions": [
             {
                 "gw": 1,
@@ -139147,12 +139148,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 62.1,
-        "web_name": "Marmoush"
+        "xp10": 62.1
     },
     {
         "id": 402,
         "name": "Rodrigo 'Rodri' Hernandez Cascante",
+        "web_name": "Rodrigo",
         "team": "MCI",
         "position": "MID",
         "price": 6.5,
@@ -139164,7 +139165,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 3.6,
         "ictIndex": 90.3,
-        "priceChangeTarget": -66.71577282291969,
+        "priceChangeTarget": 11.556225528898565,
         "predictions": [
             {
                 "gw": 1,
@@ -139482,12 +139483,12 @@ export const PLAYERS = [
         "news": "Back injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Rodrigo"
+        "xp10": 0
     },
     {
         "id": 403,
         "name": "Sávio Moreira de Oliveira",
+        "web_name": "Savinho",
         "team": "MCI",
         "position": "MID",
         "price": 6.5,
@@ -139499,7 +139500,7 @@ export const PLAYERS = [
         "xA90": 0.32,
         "xGI": 4.09,
         "ictIndex": 65.8,
-        "priceChangeTarget": -2.3383532894377907,
+        "priceChangeTarget": -4.566510649349624,
         "predictions": [
             {
                 "gw": 1,
@@ -139817,12 +139818,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 27.2,
-        "web_name": "Savinho"
+        "xp10": 27.2
     },
     {
         "id": 404,
         "name": "Tijjani Reijnders",
+        "web_name": "Reijnders",
         "team": "MCI",
         "position": "MID",
         "price": 6,
@@ -139834,7 +139835,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 6.96,
         "ictIndex": 111.2,
-        "priceChangeTarget": 68.98909954657762,
+        "priceChangeTarget": -82.61366163632356,
         "predictions": [
             {
                 "gw": 1,
@@ -140152,12 +140153,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 50.3,
-        "web_name": "Reijnders"
+        "xp10": 50.3
     },
     {
         "id": 405,
         "name": "Nico González Iglesias",
+        "web_name": "N.Gonzalez",
         "team": "MCI",
         "position": "MID",
         "price": 5.5,
@@ -140169,7 +140170,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 1.8,
         "ictIndex": 61.5,
-        "priceChangeTarget": 21.97387753391422,
+        "priceChangeTarget": 16.053199108494184,
         "predictions": [
             {
                 "gw": 1,
@@ -140487,12 +140488,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 33.6,
-        "web_name": "N.Gonzalez"
+        "xp10": 33.6
     },
     {
         "id": 406,
         "name": "Mateo Kovačić",
+        "web_name": "Kovačić",
         "team": "MCI",
         "position": "MID",
         "price": 5.5,
@@ -140504,7 +140505,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 0.55,
         "ictIndex": 11.5,
-        "priceChangeTarget": -99.53152491084447,
+        "priceChangeTarget": 59.58100096856057,
         "predictions": [
             {
                 "gw": 1,
@@ -140822,12 +140823,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18.4,
-        "web_name": "Kovačić"
+        "xp10": 18.4
     },
     {
         "id": 407,
         "name": "Claudio Echeverri",
+        "web_name": "Echeverri",
         "team": "MCI",
         "position": "MID",
         "price": 5,
@@ -140839,7 +140840,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -49.124840120408784,
+        "priceChangeTarget": 16.61090380982361,
         "predictions": [
             {
                 "gw": 1,
@@ -141157,12 +141158,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18,
-        "web_name": "Echeverri"
+        "xp10": 18
     },
     {
         "id": 408,
         "name": "Kalvin Phillips",
+        "web_name": "Phillips",
         "team": "MCI",
         "position": "MID",
         "price": 5,
@@ -141174,7 +141175,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 40.74087046412848,
+        "priceChangeTarget": 41.44038968208358,
         "predictions": [
             {
                 "gw": 1,
@@ -141492,12 +141493,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18,
-        "web_name": "Phillips"
+        "xp10": 18
     },
     {
         "id": 409,
         "name": "Divine Mukasa",
+        "web_name": "Mukasa",
         "team": "MCI",
         "position": "MID",
         "price": 4.5,
@@ -141509,7 +141510,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.21,
         "ictIndex": 3.7,
-        "priceChangeTarget": -21.64095477492971,
+        "priceChangeTarget": 73.80342467216633,
         "predictions": [
             {
                 "gw": 1,
@@ -141827,12 +141828,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18,
-        "web_name": "Mukasa"
+        "xp10": 18
     },
     {
         "id": 410,
         "name": "Jeremy Monga",
+        "web_name": "Monga",
         "team": "MCI",
         "position": "MID",
         "price": 5,
@@ -141844,7 +141845,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 63.811969921799346,
+        "priceChangeTarget": 16.850113768868354,
         "predictions": [
             {
                 "gw": 1,
@@ -142162,12 +142163,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18,
-        "web_name": "Monga"
+        "xp10": 18
     },
     {
         "id": 411,
         "name": "Erling Haaland",
+        "web_name": "Haaland",
         "team": "MCI",
         "position": "FWD",
         "price": 15.5,
@@ -142179,7 +142180,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 28.17,
         "ictIndex": 302.3,
-        "priceChangeTarget": 78.485782592627,
+        "priceChangeTarget": 49.93348010339136,
         "predictions": [
             {
                 "gw": 1,
@@ -142497,12 +142498,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 63.7,
-        "web_name": "Haaland"
+        "xp10": 63.7
     },
     {
         "id": 481,
         "name": "Elliot Anderson",
+        "web_name": "Anderson",
         "team": "MCI",
         "position": "MID",
         "price": 6.5,
@@ -142514,7 +142515,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 7.73,
         "ictIndex": 219,
-        "priceChangeTarget": 73.96752643049868,
+        "priceChangeTarget": -35.37029095367083,
         "predictions": [
             {
                 "gw": 1,
@@ -142832,12 +142833,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 49.5,
-        "web_name": "Anderson"
+        "xp10": 49.5
     },
     {
         "id": 43,
         "name": "Youri Tielemans",
+        "web_name": "Tielemans",
         "team": "MUN",
         "position": "MID",
         "price": 6,
@@ -142849,7 +142850,7 @@ export const PLAYERS = [
         "xA90": 0.16,
         "xGI": 4.4,
         "ictIndex": 113.1,
-        "priceChangeTarget": -6.385295369496632,
+        "priceChangeTarget": 8.721170432672537,
         "predictions": [
             {
                 "gw": 1,
@@ -143167,12 +143168,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 32.4,
-        "web_name": "Tielemans"
+        "xp10": 32.4
     },
     {
         "id": 162,
         "name": "Andrey Nascimento dos Santos",
+        "web_name": "Andrey Santos",
         "team": "MUN",
         "position": "MID",
         "price": 5,
@@ -143184,7 +143185,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 2.88,
         "ictIndex": 47.5,
-        "priceChangeTarget": 44.123365079593356,
+        "priceChangeTarget": -98.51322542258546,
         "predictions": [
             {
                 "gw": 1,
@@ -143502,12 +143503,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 27.6,
-        "web_name": "Andrey Santos"
+        "xp10": 27.6
     },
     {
         "id": 325,
         "name": "Karl Darlow",
+        "web_name": "Darlow",
         "team": "MUN",
         "position": "GKP",
         "price": 4.5,
@@ -143519,7 +143520,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.05,
         "ictIndex": 53.4,
-        "priceChangeTarget": -92.45100561522182,
+        "priceChangeTarget": -77.19174399993962,
         "predictions": [
             {
                 "gw": 1,
@@ -143837,16 +143838,16 @@ export const PLAYERS = [
         "news": "Unspecified injury - 75% chance of playing",
         "status": "d",
         "chanceOfPlaying": 75,
-        "xp10": 29.9,
-        "web_name": "Darlow"
+        "xp10": 29.9
     },
     {
         "id": 412,
         "name": "Senne Lammens",
+        "web_name": "Lammens",
         "team": "MUN",
         "position": "GKP",
         "price": 5,
-        "ownership": 20.1,
+        "ownership": 20,
         "points": 109,
         "xG": 0,
         "xA": 0,
@@ -143854,7 +143855,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 63.7,
-        "priceChangeTarget": -27.689410991620505,
+        "priceChangeTarget": 71.09929992266112,
         "predictions": [
             {
                 "gw": 1,
@@ -144172,12 +144173,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 40.9,
-        "web_name": "Lammens"
+        "xp10": 40.9
     },
     {
         "id": 413,
         "name": "Altay Bayındır",
+        "web_name": "Bayindir",
         "team": "MUN",
         "position": "GKP",
         "price": 4.5,
@@ -144189,7 +144190,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.05,
         "ictIndex": 12.8,
-        "priceChangeTarget": 82.21887909832853,
+        "priceChangeTarget": 81.6283984384481,
         "predictions": [
             {
                 "gw": 1,
@@ -144507,12 +144508,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37.5,
-        "web_name": "Bayindir"
+        "xp10": 37.5
     },
     {
         "id": 414,
         "name": "Tom Heaton",
+        "web_name": "Heaton",
         "team": "MUN",
         "position": "GKP",
         "price": 4,
@@ -144524,7 +144525,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 20.080427453078315,
+        "priceChangeTarget": -65.31181045699213,
         "predictions": [
             {
                 "gw": 1,
@@ -144842,12 +144843,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 40.8,
-        "web_name": "Heaton"
+        "xp10": 40.8
     },
     {
         "id": 415,
         "name": "Patrick Dorgu",
+        "web_name": "Dorgu",
         "team": "MUN",
         "position": "MID",
         "price": 6,
@@ -144859,7 +144860,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 4.23,
         "ictIndex": 120.3,
-        "priceChangeTarget": -15.278694313091322,
+        "priceChangeTarget": 60.35809604185323,
         "predictions": [
             {
                 "gw": 1,
@@ -145177,12 +145178,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 47.6,
-        "web_name": "Dorgu"
+        "xp10": 47.6
     },
     {
         "id": 416,
         "name": "Matthijs de Ligt",
+        "web_name": "De Ligt",
         "team": "MUN",
         "position": "DEF",
         "price": 5,
@@ -145194,7 +145195,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 2.21,
         "ictIndex": 45.7,
-        "priceChangeTarget": 68.95559257888345,
+        "priceChangeTarget": -27.6043238531515,
         "predictions": [
             {
                 "gw": 1,
@@ -145512,12 +145513,12 @@ export const PLAYERS = [
         "news": "Back injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "De Ligt"
+        "xp10": 0
     },
     {
         "id": 417,
         "name": "Diogo Dalot Teixeira",
+        "web_name": "Dalot",
         "team": "MUN",
         "position": "DEF",
         "price": 5,
@@ -145529,7 +145530,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 4.5,
         "ictIndex": 119.6,
-        "priceChangeTarget": -86.5253294770369,
+        "priceChangeTarget": -77.63002987094217,
         "predictions": [
             {
                 "gw": 1,
@@ -145847,12 +145848,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 36.9,
-        "web_name": "Dalot"
+        "xp10": 36.9
     },
     {
         "id": 418,
         "name": "Harry Maguire",
+        "web_name": "Maguire",
         "team": "MUN",
         "position": "DEF",
         "price": 5,
@@ -145864,7 +145865,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 1.62,
         "ictIndex": 63,
-        "priceChangeTarget": 3.6290241265123626,
+        "priceChangeTarget": 11.932320827861489,
         "predictions": [
             {
                 "gw": 1,
@@ -146182,12 +146183,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.7,
-        "web_name": "Maguire"
+        "xp10": 43.7
     },
     {
         "id": 419,
         "name": "Lisandro Martínez",
+        "web_name": "Martinez",
         "team": "MUN",
         "position": "DEF",
         "price": 5,
@@ -146199,7 +146200,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.75,
         "ictIndex": 42,
-        "priceChangeTarget": -67.6734271478292,
+        "priceChangeTarget": 42.17107650951718,
         "predictions": [
             {
                 "gw": 1,
@@ -146517,12 +146518,12 @@ export const PLAYERS = [
         "news": "Thigh injury - 75% chance of playing",
         "status": "d",
         "chanceOfPlaying": 75,
-        "xp10": 22.9,
-        "web_name": "Martinez"
+        "xp10": 22.9
     },
     {
         "id": 420,
         "name": "Leny Yoro",
+        "web_name": "Yoro",
         "team": "MUN",
         "position": "DEF",
         "price": 5,
@@ -146534,7 +146535,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 1.93,
         "ictIndex": 53.2,
-        "priceChangeTarget": 22.846464904409075,
+        "priceChangeTarget": 87.61569956352727,
         "predictions": [
             {
                 "gw": 1,
@@ -146852,12 +146853,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 21.9,
-        "web_name": "Yoro"
+        "xp10": 21.9
     },
     {
         "id": 421,
         "name": "Ayden Heaven",
+        "web_name": "Heaven",
         "team": "MUN",
         "position": "DEF",
         "price": 4.5,
@@ -146869,7 +146870,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.52,
         "ictIndex": 29.1,
-        "priceChangeTarget": 82.01957611705618,
+        "priceChangeTarget": -78.90655108469149,
         "predictions": [
             {
                 "gw": 1,
@@ -147187,12 +147188,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 36.7,
-        "web_name": "Heaven"
+        "xp10": 36.7
     },
     {
         "id": 422,
         "name": "Noussair Mazraoui",
+        "web_name": "Mazraoui",
         "team": "MUN",
         "position": "DEF",
         "price": 4.5,
@@ -147204,7 +147205,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.53,
         "ictIndex": 36.8,
-        "priceChangeTarget": 33.73737027188457,
+        "priceChangeTarget": 99.450542551333,
         "predictions": [
             {
                 "gw": 1,
@@ -147522,12 +147523,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.7,
-        "web_name": "Mazraoui"
+        "xp10": 43.7
     },
     {
         "id": 423,
         "name": "Luke Shaw",
+        "web_name": "Shaw",
         "team": "MUN",
         "position": "DEF",
         "price": 4.5,
@@ -147539,7 +147540,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 2.69,
         "ictIndex": 97.4,
-        "priceChangeTarget": -66.52993177832221,
+        "priceChangeTarget": -24.371349301646504,
         "predictions": [
             {
                 "gw": 1,
@@ -147857,12 +147858,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.1,
-        "web_name": "Shaw"
+        "xp10": 28.1
     },
     {
         "id": 424,
         "name": "Harry Amass",
+        "web_name": "Amass",
         "team": "MUN",
         "position": "DEF",
         "price": 4,
@@ -147874,7 +147875,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -54.50199285806021,
+        "priceChangeTarget": 52.14486990319108,
         "predictions": [
             {
                 "gw": 1,
@@ -148192,12 +148193,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 13.9,
-        "web_name": "Amass"
+        "xp10": 13.9
     },
     {
         "id": 425,
         "name": "Tyler Fredricson",
+        "web_name": "Fredricson",
         "team": "MUN",
         "position": "DEF",
         "price": 4,
@@ -148209,7 +148210,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.4,
-        "priceChangeTarget": 61.87920271155801,
+        "priceChangeTarget": -79.38535883423046,
         "predictions": [
             {
                 "gw": 1,
@@ -148527,12 +148528,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 13.9,
-        "web_name": "Fredricson"
+        "xp10": 13.9
     },
     {
         "id": 426,
         "name": "Bruno Borges Fernandes",
+        "web_name": "B.Fernandes",
         "team": "MUN",
         "position": "MID",
         "price": 12,
@@ -148544,7 +148545,7 @@ export const PLAYERS = [
         "xA90": 0.36,
         "xGI": 23.07,
         "ictIndex": 381.4,
-        "priceChangeTarget": -40.92872752067791,
+        "priceChangeTarget": 19.475108402598266,
         "predictions": [
             {
                 "gw": 1,
@@ -148862,16 +148863,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 61,
-        "web_name": "B.Fernandes"
+        "xp10": 61
     },
     {
         "id": 427,
         "name": "Bryan Mbeumo",
+        "web_name": "Mbeumo",
         "team": "MUN",
         "position": "MID",
         "price": 8,
-        "ownership": 21.6,
+        "ownership": 22,
         "points": 148,
         "xG": 11.98,
         "xA": 4.99,
@@ -148879,7 +148880,7 @@ export const PLAYERS = [
         "xA90": 0.17,
         "xGI": 16.97,
         "ictIndex": 231.4,
-        "priceChangeTarget": -21.847656310869112,
+        "priceChangeTarget": -58.43938070017889,
         "predictions": [
             {
                 "gw": 1,
@@ -149197,16 +149198,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 48,
-        "web_name": "Mbeumo"
+        "xp10": 48
     },
     {
         "id": 428,
         "name": "Matheus Santos Carneiro da Cunha",
+        "web_name": "Cunha",
         "team": "MUN",
         "position": "MID",
         "price": 8,
-        "ownership": 13.2,
+        "ownership": 13.1,
         "points": 143,
         "xG": 6.9,
         "xA": 3.36,
@@ -149214,7 +149215,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 10.26,
         "ictIndex": 202.5,
-        "priceChangeTarget": -97.50792564445705,
+        "priceChangeTarget": 34.97967730272228,
         "predictions": [
             {
                 "gw": 1,
@@ -149532,12 +149533,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 49.6,
-        "web_name": "Cunha"
+        "xp10": 49.6
     },
     {
         "id": 429,
         "name": "Marcus Rashford",
+        "web_name": "Rashford",
         "team": "MUN",
         "position": "MID",
         "price": 7,
@@ -149549,7 +149550,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -21.828245817212633,
+        "priceChangeTarget": 99.71052169197696,
         "predictions": [
             {
                 "gw": 1,
@@ -149867,12 +149868,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30,
-        "web_name": "Rashford"
+        "xp10": 30
     },
     {
         "id": 430,
         "name": "Mason Mount",
+        "web_name": "Mount",
         "team": "MUN",
         "position": "MID",
         "price": 5.5,
@@ -149884,7 +149885,7 @@ export const PLAYERS = [
         "xA90": 0.14,
         "xGI": 3.18,
         "ictIndex": 58,
-        "priceChangeTarget": -91.58810544920044,
+        "priceChangeTarget": 73.31916231125936,
         "predictions": [
             {
                 "gw": 1,
@@ -150202,12 +150203,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 48.6,
-        "web_name": "Mount"
+        "xp10": 48.6
     },
     {
         "id": 431,
         "name": "Amad Diallo",
+        "web_name": "Amad",
         "team": "MUN",
         "position": "MID",
         "price": 6,
@@ -150219,7 +150220,7 @@ export const PLAYERS = [
         "xA90": 0.18,
         "xGI": 10.2,
         "ictIndex": 163.5,
-        "priceChangeTarget": -36.99630242609588,
+        "priceChangeTarget": -80.28105394989961,
         "predictions": [
             {
                 "gw": 1,
@@ -150537,12 +150538,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 33.8,
-        "web_name": "Amad"
+        "xp10": 33.8
     },
     {
         "id": 432,
         "name": "Kobbie Mainoo",
+        "web_name": "Mainoo",
         "team": "MUN",
         "position": "MID",
         "price": 5.5,
@@ -150554,7 +150555,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 1.75,
         "ictIndex": 82.1,
-        "priceChangeTarget": -49.36666480602501,
+        "priceChangeTarget": -59.280583902653426,
         "predictions": [
             {
                 "gw": 1,
@@ -150872,12 +150873,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 27,
-        "web_name": "Mainoo"
+        "xp10": 27
     },
     {
         "id": 433,
         "name": "Manuel Ugarte Ribeiro",
+        "web_name": "Ugarte",
         "team": "MUN",
         "position": "MID",
         "price": 5,
@@ -150889,7 +150890,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.88,
         "ictIndex": 29.8,
-        "priceChangeTarget": -92.704365287433,
+        "priceChangeTarget": 77.62772575894434,
         "predictions": [
             {
                 "gw": 1,
@@ -151207,12 +151208,12 @@ export const PLAYERS = [
         "news": "Knee injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Ugarte"
+        "xp10": 0
     },
     {
         "id": 434,
         "name": "Jack Fletcher",
+        "web_name": "J.Fletcher",
         "team": "MUN",
         "position": "MID",
         "price": 5,
@@ -151224,7 +151225,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.05,
         "ictIndex": 4.8,
-        "priceChangeTarget": 16.332742338601136,
+        "priceChangeTarget": 73.92087074620423,
         "predictions": [
             {
                 "gw": 1,
@@ -151542,12 +151543,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.8,
-        "web_name": "J.Fletcher"
+        "xp10": 17.8
     },
     {
         "id": 435,
         "name": "Shea Lacey",
+        "web_name": "Lacey",
         "team": "MUN",
         "position": "MID",
         "price": 5,
@@ -151559,7 +151560,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.11,
         "ictIndex": 1.7,
-        "priceChangeTarget": -68.39926934193258,
+        "priceChangeTarget": 95.90441649871028,
         "predictions": [
             {
                 "gw": 1,
@@ -151877,12 +151878,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.8,
-        "web_name": "Lacey"
+        "xp10": 17.8
     },
     {
         "id": 436,
         "name": "Toby Collyer",
+        "web_name": "Collyer",
         "team": "MUN",
         "position": "MID",
         "price": 5,
@@ -151894,7 +151895,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 43.06464302725104,
+        "priceChangeTarget": -29.24290906587794,
         "predictions": [
             {
                 "gw": 1,
@@ -152212,12 +152213,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.8,
-        "web_name": "Collyer"
+        "xp10": 17.8
     },
     {
         "id": 437,
         "name": "Bendito Mantato",
+        "web_name": "Bendito Mantato",
         "team": "MUN",
         "position": "MID",
         "price": 4.5,
@@ -152229,7 +152230,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.01,
         "ictIndex": 1.4,
-        "priceChangeTarget": 18.422747493984474,
+        "priceChangeTarget": 22.660094249762878,
         "predictions": [
             {
                 "gw": 1,
@@ -152547,12 +152548,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.8,
-        "web_name": "Bendito Mantato"
+        "xp10": 17.8
     },
     {
         "id": 438,
         "name": "Tyler Fletcher",
+        "web_name": "Fletcher",
         "team": "MUN",
         "position": "MID",
         "price": 4.5,
@@ -152564,7 +152565,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.01,
         "ictIndex": 0.3,
-        "priceChangeTarget": 38.55902122476954,
+        "priceChangeTarget": -12.185365709743223,
         "predictions": [
             {
                 "gw": 1,
@@ -152882,16 +152883,16 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.8,
-        "web_name": "Fletcher"
+        "xp10": 17.8
     },
     {
         "id": 439,
         "name": "Benjamin Sesko",
+        "web_name": "Šeško",
         "team": "MUN",
         "position": "FWD",
         "price": 7,
-        "ownership": 2.5,
+        "ownership": 2.4,
         "points": 111,
         "xG": 9.21,
         "xA": 0.28,
@@ -152899,7 +152900,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 9.48,
         "ictIndex": 143.4,
-        "priceChangeTarget": 34.418810415640735,
+        "priceChangeTarget": -7.1922395680040125,
         "predictions": [
             {
                 "gw": 1,
@@ -153217,12 +153218,12 @@ export const PLAYERS = [
         "news": "Shin injury - 75% chance of playing",
         "status": "d",
         "chanceOfPlaying": 75,
-        "xp10": 38.3,
-        "web_name": "Šeško"
+        "xp10": 38.3
     },
     {
         "id": 440,
         "name": "Joshua Zirkzee",
+        "web_name": "Zirkzee",
         "team": "MUN",
         "position": "FWD",
         "price": 5.5,
@@ -153234,7 +153235,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 3.08,
         "ictIndex": 58.3,
-        "priceChangeTarget": -85.5781302668864,
+        "priceChangeTarget": -28.42556562330904,
         "predictions": [
             {
                 "gw": 1,
@@ -153552,12 +153553,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 21.3,
-        "web_name": "Zirkzee"
+        "xp10": 21.3
     },
     {
         "id": 441,
         "name": "Chido Obi",
+        "web_name": "Obi",
         "team": "MUN",
         "position": "FWD",
         "price": 4.5,
@@ -153569,7 +153570,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -59.68731512459846,
+        "priceChangeTarget": -76.61015534293752,
         "predictions": [
             {
                 "gw": 1,
@@ -153887,12 +153888,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 20.3,
-        "web_name": "Obi"
+        "xp10": 20.3
     },
     {
         "id": 442,
         "name": "Nick Pope",
+        "web_name": "Pope",
         "team": "NEW",
         "position": "GKP",
         "price": 5,
@@ -153904,7 +153905,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.16,
         "ictIndex": 70.7,
-        "priceChangeTarget": -21.5490753272328,
+        "priceChangeTarget": 49.312161789328144,
         "predictions": [
             {
                 "gw": 1,
@@ -154222,12 +154223,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45.4,
-        "web_name": "Pope"
+        "xp10": 45.4
     },
     {
         "id": 443,
         "name": "Mark Gillespie",
+        "web_name": "Gillespie",
         "team": "NEW",
         "position": "GKP",
         "price": 4.5,
@@ -154239,7 +154240,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 5.795522089598833,
+        "priceChangeTarget": 46.51289222818059,
         "predictions": [
             {
                 "gw": 1,
@@ -154557,12 +154558,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.2,
-        "web_name": "Gillespie"
+        "xp10": 39.2
     },
     {
         "id": 444,
         "name": "Ewen Jaouen",
+        "web_name": "Jaouen",
         "team": "NEW",
         "position": "GKP",
         "price": 4.5,
@@ -154574,7 +154575,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 31.28591282672076,
+        "priceChangeTarget": 0.406396768418432,
         "predictions": [
             {
                 "gw": 1,
@@ -154892,12 +154893,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.2,
-        "web_name": "Jaouen"
+        "xp10": 39.2
     },
     {
         "id": 445,
         "name": "Malick Thiaw",
+        "web_name": "Thiaw",
         "team": "NEW",
         "position": "DEF",
         "price": 5,
@@ -154909,7 +154910,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 5.76,
         "ictIndex": 138.9,
-        "priceChangeTarget": -1.3308926328533772,
+        "priceChangeTarget": -12.467305825396082,
         "predictions": [
             {
                 "gw": 1,
@@ -155227,12 +155228,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37.7,
-        "web_name": "Thiaw"
+        "xp10": 37.7
     },
     {
         "id": 446,
         "name": "Fabian Schär",
+        "web_name": "Schär",
         "team": "NEW",
         "position": "DEF",
         "price": 5,
@@ -155244,7 +155245,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 1.57,
         "ictIndex": 46.4,
-        "priceChangeTarget": -13.885552391843035,
+        "priceChangeTarget": 15.605745041951025,
         "predictions": [
             {
                 "gw": 1,
@@ -155562,12 +155563,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.9,
-        "web_name": "Schär"
+        "xp10": 30.9
     },
     {
         "id": 447,
         "name": "Sven Botman",
+        "web_name": "Botman",
         "team": "NEW",
         "position": "DEF",
         "price": 5,
@@ -155579,7 +155580,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 2.59,
         "ictIndex": 87.4,
-        "priceChangeTarget": -23.86626144813269,
+        "priceChangeTarget": -80.28736163101873,
         "predictions": [
             {
                 "gw": 1,
@@ -155897,12 +155898,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 41.9,
-        "web_name": "Botman"
+        "xp10": 41.9
     },
     {
         "id": 448,
         "name": "Dan Burn",
+        "web_name": "Burn",
         "team": "NEW",
         "position": "DEF",
         "price": 5,
@@ -155914,7 +155915,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 1.44,
         "ictIndex": 82.1,
-        "priceChangeTarget": -37.18680449060719,
+        "priceChangeTarget": -14.229013859600187,
         "predictions": [
             {
                 "gw": 1,
@@ -156232,12 +156233,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 36.7,
-        "web_name": "Burn"
+        "xp10": 36.7
     },
     {
         "id": 449,
         "name": "Lewis Hall",
+        "web_name": "Hall",
         "team": "NEW",
         "position": "DEF",
         "price": 5,
@@ -156249,7 +156250,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 3.79,
         "ictIndex": 118,
-        "priceChangeTarget": 51.1736855455398,
+        "priceChangeTarget": -18.076560256818112,
         "predictions": [
             {
                 "gw": 1,
@@ -156567,12 +156568,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.9,
-        "web_name": "Hall"
+        "xp10": 30.9
     },
     {
         "id": 450,
         "name": "Tino Livramento",
+        "web_name": "Livramento",
         "team": "NEW",
         "position": "DEF",
         "price": 5,
@@ -156584,7 +156585,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 1.02,
         "ictIndex": 46.1,
-        "priceChangeTarget": -2.061535722887342,
+        "priceChangeTarget": -28.430381551811706,
         "predictions": [
             {
                 "gw": 1,
@@ -156902,12 +156903,12 @@ export const PLAYERS = [
         "news": "Calf injury - 75% chance of playing",
         "status": "d",
         "chanceOfPlaying": 75,
-        "xp10": 25.5,
-        "web_name": "Livramento"
+        "xp10": 25.5
     },
     {
         "id": 451,
         "name": "Alex Murphy",
+        "web_name": "A.Murphy",
         "team": "NEW",
         "position": "DEF",
         "price": 4,
@@ -156919,7 +156920,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 1.3,
-        "priceChangeTarget": 22.43733707762776,
+        "priceChangeTarget": 22.497026580288676,
         "predictions": [
             {
                 "gw": 1,
@@ -157237,16 +157238,16 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 14.6,
-        "web_name": "A.Murphy"
+        "xp10": 14.6
     },
     {
         "id": 452,
         "name": "Bruno Guimarães Rodriguez Moura",
+        "web_name": "Bruno G.",
         "team": "NEW",
         "position": "MID",
         "price": 7,
-        "ownership": 10.1,
+        "ownership": 10.2,
         "points": 154,
         "xG": 5.59,
         "xA": 4.96,
@@ -157254,7 +157255,7 @@ export const PLAYERS = [
         "xA90": 0.18,
         "xGI": 10.55,
         "ictIndex": 202.9,
-        "priceChangeTarget": 40.21116072405263,
+        "priceChangeTarget": 48.01360314205368,
         "predictions": [
             {
                 "gw": 1,
@@ -157572,12 +157573,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 56.4,
-        "web_name": "Bruno G."
+        "xp10": 56.4
     },
     {
         "id": 453,
         "name": "Harvey Barnes",
+        "web_name": "Barnes",
         "team": "NEW",
         "position": "MID",
         "price": 6,
@@ -157589,7 +157590,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 9.56,
         "ictIndex": 147,
-        "priceChangeTarget": -69.12484091986468,
+        "priceChangeTarget": -84.35782885808977,
         "predictions": [
             {
                 "gw": 1,
@@ -157907,12 +157908,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.2,
-        "web_name": "Barnes"
+        "xp10": 35.2
     },
     {
         "id": 454,
         "name": "Anthony Elanga",
+        "web_name": "Elanga",
         "team": "NEW",
         "position": "MID",
         "price": 6,
@@ -157924,7 +157925,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 3.39,
         "ictIndex": 57.8,
-        "priceChangeTarget": -94.68720981898304,
+        "priceChangeTarget": -72.55347871059543,
         "predictions": [
             {
                 "gw": 1,
@@ -158242,12 +158243,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.9,
-        "web_name": "Elanga"
+        "xp10": 30.9
     },
     {
         "id": 456,
         "name": "Jacob Ramsey",
+        "web_name": "J.Ramsey",
         "team": "NEW",
         "position": "MID",
         "price": 5,
@@ -158259,7 +158260,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 2.65,
         "ictIndex": 79.9,
-        "priceChangeTarget": 77.0084086673763,
+        "priceChangeTarget": -58.233260892224514,
         "predictions": [
             {
                 "gw": 1,
@@ -158577,12 +158578,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 31.7,
-        "web_name": "J.Ramsey"
+        "xp10": 31.7
     },
     {
         "id": 457,
         "name": "Jacob Murphy",
+        "web_name": "J.Murphy",
         "team": "NEW",
         "position": "MID",
         "price": 6,
@@ -158594,7 +158595,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 5.73,
         "ictIndex": 106,
-        "priceChangeTarget": -80.60216935889844,
+        "priceChangeTarget": -57.85150195997852,
         "predictions": [
             {
                 "gw": 1,
@@ -158912,12 +158913,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 44.1,
-        "web_name": "J.Murphy"
+        "xp10": 44.1
     },
     {
         "id": 458,
         "name": "Joelinton Cássio Apolinário de Lira",
+        "web_name": "Joelinton",
         "team": "NEW",
         "position": "MID",
         "price": 5.5,
@@ -158929,7 +158930,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 3.71,
         "ictIndex": 95,
-        "priceChangeTarget": 91.45565175789335,
+        "priceChangeTarget": -42.6103046220581,
         "predictions": [
             {
                 "gw": 1,
@@ -159247,12 +159248,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 31.9,
-        "web_name": "Joelinton"
+        "xp10": 31.9
     },
     {
         "id": 459,
         "name": "Lewis Miley",
+        "web_name": "L.Miley",
         "team": "NEW",
         "position": "MID",
         "price": 5.5,
@@ -159264,7 +159265,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 3.46,
         "ictIndex": 73,
-        "priceChangeTarget": -15.67207517052482,
+        "priceChangeTarget": 45.31230381457624,
         "predictions": [
             {
                 "gw": 1,
@@ -159582,12 +159583,12 @@ export const PLAYERS = [
         "news": "Leg injury - Expected back 30 Aug",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "L.Miley"
+        "xp10": 0
     },
     {
         "id": 460,
         "name": "Joe Willock",
+        "web_name": "Willock",
         "team": "NEW",
         "position": "MID",
         "price": 5,
@@ -159599,7 +159600,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 2.33,
         "ictIndex": 55.5,
-        "priceChangeTarget": -72.46735711922696,
+        "priceChangeTarget": -53.90944979587733,
         "predictions": [
             {
                 "gw": 1,
@@ -159917,16 +159918,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 27.7,
-        "web_name": "Willock"
+        "xp10": 27.7
     },
     {
         "id": 461,
         "name": "Bazoumana Touré",
+        "web_name": "Touré",
         "team": "NEW",
         "position": "MID",
         "price": 6,
-        "ownership": 0.2,
+        "ownership": 0.3,
         "points": 75,
         "xG": 0,
         "xA": 0,
@@ -159934,7 +159935,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 48.98896128647996,
+        "priceChangeTarget": 6.160474279010359,
         "predictions": [
             {
                 "gw": 1,
@@ -160252,12 +160253,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 30.5,
-        "web_name": "Touré"
+        "xp10": 30.5
     },
     {
         "id": 462,
         "name": "Sean Steur",
+        "web_name": "Steur",
         "team": "NEW",
         "position": "MID",
         "price": 5,
@@ -160269,7 +160270,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -16.24763098265936,
+        "priceChangeTarget": -23.505476400261884,
         "predictions": [
             {
                 "gw": 1,
@@ -160587,12 +160588,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18.2,
-        "web_name": "Steur"
+        "xp10": 18.2
     },
     {
         "id": 463,
         "name": "Nick Woltemade",
+        "web_name": "Woltemade",
         "team": "NEW",
         "position": "FWD",
         "price": 6,
@@ -160604,7 +160605,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 8.12,
         "ictIndex": 117.5,
-        "priceChangeTarget": -88.85906080048271,
+        "priceChangeTarget": -75.9431130479849,
         "predictions": [
             {
                 "gw": 1,
@@ -160922,12 +160923,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 46.5,
-        "web_name": "Woltemade"
+        "xp10": 46.5
     },
     {
         "id": 464,
         "name": "Yoane Wissa",
+        "web_name": "Wissa",
         "team": "NEW",
         "position": "FWD",
         "price": 6,
@@ -160939,7 +160940,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 3.67,
         "ictIndex": 25.5,
-        "priceChangeTarget": 57.91444026982293,
+        "priceChangeTarget": 81.85864909465144,
         "predictions": [
             {
                 "gw": 1,
@@ -161257,12 +161258,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 21.8,
-        "web_name": "Wissa"
+        "xp10": 21.8
     },
     {
         "id": 465,
         "name": "William Osula",
+        "web_name": "Osula",
         "team": "NEW",
         "position": "FWD",
         "price": 6,
@@ -161274,7 +161275,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 4.9,
         "ictIndex": 62.2,
-        "priceChangeTarget": 76.5715396385909,
+        "priceChangeTarget": 15.591416319149914,
         "predictions": [
             {
                 "gw": 1,
@@ -161592,12 +161593,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 62.3,
-        "web_name": "Osula"
+        "xp10": 62.3
     },
     {
         "id": 466,
         "name": "Sean Neave",
+        "web_name": "Neave",
         "team": "NEW",
         "position": "FWD",
         "price": 4.5,
@@ -161609,7 +161610,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.03,
         "ictIndex": 0.5,
-        "priceChangeTarget": -55.05282714300521,
+        "priceChangeTarget": -8.84027335685822,
         "predictions": [
             {
                 "gw": 1,
@@ -161927,12 +161928,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 20.6,
-        "web_name": "Neave"
+        "xp10": 20.6
     },
     {
         "id": 559,
         "name": "Aladji Bamba",
+        "web_name": "Bamba",
         "team": "NEW",
         "position": "MID",
         "price": 5,
@@ -161944,7 +161945,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 80.80258936668918,
+        "priceChangeTarget": 78.36990384820038,
         "predictions": [
             {
                 "gw": 1,
@@ -162262,12 +162263,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 18.2,
-        "web_name": "Bamba"
+        "xp10": 18.2
     },
     {
         "id": 567,
         "name": "Lukás Hornícek",
+        "web_name": "Horníček",
         "team": "NEW",
         "position": "GKP",
         "price": 5,
@@ -162279,7 +162280,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -37.89268568141013,
+        "priceChangeTarget": 69.58714219995383,
         "predictions": [
             {
                 "gw": 1,
@@ -162597,12 +162598,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.2,
-        "web_name": "Horníček"
+        "xp10": 39.2
     },
     {
         "id": 467,
         "name": "Matz Sels",
+        "web_name": "Sels",
         "team": "NFO",
         "position": "GKP",
         "price": 5,
@@ -162614,7 +162615,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.06,
         "ictIndex": 74,
-        "priceChangeTarget": 61.960587591371365,
+        "priceChangeTarget": 40.447439116495474,
         "predictions": [
             {
                 "gw": 1,
@@ -162932,12 +162933,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.7,
-        "web_name": "Sels"
+        "xp10": 43.7
     },
     {
         "id": 468,
         "name": "John Victor Maciel Furtado",
+        "web_name": "John",
         "team": "NFO",
         "position": "GKP",
         "price": 4.5,
@@ -162949,7 +162950,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 5.7,
-        "priceChangeTarget": 19.3007015173321,
+        "priceChangeTarget": 57.64469235390314,
         "predictions": [
             {
                 "gw": 1,
@@ -163267,16 +163268,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.9,
-        "web_name": "John"
+        "xp10": 28.9
     },
     {
         "id": 469,
         "name": "Neco Williams",
+        "web_name": "N.Williams",
         "team": "NFO",
         "position": "DEF",
         "price": 5,
-        "ownership": 12.4,
+        "ownership": 12.3,
         "points": 128,
         "xG": 2.01,
         "xA": 3.97,
@@ -163284,7 +163285,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 5.98,
         "ictIndex": 175.6,
-        "priceChangeTarget": -50.016369669987256,
+        "priceChangeTarget": -31.880231458644644,
         "predictions": [
             {
                 "gw": 1,
@@ -163602,12 +163603,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 33.5,
-        "web_name": "N.Williams"
+        "xp10": 33.5
     },
     {
         "id": 470,
         "name": "Felipe Rodrigues da Silva",
+        "web_name": "Morato",
         "team": "NFO",
         "position": "DEF",
         "price": 5,
@@ -163619,7 +163620,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 1.47,
         "ictIndex": 50.5,
-        "priceChangeTarget": -79.86572398399944,
+        "priceChangeTarget": 11.391140560076437,
         "predictions": [
             {
                 "gw": 1,
@@ -163937,12 +163938,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 27.6,
-        "web_name": "Morato"
+        "xp10": 27.6
     },
     {
         "id": 471,
         "name": "Nikola Milenković",
+        "web_name": "Milenković",
         "team": "NFO",
         "position": "DEF",
         "price": 5.5,
@@ -163954,7 +163955,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 1.51,
         "ictIndex": 86.9,
-        "priceChangeTarget": 16.994969919235544,
+        "priceChangeTarget": -57.97951403766986,
         "predictions": [
             {
                 "gw": 1,
@@ -164272,12 +164273,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.6,
-        "web_name": "Milenković"
+        "xp10": 28.6
     },
     {
         "id": 472,
         "name": "Murillo Costa dos Santos",
+        "web_name": "Murillo",
         "team": "NFO",
         "position": "DEF",
         "price": 5.5,
@@ -164289,7 +164290,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 1.2,
         "ictIndex": 74,
-        "priceChangeTarget": -31.642225805877146,
+        "priceChangeTarget": -51.88172992389566,
         "predictions": [
             {
                 "gw": 1,
@@ -164607,12 +164608,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 31.2,
-        "web_name": "Murillo"
+        "xp10": 31.2
     },
     {
         "id": 473,
         "name": "Ola Aina",
+        "web_name": "Aina",
         "team": "NFO",
         "position": "DEF",
         "price": 4.5,
@@ -164624,7 +164625,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 1.25,
         "ictIndex": 50.5,
-        "priceChangeTarget": 73.22986414802645,
+        "priceChangeTarget": 6.232036616793707,
         "predictions": [
             {
                 "gw": 1,
@@ -164942,12 +164943,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34.8,
-        "web_name": "Aina"
+        "xp10": 34.8
     },
     {
         "id": 474,
         "name": "Jair Paula da Cunha Filho",
+        "web_name": "Jair Cunha",
         "team": "NFO",
         "position": "DEF",
         "price": 4.5,
@@ -164959,7 +164960,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.33,
         "ictIndex": 14.2,
-        "priceChangeTarget": -63.79838841303132,
+        "priceChangeTarget": -98.93639728484169,
         "predictions": [
             {
                 "gw": 1,
@@ -165277,12 +165278,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 19.9,
-        "web_name": "Jair Cunha"
+        "xp10": 19.9
     },
     {
         "id": 475,
         "name": "Nicolò Savona",
+        "web_name": "Savona",
         "team": "NFO",
         "position": "DEF",
         "price": 4.5,
@@ -165294,7 +165295,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 1.79,
         "ictIndex": 43.5,
-        "priceChangeTarget": -26.597769735431868,
+        "priceChangeTarget": 51.688725180985784,
         "predictions": [
             {
                 "gw": 1,
@@ -165612,12 +165613,12 @@ export const PLAYERS = [
         "news": "Knee injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Savona"
+        "xp10": 0
     },
     {
         "id": 476,
         "name": "Omar Richards",
+        "web_name": "O.Richards",
         "team": "NFO",
         "position": "DEF",
         "price": 4,
@@ -165629,7 +165630,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 62.38419380708629,
+        "priceChangeTarget": -9.096796141760294,
         "predictions": [
             {
                 "gw": 1,
@@ -165947,12 +165948,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 13.4,
-        "web_name": "O.Richards"
+        "xp10": 13.4
     },
     {
         "id": 477,
         "name": "Zach Abbott",
+        "web_name": "Abbott",
         "team": "NFO",
         "position": "DEF",
         "price": 4,
@@ -165964,7 +165965,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.01,
         "ictIndex": 3.2,
-        "priceChangeTarget": -1.07021512831858,
+        "priceChangeTarget": -1.970892117237625,
         "predictions": [
             {
                 "gw": 1,
@@ -166282,12 +166283,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 14.8,
-        "web_name": "Abbott"
+        "xp10": 14.8
     },
     {
         "id": 478,
         "name": "Luca Netz",
+        "web_name": "Netz",
         "team": "NFO",
         "position": "DEF",
         "price": 4.5,
@@ -166299,7 +166300,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 0.41,
         "ictIndex": 10.4,
-        "priceChangeTarget": -89.70404301403865,
+        "priceChangeTarget": -50.85131602534987,
         "predictions": [
             {
                 "gw": 1,
@@ -166617,12 +166618,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 14.8,
-        "web_name": "Netz"
+        "xp10": 14.8
     },
     {
         "id": 479,
         "name": "Tyler Bindon",
+        "web_name": "Bindon",
         "team": "NFO",
         "position": "DEF",
         "price": 4,
@@ -166634,7 +166635,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 90.17552145524857,
+        "priceChangeTarget": 33.76276275536142,
         "predictions": [
             {
                 "gw": 1,
@@ -166952,16 +166953,16 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 13.4,
-        "web_name": "Bindon"
+        "xp10": 13.4
     },
     {
         "id": 480,
         "name": "Morgan Gibbs-White",
+        "web_name": "Gibbs-White",
         "team": "NFO",
         "position": "MID",
         "price": 8,
-        "ownership": 11.6,
+        "ownership": 11.5,
         "points": 188,
         "xG": 10.81,
         "xA": 2.91,
@@ -166969,7 +166970,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 13.72,
         "ictIndex": 242.5,
-        "priceChangeTarget": -82.9006690873645,
+        "priceChangeTarget": 36.34870605041988,
         "predictions": [
             {
                 "gw": 1,
@@ -167287,12 +167288,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 53.8,
-        "web_name": "Gibbs-White"
+        "xp10": 53.8
     },
     {
         "id": 482,
         "name": "Callum Hudson-Odoi",
+        "web_name": "Hudson-Odoi",
         "team": "NFO",
         "position": "MID",
         "price": 6,
@@ -167304,7 +167305,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 5.79,
         "ictIndex": 130.6,
-        "priceChangeTarget": -6.159076227748045,
+        "priceChangeTarget": 37.49283946107482,
         "predictions": [
             {
                 "gw": 1,
@@ -167622,12 +167623,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 41.6,
-        "web_name": "Hudson-Odoi"
+        "xp10": 41.6
     },
     {
         "id": 483,
         "name": "Dan Ndoye",
+        "web_name": "Ndoye",
         "team": "NFO",
         "position": "MID",
         "price": 5.5,
@@ -167639,7 +167640,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 2.56,
         "ictIndex": 56.6,
-        "priceChangeTarget": 41.04420779903495,
+        "priceChangeTarget": 27.82560911982293,
         "predictions": [
             {
                 "gw": 1,
@@ -167957,12 +167958,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.4,
-        "web_name": "Ndoye"
+        "xp10": 35.4
     },
     {
         "id": 484,
         "name": "Omari Hutchinson",
+        "web_name": "Hutchinson",
         "team": "NFO",
         "position": "MID",
         "price": 5.5,
@@ -167974,7 +167975,7 @@ export const PLAYERS = [
         "xA90": 0.21,
         "xGI": 5.88,
         "ictIndex": 121.6,
-        "priceChangeTarget": 95.10210055741268,
+        "priceChangeTarget": -82.69505256095013,
         "predictions": [
             {
                 "gw": 1,
@@ -168292,12 +168293,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 34,
-        "web_name": "Hutchinson"
+        "xp10": 34
     },
     {
         "id": 485,
         "name": "Dilane Bakwa",
+        "web_name": "Bakwa",
         "team": "NFO",
         "position": "MID",
         "price": 5.5,
@@ -168309,7 +168310,7 @@ export const PLAYERS = [
         "xA90": 0.17,
         "xGI": 1.55,
         "ictIndex": 35.6,
-        "priceChangeTarget": -8.295268534955326,
+        "priceChangeTarget": 75.86177183607248,
         "predictions": [
             {
                 "gw": 1,
@@ -168627,16 +168628,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 42.9,
-        "web_name": "Bakwa"
+        "xp10": 42.9
     },
     {
         "id": 486,
         "name": "James McAtee",
+        "web_name": "McAtee",
         "team": "NFO",
         "position": "MID",
         "price": 5.5,
-        "ownership": 0.1,
+        "ownership": 0,
         "points": 17,
         "xG": 0.18,
         "xA": 0.37,
@@ -168644,7 +168645,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 0.55,
         "ictIndex": 17.3,
-        "priceChangeTarget": 53.21694098116575,
+        "priceChangeTarget": 32.54545615786171,
         "predictions": [
             {
                 "gw": 1,
@@ -168962,12 +168963,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.6,
-        "web_name": "McAtee"
+        "xp10": 17.6
     },
     {
         "id": 487,
         "name": "Nicolás Domínguez",
+        "web_name": "Dominguez",
         "team": "NFO",
         "position": "MID",
         "price": 5,
@@ -168979,7 +168980,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 2.24,
         "ictIndex": 59.7,
-        "priceChangeTarget": 9.26042149285719,
+        "priceChangeTarget": -62.32351134097405,
         "predictions": [
             {
                 "gw": 1,
@@ -169297,12 +169298,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 27.8,
-        "web_name": "Dominguez"
+        "xp10": 27.8
     },
     {
         "id": 488,
         "name": "Ibrahim Sangaré",
+        "web_name": "Sangaré",
         "team": "NFO",
         "position": "MID",
         "price": 5,
@@ -169314,7 +169315,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 2.96,
         "ictIndex": 76.8,
-        "priceChangeTarget": -15.798756106455286,
+        "priceChangeTarget": -97.68436891929508,
         "predictions": [
             {
                 "gw": 1,
@@ -169632,12 +169633,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.1,
-        "web_name": "Sangaré"
+        "xp10": 35.1
     },
     {
         "id": 489,
         "name": "Ryan Yates",
+        "web_name": "Yates",
         "team": "NFO",
         "position": "MID",
         "price": 4.5,
@@ -169649,7 +169650,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 0.86,
         "ictIndex": 27.2,
-        "priceChangeTarget": -14.412342238834427,
+        "priceChangeTarget": -5.372731777444258,
         "predictions": [
             {
                 "gw": 1,
@@ -169967,12 +169968,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.9,
-        "web_name": "Yates"
+        "xp10": 17.9
     },
     {
         "id": 490,
         "name": "Chris Wood",
+        "web_name": "Wood",
         "team": "NFO",
         "position": "FWD",
         "price": 6,
@@ -169984,7 +169985,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 4.61,
         "ictIndex": 48,
-        "priceChangeTarget": -23.433437543606857,
+        "priceChangeTarget": 11.556672038343578,
         "predictions": [
             {
                 "gw": 1,
@@ -170302,12 +170303,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37.9,
-        "web_name": "Wood"
+        "xp10": 37.9
     },
     {
         "id": 491,
         "name": "Igor Jesus Maciel da Cruz",
+        "web_name": "Igor Jesus",
         "team": "NFO",
         "position": "FWD",
         "price": 6,
@@ -170319,7 +170320,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 7.74,
         "ictIndex": 136.4,
-        "priceChangeTarget": -68.49913225806539,
+        "priceChangeTarget": 59.511714798695095,
         "predictions": [
             {
                 "gw": 1,
@@ -170637,12 +170638,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 40.9,
-        "web_name": "Igor Jesus"
+        "xp10": 40.9
     },
     {
         "id": 492,
         "name": "Taiwo Awoniyi",
+        "web_name": "Awoniyi",
         "team": "NFO",
         "position": "FWD",
         "price": 5.5,
@@ -170654,7 +170655,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 4.45,
         "ictIndex": 48.4,
-        "priceChangeTarget": -52.46111242638665,
+        "priceChangeTarget": 85.25890556909062,
         "predictions": [
             {
                 "gw": 1,
@@ -170972,12 +170973,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 22,
-        "web_name": "Awoniyi"
+        "xp10": 22
     },
     {
         "id": 493,
         "name": "Arnaud Kalimuendo",
+        "web_name": "Kalimuendo",
         "team": "NFO",
         "position": "FWD",
         "price": 5.5,
@@ -170989,7 +170990,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.46,
         "ictIndex": 6.3,
-        "priceChangeTarget": -47.444025445204474,
+        "priceChangeTarget": 62.366889309894134,
         "predictions": [
             {
                 "gw": 1,
@@ -171307,12 +171308,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 19.9,
-        "web_name": "Kalimuendo"
+        "xp10": 19.9
     },
     {
         "id": 558,
         "name": "Xaver Schlager",
+        "web_name": "Schlager",
         "team": "NFO",
         "position": "MID",
         "price": 5,
@@ -171324,7 +171325,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -83.96119073889952,
+        "priceChangeTarget": -28.482449660422702,
         "predictions": [
             {
                 "gw": 1,
@@ -171642,12 +171643,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.3,
-        "web_name": "Schlager"
+        "xp10": 17.3
     },
     {
         "id": 112,
         "name": "Jan Paul van Hecke",
+        "web_name": "Van Hecke",
         "team": "TOT",
         "position": "DEF",
         "price": 5,
@@ -171659,7 +171660,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 4.87,
         "ictIndex": 152,
-        "priceChangeTarget": 13.976546635881391,
+        "priceChangeTarget": -11.453237254858635,
         "predictions": [
             {
                 "gw": 1,
@@ -171977,12 +171978,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.9,
-        "web_name": "Van Hecke"
+        "xp10": 39.9
     },
     {
         "id": 455,
         "name": "Sandro Tonali",
+        "web_name": "Tonali",
         "team": "TOT",
         "position": "MID",
         "price": 5.5,
@@ -171994,7 +171995,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 4.62,
         "ictIndex": 113.4,
-        "priceChangeTarget": -19.044093569366055,
+        "priceChangeTarget": 19.225930079363792,
         "predictions": [
             {
                 "gw": 1,
@@ -172312,12 +172313,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.2,
-        "web_name": "Tonali"
+        "xp10": 26.2
     },
     {
         "id": 494,
         "name": "Guglielmo Vicario",
+        "web_name": "Vicario",
         "team": "TOT",
         "position": "GKP",
         "price": 4.5,
@@ -172329,7 +172330,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.04,
         "ictIndex": 72.2,
-        "priceChangeTarget": 79.94809301214198,
+        "priceChangeTarget": 39.29873365047922,
         "predictions": [
             {
                 "gw": 1,
@@ -172647,12 +172648,12 @@ export const PLAYERS = [
         "news": "Lost starting spot to Kinsky. Unavailable.",
         "status": "u",
         "chanceOfPlaying": 0,
-        "xp10": 39.6,
-        "web_name": "Vicario"
+        "xp10": 39.6
     },
     {
         "id": 495,
         "name": "Brandon Austin",
+        "web_name": "Austin",
         "team": "TOT",
         "position": "GKP",
         "price": 4,
@@ -172664,7 +172665,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -88.36892702029182,
+        "priceChangeTarget": -88.47458026497135,
         "predictions": [
             {
                 "gw": 1,
@@ -172982,16 +172983,16 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 40.9,
-        "web_name": "Austin"
+        "xp10": 40.9
     },
     {
         "id": 496,
         "name": "Antonín Kinský",
+        "web_name": "Kinsky",
         "team": "TOT",
         "position": "GKP",
         "price": 4.5,
-        "ownership": 19.3,
+        "ownership": 19.4,
         "points": 20,
         "xG": 0,
         "xA": 0,
@@ -172999,7 +173000,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 10.3,
-        "priceChangeTarget": -12.470827181877112,
+        "priceChangeTarget": -48.87106437363791,
         "predictions": [
             {
                 "gw": 1,
@@ -173317,12 +173318,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 31.9,
-        "web_name": "Kinsky"
+        "xp10": 31.9
     },
     {
         "id": 497,
         "name": "Martin Dubravka",
+        "web_name": "Dubravka",
         "team": "TOT",
         "position": "GKP",
         "price": 4,
@@ -173334,7 +173335,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.04,
         "ictIndex": 97.9,
-        "priceChangeTarget": 84.80471543961468,
+        "priceChangeTarget": -47.87948010208769,
         "predictions": [
             {
                 "gw": 1,
@@ -173652,12 +173653,12 @@ export const PLAYERS = [
         "news": "Backup GKP at Spurs behind Kinsky.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 42.9,
-        "web_name": "Dubravka"
+        "xp10": 42.9
     },
     {
         "id": 498,
         "name": "Marcos Senesi Barón",
+        "web_name": "Senesi",
         "team": "TOT",
         "position": "DEF",
         "price": 6,
@@ -173669,7 +173670,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 6.25,
         "ictIndex": 168.6,
-        "priceChangeTarget": 50.39268396999833,
+        "priceChangeTarget": -22.3231940842811,
         "predictions": [
             {
                 "gw": 1,
@@ -173987,16 +173988,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.7,
-        "web_name": "Senesi"
+        "xp10": 43.7
     },
     {
         "id": 499,
         "name": "Pedro Porro Sauceda",
+        "web_name": "Pedro Porro",
         "team": "TOT",
         "position": "DEF",
         "price": 5.5,
-        "ownership": 23.4,
+        "ownership": 23.3,
         "points": 117,
         "xG": 1.05,
         "xA": 4.37,
@@ -174004,7 +174005,7 @@ export const PLAYERS = [
         "xA90": 0.14,
         "xGI": 5.42,
         "ictIndex": 177.5,
-        "priceChangeTarget": -60.85869985776134,
+        "priceChangeTarget": 10.271136182674127,
         "predictions": [
             {
                 "gw": 1,
@@ -174322,12 +174323,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.1,
-        "web_name": "Pedro Porro"
+        "xp10": 35.1
     },
     {
         "id": 500,
         "name": "Cristian Romero",
+        "web_name": "Romero",
         "team": "TOT",
         "position": "DEF",
         "price": 5,
@@ -174339,7 +174340,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 2.64,
         "ictIndex": 93.2,
-        "priceChangeTarget": -82.37369320457044,
+        "priceChangeTarget": 66.52749138276434,
         "predictions": [
             {
                 "gw": 1,
@@ -174657,12 +174658,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.9,
-        "web_name": "Romero"
+        "xp10": 39.9
     },
     {
         "id": 501,
         "name": "Kevin Danso",
+        "web_name": "Danso",
         "team": "TOT",
         "position": "DEF",
         "price": 5,
@@ -174674,7 +174675,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.9,
         "ictIndex": 55.5,
-        "priceChangeTarget": 96.89015974981606,
+        "priceChangeTarget": 65.61437956941921,
         "predictions": [
             {
                 "gw": 1,
@@ -174992,12 +174993,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 35.7,
-        "web_name": "Danso"
+        "xp10": 35.7
     },
     {
         "id": 502,
         "name": "Andrew Robertson",
+        "web_name": "Robertson",
         "team": "TOT",
         "position": "DEF",
         "price": 4.5,
@@ -175009,7 +175010,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 2.49,
         "ictIndex": 68.2,
-        "priceChangeTarget": -20.254837293148725,
+        "priceChangeTarget": -61.54443697227761,
         "predictions": [
             {
                 "gw": 1,
@@ -175327,12 +175328,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 26.1,
-        "web_name": "Robertson"
+        "xp10": 26.1
     },
     {
         "id": 503,
         "name": "Micky van de Ven",
+        "web_name": "Van de Ven",
         "team": "TOT",
         "position": "DEF",
         "price": 5,
@@ -175344,7 +175345,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 3.2,
         "ictIndex": 99.6,
-        "priceChangeTarget": -42.23940782516977,
+        "priceChangeTarget": 89.60218582840608,
         "predictions": [
             {
                 "gw": 1,
@@ -175662,12 +175663,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 31.9,
-        "web_name": "Van de Ven"
+        "xp10": 31.9
     },
     {
         "id": 505,
         "name": "Djed Spence",
+        "web_name": "Spence",
         "team": "TOT",
         "position": "DEF",
         "price": 4.5,
@@ -175679,7 +175680,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 2.67,
         "ictIndex": 70.5,
-        "priceChangeTarget": -93.00450915169579,
+        "priceChangeTarget": -49.31334225378991,
         "predictions": [
             {
                 "gw": 1,
@@ -175997,12 +175998,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 32.3,
-        "web_name": "Spence"
+        "xp10": 32.3
     },
     {
         "id": 506,
         "name": "Destiny Udogie",
+        "web_name": "Udogie",
         "team": "TOT",
         "position": "DEF",
         "price": 4.5,
@@ -176014,7 +176015,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.9,
         "ictIndex": 49.8,
-        "priceChangeTarget": -71.44507415706917,
+        "priceChangeTarget": -57.209169438210864,
         "predictions": [
             {
                 "gw": 1,
@@ -176332,12 +176333,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 16.1,
-        "web_name": "Udogie"
+        "xp10": 16.1
     },
     {
         "id": 507,
         "name": "Ashley Phillips",
+        "web_name": "Phillips",
         "team": "TOT",
         "position": "DEF",
         "price": 4.5,
@@ -176349,7 +176350,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -68.45402679454833,
+        "priceChangeTarget": -78.03822958634363,
         "predictions": [
             {
                 "gw": 1,
@@ -176667,12 +176668,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 23.9,
-        "web_name": "Phillips"
+        "xp10": 23.9
     },
     {
         "id": 508,
         "name": "Ben Davies",
+        "web_name": "Davies",
         "team": "TOT",
         "position": "DEF",
         "price": 4,
@@ -176684,7 +176685,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.56,
         "ictIndex": 14.2,
-        "priceChangeTarget": 93.89455213796413,
+        "priceChangeTarget": -73.17585865513846,
         "predictions": [
             {
                 "gw": 1,
@@ -177002,12 +177003,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 15.3,
-        "web_name": "Davies"
+        "xp10": 15.3
     },
     {
         "id": 509,
         "name": "Jun'ai Byfield",
+        "web_name": "Byfield",
         "team": "TOT",
         "position": "DEF",
         "price": 4,
@@ -177019,7 +177020,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.1,
-        "priceChangeTarget": -88.57238600637594,
+        "priceChangeTarget": 19.864121744783773,
         "predictions": [
             {
                 "gw": 1,
@@ -177337,12 +177338,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 13.9,
-        "web_name": "Byfield"
+        "xp10": 13.9
     },
     {
         "id": 510,
         "name": "James Rowswell",
+        "web_name": "Rowswell",
         "team": "TOT",
         "position": "DEF",
         "price": 4,
@@ -177354,7 +177355,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -17.816934013535274,
+        "priceChangeTarget": -34.81135589174586,
         "predictions": [
             {
                 "gw": 1,
@@ -177672,12 +177673,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 13.9,
-        "web_name": "Rowswell"
+        "xp10": 13.9
     },
     {
         "id": 511,
         "name": "João Victor de Souza Menezes",
+        "web_name": "Souza",
         "team": "TOT",
         "position": "DEF",
         "price": 4,
@@ -177689,7 +177690,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.05,
         "ictIndex": 6.2,
-        "priceChangeTarget": -95.55007497430728,
+        "priceChangeTarget": -3.291757234116403,
         "predictions": [
             {
                 "gw": 1,
@@ -178007,12 +178008,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 15.3,
-        "web_name": "Souza"
+        "xp10": 15.3
     },
     {
         "id": 512,
         "name": "Mohammed Kudus",
+        "web_name": "Kudus",
         "team": "TOT",
         "position": "MID",
         "price": 6.5,
@@ -178024,7 +178025,7 @@ export const PLAYERS = [
         "xA90": 0.14,
         "xGI": 4.33,
         "ictIndex": 104.7,
-        "priceChangeTarget": -12.03014588887541,
+        "priceChangeTarget": -60.16535514307755,
         "predictions": [
             {
                 "gw": 1,
@@ -178342,12 +178343,12 @@ export const PLAYERS = [
         "news": "Thigh injury - 75% chance of playing",
         "status": "d",
         "chanceOfPlaying": 75,
-        "xp10": 29.6,
-        "web_name": "Kudus"
+        "xp10": 29.6
     },
     {
         "id": 513,
         "name": "Xavi Simons",
+        "web_name": "Xavi",
         "team": "TOT",
         "position": "MID",
         "price": 6,
@@ -178359,7 +178360,7 @@ export const PLAYERS = [
         "xA90": 0.2,
         "xGI": 6.91,
         "ictIndex": 113.9,
-        "priceChangeTarget": 15.240142370035016,
+        "priceChangeTarget": 62.18429866020014,
         "predictions": [
             {
                 "gw": 1,
@@ -178677,12 +178678,12 @@ export const PLAYERS = [
         "news": "Knee injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Xavi"
+        "xp10": 0
     },
     {
         "id": 514,
         "name": "Mathys Tel",
+        "web_name": "Tel",
         "team": "TOT",
         "position": "MID",
         "price": 6,
@@ -178694,7 +178695,7 @@ export const PLAYERS = [
         "xA90": 0.16,
         "xGI": 4.89,
         "ictIndex": 107.6,
-        "priceChangeTarget": -28.97148784723646,
+        "priceChangeTarget": 84.98904869657281,
         "predictions": [
             {
                 "gw": 1,
@@ -179012,12 +179013,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37.6,
-        "web_name": "Tel"
+        "xp10": 37.6
     },
     {
         "id": 515,
         "name": "James Maddison",
+        "web_name": "Maddison",
         "team": "TOT",
         "position": "MID",
         "price": 6.5,
@@ -179029,7 +179030,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.27,
         "ictIndex": 2.8,
-        "priceChangeTarget": 58.73487016839093,
+        "priceChangeTarget": -93.12033246969959,
         "predictions": [
             {
                 "gw": 1,
@@ -179347,16 +179348,16 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.8,
-        "web_name": "Maddison"
+        "xp10": 17.8
     },
     {
         "id": 516,
         "name": "Rodrigo Bentancur",
+        "web_name": "Bentancur",
         "team": "TOT",
         "position": "MID",
         "price": 5.5,
-        "ownership": 0.1,
+        "ownership": 0.2,
         "points": 86,
         "xG": 0.72,
         "xA": 0.84,
@@ -179364,7 +179365,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 1.56,
         "ictIndex": 67.4,
-        "priceChangeTarget": 52.99638081967686,
+        "priceChangeTarget": 19.16495529036486,
         "predictions": [
             {
                 "gw": 1,
@@ -179682,12 +179683,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37,
-        "web_name": "Bentancur"
+        "xp10": 37
     },
     {
         "id": 517,
         "name": "Wilson Odobert",
+        "web_name": "Odobert",
         "team": "TOT",
         "position": "MID",
         "price": 5.5,
@@ -179699,7 +179700,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 3.13,
         "ictIndex": 67.6,
-        "priceChangeTarget": 84.93029813328849,
+        "priceChangeTarget": 80.56000390352301,
         "predictions": [
             {
                 "gw": 1,
@@ -180017,12 +180018,12 @@ export const PLAYERS = [
         "news": "Knee injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Odobert"
+        "xp10": 0
     },
     {
         "id": 518,
         "name": "Pape Matar Sarr",
+        "web_name": "P.M.Sarr",
         "team": "TOT",
         "position": "MID",
         "price": 5,
@@ -180034,7 +180035,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 2.74,
         "ictIndex": 68.2,
-        "priceChangeTarget": 77.07473764017075,
+        "priceChangeTarget": 81.4721964135725,
         "predictions": [
             {
                 "gw": 1,
@@ -180352,12 +180353,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 29.4,
-        "web_name": "P.M.Sarr"
+        "xp10": 29.4
     },
     {
         "id": 519,
         "name": "Conor Gallagher",
+        "web_name": "Gallagher",
         "team": "TOT",
         "position": "MID",
         "price": 5.5,
@@ -180369,7 +180370,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 1.93,
         "ictIndex": 55.1,
-        "priceChangeTarget": -25.341074028222366,
+        "priceChangeTarget": 27.527801358293445,
         "predictions": [
             {
                 "gw": 1,
@@ -180687,12 +180688,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 31.4,
-        "web_name": "Gallagher"
+        "xp10": 31.4
     },
     {
         "id": 520,
         "name": "Lucas Bergvall",
+        "web_name": "Bergvall",
         "team": "TOT",
         "position": "MID",
         "price": 5.5,
@@ -180704,7 +180705,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 1.66,
         "ictIndex": 41.5,
-        "priceChangeTarget": -20.469955263303063,
+        "priceChangeTarget": -84.70503455919341,
         "predictions": [
             {
                 "gw": 1,
@@ -181022,12 +181023,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 44.4,
-        "web_name": "Bergvall"
+        "xp10": 44.4
     },
     {
         "id": 521,
         "name": "Dejan Kulusevski",
+        "web_name": "Kulusevski",
         "team": "TOT",
         "position": "MID",
         "price": 6.5,
@@ -181039,7 +181040,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -95.63512208040046,
+        "priceChangeTarget": 34.18510215635072,
         "predictions": [
             {
                 "gw": 1,
@@ -181357,12 +181358,12 @@ export const PLAYERS = [
         "news": "Knee injury - Unknown return date",
         "status": "i",
         "chanceOfPlaying": 0,
-        "xp10": 0,
-        "web_name": "Kulusevski"
+        "xp10": 0
     },
     {
         "id": 522,
         "name": "Archie Gray",
+        "web_name": "Gray",
         "team": "TOT",
         "position": "MID",
         "price": 5,
@@ -181374,7 +181375,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 2.79,
         "ictIndex": 55.5,
-        "priceChangeTarget": -6.1325527275076155,
+        "priceChangeTarget": -14.481572327740139,
         "predictions": [
             {
                 "gw": 1,
@@ -181692,12 +181693,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 33.6,
-        "web_name": "Gray"
+        "xp10": 33.6
     },
     {
         "id": 523,
         "name": "Mikey Moore",
+        "web_name": "Moore",
         "team": "TOT",
         "position": "MID",
         "price": 5,
@@ -181709,7 +181710,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -85.60549171061167,
+        "priceChangeTarget": 33.25210624862507,
         "predictions": [
             {
                 "gw": 1,
@@ -182027,12 +182028,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.8,
-        "web_name": "Moore"
+        "xp10": 17.8
     },
     {
         "id": 524,
         "name": "Callum Olusesi",
+        "web_name": "Olusesi",
         "team": "TOT",
         "position": "MID",
         "price": 4.5,
@@ -182044,7 +182045,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.01,
         "ictIndex": 0.2,
-        "priceChangeTarget": -61.24636271841628,
+        "priceChangeTarget": 39.52408930690899,
         "predictions": [
             {
                 "gw": 1,
@@ -182362,12 +182363,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 17.8,
-        "web_name": "Olusesi"
+        "xp10": 17.8
     },
     {
         "id": 525,
         "name": "Mateus Fernandes",
+        "web_name": "Fernandes",
         "team": "TOT",
         "position": "MID",
         "price": 6,
@@ -182379,7 +182380,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 4.95,
         "ictIndex": 146.3,
-        "priceChangeTarget": -51.43081863744836,
+        "priceChangeTarget": 12.471499288917002,
         "predictions": [
             {
                 "gw": 1,
@@ -182697,16 +182698,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.4,
-        "web_name": "Fernandes"
+        "xp10": 38.4
     },
     {
         "id": 526,
         "name": "Dominic Solanke-Mitchell",
+        "web_name": "Solanke",
         "team": "TOT",
         "position": "FWD",
         "price": 6,
-        "ownership": 2.5,
+        "ownership": 2.4,
         "points": 40,
         "xG": 2.97,
         "xA": 0.34,
@@ -182714,7 +182715,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 3.3,
         "ictIndex": 62.7,
-        "priceChangeTarget": 53.07816977194301,
+        "priceChangeTarget": -1.6018330516376835,
         "predictions": [
             {
                 "gw": 1,
@@ -183032,12 +183033,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 36.9,
-        "web_name": "Solanke"
+        "xp10": 36.9
     },
     {
         "id": 527,
         "name": "Richarlison de Andrade",
+        "web_name": "Richarlison",
         "team": "TOT",
         "position": "FWD",
         "price": 6,
@@ -183049,7 +183050,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 10.1,
         "ictIndex": 165.2,
-        "priceChangeTarget": -37.72183187077176,
+        "priceChangeTarget": -4.203783664232759,
         "predictions": [
             {
                 "gw": 1,
@@ -183367,12 +183368,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.3,
-        "web_name": "Richarlison"
+        "xp10": 43.3
     },
     {
         "id": 528,
         "name": "Dane Scarlett",
+        "web_name": "Scarlett",
         "team": "TOT",
         "position": "FWD",
         "price": 4.5,
@@ -183384,7 +183385,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.01,
         "ictIndex": 0.7,
-        "priceChangeTarget": 97.3191366378702,
+        "priceChangeTarget": -50.31234687622788,
         "predictions": [
             {
                 "gw": 1,
@@ -183702,12 +183703,12 @@ export const PLAYERS = [
         "news": "Backup/squad rotation option based on low historical starts.",
         "status": "a",
         "chanceOfPlaying": 15,
-        "xp10": 20.3,
-        "web_name": "Scarlett"
+        "xp10": 20.3
     },
     {
         "id": 529,
         "name": "Robin Roefs",
+        "web_name": "Roefs",
         "team": "SUN",
         "position": "GKP",
         "price": 5,
@@ -183719,7 +183720,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.1,
         "ictIndex": 93.1,
-        "priceChangeTarget": -85.98724279684488,
+        "priceChangeTarget": 42.94128305699877,
         "predictions": [
             {
                 "gw": 1,
@@ -184037,12 +184038,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 48.7,
-        "web_name": "Roefs"
+        "xp10": 48.7
     },
     {
         "id": 530,
         "name": "Anthony Patterson",
+        "web_name": "Patterson",
         "team": "SUN",
         "position": "GKP",
         "price": 4,
@@ -184054,7 +184055,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -79.41598974621948,
+        "priceChangeTarget": -31.64134341609683,
         "predictions": [
             {
                 "gw": 1,
@@ -184372,12 +184373,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 39.4,
-        "web_name": "Patterson"
+        "xp10": 39.4
     },
     {
         "id": 531,
         "name": "Melker Ellborg",
+        "web_name": "Ellborg",
         "team": "SUN",
         "position": "GKP",
         "price": 4.5,
@@ -184389,7 +184390,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.02,
         "ictIndex": 7.4,
-        "priceChangeTarget": 73.252364104003,
+        "priceChangeTarget": 17.021023132926956,
         "predictions": [
             {
                 "gw": 1,
@@ -184707,16 +184708,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 28.7,
-        "web_name": "Ellborg"
+        "xp10": 28.7
     },
     {
         "id": 532,
         "name": "Daniel Ballard",
+        "web_name": "Ballard",
         "team": "SUN",
         "position": "DEF",
         "price": 5,
-        "ownership": 3.9,
+        "ownership": 4,
         "points": 116,
         "xG": 2.46,
         "xA": 0.63,
@@ -184724,7 +184725,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 3.09,
         "ictIndex": 121.5,
-        "priceChangeTarget": -35.58755908982994,
+        "priceChangeTarget": 55.478907163166184,
         "predictions": [
             {
                 "gw": 1,
@@ -185042,16 +185043,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45,
-        "web_name": "Ballard"
+        "xp10": 45
     },
     {
         "id": 533,
         "name": "Nordi Mukiele",
+        "web_name": "Mukiele",
         "team": "SUN",
         "position": "DEF",
         "price": 5.5,
-        "ownership": 6.6,
+        "ownership": 6.4,
         "points": 151,
         "xG": 1.62,
         "xA": 2.65,
@@ -185059,7 +185060,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 4.27,
         "ictIndex": 132.9,
-        "priceChangeTarget": 64.93073372884331,
+        "priceChangeTarget": -89.40292900861517,
         "predictions": [
             {
                 "gw": 1,
@@ -185377,16 +185378,16 @@ export const PLAYERS = [
         "news": "Knock - 75% chance of playing",
         "status": "d",
         "chanceOfPlaying": 75,
-        "xp10": 33.9,
-        "web_name": "Mukiele"
+        "xp10": 33.9
     },
     {
         "id": 534,
         "name": "Trai Hume",
+        "web_name": "Hume",
         "team": "SUN",
         "position": "DEF",
         "price": 4.5,
-        "ownership": 3.6,
+        "ownership": 3.8,
         "points": 110,
         "xG": 2.27,
         "xA": 2.05,
@@ -185394,7 +185395,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 4.32,
         "ictIndex": 120.9,
-        "priceChangeTarget": 23.354103839220613,
+        "priceChangeTarget": -17.52000721161164,
         "predictions": [
             {
                 "gw": 1,
@@ -185712,12 +185713,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 32.5,
-        "web_name": "Hume"
+        "xp10": 32.5
     },
     {
         "id": 535,
         "name": "Omar Alderete",
+        "web_name": "Alderete",
         "team": "SUN",
         "position": "DEF",
         "price": 5,
@@ -185729,7 +185730,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 2.52,
         "ictIndex": 117,
-        "priceChangeTarget": -15.868874892434008,
+        "priceChangeTarget": 18.127154110942456,
         "predictions": [
             {
                 "gw": 1,
@@ -186047,12 +186048,12 @@ export const PLAYERS = [
         "news": "Knock - 75% chance of playing",
         "status": "d",
         "chanceOfPlaying": 75,
-        "xp10": 29.5,
-        "web_name": "Alderete"
+        "xp10": 29.5
     },
     {
         "id": 536,
         "name": "Reinildo Mandava",
+        "web_name": "Reinildo",
         "team": "SUN",
         "position": "DEF",
         "price": 4.5,
@@ -186064,7 +186065,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.75,
         "ictIndex": 54.7,
-        "priceChangeTarget": -88.4855992241559,
+        "priceChangeTarget": 6.765734221126564,
         "predictions": [
             {
                 "gw": 1,
@@ -186382,12 +186383,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 32.5,
-        "web_name": "Reinildo"
+        "xp10": 32.5
     },
     {
         "id": 537,
         "name": "Jenson Seelt",
+        "web_name": "Seelt",
         "team": "SUN",
         "position": "DEF",
         "price": 4.5,
@@ -186399,7 +186400,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.01,
         "ictIndex": 3.6,
-        "priceChangeTarget": -53.22543691646118,
+        "priceChangeTarget": 31.139200204290148,
         "predictions": [
             {
                 "gw": 1,
@@ -186717,12 +186718,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 15.8,
-        "web_name": "Seelt"
+        "xp10": 15.8
     },
     {
         "id": 538,
         "name": "Leo Fuhr Hjelde",
+        "web_name": "Hjelde",
         "team": "SUN",
         "position": "DEF",
         "price": 4,
@@ -186734,7 +186735,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -37.79248048006565,
+        "priceChangeTarget": 88.39082404183455,
         "predictions": [
             {
                 "gw": 1,
@@ -187052,12 +187053,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 25.9,
-        "web_name": "Hjelde"
+        "xp10": 25.9
     },
     {
         "id": 539,
         "name": "Luke O'Nien",
+        "web_name": "O'Nien",
         "team": "SUN",
         "position": "DEF",
         "price": 4,
@@ -187069,7 +187070,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.28,
         "ictIndex": 17.1,
-        "priceChangeTarget": -97.91089381777378,
+        "priceChangeTarget": -9.944220842942642,
         "predictions": [
             {
                 "gw": 1,
@@ -187387,12 +187388,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 18.2,
-        "web_name": "O'Nien"
+        "xp10": 18.2
     },
     {
         "id": 540,
         "name": "Arthur Masuaku",
+        "web_name": "Masuaku",
         "team": "SUN",
         "position": "DEF",
         "price": 4,
@@ -187404,7 +187405,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.15,
         "ictIndex": 4.9,
-        "priceChangeTarget": 89.26793926505337,
+        "priceChangeTarget": -1.7326593694162966,
         "predictions": [
             {
                 "gw": 1,
@@ -187722,12 +187723,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 16.6,
-        "web_name": "Masuaku"
+        "xp10": 16.6
     },
     {
         "id": 541,
         "name": "Thomas Meunier",
+        "web_name": "Meunier",
         "team": "SUN",
         "position": "DEF",
         "price": 4.5,
@@ -187739,7 +187740,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 37.961202903726615,
+        "priceChangeTarget": -17.77922141360176,
         "predictions": [
             {
                 "gw": 1,
@@ -188057,12 +188058,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 25.9,
-        "web_name": "Meunier"
+        "xp10": 25.9
     },
     {
         "id": 542,
         "name": "Enzo Le Fée",
+        "web_name": "E.Le Fée",
         "team": "SUN",
         "position": "MID",
         "price": 6,
@@ -188074,7 +188075,7 @@ export const PLAYERS = [
         "xA90": 0.18,
         "xGI": 11.17,
         "ictIndex": 186.9,
-        "priceChangeTarget": -44.61884459338323,
+        "priceChangeTarget": 48.580948528677936,
         "predictions": [
             {
                 "gw": 1,
@@ -188392,12 +188393,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 45.8,
-        "web_name": "E.Le Fée"
+        "xp10": 45.8
     },
     {
         "id": 543,
         "name": "Habib Diarra",
+        "web_name": "Diarra",
         "team": "SUN",
         "position": "MID",
         "price": 5.5,
@@ -188409,7 +188410,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 4.12,
         "ictIndex": 53.9,
-        "priceChangeTarget": -7.319486063496157,
+        "priceChangeTarget": -9.771236364267907,
         "predictions": [
             {
                 "gw": 1,
@@ -188727,12 +188728,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 37.3,
-        "web_name": "Diarra"
+        "xp10": 37.3
     },
     {
         "id": 544,
         "name": "Granit Xhaka",
+        "web_name": "Xhaka",
         "team": "SUN",
         "position": "MID",
         "price": 5.5,
@@ -188744,7 +188745,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 4.74,
         "ictIndex": 138.1,
-        "priceChangeTarget": 65.34161305825555,
+        "priceChangeTarget": 18.081148942874975,
         "predictions": [
             {
                 "gw": 1,
@@ -189062,12 +189063,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.4,
-        "web_name": "Xhaka"
+        "xp10": 38.4
     },
     {
         "id": 545,
         "name": "Noah Sadiki",
+        "web_name": "Sadiki",
         "team": "SUN",
         "position": "MID",
         "price": 5,
@@ -189079,7 +189080,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 2.89,
         "ictIndex": 84.6,
-        "priceChangeTarget": 93.27817730649147,
+        "priceChangeTarget": -7.605229122639216,
         "predictions": [
             {
                 "gw": 1,
@@ -189397,12 +189398,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 24.2,
-        "web_name": "Sadiki"
+        "xp10": 24.2
     },
     {
         "id": 546,
         "name": "Simon Adingra",
+        "web_name": "Adingra",
         "team": "SUN",
         "position": "MID",
         "price": 5,
@@ -189414,7 +189415,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 0.97,
         "ictIndex": 27,
-        "priceChangeTarget": -27.011621588278302,
+        "priceChangeTarget": -6.850395504426302,
         "predictions": [
             {
                 "gw": 1,
@@ -189732,12 +189733,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.6,
-        "web_name": "Adingra"
+        "xp10": 38.6
     },
     {
         "id": 547,
         "name": "Romaine Mundle",
+        "web_name": "Mundle",
         "team": "SUN",
         "position": "MID",
         "price": 5,
@@ -189749,7 +189750,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 1.35,
         "ictIndex": 12.7,
-        "priceChangeTarget": -39.36624754366771,
+        "priceChangeTarget": -71.58810746380641,
         "predictions": [
             {
                 "gw": 1,
@@ -190067,12 +190068,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 19.2,
-        "web_name": "Mundle"
+        "xp10": 19.2
     },
     {
         "id": 548,
         "name": "Chris Rigg",
+        "web_name": "Rigg",
         "team": "SUN",
         "position": "MID",
         "price": 5,
@@ -190084,7 +190085,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 1.79,
         "ictIndex": 36,
-        "priceChangeTarget": 10.104789968875721,
+        "priceChangeTarget": 58.77524841273768,
         "predictions": [
             {
                 "gw": 1,
@@ -190402,12 +190403,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 33.7,
-        "web_name": "Rigg"
+        "xp10": 33.7
     },
     {
         "id": 549,
         "name": "Chemsdine Talbi",
+        "web_name": "Talbi",
         "team": "SUN",
         "position": "MID",
         "price": 5.5,
@@ -190419,7 +190420,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 3.3,
         "ictIndex": 69.1,
-        "priceChangeTarget": -99.49091059756098,
+        "priceChangeTarget": 63.53576762718731,
         "predictions": [
             {
                 "gw": 1,
@@ -190737,12 +190738,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 38.6,
-        "web_name": "Talbi"
+        "xp10": 38.6
     },
     {
         "id": 550,
         "name": "Djiamgone Jocelin Ta Bi",
+        "web_name": "Jocelin.T",
         "team": "SUN",
         "position": "MID",
         "price": 5,
@@ -190754,7 +190755,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.04,
         "ictIndex": 1,
-        "priceChangeTarget": 93.41551026875607,
+        "priceChangeTarget": -0.1263762131138435,
         "predictions": [
             {
                 "gw": 1,
@@ -191072,12 +191073,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 17.9,
-        "web_name": "Jocelin.T"
+        "xp10": 17.9
     },
     {
         "id": 551,
         "name": "Nilson Angulo",
+        "web_name": "Angulo",
         "team": "SUN",
         "position": "MID",
         "price": 5,
@@ -191089,7 +191090,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.89,
         "ictIndex": 17.8,
-        "priceChangeTarget": -24.156914080757062,
+        "priceChangeTarget": -11.490991729433645,
         "predictions": [
             {
                 "gw": 1,
@@ -191407,16 +191408,16 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 27.6,
-        "web_name": "Angulo"
+        "xp10": 27.6
     },
     {
         "id": 552,
         "name": "Brian Brobbey",
+        "web_name": "Brobbey",
         "team": "SUN",
         "position": "FWD",
         "price": 6,
-        "ownership": 18.1,
+        "ownership": 18,
         "points": 92,
         "xG": 6.02,
         "xA": 0.67,
@@ -191424,7 +191425,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 6.69,
         "ictIndex": 106.7,
-        "priceChangeTarget": -50.60165731821682,
+        "priceChangeTarget": 45.44123902091894,
         "predictions": [
             {
                 "gw": 1,
@@ -191742,12 +191743,12 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 43.1,
-        "web_name": "Brobbey"
+        "xp10": 43.1
     },
     {
         "id": 553,
         "name": "Wilson Isidor",
+        "web_name": "Isidor",
         "team": "SUN",
         "position": "FWD",
         "price": 5.5,
@@ -191759,7 +191760,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 5.08,
         "ictIndex": 71.5,
-        "priceChangeTarget": 21.33960178988859,
+        "priceChangeTarget": -83.28507263002089,
         "predictions": [
             {
                 "gw": 1,
@@ -192077,8 +192078,7 @@ export const PLAYERS = [
         "news": "",
         "status": "a",
         "chanceOfPlaying": 100,
-        "xp10": 40.3,
-        "web_name": "Isidor"
+        "xp10": 40.3
     }
 ];
 
@@ -192087,8 +192087,8 @@ export const DEFAULT_SQUAD = [
     497,
     4,
     423,
-    499,
     388,
+    499,
     387,
     426,
     368,
@@ -192113,8 +192113,8 @@ export const EXPERT_REVEALS = [
             497,
             4,
             423,
-            499,
             388,
+            499,
             387,
             426,
             368,
@@ -192141,8 +192141,8 @@ export const EXPERT_REVEALS = [
             497,
             4,
             423,
-            499,
             388,
+            499,
             387,
             426,
             368,
@@ -192169,8 +192169,8 @@ export const EXPERT_REVEALS = [
             497,
             4,
             423,
-            499,
             388,
+            499,
             387,
             426,
             368,
