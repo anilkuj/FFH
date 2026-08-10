@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { createEmptyStore, applyPredictionSnapshot, applyActuals, getReport } from './lib/backtestStore.js';
+import { createEmptyHistory, recordGwSnapshot, getPlayerHistory } from './lib/rotationHistory.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -34,6 +35,14 @@ try {
     fs.unlinkSync(RETRO_REPORT_FILE + '.test');
 } catch (e) {
     RETRO_REPORT_FILE = '/tmp/retro_backtest_report.json';
+}
+
+let ROTATION_HISTORY_FILE = path.join(PERSIST_DIR, 'rotation_history.json');
+try {
+    fs.writeFileSync(ROTATION_HISTORY_FILE + '.test', 'ok');
+    fs.unlinkSync(ROTATION_HISTORY_FILE + '.test');
+} catch (e) {
+    ROTATION_HISTORY_FILE = '/tmp/rotation_history.json';
 }
 
 // In-memory cache
@@ -73,6 +82,38 @@ function saveBacktestStore() {
     } catch (e) {
         console.warn('Backtest store write skipped:', e.message);
     }
+}
+
+let rotationHistory = createEmptyHistory();
+if (fs.existsSync(ROTATION_HISTORY_FILE)) {
+    try {
+        rotationHistory = JSON.parse(fs.readFileSync(ROTATION_HISTORY_FILE, 'utf-8'));
+    } catch (e) {
+        console.error('Failed to load rotation_history.json:', e);
+    }
+}
+
+function saveRotationHistory() {
+    try {
+        fs.writeFileSync(ROTATION_HISTORY_FILE, JSON.stringify(rotationHistory, null, 2));
+    } catch (e) {
+        console.warn('Rotation history write skipped:', e.message);
+    }
+}
+
+// Validates the shape of an incoming rotation-snapshot `players` array at the
+// HTTP boundary (separate from `validatePlayersPayload` above, which expects
+// an `id`/`pts`-shaped payload for the backtest routes rather than the
+// `code`/`team`/`position`/`minutesThisGw` shape rotation snapshots use).
+function validateRotationPlayersPayload(players) {
+    if (!Array.isArray(players)) return false;
+    return players.every(p =>
+        p && typeof p === 'object' &&
+        typeof p.code === 'number' && !Number.isNaN(p.code) &&
+        typeof p.team === 'string' &&
+        typeof p.position === 'string' &&
+        typeof p.minutesThisGw === 'number' && !Number.isNaN(p.minutesThisGw)
+    );
 }
 
 
@@ -323,6 +364,53 @@ const server = http.createServer((req, res) => {
         }
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: true, ...getReport(backtestStore) }));
+        return;
+    }
+
+
+    // API Route: Record a Rotation History Snapshot (one per real finished gameweek)
+    if (req.method === 'POST' && pathname === '/api/rotation/snapshot') {
+        let body = '';
+        req.on('data', chunk => body += chunk);
+        req.on('end', () => {
+            try {
+                const data = JSON.parse(body);
+                if (typeof data.gw !== 'number' || !validateRotationPlayersPayload(data.players)) {
+                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Missing gw or malformed players array' }));
+                    return;
+                }
+                const result = recordGwSnapshot(rotationHistory, { gw: data.gw, players: data.players });
+                rotationHistory = result.history;
+                saveRotationHistory();
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: true, changed: result.changed }));
+            } catch (err) {
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Invalid JSON payload' }));
+            }
+        });
+        return;
+    }
+
+    // API Route: Get a Player's Rotation History (debugging/inspection)
+    if (req.method === 'GET' && pathname === '/api/rotation/history') {
+        const code = parseInt(reqUrl.searchParams.get('code'), 10);
+        const playerHistory = Number.isFinite(code) ? getPlayerHistory(rotationHistory, code) : null;
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        if (playerHistory) {
+            res.end(JSON.stringify({ success: true, data: playerHistory }));
+        } else {
+            res.end(JSON.stringify({ success: false, data: null }));
+        }
+        return;
+    }
+
+    // API Route: Get the full Rotation History document (bulk, for sync.js's per-sync computation
+    // across ~700 players -- a per-player GET loop would be 700 requests per sync, this is 1)
+    if (req.method === 'GET' && pathname === '/api/rotation/history-bulk') {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, data: rotationHistory }));
         return;
     }
 
