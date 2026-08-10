@@ -1,4 +1,4 @@
-import { PLAYERS, DEFAULT_SQUAD } from './data.js';
+import { PLAYERS, DEFAULT_SQUAD, XP_CALIBRATION_FACTOR as SYNCED_XP_CALIBRATION_FACTOR } from './data.js';
 import { renderPlanner } from './components/planner.js';
 import { renderOptimizer } from './components/optimizer.js';
 import { renderStats } from './components/stats.js';
@@ -82,13 +82,12 @@ window.getPlayerMinutesFactor = function(player) {
 
 
 
-// Universal dataset-wide minutes & rotation risk discounting for all 700+ players.
-// CALIBRATION_FACTOR: scales raw predictions down to realistic FPL score levels.
-// Real-world FPL sites estimate a good squad at 50-65 GW pts; our raw data averages 70+ 
-// due to historical PPG including bonus pts & easy-fixture multipliers stacking.
-// 0.82 brings elite players (Saka 9.3→7.6, Bruno 9.1→7.5) to realistic levels, and 
-// typical squads from 70+ to the expected 55-65 range.
-const XP_CALIBRATION_FACTOR = 0.90;
+// Calibration factor is now computed and auto-tuned server-side by the backtest
+// infrastructure (see lib/calibration.js), baked into data.js by sync.js on each
+// sync run. 0.90 here is only the fallback used before data.js has ever been
+// re-synced with the new export (or if a sync run failed to reach the backtest
+// server) — see docs/superpowers/specs/2026-08-10-xp-backtest-infra-design.md.
+const XP_CALIBRATION_FACTOR = (typeof SYNCED_XP_CALIBRATION_FACTOR === 'number') ? SYNCED_XP_CALIBRATION_FACTOR : 0.90;
 
 window.applyUniversalMinutesDiscount = function() {
     if (typeof PLAYERS === 'undefined' || !Array.isArray(PLAYERS)) return;
