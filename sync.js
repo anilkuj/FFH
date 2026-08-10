@@ -102,13 +102,13 @@ async function syncBacktestTracking(playersList, fixturesData) {
     let calibrationFactor = 0.90; // fallback if the backtest server is unreachable
 
     try {
-        const reportRes = await fetch(`${BACKTEST_API_BASE_URL}/api/backtest/report`);
+        const reportRes = await fetch(`${BACKTEST_API_BASE_URL}/api/backtest/report`, { signal: AbortSignal.timeout(5000) });
         if (!reportRes.ok) {
             console.warn('Backtest tracking skipped: report endpoint returned', reportRes.status);
             return calibrationFactor;
         }
         const report = await reportRes.json();
-        if (typeof report.currentCalibrationFactor === 'number') {
+        if (Number.isFinite(report.currentCalibrationFactor) && report.currentCalibrationFactor > 0) {
             calibrationFactor = report.currentCalibrationFactor;
         }
 
@@ -121,18 +121,21 @@ async function syncBacktestTracking(playersList, fixturesData) {
                 })
                 .filter(Boolean);
 
-            await fetch(`${BACKTEST_API_BASE_URL}/api/backtest/predictions`, {
+            const predictionsRes = await fetch(`${BACKTEST_API_BASE_URL}/api/backtest/predictions`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ gw: nextUnplayedGw, capturedAt: Date.now(), players: predictionPlayers })
+                body: JSON.stringify({ gw: nextUnplayedGw, capturedAt: Date.now(), players: predictionPlayers }),
+                signal: AbortSignal.timeout(5000)
             });
-            console.log(`Backtest: snapshotted predictions for GW${nextUnplayedGw}.`);
+            if (predictionsRes.ok) {
+                console.log(`Backtest: snapshotted predictions for GW${nextUnplayedGw}.`);
+            }
         }
 
         const latestFinishedGw = getLatestFinishedGw(fixturesData);
         const alreadyScored = latestFinishedGw !== null && Object.prototype.hasOwnProperty.call(report.byGw || {}, String(latestFinishedGw));
         if (latestFinishedGw !== null && !alreadyScored) {
-            const liveRes = await fetch(`https://fantasy.premierleague.com/api/event/${latestFinishedGw}/live/`);
+            const liveRes = await fetch(`https://fantasy.premierleague.com/api/event/${latestFinishedGw}/live/`, { signal: AbortSignal.timeout(5000) });
             if (liveRes.ok) {
                 const liveData = await liveRes.json();
                 const actualPlayers = liveData.elements.map(e => ({
@@ -143,7 +146,8 @@ async function syncBacktestTracking(playersList, fixturesData) {
                 const actualsRes = await fetch(`${BACKTEST_API_BASE_URL}/api/backtest/actuals`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ gw: latestFinishedGw, players: actualPlayers })
+                    body: JSON.stringify({ gw: latestFinishedGw, players: actualPlayers }),
+                    signal: AbortSignal.timeout(5000)
                 });
                 if (actualsRes.ok) {
                     const actualsBody = await actualsRes.json();
