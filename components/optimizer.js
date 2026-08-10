@@ -207,6 +207,7 @@ export function renderSetPieceLegend() {
 const SET_PIECE_REFRESH_INTERVAL = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
 
 export function checkAndRefreshSetPieceData() {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') return;
     const lastSync = parseInt(localStorage.getItem('fpl_hub_set_piece_last_sync') || '0');
     const now = Date.now();
 
@@ -227,8 +228,10 @@ export function checkAndRefreshSetPieceData() {
 }
 
 // Automatically check on module load and schedule background 6-hour refresh
-checkAndRefreshSetPieceData();
-setInterval(checkAndRefreshSetPieceData, SET_PIECE_REFRESH_INTERVAL);
+if (typeof window !== 'undefined') {
+    checkAndRefreshSetPieceData();
+    setInterval(checkAndRefreshSetPieceData, SET_PIECE_REFRESH_INTERVAL);
+}
 
 
 
