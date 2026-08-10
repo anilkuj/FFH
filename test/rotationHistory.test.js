@@ -51,6 +51,22 @@ test('recordGwSnapshot: team change updates currentTeam and future snapshots rec
     assert.equal(p.snapshots[1].team, 'CHE');
 });
 
+test('recordGwSnapshot: out-of-order backfill (postponed fixture) does not regress currentTeam, and snapshots stay gw-ordered', () => {
+    let history = createEmptyHistory();
+    history = recordGwSnapshot(history, { gw: 1, players: [{ code: 100, team: 'ARS', position: 'MID', minutesThisGw: 90, startedThisGw: true }] }).history;
+    history = recordGwSnapshot(history, { gw: 3, players: [{ code: 100, team: 'CHE', position: 'MID', minutesThisGw: 90, startedThisGw: true }] }).history;
+
+    let p = getPlayerHistory(history, 100);
+    assert.equal(p.currentTeam, 'CHE');
+
+    // gw2 was postponed and only gets backfilled now, after gw3 already recorded.
+    history = recordGwSnapshot(history, { gw: 2, players: [{ code: 100, team: 'ARS', position: 'MID', minutesThisGw: 90, startedThisGw: true }] }).history;
+
+    p = getPlayerHistory(history, 100);
+    assert.equal(p.currentTeam, 'CHE'); // must not regress to ARS; gw3 is still the most recent gw
+    assert.deepEqual(p.snapshots.map(s => s.gw), [1, 2, 3]); // gw-ordered, not insertion-ordered [1, 3, 2]
+});
+
 test('getPlayerHistory: unknown player code returns null', () => {
     assert.equal(getPlayerHistory(createEmptyHistory(), 999), null);
 });
