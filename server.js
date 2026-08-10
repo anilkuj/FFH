@@ -20,8 +20,21 @@ try {
     STORAGE_FILE = '/tmp/cloud_drafts_store.json';
 }
 
-const BACKTEST_STORE_FILE = path.join(PERSIST_DIR, 'backtest_log.json');
-const RETRO_REPORT_FILE = path.join(PERSIST_DIR, 'retro_backtest_report.json');
+let BACKTEST_STORE_FILE = path.join(PERSIST_DIR, 'backtest_log.json');
+try {
+    fs.writeFileSync(BACKTEST_STORE_FILE + '.test', 'ok');
+    fs.unlinkSync(BACKTEST_STORE_FILE + '.test');
+} catch (e) {
+    BACKTEST_STORE_FILE = '/tmp/backtest_log.json';
+}
+
+let RETRO_REPORT_FILE = path.join(PERSIST_DIR, 'retro_backtest_report.json');
+try {
+    fs.writeFileSync(RETRO_REPORT_FILE + '.test', 'ok');
+    fs.unlinkSync(RETRO_REPORT_FILE + '.test');
+} catch (e) {
+    RETRO_REPORT_FILE = '/tmp/retro_backtest_report.json';
+}
 
 // In-memory cache
 let cloudDraftsStore = {};
@@ -62,6 +75,22 @@ function saveBacktestStore() {
     }
 }
 
+
+// Validates the shape of an incoming `players` array at the HTTP boundary.
+// `extraNumericField` (e.g. 'pts' or 'actualPts') is checked in addition to
+// `id` when provided. Returns null if valid, or a string error message.
+function validatePlayersPayload(players, extraNumericField) {
+    for (let i = 0; i < players.length; i++) {
+        const p = players[i];
+        if (!p || typeof p !== 'object' || typeof p.id !== 'number' || Number.isNaN(p.id)) {
+            return `players[${i}] is missing a numeric id`;
+        }
+        if (extraNumericField && (typeof p[extraNumericField] !== 'number' || Number.isNaN(p[extraNumericField]))) {
+            return `players[${i}] is missing a numeric ${extraNumericField}`;
+        }
+    }
+    return null;
+}
 
 const MIME_TYPES = {
     '.html': 'text/html; charset=utf-8',
@@ -202,6 +231,12 @@ const server = http.createServer((req, res) => {
                     res.end(JSON.stringify({ error: 'Missing gw or players array' }));
                     return;
                 }
+                const playersError = validatePlayersPayload(data.players, 'pts');
+                if (playersError) {
+                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: playersError }));
+                    return;
+                }
                 const result = applyPredictionSnapshot(backtestStore, {
                     gw: data.gw,
                     capturedAt: data.capturedAt || Date.now(),
@@ -229,6 +264,12 @@ const server = http.createServer((req, res) => {
                 if (typeof data.gw !== 'number' || !Array.isArray(data.players)) {
                     res.writeHead(400, { 'Content-Type': 'application/json' });
                     res.end(JSON.stringify({ error: 'Missing gw or players array' }));
+                    return;
+                }
+                const playersError = validatePlayersPayload(data.players, 'actualPts');
+                if (playersError) {
+                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: playersError }));
                     return;
                 }
                 const result = applyActuals(backtestStore, { gw: data.gw, players: data.players });
@@ -281,7 +322,7 @@ const server = http.createServer((req, res) => {
             return;
         }
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify(getReport(backtestStore)));
+        res.end(JSON.stringify({ success: true, ...getReport(backtestStore) }));
         return;
     }
 

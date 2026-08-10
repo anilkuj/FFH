@@ -80,7 +80,78 @@ test('retro-report is stored and served back under source=retro', async () => {
     assert.equal(body.note, 'stub-retro-report');
 });
 
-test.after(() => {
+test('POST /api/backtest/predictions with missing gw returns 400', async () => {
+    const res = await fetch(`${baseUrl()}/api/backtest/predictions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ players: [{ id: 1, position: 'MID', price: 8.0, pts: 6.0 }] })
+    });
+    assert.equal(res.status, 400);
+    const body = await res.json();
+    assert.ok(body.error);
+});
+
+test('POST /api/backtest/predictions with malformed JSON body returns 500', async () => {
+    const res = await fetch(`${baseUrl()}/api/backtest/predictions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: '{not valid json'
+    });
+    assert.equal(res.status, 500);
+    const body = await res.json();
+    assert.ok(body.error);
+});
+
+test('POST /api/backtest/predictions with a non-numeric id in players returns 400 and does not persist', async () => {
+    const res = await fetch(`${baseUrl()}/api/backtest/predictions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            gw: 99,
+            players: [{ id: 'not-a-number', position: 'MID', price: 8.0, pts: 6.0 }]
+        })
+    });
+    assert.equal(res.status, 400);
+    const body = await res.json();
+    assert.ok(body.error);
+});
+
+test('POST /api/backtest/actuals with a non-numeric actualPts returns 400', async () => {
+    const res = await fetch(`${baseUrl()}/api/backtest/actuals`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            gw: 1,
+            players: [{ id: 1, actualPts: 'lots', minutesPlayed: 90 }]
+        })
+    });
+    assert.equal(res.status, 400);
+    const body = await res.json();
+    assert.ok(body.error);
+});
+
+test('data written to disk survives a fresh server instance loading from the same persist dir', async () => {
+    // The earlier round-trip test already wrote GW1 predictions+actuals to
+    // BACKTEST_STORE_FILE under tmpDir via the live in-memory `backtestStore`.
+    // Close this server instance and re-import server.js as a distinct module
+    // instance (cache-busted via a query string) pointed at the same
+    // FFH_PERSIST_DIR, to prove the load-on-startup path actually reads back
+    // what was persisted rather than just serving from memory.
     server.close();
+
+    process.env.PORT = '0';
+    const { server: server2 } = await import(`../server.js?t=${Date.now()}`);
+    try {
+        const { port } = server2.address();
+        const res = await fetch(`http://localhost:${port}/api/backtest/report`);
+        const body = await res.json();
+        assert.equal(body.success, true);
+        assert.equal(body.scoredGwCount, 1);
+    } finally {
+        server2.close();
+    }
+});
+
+test.after(() => {
     fs.rmSync(tmpDir, { recursive: true, force: true });
 });
