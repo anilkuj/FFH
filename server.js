@@ -2,19 +2,26 @@ import http from 'http';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createEmptyStore, applyPredictionSnapshot, applyActuals, getReport } from './lib/backtestStore.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const PORT = process.env.PORT || 3000;
 const DIST_DIR = path.join(__dirname, 'dist');
-let STORAGE_FILE = path.join(__dirname, 'cloud_drafts_store.json');
+
+const PERSIST_DIR = process.env.FFH_PERSIST_DIR || (fs.existsSync('/data') ? '/data' : __dirname);
+
+let STORAGE_FILE = path.join(PERSIST_DIR, 'cloud_drafts_store.json');
 try {
     fs.writeFileSync(STORAGE_FILE + '.test', 'ok');
     fs.unlinkSync(STORAGE_FILE + '.test');
 } catch (e) {
     STORAGE_FILE = '/tmp/cloud_drafts_store.json';
 }
+
+const BACKTEST_STORE_FILE = path.join(PERSIST_DIR, 'backtest_log.json');
+const RETRO_REPORT_FILE = path.join(PERSIST_DIR, 'retro_backtest_report.json');
 
 // In-memory cache
 let cloudDraftsStore = {};
@@ -35,6 +42,23 @@ function saveStoreToDisk() {
         fs.writeFileSync(STORAGE_FILE, JSON.stringify(cloudDraftsStore, null, 2));
     } catch (e) {
         console.warn('Ephemeral storage note: saved in memory, disk write skipped:', e.message);
+    }
+}
+
+let backtestStore = createEmptyStore();
+if (fs.existsSync(BACKTEST_STORE_FILE)) {
+    try {
+        backtestStore = JSON.parse(fs.readFileSync(BACKTEST_STORE_FILE, 'utf-8'));
+    } catch (e) {
+        console.error('Failed to load backtest_log.json:', e);
+    }
+}
+
+function saveBacktestStore() {
+    try {
+        fs.writeFileSync(BACKTEST_STORE_FILE, JSON.stringify(backtestStore, null, 2));
+    } catch (e) {
+        console.warn('Backtest store write skipped:', e.message);
     }
 }
 
@@ -166,6 +190,101 @@ const server = http.createServer((req, res) => {
         return;
     }
 
+    // API Route: Log Backtest Prediction Snapshot
+    if (req.method === 'POST' && pathname === '/api/backtest/predictions') {
+        let body = '';
+        req.on('data', chunk => body += chunk);
+        req.on('end', () => {
+            try {
+                const data = JSON.parse(body);
+                if (typeof data.gw !== 'number' || !Array.isArray(data.players)) {
+                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Missing gw or players array' }));
+                    return;
+                }
+                const result = applyPredictionSnapshot(backtestStore, {
+                    gw: data.gw,
+                    capturedAt: data.capturedAt || Date.now(),
+                    players: data.players
+                });
+                backtestStore = result.store;
+                saveBacktestStore();
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: true, skipped: result.skipped }));
+            } catch (err) {
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Invalid JSON payload' }));
+            }
+        });
+        return;
+    }
+
+    // API Route: Log Backtest Actual Results
+    if (req.method === 'POST' && pathname === '/api/backtest/actuals') {
+        let body = '';
+        req.on('data', chunk => body += chunk);
+        req.on('end', () => {
+            try {
+                const data = JSON.parse(body);
+                if (typeof data.gw !== 'number' || !Array.isArray(data.players)) {
+                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Missing gw or players array' }));
+                    return;
+                }
+                const result = applyActuals(backtestStore, { gw: data.gw, players: data.players });
+                backtestStore = result.store;
+                saveBacktestStore();
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({
+                    success: true,
+                    skipped: result.skipped,
+                    reason: result.reason || null,
+                    pairCount: result.pairCount || 0
+                }));
+            } catch (err) {
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Invalid JSON payload' }));
+            }
+        });
+        return;
+    }
+
+    // API Route: Store the (manually-run) retrospective backtest report
+    if (req.method === 'POST' && pathname === '/api/backtest/retro-report') {
+        let body = '';
+        req.on('data', chunk => body += chunk);
+        req.on('end', () => {
+            try {
+                JSON.parse(body); // validate it's well-formed JSON before persisting
+                fs.writeFileSync(RETRO_REPORT_FILE, body);
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: true }));
+            } catch (err) {
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Invalid JSON payload' }));
+            }
+        });
+        return;
+    }
+
+    // API Route: Get Backtest Report (live forward-tracking by default, or ?source=retro)
+    if (req.method === 'GET' && pathname === '/api/backtest/report') {
+        const source = reqUrl.searchParams.get('source') || 'live';
+        if (source === 'retro') {
+            if (fs.existsSync(RETRO_REPORT_FILE)) {
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(fs.readFileSync(RETRO_REPORT_FILE, 'utf-8'));
+            } else {
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: false, error: 'Retro report not generated yet' }));
+            }
+            return;
+        }
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(getReport(backtestStore)));
+        return;
+    }
+
 
     // Static File Serving
     let filePath = path.join(DIST_DIR, pathname === '/' ? 'index.html' : pathname);
@@ -190,3 +309,5 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });
+
+export { server };
