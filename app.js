@@ -5,7 +5,7 @@ import { renderStats } from './components/stats.js';
 import { renderCompare } from './components/compare.js';
 import { renderTicker } from './components/ticker.js';
 import { renderDifferentials } from './components/differentials.js';
-import { getFormationConstraints } from './components/formation.js';
+import { getFormationConstraints, FORMATIONS } from './components/formation.js';
 import { renderCaptain } from './components/captain.js';
 import { renderLeague } from './components/league.js';
 import { renderLiveRank } from './components/liverank.js';
@@ -1913,33 +1913,35 @@ const actions = {
                 slot2.position = tempPos;
             }
         } else {
-            // Starters vs Bench swap. Check formation validation
-            // Create hypothetical starting lineup
+            // Starters vs Bench swap. Check formation validation and automatically adjust formation
             const hypStarters = state.starters.map(id => id === id1 ? id2 : (id === id2 ? id1 : id));
             
-            // Validate formation based on selected formation constraints
             if (hypStarters.length === 11) {
-                const constraints = getFormationConstraints(state.formation);
                 const gkpCount = hypStarters.filter(id => PLAYERS.find(p => p.id === id)?.position === 'GKP').length;
                 const defCount = hypStarters.filter(id => PLAYERS.find(p => p.id === id)?.position === 'DEF').length;
                 const midCount = hypStarters.filter(id => PLAYERS.find(p => p.id === id)?.position === 'MID').length;
                 const fwdCount = hypStarters.filter(id => PLAYERS.find(p => p.id === id)?.position === 'FWD').length;
 
-                if (gkpCount !== constraints.GKP) {
-                    actions.showToast(`Starting lineup must contain exactly ${constraints.GKP} Goalkeeper(s).`, 'error');
+                if (gkpCount !== 1) {
+                    actions.showToast('Starting lineup must contain exactly 1 Goalkeeper.', 'error');
                     return;
                 }
-                if (defCount !== constraints.DEF) {
-                    actions.showToast(`Starting lineup must contain exactly ${constraints.DEF} Defenders.`, 'error');
+                if (defCount < 3 || defCount > 5) {
+                    actions.showToast('Starting lineup must contain between 3 and 5 Defenders.', 'error');
                     return;
                 }
-                if (midCount !== constraints.MID) {
-                    actions.showToast(`Starting lineup must contain exactly ${constraints.MID} Midfielders.`, 'error');
+                if (midCount < 2 || midCount > 5) {
+                    actions.showToast('Starting lineup must contain between 2 and 5 Midfielders.', 'error');
                     return;
                 }
-                if (fwdCount !== constraints.FWD) {
-                    actions.showToast(`Starting lineup must contain exactly ${constraints.FWD} Forwards.`, 'error');
+                if (fwdCount < 1 || fwdCount > 3) {
+                    actions.showToast('Starting lineup must contain between 1 and 3 Forwards.', 'error');
                     return;
+                }
+
+                const newFormation = `${defCount}-${midCount}-${fwdCount}`;
+                if (FORMATIONS && FORMATIONS[newFormation]) {
+                    state.formation = newFormation;
                 }
             }
 
@@ -1955,7 +1957,7 @@ const actions = {
 
         state.saveState();
         actions.renderActiveView();
-        actions.showToast('Formation adjusted successfully!', 'success');
+        actions.showToast(`Formation automatically updated to ${state.formation}!`, 'success');
     },
 
     removePlayer(playerId) {
