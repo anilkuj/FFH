@@ -4,7 +4,6 @@ import { getNextUnplayedGw, getLatestFinishedGw } from './lib/gwStatus.js';
 
 const BOOTSTRAP_URL = 'https://fantasy.premierleague.com/api/bootstrap-static/';
 const FIXTURES_URL = 'https://fantasy.premierleague.com/api/fixtures/';
-const PROMOTED_TEAMS = ['LEI', 'IPS', 'SOU'];
 const BACKTEST_API_BASE_URL = process.env.BACKTEST_API_BASE_URL || 'https://ffh-production.up.railway.app';
 
 async function sync() {
@@ -25,78 +24,6 @@ async function sync() {
 }
 
 sync();
-
-async function fetchAIPleayerNews() {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-        console.log('No GEMINI_API_KEY environment variable found. Skipping AI player news fetch.');
-        return {};
-    }
-
-    console.log('Contacting Gemini API to scan Premier League injury news and rotation risks for all players...');
-    
-    const prompt = `Search/retrieve and analyze the current injury news, fitness flags, suspension statuses, rotation risks, and coach team selections (backups / non-starters / out of favor players) for all 20 English Premier League (EPL) teams.
-Specifically identify any player who is NOT the absolute first choice (regular starter) in their position for their coach, or who faces high rotation risk due to competition or tactical preferences.
-
-Return the results ONLY as a valid JSON array of objects (no markdown, no code block backticks) with the following structure:
-[
-  {
-    "name": "Player Full Name (matching official FPL names, e.g., 'Riccardo Calafiori', 'Bukayo Saka')",
-    "status": "i" | "s" | "d" | "a", // 'i' for injured, 's' for suspended, 'd' for doubtful/rotation risk, 'a' for fit but backup/not #1 choice
-    "chanceOfPlaying": number, // 0 to 100 representing their starting probability (e.g. 0 for injured, 10-30 for backup players, 50 for doubtful/rotation risk)
-    "news": "A concise, informative note explaining their situation (e.g., 'Injured hamstring, out until September.', 'Backup goalkeeper behind Alisson.', 'Rotation risk due to European competition.')"
-  }
-]`;
-
-    try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [{
-                        text: prompt
-                    }]
-                }],
-                generationConfig: {
-                    responseMimeType: "application/json"
-                }
-            })
-        });
-
-        if (!response.ok) {
-            const errText = await response.text();
-            throw new Error(`Gemini API error: ${response.status} - ${errText}`);
-        }
-
-        const resData = await response.json();
-        const text = resData.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (!text) {
-            throw new Error("Empty response from Gemini API");
-        }
-
-        const cleaned = text.trim();
-        const parsed = JSON.parse(cleaned);
-        console.log(`Successfully fetched and parsed ${parsed.length} player status and news overrides from Gemini API!`);
-        
-        const dict = {};
-        parsed.forEach(item => {
-            if (item.name) {
-                dict[item.name.trim()] = {
-                    chanceOfPlaying: typeof item.chanceOfPlaying === 'number' ? item.chanceOfPlaying : 100,
-                    status: item.status || 'a',
-                    news: item.news || ''
-                };
-            }
-        });
-        return dict;
-    } catch (err) {
-        console.error("Failed to fetch AI player news overrides:", err.message);
-        return {};
-    }
-}
 
 async function syncBacktestTracking(playersList, fixturesData) {
     let calibrationFactor = 0.90; // fallback if the backtest server is unreachable
@@ -166,25 +93,13 @@ async function syncBacktestTracking(playersList, fixturesData) {
 }
 
 async function parseAndWriteData(data, fixturesData) {
-    const aiOverrides = await fetchAIPleayerNews();
+    // NOTE: this local PROMOTED_TEAMS is kept (not deleted) because it is still consumed
+    // below by the "expected starter" zero-minutes/zero-starts fallback heuristic
+    // (see `isPromoted` further down in this function), which is a separate, unrelated piece
+    // of logic that Task 4 (removal of ROLE_OVERRIDES/KNOWN_TRANSFERS/fetchAIPleayerNews) does
+    // not touch. Deleting it here would break that heuristic.
     const PROMOTED_TEAMS = ['COV', 'HUL', 'SUN', 'IPS', 'LEE'];
 
-    const ROLE_OVERRIDES = {
-        // TOT keepers: Kinsky is #1, Dubravka is backup, Vicario lost his spot
-        "Martin Dubravka":      { chanceOfPlaying: 15,  status: "a", news: "Backup GKP at Spurs behind Kinsky." },
-        "Guglielmo Vicario":    { chanceOfPlaying: 0,   status: "u", news: "Lost starting spot to Kinsky. Unavailable." },
-        // LIV: Alisson is #1, Mamardashvili is backup
-        "Giorgi Mamardashvili": { chanceOfPlaying: 10,  status: "a", news: "Backup GKP at Liverpool behind Alisson." },
-        // Outfield role overrides
-        "Illan Meslier":        { chanceOfPlaying: 5,   status: "a", news: "Backup GK behind David Raya." },
-        "Marcos Senesi":        { chanceOfPlaying: 40,  status: "a", news: "Rotation option behind van Hecke, Romero, van de Ven." },
-        "Jordan Henderson":     { chanceOfPlaying: 15,  status: "a", news: "Backup/rotation option at Chelsea." },
-        "Danny Welbeck":        { chanceOfPlaying: 20,  status: "a", news: "Backup forward at Chelsea behind Nicolas Jackson." },
-        "Casemiro":             { chanceOfPlaying: 25,  status: "a", news: "Backup midfielder at Man Utd." },
-        "Christian Eriksen":    { chanceOfPlaying: 15,  status: "a", news: "Backup midfielder at Man Utd." },
-        "Mamadou Sangaré":      { chanceOfPlaying: 100, status: "a", news: "New signing expected to start for Brentford.", basePPG: 3.2 }
-    };
-    
     // Read existing players list from data.js
     let existingPlayers = [];
     try {
@@ -275,65 +190,20 @@ async function parseAndWriteData(data, fixturesData) {
         let transferredThisSeason = false;
         let oldTeam = null;
 
-        const KNOWN_TRANSFERS = {
-            // Outfield transfers
-            "Morgan Rogers": { oldTeam: "AVL", newTeam: "CHE" },
-            "João Gomes": { oldTeam: "WOL", newTeam: "AVL" },
-            "Joao Gomes": { oldTeam: "WOL", newTeam: "AVL" },
-            "Youri Tielemans": { oldTeam: "AVL", newTeam: "MUN" },
-            "Elliot Anderson": { oldTeam: "NFO", newTeam: "MCI" },
-            "Christos Tzolis": { oldTeam: "Club Brugge", newTeam: "ARS" },
-            "Piero Hincapie": { oldTeam: "Bayer Leverkusen", newTeam: "ARS" },
-            "Piero Hincapié": { oldTeam: "Bayer Leverkusen", newTeam: "ARS" },
-            "Illan Meslier": { oldTeam: "Leeds United", newTeam: "ARS" },
-            "Alejandro Garnacho": { oldTeam: "MUN", newTeam: "AVL" },
-            // Goalkeeper transfers — important for xP accuracy
-            "Antonín Kinský": { oldTeam: "Slavia Prague", newTeam: "TOT" },
-            "Antonin Kinsky": { oldTeam: "Slavia Prague", newTeam: "TOT" },
-            "Caoimhín Kelleher": { oldTeam: "LIV", newTeam: "BRE" },
-            "Caoimhin Kelleher": { oldTeam: "LIV", newTeam: "BRE" },
-            "Đorđe Petrović": { oldTeam: "CHE", newTeam: "BOU" },
-            "Djordje Petrovic": { oldTeam: "CHE", newTeam: "BOU" },
-            "Gianluigi Donnarumma": { oldTeam: "PSG", newTeam: "MCI" },
-            "Giorgi Mamardashvili": { oldTeam: "Valencia", newTeam: "LIV" },
-            "Senne Lammens": { oldTeam: "Antwerp", newTeam: "MUN" },
-            // Additional Summer 2026 Outfield transfers
-            "Sandro Tonali": { oldTeam: "NEW", newTeam: "TOT" },
-            "Mateus Fernandes": { oldTeam: "WHU", newTeam: "TOT" },
-            "Jan Paul van Hecke": { oldTeam: "BHA", newTeam: "TOT" },
-            "Maxence Lacroix": { oldTeam: "CRY", newTeam: "CHE" },
-            "Marcos Senesi": { oldTeam: "BOU", newTeam: "TOT" },
-            "Andy Robertson": { oldTeam: "LIV", newTeam: "TOT" },
-            "Pascal Struijk": { oldTeam: "LEE", newTeam: "BHA" },
-            "Callum Wilson": { oldTeam: "WHU", newTeam: "BRE" },
-            "Jordan Henderson": { oldTeam: "BRE", newTeam: "CHE" },
-            "Danny Welbeck": { oldTeam: "BHA", newTeam: "CHE" },
-            "Andrey Santos": { oldTeam: "CHE", newTeam: "MUN" },
-            "Tyrique George": { oldTeam: "CHE", newTeam: "EVE" },
-            "Johan Manzambi": { oldTeam: "SC Freiburg", newTeam: "AVL" },
-            "António Silva": { oldTeam: "Benfica", newTeam: "BOU" },
-            "Antonio Silva": { oldTeam: "Benfica", newTeam: "BOU" },
-            "Álvaro Rodríguez": { oldTeam: "Elche", newTeam: "BOU" },
-            "Alvaro Rodriguez": { oldTeam: "Elche", newTeam: "BOU" },
-            "Alex Jiménez": { oldTeam: "AC Milan", newTeam: "BOU" },
-            "Alex Jimenez": { oldTeam: "AC Milan", newTeam: "BOU" },
-            "Oscar Mingueza": { oldTeam: "Celta Vigo", newTeam: "CRY" },
-            "Jeremy Jacquet": { oldTeam: "Rennes", newTeam: "LIV" },
-            "Thomas Meunier": { oldTeam: "Free Agent", newTeam: "SUN" },
-            "Jannik Schuster": { oldTeam: "RB Salzburg", newTeam: "BRE" },
-            "Mamadou Sangaré": { oldTeam: "Free Agent", newTeam: "BRE" },
-            "Dara O'Shea": { oldTeam: "BUR", newTeam: "IPS" }
-        };
-
-        for (const [key, val] of Object.entries(KNOWN_TRANSFERS)) {
-            if (playerName.includes(key)) {
-                transferredThisSeason = true;
-                oldTeam = val.oldTeam;
-                teamShort = val.newTeam;
-                break;
+        // isNewToCurrentTeam: generic, always-available signal from FPL's own team_join_date --
+        // no hardcoded transfer list needed, and unlike diffing our own rotation history this
+        // works immediately on the very first sync, including summer transfer window signings.
+        const NEW_TO_TEAM_DAYS_THRESHOLD = 75; // roughly one transfer window
+        let isNewToCurrentTeam = false;
+        if (el.team_join_date) {
+            const joinedAt = new Date(el.team_join_date);
+            if (!Number.isNaN(joinedAt.getTime())) {
+                const daysSinceJoin = (Date.now() - joinedAt.getTime()) / (1000 * 60 * 60 * 24);
+                isNewToCurrentTeam = daysSinceJoin <= NEW_TO_TEAM_DAYS_THRESHOLD;
             }
         }
-        
+        transferredThisSeason = isNewToCurrentTeam;
+
         // Mock target price change
         const transfersIn = el.transfers_in_event || 0;
         const transfersOut = el.transfers_out_event || 0;
@@ -346,8 +216,12 @@ async function parseAndWriteData(data, fixturesData) {
         }
         changeTarget = Math.max(-100, Math.min(100, changeTarget));
 
-        const existingPlayer = existingPlayers.find(ep => ep.name === playerName);
-        
+        const existingPlayer = existingPlayers.find(ep => ep.code === el.code);
+
+        if (isNewToCurrentTeam && existingPlayer && existingPlayer.team && existingPlayer.team !== teamShort) {
+            oldTeam = existingPlayer.team;
+        }
+
         let minutes = el.minutes || 0;
         let starts = el.starts || 0;
         let totalPoints = el.total_points || 0;
@@ -408,9 +282,11 @@ async function parseAndWriteData(data, fixturesData) {
         if (minutes > 0 && appearances === 0) appearances = 1;
         const mppg = appearances > 0 ? minutes / appearances : 0.0;
 
-        // Calculate a realistic points-per-game baseline
-        const manualOverride = ROLE_OVERRIDES[playerName];
-        const isPromotedOrTransfer = PROMOTED_TEAMS.includes(teamShort) || transferredThisSeason;
+        // Calculate a realistic points-per-game baseline.
+        // isPromotedOrTransfer here is purely a productivity question: season-cumulative
+        // minutes already correctly reflect a player's real point-scoring history regardless
+        // of which club earned it, so "no minutes yet" is the only signal computeBasePPG needs.
+        const isPromotedOrTransfer = minutes === 0;
 
         const basePPG = computeBasePPG({
             minutes,
@@ -420,7 +296,7 @@ async function parseAndWriteData(data, fixturesData) {
             teamShort,
             price,
             isPromotedOrTransfer,
-            manualOverridePPG: (manualOverride && manualOverride.basePPG !== undefined) ? manualOverride.basePPG : undefined
+            manualOverridePPG: undefined
         });
 
         const predictions = [];
@@ -511,6 +387,7 @@ async function parseAndWriteData(data, fixturesData) {
  
         return {
             id: el.id,
+            code: el.code,
             name: `${el.first_name} ${el.second_name}`,
             web_name: el.web_name,
             team: teamShort,
@@ -542,35 +419,16 @@ async function parseAndWriteData(data, fixturesData) {
 
     });
 
-    // 4b. Apply manual role overrides for players where FPL API data is misleading
-    // (Note: ROLE_OVERRIDES has been moved to the top of the function)
-
+    // 4b. Rules-based fallback classifier: flags outfield players who started very few games
+    // and played very few minutes last season as likely backups/rotation risks. This has real,
+    // independent value regardless of any AI-provided news, so it always runs now (previously
+    // gated behind "if no AI override" -- that AI-news path has been removed).
     playersList.forEach(p => {
-        // 1. AI Overrides first
-        const aiOverride = aiOverrides[p.name];
-        if (aiOverride) {
-            if (aiOverride.chanceOfPlaying !== undefined) p.chanceOfPlaying = aiOverride.chanceOfPlaying;
-            if (aiOverride.status !== undefined) p.status = aiOverride.status;
-            if (aiOverride.news !== undefined) p.news = aiOverride.news;
-        }
-
-        // 2. Rules-based fallback classifier (if no AI override)
-        // Checks if outfield player started very few games and played very few minutes last season
-        if (!aiOverride) {
-            const isPromotedOrTransfer = PROMOTED_TEAMS.includes(p.team) || p.transferredThisSeason;
-            const hasLowStarts = typeof p.GS === 'number' && p.GS < 8 && typeof p.MPPG === 'number' && p.MPPG < 45;
-            if (hasLowStarts && !p.news && p.status === 'a' && !isPromotedOrTransfer) {
-                p.chanceOfPlaying = 15;
-                p.news = "Backup/squad rotation option based on low historical starts.";
-            }
-        }
-
-        // 3. Explicit hardcoded overrides (highest priority)
-        const override = ROLE_OVERRIDES[p.name];
-        if (override) {
-            if (override.chanceOfPlaying !== undefined) p.chanceOfPlaying = override.chanceOfPlaying;
-            if (override.status !== undefined) p.status = override.status;
-            if (override.news !== undefined) p.news = override.news;
+        const isPromotedOrTransfer = PROMOTED_TEAMS.includes(p.team) || p.transferredThisSeason;
+        const hasLowStarts = typeof p.GS === 'number' && p.GS < 8 && typeof p.MPPG === 'number' && p.MPPG < 45;
+        if (hasLowStarts && !p.news && p.status === 'a' && !isPromotedOrTransfer) {
+            p.chanceOfPlaying = 15;
+            p.news = "Backup/squad rotation option based on low historical starts.";
         }
     });
 
