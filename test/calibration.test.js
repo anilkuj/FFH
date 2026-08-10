@@ -65,3 +65,26 @@ test('computeSuggestedCalibration: zero predicted total is a safe no-op', () => 
     });
     assert.equal(result, 0.90);
 });
+
+test('computeSuggestedCalibration: small in-bounds nudge is applied and rounded', () => {
+    const result = computeSuggestedCalibration({
+        currentFactor: 0.90,
+        scoredPairs: [{ predictedPts: 137, actualPts: 140 }]
+    });
+    // rawSuggested = 0.90 * (140 / 137) = 0.90 * 1.021897810218978... = 0.919708029197080...
+    // step = rawSuggested - currentFactor = 0.019708029197080... which is well within +-0.03,
+    // so the step clamp does not kick in.
+    // newFactor = 0.90 + 0.019708029197080... = 0.919708029197080...
+    // hard [0.6, 1.3] bounds don't change it either.
+    // Math.round(0.919708029197080... * 10000) / 10000 = Math.round(9197.0802...) / 10000 = 0.9197
+    assert.equal(result, 0.9197);
+});
+
+test('computeSuggestedCalibration: non-finite result degrades to a no-op instead of poisoning the factor', () => {
+    const result = computeSuggestedCalibration({
+        currentFactor: 0.90,
+        scoredPairs: [{ predictedPts: 10, actualPts: undefined }]
+    });
+    assert.equal(result, 0.90);
+    assert.notEqual(Number.isNaN(result), true);
+});
