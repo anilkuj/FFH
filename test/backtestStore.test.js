@@ -16,12 +16,12 @@ function makeSyntheticPlayers() {
     return players;
 }
 
-test('simulated 6-GW season: calibration stays put for 2 GWs, then converges under a steady 8% overprediction bias, clamped every step', () => {
+test('simulated 8-GW season: calibration stays put for 2 GWs, converges to the true bias within a few clamped steps, then holds stable', () => {
     let store = createEmptyStore();
-    const BIAS = 0.92; // actual always comes in at 92% of predicted
-    const expectedFactorByGw = { 1: 0.90, 2: 0.90, 3: 0.87, 4: 0.84, 5: 0.81, 6: 0.78 };
+    const BIAS = 0.75; // actual always comes in at 75% of predicted -- a large, deliberately obvious miss
+    const expectedFactorByGw = { 1: 0.90, 2: 0.90, 3: 0.87, 4: 0.84, 5: 0.81, 6: 0.78, 7: 0.75, 8: 0.75 };
 
-    for (let gw = 1; gw <= 6; gw++) {
+    for (let gw = 1; gw <= 8; gw++) {
         const predPlayers = makeSyntheticPlayers();
         const snap = applyPredictionSnapshot(store, { gw, capturedAt: Date.now(), players: predPlayers });
         assert.equal(snap.skipped, false, `GW${gw} snapshot should not be skipped`);
@@ -40,9 +40,11 @@ test('simulated 6-GW season: calibration stays put for 2 GWs, then converges und
     }
 
     const report = getReport(store);
-    assert.equal(report.scoredGwCount, 6);
-    assert.equal(report.calibrationHistory.length, 4); // one real adjustment per GW from GW3 onward
-    assert.equal(report.overall.n, 120); // 20 players x 6 GWs
+    assert.equal(report.scoredGwCount, 8);
+    // 5 real adjustments (GW3->0.87, GW4->0.84, GW5->0.81, GW6->0.78, GW7->0.75);
+    // GW8 computes the same 0.75 again so no new history entry is appended (no-op guard).
+    assert.equal(report.calibrationHistory.length, 5);
+    assert.equal(report.overall.n, 160); // 20 players x 8 GWs
 });
 
 test('actuals for a player id absent from the prediction snapshot are excluded, not crashing', () => {

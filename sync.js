@@ -117,6 +117,9 @@ async function syncBacktestTracking(playersList, fixturesData) {
             const predictionPlayers = playersList
                 .map(p => {
                     const pred = p.predictions.find(pr => pr.gw === nextUnplayedGw);
+                    // pts here is intentionally raw/uncalibrated -- see lib/calibration.js's
+                    // computeSuggestedCalibration contract; do not multiply by any
+                    // calibration factor before sending.
                     return pred ? { id: p.id, position: p.position, price: p.price, pts: pred.pts } : null;
                 })
                 .filter(Boolean);

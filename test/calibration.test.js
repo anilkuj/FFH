@@ -42,12 +42,12 @@ test('shouldApplyCalibration: gated at 3 scored GWs', () => {
     assert.equal(shouldApplyCalibration(3), true);
 });
 
-test('computeSuggestedCalibration: moves toward the real ratio, clamped to +-0.03', () => {
+test('computeSuggestedCalibration: moves toward the implied bias ratio, clamped to +-0.03', () => {
     const result = computeSuggestedCalibration({
         currentFactor: 0.90,
-        scoredPairs: [{ predictedPts: 10, actualPts: 9 }]
+        scoredPairs: [{ predictedPts: 10, actualPts: 7 }]
     });
-    assert.equal(result, 0.87); // raw target 0.81, but step clamped to -0.03
+    assert.equal(result, 0.87); // implied ratio 7/10 = 0.7; delta -0.20 clamped to -0.03
 });
 
 test('computeSuggestedCalibration: never crosses the hard floor even under a huge bias', () => {
@@ -69,15 +69,11 @@ test('computeSuggestedCalibration: zero predicted total is a safe no-op', () => 
 test('computeSuggestedCalibration: small in-bounds nudge is applied and rounded', () => {
     const result = computeSuggestedCalibration({
         currentFactor: 0.90,
-        scoredPairs: [{ predictedPts: 137, actualPts: 140 }]
+        scoredPairs: [{ predictedPts: 300, actualPts: 277 }]
     });
-    // rawSuggested = 0.90 * (140 / 137) = 0.90 * 1.021897810218978... = 0.919708029197080...
-    // step = rawSuggested - currentFactor = 0.019708029197080... which is well within +-0.03,
-    // so the step clamp does not kick in.
-    // newFactor = 0.90 + 0.019708029197080... = 0.919708029197080...
-    // hard [0.6, 1.3] bounds don't change it either.
-    // Math.round(0.919708029197080... * 10000) / 10000 = Math.round(9197.0802...) / 10000 = 0.9197
-    assert.equal(result, 0.9197);
+    // implied ratio = 277/300 = 0.923333... ; delta = 0.023333... well within +-0.03, no clamp
+    // newFactor = 0.90 + 0.023333... = 0.923333..., rounded to 4dp = 0.9233
+    assert.equal(result, 0.9233);
 });
 
 test('computeSuggestedCalibration: non-finite result degrades to a no-op instead of poisoning the factor', () => {
