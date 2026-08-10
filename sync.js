@@ -1,9 +1,11 @@
 import fs from 'fs';
 import { computeBasePPG, computeGwPrediction } from './lib/predictionModel.js';
+import { getNextUnplayedGw, getLatestFinishedGw } from './lib/gwStatus.js';
 
 const BOOTSTRAP_URL = 'https://fantasy.premierleague.com/api/bootstrap-static/';
 const FIXTURES_URL = 'https://fantasy.premierleague.com/api/fixtures/';
 const PROMOTED_TEAMS = ['LEI', 'IPS', 'SOU'];
+const BACKTEST_API_BASE_URL = process.env.BACKTEST_API_BASE_URL || 'https://ffh-production.up.railway.app';
 
 async function sync() {
     try {
@@ -94,6 +96,66 @@ Return the results ONLY as a valid JSON array of objects (no markdown, no code b
         console.error("Failed to fetch AI player news overrides:", err.message);
         return {};
     }
+}
+
+async function syncBacktestTracking(playersList, fixturesData) {
+    let calibrationFactor = 0.90; // fallback if the backtest server is unreachable
+
+    try {
+        const reportRes = await fetch(`${BACKTEST_API_BASE_URL}/api/backtest/report`);
+        if (!reportRes.ok) {
+            console.warn('Backtest tracking skipped: report endpoint returned', reportRes.status);
+            return calibrationFactor;
+        }
+        const report = await reportRes.json();
+        if (typeof report.currentCalibrationFactor === 'number') {
+            calibrationFactor = report.currentCalibrationFactor;
+        }
+
+        const nextUnplayedGw = getNextUnplayedGw(fixturesData);
+        if (nextUnplayedGw !== null) {
+            const predictionPlayers = playersList
+                .map(p => {
+                    const pred = p.predictions.find(pr => pr.gw === nextUnplayedGw);
+                    return pred ? { id: p.id, position: p.position, price: p.price, pts: pred.pts } : null;
+                })
+                .filter(Boolean);
+
+            await fetch(`${BACKTEST_API_BASE_URL}/api/backtest/predictions`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ gw: nextUnplayedGw, capturedAt: Date.now(), players: predictionPlayers })
+            });
+            console.log(`Backtest: snapshotted predictions for GW${nextUnplayedGw}.`);
+        }
+
+        const latestFinishedGw = getLatestFinishedGw(fixturesData);
+        const alreadyScored = latestFinishedGw !== null && Object.prototype.hasOwnProperty.call(report.byGw || {}, String(latestFinishedGw));
+        if (latestFinishedGw !== null && !alreadyScored) {
+            const liveRes = await fetch(`https://fantasy.premierleague.com/api/event/${latestFinishedGw}/live/`);
+            if (liveRes.ok) {
+                const liveData = await liveRes.json();
+                const actualPlayers = liveData.elements.map(e => ({
+                    id: e.id,
+                    actualPts: e.stats.total_points,
+                    minutesPlayed: e.stats.minutes
+                }));
+                const actualsRes = await fetch(`${BACKTEST_API_BASE_URL}/api/backtest/actuals`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ gw: latestFinishedGw, players: actualPlayers })
+                });
+                if (actualsRes.ok) {
+                    const actualsBody = await actualsRes.json();
+                    console.log(`Backtest: scored GW${latestFinishedGw} (${actualsBody.pairCount} players matched).`);
+                }
+            }
+        }
+    } catch (err) {
+        console.warn('Backtest tracking skipped (non-fatal):', err.message);
+    }
+
+    return calibrationFactor;
 }
 
 async function parseAndWriteData(data, fixturesData) {
@@ -570,6 +632,8 @@ async function parseAndWriteData(data, fixturesData) {
         }
     ];
 
+    const calibrationFactor = await syncBacktestTracking(playersList, fixturesData);
+
     // Write file content
     const fileContent = `// FPL Hub Synced Live Database
 // Automatically synced with official Fantasy Premier League API
@@ -583,6 +647,8 @@ export const DEFAULT_SQUAD = ${JSON.stringify(defaultSquad, null, 4)};
 export const EXPERT_REVEALS = ${JSON.stringify(expertReveals, null, 4)};
 
 export const TICKER_DATA = ${JSON.stringify(fixturesSchedule, null, 4)};
+
+export const XP_CALIBRATION_FACTOR = ${calibrationFactor};
 
 export function getPlayerRatings(player, currentGw = 1) {
     // 1. Expected Minutes (based on MPPG - Avg Minutes/Game)
