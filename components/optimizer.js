@@ -3398,22 +3398,27 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
 
         const applySingleBtns = resultsGrid.querySelectorAll('.apply-single-preseason-btn');
         applySingleBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
+            btn.addEventListener('click', async () => {
                 const slotIdx = parseInt(btn.getAttribute('data-slot-idx'));
                 const inId = parseInt(btn.getAttribute('data-in-id'));
                 const outIdStr = btn.getAttribute('data-out-id');
                 const outId = outIdStr !== 'null' ? parseInt(outIdStr) : null;
-                
+
                 state.squadSlots[slotIdx].playerId = inId;
                 state.optimizeCaptaincy();
                 state.saveState();
-                
+
                 const pIn = PLAYERS.find(p => p.id === inId);
                 const pOut = outId !== null ? PLAYERS.find(p => p.id === outId) : null;
-                
+
                 actions.syncTopBar();
                 actions.showToast(`Applied swap: ${pIn.name} in for ${pOut ? pOut.name : 'empty slot'}`, 'success');
-                performOptimization(resultsGrid, state, actions, horizon, mode);
+                btn.disabled = true;
+                try {
+                    await performOptimization(resultsGrid, state, actions, horizon, mode);
+                } finally {
+                    btn.disabled = false;
+                }
             });
         });
     } else {
@@ -3802,21 +3807,26 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
 
         const singleBtn = resultsGrid.querySelector('#applySingleBtn');
         if (singleBtn) {
-            singleBtn.addEventListener('click', () => {
+            singleBtn.addEventListener('click', async () => {
                 const ok = actions.addTransfer(state.currentGw, best1Tx.out.id, best1Tx.in.id);
                 if (ok) {
                     state.optimizeCaptaincy();
                     state.saveState();
                     actions.syncTopBar();
                     actions.showToast("AI single transfer applied successfully!", "success");
-                    performOptimization(resultsGrid, state, actions, horizon, mode);
+                    singleBtn.disabled = true;
+                    try {
+                        await performOptimization(resultsGrid, state, actions, horizon, mode);
+                    } finally {
+                        singleBtn.disabled = false;
+                    }
                 }
             });
         }
 
         const doubleBtn = resultsGrid.querySelector('#applyDoubleBtn');
         if (doubleBtn) {
-            doubleBtn.addEventListener('click', () => {
+            doubleBtn.addEventListener('click', async () => {
                 const ok1 = actions.addTransfer(state.currentGw, best2Tx.out1.id, best2Tx.in1.id);
                 if (ok1) {
                     const ok2 = actions.addTransfer(state.currentGw, best2Tx.out2.id, best2Tx.in2.id);
@@ -3825,7 +3835,12 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
                         state.saveState();
                         actions.syncTopBar();
                         actions.showToast("AI double transfer applied successfully!", "success");
-                        performOptimization(resultsGrid, state, actions, horizon, mode);
+                        doubleBtn.disabled = true;
+                        try {
+                            await performOptimization(resultsGrid, state, actions, horizon, mode);
+                        } finally {
+                            doubleBtn.disabled = false;
+                        }
                     } else {
                         const list = state.transfers[state.currentGw];
                         list.pop();
