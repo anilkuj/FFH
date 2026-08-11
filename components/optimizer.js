@@ -125,6 +125,32 @@ function normalizeNameForSetPiece(str) {
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').trim();
 }
 
+function yieldToEventLoop() {
+    return new Promise(resolve => setTimeout(resolve, 0));
+}
+
+function updateOptimizerPhase(resultsGrid, text) {
+    const label = resultsGrid.querySelector('#optimizerPhaseLabel');
+    if (label) label.textContent = text;
+}
+
+// Single source of truth for "an optimization run is currently in flight", shared across
+// every trigger point (Run/Re-run buttons and all apply-transfer buttons) so concurrent
+// runs can't be started from two different controls at once.
+let isExecuting = false;
+
+function showOptimizerLoadingCard(resultsGrid, message) {
+    resultsGrid.innerHTML = `
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px; gap: 16px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px;">
+            <i data-lucide="loader" class="animate-spin" style="color: var(--primary); width: 32px; height: 32px;"></i>
+            <span id="optimizerPhaseLabel" style="font-weight: 700; color: var(--text-main); font-size: 15px;">${message || 'AI Solver is analyzing player data...'}</span>
+            <span style="color: var(--text-muted); font-size: 12px;">Running expected points projections and fixture constraints</span>
+        </div>
+    `;
+    resultsGrid.classList.remove('hidden');
+    lucide.createIcons();
+}
+
 export function getPlayerSetPieceDuty(player) {
     if (!player || !player.name || player.position === 'GKP') {
         return { pk: false, fk: false, ck: false, duties: [], label: '', hasDuty: false };
@@ -1045,8 +1071,7 @@ export function renderOptimizer(container, state, actions) {
         lucide.createIcons();
     };
 
-    let isExecuting = false;
-    const executeAnalysis = () => {
+    const executeAnalysis = async () => {
         if (isExecuting) return;
         isExecuting = true;
 
@@ -1105,34 +1130,27 @@ export function renderOptimizer(container, state, actions) {
         const mode = phaseSelect.value;
 
         // Show a loader card inside the resultsGrid before optimization runs to prevent clashing UI
-        resultsGrid.innerHTML = `
-            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px; gap: 16px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px;">
-                <i data-lucide="loader" class="animate-spin" style="color: var(--primary); width: 32px; height: 32px;"></i>
-                <span style="font-weight: 700; color: var(--text-main); font-size: 15px;">AI Solver is analyzing player data...</span>
-                <span style="color: var(--text-muted); font-size: 12px;">Running expected points projections and fixture constraints</span>
-            </div>
-        `;
-        resultsGrid.classList.remove('hidden');
-        lucide.createIcons();
+        showOptimizerLoadingCard(resultsGrid);
 
-        setTimeout(() => {
-            try {
-                performOptimization(resultsGrid, state, actions, horizon, mode);
-                updateActivePills(horizon, mode);
-                toggleSettingsBody(true); // Gently collapse form so results are focal, while preserving form DOM
-                setTimeout(() => resultsGrid.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
-            } catch (err) {
-                console.error("AI Optimizer Execution Error:", err);
-                actions.showToast("Optimizer notice: " + (err.message || "Optimization complete"), "warning");
-            } finally {
-                runBtn.disabled = false;
-                if (reRunInBodyBtn) reRunInBodyBtn.disabled = false;
-                runBtn.innerHTML = `<i data-lucide="play-circle"></i> Re-run Analysis`;
-                if (reRunInBodyBtn) reRunInBodyBtn.innerHTML = `<i data-lucide="play-circle"></i> Re-run Analysis`;
-                lucide.createIcons();
-                isExecuting = false;
-            }
-        }, 50);
+        try {
+            await performOptimization(resultsGrid, state, actions, horizon, mode);
+            updateActivePills(horizon, mode);
+            toggleSettingsBody(true); // Gently collapse form so results are focal, while preserving form DOM
+            setTimeout(() => resultsGrid.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+        } catch (err) {
+            console.error("AI Optimizer Execution Error:", err);
+            actions.showToast("Optimizer notice: " + (err.message || "Optimization complete"), "warning");
+            // Don't leave the results panel frozen mid-sentence on a stale phase label
+            resultsGrid.innerHTML = '';
+            resultsGrid.classList.add('hidden');
+        } finally {
+            runBtn.disabled = false;
+            if (reRunInBodyBtn) reRunInBodyBtn.disabled = false;
+            runBtn.innerHTML = `<i data-lucide="play-circle"></i> Re-run Analysis`;
+            if (reRunInBodyBtn) reRunInBodyBtn.innerHTML = `<i data-lucide="play-circle"></i> Re-run Analysis`;
+            lucide.createIcons();
+            isExecuting = false;
+        }
     };
 
     runBtn.addEventListener('click', executeAnalysis);
@@ -1163,13 +1181,16 @@ function renderLockOverlay(container, actions) {
 
 const ALL_FORMATIONS = ['3-5-2', '3-4-3', '4-4-2', '4-3-3', '4-5-1', '5-3-2', '5-4-1', '5-2-3'];
 
-function performOptimization(resultsGrid, state, actions, horizon, mode) {
+async function performOptimization(resultsGrid, state, actions, horizon, mode) {
     // If 'optimum' formation: score each formation with top-starter expected points,
     // then temporarily set state.formation to the winner before running the real solver.
     if (state.formation === 'optimum') {
         const originalFormation = 'optimum';
         let bestFormation = '3-5-2';
         let bestScore = -Infinity;
+
+        updateOptimizerPhase(resultsGrid, 'Scoring formations...');
+        await yieldToEventLoop();
 
         for (const formation of ALL_FORMATIONS) {
             state.formation = formation;
@@ -1181,11 +1202,11 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
         }
 
         state.formation = originalFormation;
-        _performOptimizationWithFormation(resultsGrid, state, actions, horizon, mode, bestFormation, true);
+        await _performOptimizationWithFormation(resultsGrid, state, actions, horizon, mode, bestFormation, true);
         return;
     }
 
-    _performOptimizationWithFormation(resultsGrid, state, actions, horizon, mode, state.formation, false);
+    await _performOptimizationWithFormation(resultsGrid, state, actions, horizon, mode, state.formation, false);
 }
 
 /**
@@ -1322,7 +1343,7 @@ function _scoreOptimizationForFormation(state, horizon, mode) {
 /**
  * Full optimizer render function. chosenFormation is set when 'optimum' mode selects the best formation.
  */
-function _performOptimizationWithFormation(resultsGrid, state, actions, horizon, mode, chosenFormation, isOptimumMode) {
+async function _performOptimizationWithFormation(resultsGrid, state, actions, horizon, mode, chosenFormation, isOptimumMode) {
     const squadInfo = state.getSquadForGw(state.currentGw);
     const { starters, bench } = squadInfo;
     let bank = squadInfo.bank;
@@ -1940,6 +1961,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             return result;
         };
 
+        updateOptimizerPhase(resultsGrid, 'Building initial squad...');
+        await yieldToEventLoop();
+
         // Initialize starting slots with budget-constrained top-scoring guaranteed starters
         let runningStartingCost = 0;
         const runningTeamCounts = {};
@@ -2234,6 +2258,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             }
         };
 
+        updateOptimizerPhase(resultsGrid, 'Optimizing starting XI...');
+        await yieldToEventLoop();
+
         // --- OPTIMIZE STARTING 11 ---
         let startingImproved = true;
         let startingIter = 0;
@@ -2409,6 +2436,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         // Ensure bench is clean and has no duplicates before starting bench optimization
         resolveBenchDuplicates();
 
+        updateOptimizerPhase(resultsGrid, 'Optimizing bench...');
+        await yieldToEventLoop();
+
         // --- OPTIMIZE BENCH ---
         const startingCost = startingIndices.reduce((sum, sIdx) => {
             const pId = optimizedSquadSlots[sIdx].playerId;
@@ -2508,6 +2538,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 }
             }
         }
+
+        updateOptimizerPhase(resultsGrid, 'Refining squad within budget...');
+        await yieldToEventLoop();
 
         // --- HARD BENCH BUDGET SAFETY ENFORCER ---
         let currentBenchCost = benchIndices.reduce((sum, bIdx) => {
@@ -2778,17 +2811,20 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         }
 
 
+        updateOptimizerPhase(resultsGrid, 'Checking pairwise upgrades...');
+        await yieldToEventLoop();
+
         // --- PAIRWISE DOUBLE-UPGRADE STEP ---
         // Escape local minima by checking pairs of slots and swapping them with elite candidates
         let pairwiseImproved = true;
         let pairwiseIter = 0;
         
-        while (pairwiseImproved && pairwiseIter < 3) {
+        while (pairwiseImproved && pairwiseIter < 6) {
             pairwiseImproved = false;
             pairwiseIter++;
-            
+
             const getEliteCandidates = (pos) => {
-                let list = PLAYERS.filter(p => 
+                let list = PLAYERS.filter(p =>
                     p.position === pos &&
                     !state.mustExclude.includes(p.id) &&
                     (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 75)
@@ -2796,8 +2832,11 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 if (pos === 'GKP') {
                     list = list.filter(p => p.price >= 4.5 || isGuaranteedStart(p, state));
                 }
+                // Widened from 16 to 30: the async restructuring removed the "must finish before
+                // the tab looks frozen" pressure that originally motivated a narrow cap, so this
+                // pass can afford to consider more candidates per position.
                 return list.sort((a, b) => getSolverScore(b) - getSolverScore(a))
-                 .slice(0, 16);
+                 .slice(0, 30);
             };
             
             const elitePools = {
@@ -3037,6 +3076,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 }
             }
         }
+
+        updateOptimizerPhase(resultsGrid, 'Finalizing...');
+        await yieldToEventLoop();
 
         // --- FINAL HARD BENCH BUDGET SAFETY ENFORCER ---
         // Runs after ALL optimization passes to guarantee bench cost never exceeds the user's bench budget.
@@ -3370,22 +3412,42 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
 
         const applySingleBtns = resultsGrid.querySelectorAll('.apply-single-preseason-btn');
         applySingleBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const slotIdx = parseInt(btn.getAttribute('data-slot-idx'));
-                const inId = parseInt(btn.getAttribute('data-in-id'));
-                const outIdStr = btn.getAttribute('data-out-id');
-                const outId = outIdStr !== 'null' ? parseInt(outIdStr) : null;
-                
-                state.squadSlots[slotIdx].playerId = inId;
-                state.optimizeCaptaincy();
-                state.saveState();
-                
-                const pIn = PLAYERS.find(p => p.id === inId);
-                const pOut = outId !== null ? PLAYERS.find(p => p.id === outId) : null;
-                
-                actions.syncTopBar();
-                actions.showToast(`Applied swap: ${pIn.name} in for ${pOut ? pOut.name : 'empty slot'}`, 'success');
-                performOptimization(resultsGrid, state, actions, horizon, mode);
+            btn.addEventListener('click', async () => {
+                if (isExecuting) return;
+                isExecuting = true;
+
+                const runBtnEl = document.getElementById('runOptBtn');
+                const reRunBtnEl = document.getElementById('reRunInBodyBtn');
+                if (runBtnEl) runBtnEl.disabled = true;
+                if (reRunBtnEl) reRunBtnEl.disabled = true;
+                btn.disabled = true;
+
+                try {
+                    const slotIdx = parseInt(btn.getAttribute('data-slot-idx'));
+                    const inId = parseInt(btn.getAttribute('data-in-id'));
+                    const outIdStr = btn.getAttribute('data-out-id');
+                    const outId = outIdStr !== 'null' ? parseInt(outIdStr) : null;
+
+                    state.squadSlots[slotIdx].playerId = inId;
+                    state.optimizeCaptaincy();
+                    state.saveState();
+
+                    const pIn = PLAYERS.find(p => p.id === inId);
+                    const pOut = outId !== null ? PLAYERS.find(p => p.id === outId) : null;
+
+                    actions.syncTopBar();
+                    actions.showToast(`Applied swap: ${pIn.name} in for ${pOut ? pOut.name : 'empty slot'}`, 'success');
+
+                    showOptimizerLoadingCard(resultsGrid);
+                    await performOptimization(resultsGrid, state, actions, horizon, mode);
+                } catch (err) {
+                    console.error("AI Optimizer Execution Error:", err);
+                    actions.showToast("Optimizer notice: " + (err.message || "Optimization complete"), "warning");
+                } finally {
+                    if (runBtnEl) runBtnEl.disabled = false;
+                    if (reRunBtnEl) reRunBtnEl.disabled = false;
+                    isExecuting = false;
+                }
             });
         });
     } else {
@@ -3434,6 +3496,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             const newBenchCost = getBenchCost(slots);
             return newBenchCost <= maxBenchBudget + 0.001 || newBenchCost <= currentBenchCost + 0.001;
         };
+
+        updateOptimizerPhase(resultsGrid, 'Checking single transfers...');
+        await yieldToEventLoop();
 
         // --- FIND BEST 1-TRANSFER OPTION ---
         let best1Tx = null;
@@ -3496,12 +3561,31 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             }
         }
 
+        updateOptimizerPhase(resultsGrid, 'Checking double transfers...');
+        await yieldToEventLoop();
+
         // --- FIND BEST 2-TRANSFER OPTION ---
-        // IMPORTANT: The double transfer must be coherent with the single transfer.
-        // We must NOT suggest selling a player we just recommended buying (single IN),
-        // and we must NOT suggest buying back a player we just recommended selling (single OUT).
-        const single1TxInId  = best1Tx ? best1Tx.in.id  : null; // player recommended to BUY in single
-        const single1TxOutId = best1Tx ? best1Tx.out.id : null; // player recommended to SELL in single
+        // Searched independently of the single-transfer pick (best1Tx) -- a 2-transfer search
+        // conditioned on "must be coherent with whichever single transfer scored highest" can miss
+        // a genuinely better pair that doesn't involve that specific player at all.
+        //
+        // Candidate pools are capped to a top-N "elite" set per position (same pattern as the
+        // preseason pairwise-upgrade step's getEliteCandidates), so this stays a genuine, bounded
+        // search instead of the previous uncapped nested loop over the full position pool.
+        const getTransferEliteCandidates = (pos) => {
+            // Both s1 and s2 are already in currentSquadIds (they're being sold FROM the current
+            // squad), so the existing !currentSquadIds.includes(p.id) filter already rules out
+            // buying either one back as part of the same 2-transfer combination.
+            let list = PLAYERS.filter(p =>
+                p.position === pos &&
+                !currentSquadIds.includes(p.id) &&
+                !state.mustExclude.includes(p.id) &&
+                (p.position !== 'FWD' || p.price >= (state.minFwdPrice ?? 6.0) || (state.mustInclude && state.mustInclude.includes(p.id)))
+            );
+            const guaranteed = list.filter(p => isGuaranteedStart(p, state));
+            if (guaranteed.length > 0) list = guaranteed;
+            return list.sort((a, b) => getSolverScore(b) - getSolverScore(a)).slice(0, 20);
+        };
 
         let best2Tx = null;
         let maxGain2 = -999;
@@ -3513,42 +3597,20 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
 
                 if (!s1 || !s2) continue;
 
-                // Cannot sell a player who is the single-transfer "buy" recommendation
-                // (they're not in the squad yet — this would be incoherent)
-                if (s1.id === single1TxInId || s2.id === single1TxInId) continue;
-
                 const sellBudget = s1.price + s2.price + bank;
 
-                let candidates1 = PLAYERS.filter(p => 
-                    p.position === s1.position && 
-                    !currentSquadIds.includes(p.id) &&
-                    !state.mustExclude.includes(p.id) &&
-                    p.id !== single1TxOutId &&
-                    (p.position !== 'FWD' || p.price >= (state.minFwdPrice ?? 6.0) || (state.mustInclude && state.mustInclude.includes(p.id)))
-                );
-                const g1 = candidates1.filter(p => isGuaranteedStart(p, state));
-                if (g1.length > 0) candidates1 = g1;
-
-                const mustIncludeNotInSquad1 = state.mustInclude.filter(id => 
-                    !currentSquadIds.includes(id) && 
+                let candidates1 = getTransferEliteCandidates(s1.position);
+                const mustIncludeNotInSquad1 = state.mustInclude.filter(id =>
+                    !currentSquadIds.includes(id) &&
                     PLAYERS.find(pl => pl.id === id)?.position === s1.position
                 );
                 if (mustIncludeNotInSquad1.length > 0) {
                     candidates1 = candidates1.filter(p => mustIncludeNotInSquad1.includes(p.id));
                 }
 
-                let candidates2 = PLAYERS.filter(p => 
-                    p.position === s2.position && 
-                    !currentSquadIds.includes(p.id) &&
-                    !state.mustExclude.includes(p.id) &&
-                    p.id !== single1TxOutId &&
-                    (p.position !== 'FWD' || p.price >= (state.minFwdPrice ?? 6.0) || (state.mustInclude && state.mustInclude.includes(p.id)))
-                );
-                const g2 = candidates2.filter(p => isGuaranteedStart(p, state));
-                if (g2.length > 0) candidates2 = g2;
-
-                const mustIncludeNotInSquad2 = state.mustInclude.filter(id => 
-                    !currentSquadIds.includes(id) && 
+                let candidates2 = getTransferEliteCandidates(s2.position);
+                const mustIncludeNotInSquad2 = state.mustInclude.filter(id =>
+                    !currentSquadIds.includes(id) &&
                     PLAYERS.find(pl => pl.id === id)?.position === s2.position
                 );
                 if (mustIncludeNotInSquad2.length > 0) {
@@ -3588,6 +3650,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             }
         }
 
+
+        updateOptimizerPhase(resultsGrid, 'Finalizing...');
+        await yieldToEventLoop();
 
         // Calculate 1-GW expected points gains for display comparison
         let best1Tx1GwGain = 0;
@@ -3766,30 +3831,66 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
 
         const singleBtn = resultsGrid.querySelector('#applySingleBtn');
         if (singleBtn) {
-            singleBtn.addEventListener('click', () => {
+            singleBtn.addEventListener('click', async () => {
+                if (isExecuting) return;
                 const ok = actions.addTransfer(state.currentGw, best1Tx.out.id, best1Tx.in.id);
                 if (ok) {
+                    isExecuting = true;
+                    const runBtnEl = document.getElementById('runOptBtn');
+                    const reRunBtnEl = document.getElementById('reRunInBodyBtn');
+                    if (runBtnEl) runBtnEl.disabled = true;
+                    if (reRunBtnEl) reRunBtnEl.disabled = true;
+                    singleBtn.disabled = true;
+
                     state.optimizeCaptaincy();
                     state.saveState();
                     actions.syncTopBar();
                     actions.showToast("AI single transfer applied successfully!", "success");
-                    performOptimization(resultsGrid, state, actions, horizon, mode);
+                    try {
+                        showOptimizerLoadingCard(resultsGrid);
+                        await performOptimization(resultsGrid, state, actions, horizon, mode);
+                    } catch (err) {
+                        console.error("AI Optimizer Execution Error:", err);
+                        actions.showToast("Optimizer notice: " + (err.message || "Optimization complete"), "warning");
+                    } finally {
+                        if (runBtnEl) runBtnEl.disabled = false;
+                        if (reRunBtnEl) reRunBtnEl.disabled = false;
+                        isExecuting = false;
+                    }
                 }
             });
         }
 
         const doubleBtn = resultsGrid.querySelector('#applyDoubleBtn');
         if (doubleBtn) {
-            doubleBtn.addEventListener('click', () => {
+            doubleBtn.addEventListener('click', async () => {
+                if (isExecuting) return;
                 const ok1 = actions.addTransfer(state.currentGw, best2Tx.out1.id, best2Tx.in1.id);
                 if (ok1) {
                     const ok2 = actions.addTransfer(state.currentGw, best2Tx.out2.id, best2Tx.in2.id);
                     if (ok2) {
+                        isExecuting = true;
+                        const runBtnEl = document.getElementById('runOptBtn');
+                        const reRunBtnEl = document.getElementById('reRunInBodyBtn');
+                        if (runBtnEl) runBtnEl.disabled = true;
+                        if (reRunBtnEl) reRunBtnEl.disabled = true;
+                        doubleBtn.disabled = true;
+
                         state.optimizeCaptaincy();
                         state.saveState();
                         actions.syncTopBar();
                         actions.showToast("AI double transfer applied successfully!", "success");
-                        performOptimization(resultsGrid, state, actions, horizon, mode);
+                        try {
+                            showOptimizerLoadingCard(resultsGrid);
+                            await performOptimization(resultsGrid, state, actions, horizon, mode);
+                        } catch (err) {
+                            console.error("AI Optimizer Execution Error:", err);
+                            actions.showToast("Optimizer notice: " + (err.message || "Optimization complete"), "warning");
+                        } finally {
+                            if (runBtnEl) runBtnEl.disabled = false;
+                            if (reRunBtnEl) reRunBtnEl.disabled = false;
+                            isExecuting = false;
+                        }
                     } else {
                         const list = state.transfers[state.currentGw];
                         list.pop();
