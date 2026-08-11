@@ -189,3 +189,48 @@ test('computeGwPrediction: goalsConceded90 nudge shifts DEF clean-sheet points f
     });
     assert.ok(withNudge.pts > withoutNudge.pts);
 });
+
+test('computeGwPrediction: tier-1-only strength data (attack/defence-specific, no overall) still drops the flat home/away adjustment', () => {
+    // No ownStrength/oppStrength (tier-2) here, only the defence-vs-opponent-attack fields
+    // getCleanSheetProb's own tier-1 branch looks for. usedStrengthPath must not be blind to this.
+    const { breakdown } = computeGwPrediction({
+        basePPG: 4.0, position: 'DEF', xG90: 0, xA90: 0, saves90: 0,
+        mppg: 90, starts: 20, chanceOfPlaying: 100,
+        fixture: { opp: 'AVL', loc: 'A', diff: 4, ownDefenceStrength: 1320, oppAttackStrength: 1040 }
+    });
+    assert.equal(breakdown.homeAwayAdj, 0);
+});
+
+test('getAttackMultiplier: missing/non-numeric diff falls back to neutral (1.0), not worst-case', () => {
+    assert.equal(getAttackMultiplier({ diff: undefined }), 1.0);
+    assert.equal(getAttackMultiplier({ diff: NaN }), 1.0);
+    assert.equal(getAttackMultiplier({}), 1.0);
+});
+
+test('getCleanSheetProb: missing/non-numeric diff falls back to the same neutral fixture-difficulty as diff=3, not worst-case', () => {
+    assert.equal(getCleanSheetProb({ diff: undefined, loc: 'H' }), getCleanSheetProb({ diff: 3, loc: 'H' }));
+    assert.equal(getCleanSheetProb({ diff: NaN, loc: 'A' }), getCleanSheetProb({ diff: 3, loc: 'A' }));
+});
+
+test('getExpectedSavePts: missing/non-numeric diff falls back to the same neutral fixture-difficulty as diff=3, not worst-case', () => {
+    const missing = getExpectedSavePts({ position: 'GKP', diff: undefined, loc: 'H', saves90: 3.0 });
+    const neutral = getExpectedSavePts({ position: 'GKP', diff: 3, loc: 'H', saves90: 3.0 });
+    assert.equal(missing, neutral);
+});
+
+test('computeGwPrediction: goalsConceded90 nudge is scaled down for MID relative to GKP/DEF (matches the 1:4 csAdj weight ratio)', () => {
+    const fixture = { opp: 'AVL', loc: 'A', diff: 4, ownStrength: 5, oppStrength: 3 };
+    const base = { basePPG: 4.0, xG90: 0, xA90: 0, saves90: 0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture };
+
+    const defWithout = computeGwPrediction({ ...base, position: 'DEF' });
+    const defWith = computeGwPrediction({ ...base, position: 'DEF', goalsConceded90: 0.5, leagueAvgGoalsConceded90: 1.5 });
+    const midWithout = computeGwPrediction({ ...base, position: 'MID' });
+    const midWith = computeGwPrediction({ ...base, position: 'MID', goalsConceded90: 0.5, leagueAvgGoalsConceded90: 1.5 });
+
+    const defNudgeEffect = defWith.breakdown.csAdj - defWithout.breakdown.csAdj;
+    const midNudgeEffect = midWith.breakdown.csAdj - midWithout.breakdown.csAdj;
+
+    assert.ok(midNudgeEffect > 0); // still a positive nudge in the right direction
+    assert.ok(midNudgeEffect < defNudgeEffect); // but proportionally smaller than GKP/DEF's
+    assert.equal(Math.round(midNudgeEffect * 10000) / 10000, Math.round(defNudgeEffect * 0.25 * 10000) / 10000);
+});
