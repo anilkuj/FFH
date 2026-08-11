@@ -409,7 +409,15 @@ async function parseAndWriteData(data, fixturesData) {
             basePPG,
             mppg,
             starts,
-            minutes
+            minutes,
+            // Raw, unmutated el.starts (distinct from the `starts` local above, which gets
+            // reassigned by the early-season merge and the "expected starter" heuristic).
+            // The actualPts backtest-simulation gate below needs "did this player actually
+            // start real-world matches so far" decoupled from "how many starts we're now
+            // projecting going forward" -- using the mutated value there would fabricate
+            // non-zero actualPts for finished fixtures a promoted-team/new-signing player
+            // never actually played in.
+            rawStarts: el.starts || 0
         };
     });
 
@@ -424,10 +432,12 @@ async function parseAndWriteData(data, fixturesData) {
     console.log('League average goalsConceded90 (GKP/DEF, min. 450 mins):', leagueAvgGoalsConceded90);
 
     const playersList = playerBaseList.map(player => {
-        // minutes is stripped from restFields here (not spread into the final player object) --
-        // it's only needed for the league-average computation above; the original data.js schema
-        // never exposed raw minutes (only the derived MPPG), and this preserves that exactly.
-        const { basePPG, mppg, starts, minutes, ...restFields } = player;
+        // basePPG/mppg/starts/minutes/rawStarts are pass-1 scratch fields (not part of the
+        // public data.js schema) destructured out here for use in the prediction loop below.
+        // The final return object is an explicit allow-list (not `...restFields`) precisely so
+        // that a forgotten scratch field here is a loud "undefined" bug, not a silent leak into
+        // the public schema.
+        const { basePPG, mppg, starts, minutes, rawStarts } = player;
         const predictions = [];
         const fixtures = fixturesSchedule[player.team] || [];
 
@@ -495,7 +505,7 @@ async function parseAndWriteData(data, fixturesData) {
                     }
 
                     actualPts = ptsBase + attackingPts + cardPts + bonusPts + savePts;
-                    const playChance = starts / 38;
+                    const playChance = rawStarts / 38;
                     if (pseudoRandom > playChance && playChance < 0.8) {
                         actualPts = 0;
                     }
@@ -516,8 +526,34 @@ async function parseAndWriteData(data, fixturesData) {
         const totalXp10 = predictions.slice(0, 10).reduce((sum, pr) => sum + pr.pts, 0);
 
         return {
-            ...restFields,
+            id: player.id,
+            code: player.code,
+            name: player.name,
+            web_name: player.web_name,
+            team: player.team,
+            position: player.position,
+            price: player.price,
+            ownership: player.ownership,
+            points: player.points,
+            xG: player.xG,
+            xA: player.xA,
+            xG90: player.xG90,
+            xA90: player.xA90,
+            xGI: player.xGI,
+            ictIndex: player.ictIndex,
+            priceChangeTarget: player.priceChangeTarget,
             predictions,
+            GS: player.GS,
+            MPPG: player.MPPG,
+            saves: player.saves,
+            saves90: player.saves90,
+            goalsConceded: player.goalsConceded,
+            goalsConceded90: player.goalsConceded90,
+            transferredThisSeason: player.transferredThisSeason,
+            oldTeam: player.oldTeam,
+            news: player.news,
+            status: player.status,
+            chanceOfPlaying: player.chanceOfPlaying,
             xp10: parseFloat(totalXp10.toFixed(1))
         };
     });
