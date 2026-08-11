@@ -236,11 +236,11 @@ test('computeGwPrediction: player-scoring multiplier is dampened relative to get
         mppg: 90, starts: 30, chanceOfPlaying: 100, fixture
     });
     assert.ok(breakdown.fdrMultiplier < rawTeamLevelMultiplier); // player-scoring value is dampened below the raw team-level value
-    assert.equal(breakdown.fdrMultiplier, 1.5);
-    // basePPG(6.0) * dampened fdrMultiplier(1.5) = 9.0, plus this fixture's diff:2 FWD attacking
-    // bonus (xgiAdj = (xG90+xA90)*0.8 = 0.72, independent of the fdrMultiplier clamp) = 9.72 -> 9.7.
+    assert.equal(breakdown.fdrMultiplier, 1.3);
+    // basePPG(6.0) * dampened fdrMultiplier(1.3) = 7.8, plus this fixture's diff:2 FWD attacking
+    // bonus (xgiAdj = (xG90+xA90)*0.8 = 0.72, independent of the fdrMultiplier clamp) = 8.52 -> 8.5.
     // Still far below the undampened 12.7 (basePPG * raw 2.0 + xgiAdj), demonstrating the fix.
-    assert.equal(pts, 9.7);
+    assert.equal(pts, 8.5);
 });
 
 test('computeGwPrediction: goalsConceded90 nudge is scaled down for MID relative to GKP/DEF (matches the 1:4 csAdj weight ratio)', () => {
