@@ -1191,8 +1191,6 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
 /**
  * Helper: guaranteed start filter based on MPPG and start chance
  */
-const PROMOTED_TEAMS_LIST = ['COV', 'HUL', 'SUN', 'IPS', 'LEE'];
-
 function isGuaranteedStart(player, state) {
     if (!player) return false;
     if (state && state.mustInclude && state.mustInclude.includes(player.id)) return true;
@@ -1217,8 +1215,8 @@ function isGuaranteedStart(player, state) {
     // to prevent newly-promoted goalkeepers (e.g. Walton/IPS) from overriding established PL keepers.
     const isGKP = player.position === 'GKP';
     const isPromotedOrNew = !isGKP && (
-        (player.team && PROMOTED_TEAMS_LIST.includes(player.team)) || 
-        player.transferredThisSeason || 
+        player.transferredThisSeason ||
+        (typeof player.dataConfidence === 'string' && player.dataConfidence === 'low') ||
         (typeof player.points === 'number' && player.points < 15)
     );
 
@@ -1398,10 +1396,10 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             }
         }
 
-        // Penalise GKPs from newly-promoted clubs so established PL keepers (Verbruggen,
-        // Kinsky, Petrovic etc) are always ranked above newly-promoted options (Walton/IPS).
-        // This is intentional: promoted-team GKPs have no PL data and higher variance.
-        if (player.position === 'GKP' && PROMOTED_TEAMS_LIST.includes(player.team)) {
+        // Penalise low-data-confidence GKPs (promoted-team or otherwise) so established PL
+        // keepers are always ranked above unproven options with no real PL track record.
+        // This is intentional: no-data GKPs have higher variance than their point estimate shows.
+        if (player.position === 'GKP' && player.dataConfidence === 'low') {
             baseScore -= 3.0;
         }
 
