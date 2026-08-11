@@ -20,7 +20,6 @@ import { renderLiveRank } from './components/liverank.js';
 import { renderReveals } from './components/reveals.js';
 import { renderTransferPlanner } from './components/transferplanner.js';
 
-const PROMOTED_TEAMS = ['COV', 'HUL', 'SUN', 'IPS', 'LEE'];
 if (typeof window !== 'undefined') {
     window.PLAYERS = PLAYERS;
 }
@@ -29,63 +28,23 @@ window.getPlayerMinutesFactor = function(player) {
     if (!player) return 1.0;
     if (player.status === 'i' || player.status === 's' || player.status === 'u') return 0;
 
+    // Backup goalkeeper suppression stays -- this is a squad-slot rule (bench-budget economics: a
+    // 4.0m backup GK behind an active 4.5m+ primary contributes ~0 realistic points), not a
+    // rotation-probability question startProbability already answers.
     const allPlayers = (typeof PLAYERS !== 'undefined' && Array.isArray(PLAYERS)) ? PLAYERS : (typeof window !== 'undefined' && window.PLAYERS ? window.PLAYERS : []);
-
-    // Discount backup / second-choice goalkeepers (priced <= 4.0m) to 0 if the primary goalkeeper is fit/active
     if (player.position === 'GKP' && player.price <= 4.0) {
         const primaryGKPs = allPlayers.filter(p => p.position === 'GKP' && p.team === player.team && p.price >= 4.5);
         const hasActivePrimary = primaryGKPs.some(p => p.status !== 'i' && p.status !== 's' && (p.chanceOfPlaying === undefined || p.chanceOfPlaying > 0));
-        if (hasActivePrimary) {
-            return 0.0;
-        }
-    }
-    
-    const chance = (player.chanceOfPlaying !== undefined && player.chanceOfPlaying !== null) 
-        ? (player.chanceOfPlaying / 100) 
-        : 1.0;
-
-    // Do NOT penalize newly promoted teams or new transfers without established PL start history!
-    // NOTE: GKPs are explicitly excluded from this bypass — promoted-team GKPs (Walton/IPS etc)
-    // must be scored by actual MPPG/GS data like any other keeper, not treated as guaranteed starters.
-    const isGKP = player.position === 'GKP';
-    const isPromotedOrNew = !isGKP && (
-        (player.team && PROMOTED_TEAMS.includes(player.team)) || 
-        player.transferredThisSeason || 
-        (typeof player.points === 'number' && player.points < 15 && (player.minutes === 0 || player.MPPG === 0))
-    );
-
-    // Also do NOT heavily penalize premium or highly-owned key players (they are established starters/key players)
-    // BUT do not let them bypass if their historical stats indicate they are highly rotated (low minutes/starts)
-    // EXCEPT if they have high ownership (>= 10.0%) indicating the community expects them to start regularly.
-    const isPremiumOrKey = (((player.position === 'GKP' && player.price >= 5.0) ||
-                             (player.position === 'DEF' && player.price >= 5.0) ||
-                             (player.position === 'MID' && player.price >= 7.0) ||
-                             (player.position === 'FWD' && player.price >= 7.5)) &&
-                            (player.MPPG === undefined || player.MPPG >= 65.0) &&
-                            (player.GS === undefined || player.GS >= 15)) ||
-                           (player.ownership && player.ownership >= 10.0);
-
-    const isBypassPenalty = isPromotedOrNew || isPremiumOrKey;
-
-    let matchMinutesRatio = 1.0;
-    if (typeof player.MPPG === 'number' && player.MPPG > 0) {
-        // If they average 85+ minutes per game, treat them as a full 90-minute player (no discount)
-        matchMinutesRatio = player.MPPG >= 85.0 ? 1.0 : Math.min(1.0, Math.max(isBypassPenalty ? 0.85 : 0.15, player.MPPG / 90));
-    } else if (!isBypassPenalty) {
-        // Only apply the 0.15 floor for established PL players with 0 recorded minutes
-        // (e.g. true bench warmers). Promoted/new/premium players get full 90-min assumption.
-        matchMinutesRatio = 0.15;
-    }
-    // isBypassPenalty with MPPG=0 → matchMinutesRatio stays 1.0 (full starter assumption)
-
-    let startRatio = 1.0;
-    // Only apply starting frequency (GS) penalty to established PL squad rotation players
-    if (!isBypassPenalty && typeof player.GS === 'number' && player.GS > 0) {
-        startRatio = Math.min(1.0, Math.max(0.20, player.GS / 28));
+        if (hasActivePrimary) return 0.0;
     }
 
-    const combined = chance * startRatio * matchMinutesRatio;
-    return Math.min(1.0, Math.max(0.15, combined));
+    if (typeof player.startProbability === 'number' && !Number.isNaN(player.startProbability)) {
+        return Math.min(1.0, Math.max(0.15, player.startProbability));
+    }
+
+    // Fallback for the transition period before data.js has been re-synced with startProbability.
+    const chance = (player.chanceOfPlaying !== undefined && player.chanceOfPlaying !== null) ? (player.chanceOfPlaying / 100) : 1.0;
+    return Math.min(1.0, Math.max(0.15, chance));
 };
 
 
@@ -122,22 +81,6 @@ window.applyUniversalMinutesDiscount = function() {
 
 // Run universal minutes discounting across all 700+ players immediately on startup
 window.applyUniversalMinutesDiscount();
-
-// Dynamic Injury/Suspension Boost: If Saliba (id 6) is injured/out, Mosquera (id 11) starts and gets Calafiori (id 8) XP
-const saliba = PLAYERS.find(p => p.id === 6);
-const mosquera = PLAYERS.find(p => p.id === 11);
-const calafiori = PLAYERS.find(p => p.id === 8);
-if (mosquera && saliba && calafiori && (saliba.chanceOfPlaying === 0 || saliba.status === 'i' || saliba.status === 's')) {
-    mosquera.predictions.forEach(pred => {
-        const calaPred = calafiori.predictions.find(cp => cp.gw === pred.gw);
-        if (calaPred) {
-            pred._rawPts = calaPred._rawPts !== undefined ? calaPred._rawPts : calaPred.pts;
-            pred.pts = calaPred.pts;
-        }
-    });
-    const sum10 = mosquera.predictions.slice(0, 10).reduce((acc, p) => acc + p.pts, 0);
-    mosquera.xp10 = Math.round(sum10 * 10) / 10;
-}
 
 // Application State class
 
