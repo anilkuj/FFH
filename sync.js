@@ -3,6 +3,8 @@ import { computeBasePPG, computeGwPrediction } from './lib/predictionModel.js';
 import { getNextUnplayedGw, getLatestFinishedGw } from './lib/gwStatus.js';
 import { computeStartProbability, detectDisplacementRisk } from './lib/startProbability.js';
 import { getRecentWindow } from './lib/rotationHistory.js';
+import { buildHistoricalStrengthByCode, resolveTeamStrength, HISTORICAL_TEAMS_CSV_URL } from './lib/teamStrength.js';
+import { parseCsv } from './lib/csv.js';
 
 const BOOTSTRAP_URL = 'https://fantasy.premierleague.com/api/bootstrap-static/';
 const FIXTURES_URL = 'https://fantasy.premierleague.com/api/fixtures/';
@@ -146,6 +148,16 @@ async function parseAndWriteData(data, fixturesData) {
         console.warn('Warning: Could not read/parse existing players from data.js: ', err.message);
     }
 
+    let historicalStrengthByCode = new Map();
+    try {
+        const historicalRes = await fetch(HISTORICAL_TEAMS_CSV_URL, { signal: AbortSignal.timeout(5000) });
+        if (historicalRes.ok) {
+            historicalStrengthByCode = buildHistoricalStrengthByCode(parseCsv(await historicalRes.text()));
+        }
+    } catch (err) {
+        console.warn('Historical team-strength fetch skipped (non-fatal, falls back to overall-strength only):', err.message);
+    }
+
     const teams = data.teams;
     const elements = data.elements;
 
@@ -164,13 +176,28 @@ async function parseAndWriteData(data, fixturesData) {
         };
         color = colors[shortName] || '#94a3b8';
 
+        const resolvedStrength = resolveTeamStrength({
+            code: t.code,
+            strengthAttackHome: t.strength_attack_home,
+            strengthAttackAway: t.strength_attack_away,
+            strengthDefenceHome: t.strength_defence_home,
+            strengthDefenceAway: t.strength_defence_away
+        }, historicalStrengthByCode);
+
         return {
             id: t.id,
+            code: t.code,
             name: t.name,
             shortName: shortName,
-            color: color
+            color: color,
+            strengthOverallHome: t.strength_overall_home,
+            strengthOverallAway: t.strength_overall_away,
+            ...resolvedStrength
         };
     });
+
+    const teamByShortName = {};
+    teamsList.forEach(t => { teamByShortName[t.shortName] = t; });
 
     // 2. Map Position Types
     const posMap = { 1: 'GKP', 2: 'DEF', 3: 'MID', 4: 'FWD' };
@@ -186,13 +213,21 @@ async function parseAndWriteData(data, fixturesData) {
         if (gw >= 1 && gw <= 38) {
             const homeTeam = teamMap[f.team_h];
             const awayTeam = teamMap[f.team_a];
-            
+            const homeTeamObj = teamByShortName[homeTeam];
+            const awayTeamObj = teamByShortName[awayTeam];
+
             if (fixturesSchedule[homeTeam]) {
                 fixturesSchedule[homeTeam].push({
                     gw: gw,
                     opp: awayTeam,
                     loc: 'H',
-                    diff: f.team_h_difficulty
+                    diff: f.team_h_difficulty,
+                    ownStrength: homeTeamObj.strengthOverallHome,
+                    oppStrength: awayTeamObj.strengthOverallAway,
+                    ownAttackStrength: homeTeamObj.strengthAttackHome,
+                    oppDefenceStrength: awayTeamObj.strengthDefenceAway,
+                    ownDefenceStrength: homeTeamObj.strengthDefenceHome,
+                    oppAttackStrength: awayTeamObj.strengthAttackAway
                 });
             }
             if (fixturesSchedule[awayTeam]) {
@@ -200,7 +235,13 @@ async function parseAndWriteData(data, fixturesData) {
                     gw: gw,
                     opp: homeTeam,
                     loc: 'A',
-                    diff: f.team_a_difficulty
+                    diff: f.team_a_difficulty,
+                    ownStrength: awayTeamObj.strengthOverallAway,
+                    oppStrength: homeTeamObj.strengthOverallHome,
+                    ownAttackStrength: awayTeamObj.strengthAttackAway,
+                    oppDefenceStrength: homeTeamObj.strengthDefenceHome,
+                    ownDefenceStrength: awayTeamObj.strengthDefenceAway,
+                    oppAttackStrength: homeTeamObj.strengthAttackHome
                 });
             }
         }
