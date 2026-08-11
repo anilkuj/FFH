@@ -125,6 +125,15 @@ function normalizeNameForSetPiece(str) {
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').trim();
 }
 
+function yieldToEventLoop() {
+    return new Promise(resolve => setTimeout(resolve, 0));
+}
+
+function updateOptimizerPhase(resultsGrid, text) {
+    const label = resultsGrid.querySelector('#optimizerPhaseLabel');
+    if (label) label.textContent = text;
+}
+
 export function getPlayerSetPieceDuty(player) {
     if (!player || !player.name || player.position === 'GKP') {
         return { pk: false, fk: false, ck: false, duties: [], label: '', hasDuty: false };
@@ -1046,7 +1055,7 @@ export function renderOptimizer(container, state, actions) {
     };
 
     let isExecuting = false;
-    const executeAnalysis = () => {
+    const executeAnalysis = async () => {
         if (isExecuting) return;
         isExecuting = true;
 
@@ -1108,31 +1117,29 @@ export function renderOptimizer(container, state, actions) {
         resultsGrid.innerHTML = `
             <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px; gap: 16px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px;">
                 <i data-lucide="loader" class="animate-spin" style="color: var(--primary); width: 32px; height: 32px;"></i>
-                <span style="font-weight: 700; color: var(--text-main); font-size: 15px;">AI Solver is analyzing player data...</span>
+                <span id="optimizerPhaseLabel" style="font-weight: 700; color: var(--text-main); font-size: 15px;">AI Solver is analyzing player data...</span>
                 <span style="color: var(--text-muted); font-size: 12px;">Running expected points projections and fixture constraints</span>
             </div>
         `;
         resultsGrid.classList.remove('hidden');
         lucide.createIcons();
 
-        setTimeout(() => {
-            try {
-                performOptimization(resultsGrid, state, actions, horizon, mode);
-                updateActivePills(horizon, mode);
-                toggleSettingsBody(true); // Gently collapse form so results are focal, while preserving form DOM
-                setTimeout(() => resultsGrid.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
-            } catch (err) {
-                console.error("AI Optimizer Execution Error:", err);
-                actions.showToast("Optimizer notice: " + (err.message || "Optimization complete"), "warning");
-            } finally {
-                runBtn.disabled = false;
-                if (reRunInBodyBtn) reRunInBodyBtn.disabled = false;
-                runBtn.innerHTML = `<i data-lucide="play-circle"></i> Re-run Analysis`;
-                if (reRunInBodyBtn) reRunInBodyBtn.innerHTML = `<i data-lucide="play-circle"></i> Re-run Analysis`;
-                lucide.createIcons();
-                isExecuting = false;
-            }
-        }, 50);
+        try {
+            await performOptimization(resultsGrid, state, actions, horizon, mode);
+            updateActivePills(horizon, mode);
+            toggleSettingsBody(true); // Gently collapse form so results are focal, while preserving form DOM
+            setTimeout(() => resultsGrid.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+        } catch (err) {
+            console.error("AI Optimizer Execution Error:", err);
+            actions.showToast("Optimizer notice: " + (err.message || "Optimization complete"), "warning");
+        } finally {
+            runBtn.disabled = false;
+            if (reRunInBodyBtn) reRunInBodyBtn.disabled = false;
+            runBtn.innerHTML = `<i data-lucide="play-circle"></i> Re-run Analysis`;
+            if (reRunInBodyBtn) reRunInBodyBtn.innerHTML = `<i data-lucide="play-circle"></i> Re-run Analysis`;
+            lucide.createIcons();
+            isExecuting = false;
+        }
     };
 
     runBtn.addEventListener('click', executeAnalysis);
@@ -1163,13 +1170,16 @@ function renderLockOverlay(container, actions) {
 
 const ALL_FORMATIONS = ['3-5-2', '3-4-3', '4-4-2', '4-3-3', '4-5-1', '5-3-2', '5-4-1', '5-2-3'];
 
-function performOptimization(resultsGrid, state, actions, horizon, mode) {
+async function performOptimization(resultsGrid, state, actions, horizon, mode) {
     // If 'optimum' formation: score each formation with top-starter expected points,
     // then temporarily set state.formation to the winner before running the real solver.
     if (state.formation === 'optimum') {
         const originalFormation = 'optimum';
         let bestFormation = '3-5-2';
         let bestScore = -Infinity;
+
+        updateOptimizerPhase(resultsGrid, 'Scoring formations...');
+        await yieldToEventLoop();
 
         for (const formation of ALL_FORMATIONS) {
             state.formation = formation;
@@ -1181,11 +1191,11 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
         }
 
         state.formation = originalFormation;
-        _performOptimizationWithFormation(resultsGrid, state, actions, horizon, mode, bestFormation, true);
+        await _performOptimizationWithFormation(resultsGrid, state, actions, horizon, mode, bestFormation, true);
         return;
     }
 
-    _performOptimizationWithFormation(resultsGrid, state, actions, horizon, mode, state.formation, false);
+    await _performOptimizationWithFormation(resultsGrid, state, actions, horizon, mode, state.formation, false);
 }
 
 /**
@@ -1322,7 +1332,7 @@ function _scoreOptimizationForFormation(state, horizon, mode) {
 /**
  * Full optimizer render function. chosenFormation is set when 'optimum' mode selects the best formation.
  */
-function _performOptimizationWithFormation(resultsGrid, state, actions, horizon, mode, chosenFormation, isOptimumMode) {
+async function _performOptimizationWithFormation(resultsGrid, state, actions, horizon, mode, chosenFormation, isOptimumMode) {
     const squadInfo = state.getSquadForGw(state.currentGw);
     const { starters, bench } = squadInfo;
     let bank = squadInfo.bank;
@@ -1940,6 +1950,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             return result;
         };
 
+        updateOptimizerPhase(resultsGrid, 'Building initial squad...');
+        await yieldToEventLoop();
+
         // Initialize starting slots with budget-constrained top-scoring guaranteed starters
         let runningStartingCost = 0;
         const runningTeamCounts = {};
@@ -2234,6 +2247,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             }
         };
 
+        updateOptimizerPhase(resultsGrid, 'Optimizing starting XI...');
+        await yieldToEventLoop();
+
         // --- OPTIMIZE STARTING 11 ---
         let startingImproved = true;
         let startingIter = 0;
@@ -2409,6 +2425,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         // Ensure bench is clean and has no duplicates before starting bench optimization
         resolveBenchDuplicates();
 
+        updateOptimizerPhase(resultsGrid, 'Optimizing bench...');
+        await yieldToEventLoop();
+
         // --- OPTIMIZE BENCH ---
         const startingCost = startingIndices.reduce((sum, sIdx) => {
             const pId = optimizedSquadSlots[sIdx].playerId;
@@ -2508,6 +2527,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 }
             }
         }
+
+        updateOptimizerPhase(resultsGrid, 'Refining squad within budget...');
+        await yieldToEventLoop();
 
         // --- HARD BENCH BUDGET SAFETY ENFORCER ---
         let currentBenchCost = benchIndices.reduce((sum, bIdx) => {
@@ -2778,6 +2800,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         }
 
 
+        updateOptimizerPhase(resultsGrid, 'Checking pairwise upgrades...');
+        await yieldToEventLoop();
+
         // --- PAIRWISE DOUBLE-UPGRADE STEP ---
         // Escape local minima by checking pairs of slots and swapping them with elite candidates
         let pairwiseImproved = true;
@@ -3037,6 +3062,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
                 }
             }
         }
+
+        updateOptimizerPhase(resultsGrid, 'Finalizing...');
+        await yieldToEventLoop();
 
         // --- FINAL HARD BENCH BUDGET SAFETY ENFORCER ---
         // Runs after ALL optimization passes to guarantee bench cost never exceeds the user's bench budget.
@@ -3435,6 +3463,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             return newBenchCost <= maxBenchBudget + 0.001 || newBenchCost <= currentBenchCost + 0.001;
         };
 
+        updateOptimizerPhase(resultsGrid, 'Checking single transfers...');
+        await yieldToEventLoop();
+
         // --- FIND BEST 1-TRANSFER OPTION ---
         let best1Tx = null;
         let maxGain1 = -999;
@@ -3496,8 +3527,10 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             }
         }
 
+        updateOptimizerPhase(resultsGrid, 'Checking double transfers...');
+        await yieldToEventLoop();
+
         // --- FIND BEST 2-TRANSFER OPTION ---
-        // IMPORTANT: The double transfer must be coherent with the single transfer.
         // We must NOT suggest selling a player we just recommended buying (single IN),
         // and we must NOT suggest buying back a player we just recommended selling (single OUT).
         const single1TxInId  = best1Tx ? best1Tx.in.id  : null; // player recommended to BUY in single
@@ -3588,6 +3621,9 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             }
         }
 
+
+        updateOptimizerPhase(resultsGrid, 'Finalizing...');
+        await yieldToEventLoop();
 
         // Calculate 1-GW expected points gains for display comparison
         let best1Tx1GwGain = 0;
