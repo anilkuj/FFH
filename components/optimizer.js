@@ -1191,8 +1191,6 @@ function performOptimization(resultsGrid, state, actions, horizon, mode) {
 /**
  * Helper: guaranteed start filter based on MPPG and start chance
  */
-const PROMOTED_TEAMS_LIST = ['COV', 'HUL', 'SUN', 'IPS', 'LEE'];
-
 function isGuaranteedStart(player, state) {
     if (!player) return false;
     if (state && state.mustInclude && state.mustInclude.includes(player.id)) return true;
@@ -1213,20 +1211,20 @@ function isGuaranteedStart(player, state) {
     const mppg = typeof player.MPPG === 'number' ? player.MPPG : 85;
     const gs = typeof player.GS === 'number' ? player.GS : 25;
 
-    // Promoted/new team flag — NOTE: GKPs are explicitly excluded from this bypass
+    // Low-data-confidence/new-transfer flag — NOTE: GKPs are explicitly excluded from this bypass
     // to prevent newly-promoted goalkeepers (e.g. Walton/IPS) from overriding established PL keepers.
     const isGKP = player.position === 'GKP';
     const isPromotedOrNew = !isGKP && (
-        (player.team && PROMOTED_TEAMS_LIST.includes(player.team)) || 
-        player.transferredThisSeason || 
+        player.transferredThisSeason ||
+        (player.dataConfidence === 'low' || player.dataConfidence === undefined) ||
         (typeof player.points === 'number' && player.points < 15)
     );
 
     // DYNAMIC START QUALITY EVALUATION:
     // 1. Hard reject if current chance of playing is < 50%
     if (chance < 50) return false;
-    
-    // 2. Reject rotation risks with low starts (GS < 18 starts out of 38), but exempt newly promoted teams & new transfers (non-GKP only)!
+
+    // 2. Reject rotation risks with low starts (GS < 18 starts out of 38), but exempt low-data-confidence players & new transfers (non-GKP only)!
     if (!isPromotedOrNew && gs < 18) return false;
 
     // 3. Reject rotation risks if chance < 75% AND minutes per game < 60
@@ -1235,7 +1233,10 @@ function isGuaranteedStart(player, state) {
     // Respect user's custom Guaranteed Start slider threshold if configured
     const minMins = (state && state.guaranteedStart) || 0;
     if (minMins > 0) {
-        if (isPromotedOrNew) return true;
+        // Bypass the slider only for genuine new-team arrivals with no minutes history to judge --
+        // NOT the broader isPromotedOrNew (which also covers any low-dataConfidence or low-points
+        // player and would otherwise let most of the pool skip the user's chosen threshold).
+        if (!isGKP && player.transferredThisSeason) return true;
         const minStarts = minMins >= 80 ? 25 : (minMins >= 60 ? 22 : 18);
         return mppg >= minMins && gs >= minStarts;
     }
@@ -1398,10 +1399,10 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
             }
         }
 
-        // Penalise GKPs from newly-promoted clubs so established PL keepers (Verbruggen,
-        // Kinsky, Petrovic etc) are always ranked above newly-promoted options (Walton/IPS).
-        // This is intentional: promoted-team GKPs have no PL data and higher variance.
-        if (player.position === 'GKP' && PROMOTED_TEAMS_LIST.includes(player.team)) {
+        // Penalise low-data-confidence GKPs (promoted-team or otherwise) so established PL
+        // keepers are always ranked above unproven options with no real PL track record.
+        // This is intentional: no-data GKPs have higher variance than their point estimate shows.
+        if (player.position === 'GKP' && (player.dataConfidence === 'low' || player.dataConfidence === undefined)) {
             baseScore -= 3.0;
         }
 
