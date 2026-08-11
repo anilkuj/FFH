@@ -1,82 +1,12 @@
 import { TEAMS, TICKER_DATA } from '../data.js';
+import * as DataModule from '../data.js';
+import { getCleanSheetProb, getAttackMultiplier } from '../lib/predictionModel.js';
 
-// Exact Clean Sheet Odds % lookup from FFS ticker screenshots for GW1-5
-const CS_ODDS_LOOKUP = {
-    ARS: [57, 37, 46, 43, 42],
-    AVL: [26, 12, 34, 33, 23],
-    BOU: [18, 34, 22, 37, 25],
-    BRE: [34, 31, 39, 22, 34],
-    BHA: [32, 23, 41, 35, 15],
-    CHE: [29, 43, 9, 51, 27],
-    COV: [5, 37, 10, 28, 21],
-    CRY: [32, 24, 33, 45, 36],
-    EVE: [23, 16, 24, 18, 34],
-    FUL: [25, 22, 25, 13, 26],
-    HUL: [23, 25, 21, 15, 12],
-    IPS: [29, 19, 18, 16, 21],
-    LEE: [26, 34, 25, 25, 28],
-    LIV: [30, 50, 44, 51, 34],
-    MCI: [41, 39, 57, 43, 51],
-    MUN: [39, 46, 30, 26, 31],
-    NEW: [30, 26, 32, 31, 51],
-    NFO: [30, 16, 23, 20, 35],
-    SUN: [27, 32, 20, 11, 11],
-    TOT: [29, 29, 32, 34, 30]
-};
-
-// Exact Projected Goals lookup from FFS ticker screenshots for GW1-5
-const PROJ_GOALS_LOOKUP = {
-    ARS: [3.03, 2.06, 2.35, 2.17, 1.85],
-    AVL: [1.12, 0.99, 1.55, 1.60, 1.19],
-    BOU: [0.87, 1.81, 1.11, 1.47, 1.07],
-    BRE: [1.21, 1.07, 1.57, 0.97, 1.28],
-    BHA: [1.34, 0.83, 1.35, 1.24, 0.84],
-    CHE: [1.34, 1.44, 0.75, 1.90, 1.05],
-    COV: [0.55, 1.36, 0.55, 1.03, 1.03],
-    CRY: [1.42, 0.92, 1.35, 1.82, 1.27],
-    EVE: [1.11, 1.06, 1.17, 1.05, 1.55],
-    FUL: [1.22, 1.11, 1.10, 0.67, 1.16],
-    HUL: [0.93, 0.98, 1.07, 0.66, 0.67],
-    IPS: [1.29, 0.76, 0.80, 0.79, 1.06],
-    LEE: [1.17, 1.16, 0.88, 1.14, 1.01],
-    LIV: [1.18, 1.81, 1.70, 2.04, 1.37],
-    MCI: [1.71, 1.39, 2.29, 1.34, 2.18],
-    MUN: [1.46, 1.63, 1.40, 0.83, 1.33],
-    NEW: [1.18, 1.22, 1.51, 1.36, 2.06],
-    NFO: [1.31, 0.68, 1.12, 1.07, 1.53],
-    SUN: [1.22, 1.50, 0.91, 0.82, 0.66],
-    TOT: [1.06, 1.34, 1.43, 1.67, 1.43]
-};
-
-function getCleanSheetOdds(teamShort, opponentShort, loc, gw, diff = 3) {
-    const list = CS_ODDS_LOOKUP[teamShort];
-    if (list && list[gw - 1] !== undefined) {
-        return list[gw - 1];
-    }
-    // Dynamic formula for GW6-10
-    let odds = 30;
-    if (diff === 2) odds = 48;
-    else if (diff === 4) odds = 18;
-    else if (diff === 5) odds = 8;
-    if (loc === 'H') odds += 5;
-    else odds -= 5;
-    return Math.max(5, Math.min(65, odds));
-}
-
-function getProjectedGoals(teamShort, opponentShort, loc, gw, diff = 3) {
-    const list = PROJ_GOALS_LOOKUP[teamShort];
-    if (list && list[gw - 1] !== undefined) {
-        return list[gw - 1];
-    }
-    // Dynamic formula for GW6-10
-    let goals = 1.4;
-    if (diff === 2) goals = 2.2;
-    else if (diff === 4) goals = 1.0;
-    else if (diff === 5) goals = 0.6;
-    if (loc === 'H') goals += 0.25;
-    else goals -= 0.25;
-    return Math.max(0.4, Math.min(3.5, parseFloat(goals.toFixed(2))));
-}
+// Namespace import (not a named import) for LEAGUE_AVG_GOALS_PER_GAME: same reasoning as
+// app.js's XP_CALIBRATION_FACTOR handling -- a named import of a field data.js might not yet
+// have (e.g. right after a merge, before the next sync bakes it in) is a hard Vite build-time
+// error, not a runtime-catchable undefined.
+const LEAGUE_AVG_GOALS_PER_GAME = (typeof DataModule.LEAGUE_AVG_GOALS_PER_GAME === 'number') ? DataModule.LEAGUE_AVG_GOALS_PER_GAME : 1.4;
 
 const OPPONENTS = ["ARS", "AVL", "BOU", "BRE", "BHA", "CHE", "COV", "CRY", "EVE", "FUL", "HUL", "IPS", "LEE", "LIV", "MCI", "MUN", "NEW", "NFO", "SUN", "TOT"];
 
@@ -130,7 +60,7 @@ export function renderTicker(container, state, actions) {
 
             if (mode === 'cleansheet') {
                 adjustedFixtures = activeFixtures.map(f => {
-                    const odds = getCleanSheetOdds(team.shortName, f.opp, f.loc, f.gw, f.diff);
+                    const odds = Math.round(getCleanSheetProb(f) * 100);
                     let diffClass = 'diff-3';
                     if (odds >= 38) diffClass = 'diff-2';
                     else if (odds >= 28) diffClass = 'diff-3';
@@ -141,7 +71,8 @@ export function renderTicker(container, state, actions) {
                 avg = adjustedFixtures.reduce((sum, f) => sum + f.numeric, 0) / adjustedFixtures.length;
             } else if (mode === 'goals') {
                 adjustedFixtures = activeFixtures.map(f => {
-                    const goals = getProjectedGoals(team.shortName, f.opp, f.loc, f.gw, f.diff);
+                    const multiplier = getAttackMultiplier(f);
+                    const goals = Math.max(0.4, Math.min(3.5, parseFloat((LEAGUE_AVG_GOALS_PER_GAME * multiplier).toFixed(2))));
                     let diffClass = 'diff-3';
                     if (goals >= 1.8) diffClass = 'diff-2';
                     else if (goals >= 1.3) diffClass = 'diff-3';

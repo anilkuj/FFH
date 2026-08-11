@@ -6,6 +6,18 @@ import { getRecentWindow } from './lib/rotationHistory.js';
 import { buildHistoricalStrengthByCode, resolveTeamStrength, HISTORICAL_TEAMS_CSV_URL } from './lib/teamStrength.js';
 import { parseCsv } from './lib/csv.js';
 
+// League-average goals-per-team-per-game, used by ticker.js's Projected Goals tab. Computed from
+// this season's real finished fixtures; the 1.4 fallback is only a bootstrap seed for before any
+// fixture has been played this season (recent Premier League seasons have averaged close to this),
+// and self-corrects to real data the moment GW1 finishes -- same pattern as baseGc90/baseSaves90
+// elsewhere in this file (a documented default used only until real per-fixture data exists).
+function computeLeagueAvgGoalsPerGame(fixturesData) {
+    const finished = fixturesData.filter(f => f.finished && typeof f.team_h_score === 'number' && typeof f.team_a_score === 'number');
+    if (finished.length === 0) return 1.4;
+    const totalGoals = finished.reduce((sum, f) => sum + f.team_h_score + f.team_a_score, 0);
+    return totalGoals / (finished.length * 2);
+}
+
 const BOOTSTRAP_URL = 'https://fantasy.premierleague.com/api/bootstrap-static/';
 const FIXTURES_URL = 'https://fantasy.premierleague.com/api/fixtures/';
 const BACKTEST_API_BASE_URL = process.env.BACKTEST_API_BASE_URL || 'https://ffh-production.up.railway.app';
@@ -709,6 +721,8 @@ async function parseAndWriteData(data, fixturesData) {
         p.displacementRisk = displacementMap[p.code] || null;
     });
 
+    const leagueAvgGoalsPerGame = computeLeagueAvgGoalsPerGame(fixturesData);
+
     // Write file content
     const fileContent = `// FPL Hub Synced Live Database
 // Automatically synced with official Fantasy Premier League API
@@ -724,6 +738,8 @@ export const EXPERT_REVEALS = ${JSON.stringify(expertReveals, null, 4)};
 export const TICKER_DATA = ${JSON.stringify(fixturesSchedule, null, 4)};
 
 export const XP_CALIBRATION_FACTOR = ${calibrationFactor};
+
+export const LEAGUE_AVG_GOALS_PER_GAME = ${leagueAvgGoalsPerGame};
 
 export function getPlayerRatings(player, currentGw = 1) {
     // 1. Expected Minutes (based on MPPG - Avg Minutes/Game)
