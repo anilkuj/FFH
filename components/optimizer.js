@@ -1211,20 +1211,20 @@ function isGuaranteedStart(player, state) {
     const mppg = typeof player.MPPG === 'number' ? player.MPPG : 85;
     const gs = typeof player.GS === 'number' ? player.GS : 25;
 
-    // Promoted/new team flag — NOTE: GKPs are explicitly excluded from this bypass
+    // Low-data-confidence/new-transfer flag — NOTE: GKPs are explicitly excluded from this bypass
     // to prevent newly-promoted goalkeepers (e.g. Walton/IPS) from overriding established PL keepers.
     const isGKP = player.position === 'GKP';
     const isPromotedOrNew = !isGKP && (
         player.transferredThisSeason ||
-        (typeof player.dataConfidence === 'string' && player.dataConfidence === 'low') ||
+        (player.dataConfidence === 'low' || player.dataConfidence === undefined) ||
         (typeof player.points === 'number' && player.points < 15)
     );
 
     // DYNAMIC START QUALITY EVALUATION:
     // 1. Hard reject if current chance of playing is < 50%
     if (chance < 50) return false;
-    
-    // 2. Reject rotation risks with low starts (GS < 18 starts out of 38), but exempt newly promoted teams & new transfers (non-GKP only)!
+
+    // 2. Reject rotation risks with low starts (GS < 18 starts out of 38), but exempt low-data-confidence players & new transfers (non-GKP only)!
     if (!isPromotedOrNew && gs < 18) return false;
 
     // 3. Reject rotation risks if chance < 75% AND minutes per game < 60
@@ -1399,7 +1399,7 @@ function _performOptimizationWithFormation(resultsGrid, state, actions, horizon,
         // Penalise low-data-confidence GKPs (promoted-team or otherwise) so established PL
         // keepers are always ranked above unproven options with no real PL track record.
         // This is intentional: no-data GKPs have higher variance than their point estimate shows.
-        if (player.position === 'GKP' && player.dataConfidence === 'low') {
+        if (player.position === 'GKP' && (player.dataConfidence === 'low' || player.dataConfidence === undefined)) {
             baseScore -= 3.0;
         }
 
