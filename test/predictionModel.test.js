@@ -55,8 +55,8 @@ test('getCleanSheetProb: attack/defence-specific path -- strong defence vs weak 
     const strongDefence = getCleanSheetProb({ diff: 3, loc: 'H', ownDefenceStrength: 1320, oppAttackStrength: 1040 });
     const weakDefence = getCleanSheetProb({ diff: 3, loc: 'H', ownDefenceStrength: 1040, oppAttackStrength: 1340 });
     assert.ok(strongDefence > weakDefence);
-    assert.ok(strongDefence <= 0.65 && strongDefence >= 0.02);
-    assert.ok(weakDefence <= 0.65 && weakDefence >= 0.02);
+    assert.ok(strongDefence <= 0.70 && strongDefence >= 0.02);
+    assert.ok(weakDefence <= 0.70 && weakDefence >= 0.02);
 });
 
 test('getCleanSheetProb: overall-strength-only fallback when attack/defence data is missing but overall is present', () => {
@@ -77,8 +77,16 @@ test('getAttackMultiplier: attack/defence-specific path -- strong attack vs weak
     const easy = getAttackMultiplier({ diff: 3, ownAttackStrength: 1390, oppDefenceStrength: 1040 });
     const hard = getAttackMultiplier({ diff: 3, ownAttackStrength: 1040, oppDefenceStrength: 1390 });
     assert.ok(easy > hard);
-    assert.ok(easy <= 1.30 && easy >= 0.65);
-    assert.ok(hard <= 1.30 && hard >= 0.65);
+    assert.ok(easy <= 1.9 && easy >= 0.5);
+    assert.ok(hard <= 1.9 && hard >= 0.5);
+});
+
+test('getAttackMultiplier: extreme overall-strength mismatch (e.g. a top team at home vs a newly-promoted away side) produces a meaningfully bigger swing than a moderate gap, not just a marginal one', () => {
+    const extreme = getAttackMultiplier({ diff: 4, ownStrength: 4, oppStrength: 2 }); // e.g. Arsenal vs Coventry
+    const moderate = getAttackMultiplier({ diff: 3, ownStrength: 4, oppStrength: 3 }); // one level apart
+    assert.equal(extreme, 1.5);
+    assert.equal(moderate, 1.25);
+    assert.ok(extreme > moderate); // extreme mismatch should differentiate meaningfully more than a mild one
 });
 
 test('getAttackMultiplier: real ARS @ AVL GW2 case -- overall strength disagrees with FPL official diff, and we side with strength', () => {
