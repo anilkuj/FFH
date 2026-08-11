@@ -667,7 +667,7 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
                     ${designationBadge}
                     ${riskBadge}
                     ${transferBadgeHtml}
-                    ${player.transferredThisSeason ? `<div class="pitch-transfer-icon" title="Transferred from ${player.oldTeam}">⇆</div>` : ''}
+                    ${player.transferredThisSeason ? `<div class="pitch-transfer-icon" title="${player.oldTeam ? `Transferred from ${player.oldTeam}` : 'New arrival this season'}">⇆</div>` : ''}
                 </div>
 
                 <div class="player-card-info" style="padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; border-radius: 8px;">
@@ -781,7 +781,7 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions, is
                         ${designationBadge}
                         ${riskBadge}
                         ${transferBadgeHtml}
-                        ${player.transferredThisSeason ? `<div class="pitch-transfer-icon" title="Transferred from ${player.oldTeam}">⇆</div>` : ''}
+                        ${player.transferredThisSeason ? `<div class="pitch-transfer-icon" title="${player.oldTeam ? `Transferred from ${player.oldTeam}` : 'New arrival this season'}">⇆</div>` : ''}
                     </div>
 
                     <div class="player-card-info" style="padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; border-radius: 8px;">
@@ -1383,13 +1383,17 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
             </div>
         ` : riskyPlayers.map(p => {
             const r = state.squadRisks[p.name];
+            const confidence = state.squadDataConfidence && state.squadDataConfidence[p.name];
             const borderCol = r.risk === 'High' ? '#ef4444' : (r.risk === 'Medium' ? '#f59e0b' : '#38bdf8');
             const bgCol = r.risk === 'High' ? 'rgba(239, 68, 68, 0.05)' : (r.risk === 'Medium' ? 'rgba(245, 158, 11, 0.05)' : 'rgba(56, 189, 248, 0.05)');
             return `
                 <div style="background:${bgCol}; border-left:4px solid ${borderCol}; border-radius:6px; padding:12px; display:flex; flex-direction:column; gap:4px; font-size:11.5px;">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <strong style="font-size:13px; color:var(--text-main); font-family:var(--font-heading);">${p.name} <span style="font-size:10px; font-weight:700; color:var(--text-muted); padding:2px 6px; background:rgba(0,0,0,0.15); border-radius:4px;">${p.team} - ${p.position}</span></strong>
-                        <span style="font-size:10px; font-weight:800; text-transform:uppercase; color:${borderCol}; background:${borderCol}1a; padding:2px 8px; border-radius:12px; border:1px solid ${borderCol}33;">${r.risk} Risk</span>
+                        <span style="display:flex; align-items:center; gap:6px;">
+                            ${confidence ? `<span title="${confidence.reason}" style="font-size:10px; font-weight:800; text-transform:uppercase; color:#94a3b8; background:rgba(148,163,184,0.12); padding:2px 8px; border-radius:12px; border:1px solid rgba(148,163,184,0.33);">${confidence.label}</span>` : ''}
+                            <span style="font-size:10px; font-weight:800; text-transform:uppercase; color:${borderCol}; background:${borderCol}1a; padding:2px 8px; border-radius:12px; border:1px solid ${borderCol}33;">${r.risk} Risk</span>
+                        </span>
                     </div>
                     <p style="margin:4px 0 0 0; color:var(--text-main); font-weight:600;">⚠️ ${r.reason}</p>
                     ${r.details ? `<p style="margin:2px 0 0 0; color:var(--text-muted); font-size:10.5px; font-style:italic;">ℹ️ ${r.details}</p>` : ''}
@@ -1459,12 +1463,91 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
         }
     };
 
+    const computeLocalRiskEntry = (p) => {
+        // Backup goalkeeper risk
+        if (p.position === 'GKP' && p.price <= 4.0) {
+            const primaryGKPs = PLAYERS.filter(other =>
+                other.position === 'GKP' && other.team === p.team && other.price >= 4.5
+            );
+            const hasActivePrimary = primaryGKPs.some(other =>
+                other.status !== 'i' && other.status !== 's' && (other.chanceOfPlaying === undefined || other.chanceOfPlaying > 0)
+            );
+            if (hasActivePrimary) {
+                return { risk: "High", reason: "Second-choice / backup goalkeeper.", details: "Goalkeepers priced at £4.0m are backup options and will not start or score points on Bench Boost unless the first-choice keeper is injured or suspended." };
+            }
+        }
+
+        const chance = (p.chanceOfPlaying !== undefined && p.chanceOfPlaying !== null) ? p.chanceOfPlaying : 100;
+        const status = p.status || 'a';
+        const starts = typeof p.GS === 'number' ? p.GS : 25;
+        const mppg = typeof p.MPPG === 'number' ? p.MPPG : 80;
+
+        if (status === 'i' || chance === 0) {
+            return { risk: "High", reason: p.news || "Ruled out with injury.", details: "FPL official status flag set to unavailable." };
+        }
+        if (status === 's') {
+            return { risk: "High", reason: p.news || "Suspended.", details: "FPL official status flag set to suspended." };
+        }
+        if (status === 'd' || chance < 75) {
+            return { risk: "Medium", reason: p.news || `Doubtful starting chance (${chance}% play probability).`, details: "Player flagged by team medical staff." };
+        }
+
+        // New: positional displacement risk (data-driven, not name-keyed)
+        if (p.displacementRisk) {
+            const gapPct = Math.round(p.displacementRisk.gap * 100);
+            const risk = p.displacementRisk.gap > 0.3 ? "High" : "Medium";
+            return {
+                risk,
+                reason: `At risk of losing his place to ${p.displacementRisk.threatenedByName}.`,
+                details: `${p.displacementRisk.threatenedByName} recently joined the squad and has a ${gapPct}-point-higher start probability.`
+            };
+        }
+
+        if (chance < 100) {
+            return { risk: "Low", reason: p.news || `Minor fitness concern (${chance}% play probability).`, details: "Mild flag. Check press conferences before deadline." };
+        }
+
+        // Historical starting-pattern checks -- only trusted when dataConfidence isn't 'low'
+        // (replaces the old PROMOTED_TEAMS-gated isPromotedOrNew bypass: a low-data player's thin
+        // history shouldn't be read as a rotation risk, it just means we don't know yet).
+        // Treat `undefined` (data.js not yet resynced with this field) the same as 'low' so these
+        // checks stay dormant-but-safe during the transition period rather than firing on every
+        // player because `undefined !== 'low'` is true.
+        if (p.dataConfidence !== 'low' && p.dataConfidence !== undefined) {
+            if (starts > 0 && starts < 15) {
+                return { risk: "Medium", reason: `Tactical rotation risk (started only ${starts} matches last season).`, details: "Historical starting frequency indicates rotation risk." };
+            }
+            if (mppg > 0 && mppg < 60) {
+                return { risk: "Low", reason: `Minutes risk (averages only ${mppg.toFixed(0)} mins per appearance).`, details: "Averages less than 60 minutes per game." };
+            }
+        }
+
+        return null;
+    };
+
+    const computeDataConfidenceBadge = (p) => {
+        // Unlike the risk-entry gate above, `undefined` is treated as NOT low here: showing a
+        // "Limited Data" badge on literally every player during the transition period (before
+        // data.js is resynced with real confidence values) would be noisy and wrong. Only an
+        // explicit 'low' should surface the badge.
+        if (p.dataConfidence !== 'low') return null;
+        return {
+            label: 'Limited Data',
+            reason: p.transferredThisSeason
+                ? 'New arrival with no Premier League track record yet at this club.'
+                : 'Very little recent playing time to base this projection on.'
+        };
+    };
+
     const runPlannerSquadRiskCheck = async (slots) => {
         const apiKey = localStorage.getItem('fpl_hub_gemini_api_key');
         const squadPlayers = slots.map(s => {
             if (s.playerId === null) return null;
             return PLAYERS.find(p => p.id === s.playerId);
         }).filter(Boolean);
+
+        state.squadRisks = {};
+        state.squadDataConfidence = {};
 
         if (apiKey) {
             const squadListText = squadPlayers.map(p => {
@@ -1483,6 +1566,8 @@ Determine if any of them are at risk of not starting. Risks can be due to:
 - Cup rotations (FA Cup, EFL Cup)
 - International duty fatigue (long travel) or late returns
 - Tactical shifts (losing their starting spot to a teammate)
+- New signing uncertainty (limited or no Premier League track record at this club yet)
+- Positional competition from a new arrival in the same position
 
 Use Google Search to verify the latest manager quotes and team news for each player.
 
@@ -1553,9 +1638,6 @@ ${squadListText}
                             }
                         });
 
-                        showPlannerRiskReportModal(squadPlayers);
-                        actions.renderActiveView();
-                        return;
                     }
                 }
             } catch (err) {
@@ -1563,76 +1645,19 @@ ${squadListText}
             }
         }
 
-        // Local fallback scan
-        state.squadRisks = {};
-        const PROMOTED_TEAMS = ['COV', 'HUL', 'SUN', 'IPS', 'LEE'];
+        // Always run the local, data-driven pass -- runs whether or not Gemini ran/succeeded, and
+        // never overwrites a Gemini-sourced entry (Gemini's news-grounded text takes precedence
+        // for the players it covers; this fills in everything else, including the two new
+        // data-driven risk types Gemini's prompt doesn't compute precisely: displacement and
+        // low-confidence).
         squadPlayers.forEach(p => {
-            let riskLevel = null;
-            let reason = "";
-            let details = "";
-
-            // Check for backup goalkeeper risk
-            if (p.position === 'GKP' && p.price <= 4.0) {
-                const primaryGKPs = PLAYERS.filter(other => 
-                    other.position === 'GKP' && 
-                    other.team === p.team && 
-                    other.price >= 4.5
-                );
-                const hasActivePrimary = primaryGKPs.some(other => 
-                    other.status !== 'i' && 
-                    other.status !== 's' && 
-                    (other.chanceOfPlaying === undefined || other.chanceOfPlaying > 0)
-                );
-                if (hasActivePrimary) {
-                    riskLevel = "High";
-                    reason = "Second-choice / backup goalkeeper.";
-                    details = "Goalkeepers priced at £4.0m are backup options and will not start or score points on Bench Boost unless the first-choice keeper is injured or suspended.";
-                }
+            if (!state.squadRisks[p.name]) {
+                const entry = computeLocalRiskEntry(p);
+                if (entry) state.squadRisks[p.name] = entry;
             }
-
-            const chance = (p.chanceOfPlaying !== undefined && p.chanceOfPlaying !== null) ? p.chanceOfPlaying : 100;
-            const status = p.status || 'a';
-            const starts = typeof p.GS === 'number' ? p.GS : 25;
-            const mppg = typeof p.MPPG === 'number' ? p.MPPG : 80;
-
-            if (status === 'i' || chance === 0) {
-                riskLevel = "High";
-                reason = p.news || "Ruled out with injury.";
-                details = "FPL official status flag set to unavailable.";
-            } else if (status === 's') {
-                riskLevel = "High";
-                reason = p.news || "Suspended.";
-                details = "FPL official status flag set to suspended.";
-            } else if (status === 'd' || chance < 75) {
-                riskLevel = "Medium";
-                reason = p.news || `Doubtful starting chance (${chance}% play probability).`;
-                details = "Player flagged by team medical staff.";
-            } else if (chance < 100) {
-                riskLevel = "Low";
-                reason = p.news || `Minor fitness concern (${chance}% play probability).`;
-                details = "Mild flag. Check press conferences before deadline.";
-            } else if (starts > 0 && starts < 15) {
-                const isPromotedOrNew = (p.team && PROMOTED_TEAMS.includes(p.team)) || p.transferredThisSeason;
-                if (!isPromotedOrNew) {
-                    riskLevel = "Medium";
-                    reason = `Tactical rotation risk (started only ${starts} matches last season).`;
-                    details = "Historical starting frequency indicates rotation risk.";
-                }
-            } else if (mppg > 0 && mppg < 60) {
-                const isPromotedOrNew = (p.team && PROMOTED_TEAMS.includes(p.team)) || p.transferredThisSeason;
-                if (!isPromotedOrNew) {
-                    riskLevel = "Low";
-                    reason = `Minutes risk (averages only ${mppg.toFixed(0)} mins per appearance).`;
-                    details = "Averages less than 60 minutes per game.";
-                }
-            }
-
-            if (riskLevel) {
-                state.squadRisks[p.name] = {
-                    risk: riskLevel,
-                    reason: reason,
-                    details: details
-                };
+            const confidenceBadge = computeDataConfidenceBadge(p);
+            if (confidenceBadge) {
+                state.squadDataConfidence[p.name] = confidenceBadge;
             }
         });
 
@@ -1919,7 +1944,7 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
                     </div>
                     <div class="detail-player-info">
                         <h4 style="margin: 0 0 4px 0; font-size: 18px; font-weight: 700; color: var(--text-main);">${player.name}</h4>
-                        <p style="margin: 0; font-size: 13px; color: var(--text-muted);">${player.position} • ${player.team} ${player.transferredThisSeason ? `<span class="transfer-badge" style="margin-left: 8px;" title="Transferred from ${player.oldTeam}">⇆ ex-${player.oldTeam}</span>` : ''}</p>
+                        <p style="margin: 0; font-size: 13px; color: var(--text-muted);">${player.position} • ${player.team} ${player.transferredThisSeason ? (player.oldTeam ? `<span class="transfer-badge" style="margin-left: 8px;" title="Transferred from ${player.oldTeam}">⇆ ex-${player.oldTeam}</span>` : `<span class="transfer-badge" style="margin-left: 8px;" title="New arrival this season">⇆ NEW</span>`) : ''}</p>
                         <div style="margin-top: 8px;">
                             ${renderFdrFixtures(player, state.currentGw)}
                         </div>
