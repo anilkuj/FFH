@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { computeBasePPG, computeGwPrediction } from './lib/predictionModel.js';
+import { computeBasePPG, computeGwPrediction, computeLeagueAverageGoalsConceded90 } from './lib/predictionModel.js';
 import { getNextUnplayedGw, getLatestFinishedGw } from './lib/gwStatus.js';
 import { computeStartProbability, detectDisplacementRisk } from './lib/startProbability.js';
 import { getRecentWindow } from './lib/rotationHistory.js';
@@ -256,7 +256,7 @@ async function parseAndWriteData(data, fixturesData) {
         fixturesSchedule[shortName].sort((a, b) => a.gw - b.gw);
     });
 
-    const playersList = elements.map(el => {
+    const playerBaseList = elements.map(el => {
         const playerName = `${el.first_name} ${el.second_name}`;
         let teamShort = teamMap[el.team] || 'MUN';
         const position = posMap[el.element_type] || 'MID';
@@ -312,8 +312,8 @@ async function parseAndWriteData(data, fixturesData) {
         const isEarlySeason = (el.minutes || 0) < 900;
         if (isEarlySeason && existingPlayer) {
             starts = existingPlayer.GS !== undefined ? existingPlayer.GS : starts;
-            minutes = (existingPlayer.MPPG !== undefined && existingPlayer.GS !== undefined) 
-                ? Math.round(existingPlayer.MPPG * (existingPlayer.GS || 1)) 
+            minutes = (existingPlayer.MPPG !== undefined && existingPlayer.GS !== undefined)
+                ? Math.round(existingPlayer.MPPG * (existingPlayer.GS || 1))
                 : (existingPlayer.MPPG !== undefined ? Math.round(existingPlayer.MPPG * 10) : minutes);
             totalPoints = existingPlayer.points !== undefined ? existingPlayer.points : totalPoints;
             totalSaves = existingPlayer.saves !== undefined ? existingPlayer.saves : totalSaves;
@@ -323,10 +323,10 @@ async function parseAndWriteData(data, fixturesData) {
         // If they still have 0 minutes/starts (e.g. newly promoted teams or new signings from abroad not in the old database)
         const isPromoted = PROMOTED_TEAMS.includes(teamShort);
         if (minutes === 0 && starts === 0) {
-            const isExpectedStarter = isPromoted 
-                ? (ownership > 0.4 || price >= (position === 'GKP' || position === 'DEF' ? 4.0 : 4.5)) 
+            const isExpectedStarter = isPromoted
+                ? (ownership > 0.4 || price >= (position === 'GKP' || position === 'DEF' ? 4.0 : 4.5))
                 : (price >= (position === 'GKP' || position === 'DEF' ? 4.5 : 5.5) || ownership > 1.5);
-                
+
             if (isExpectedStarter) {
                 starts = 25;
                 const defaultMins = (position === 'GKP' || position === 'DEF') ? 90 : 80;
@@ -378,73 +378,124 @@ async function parseAndWriteData(data, fixturesData) {
             manualOverridePPG: undefined
         });
 
+        return {
+            id: el.id,
+            code: el.code,
+            name: `${el.first_name} ${el.second_name}`,
+            web_name: el.web_name,
+            team: teamShort,
+            position: position,
+            price: price,
+            ownership: ownership,
+            points: totalPoints,
+            xG: xG,
+            xA: xA,
+            xG90: parseFloat(xG90.toFixed(2)),
+            xA90: parseFloat(xA90.toFixed(2)),
+            xGI: parseFloat(el.expected_goal_involvements) || 0.0,
+            ictIndex: parseFloat(el.ict_index) || 0.0,
+            priceChangeTarget: changeTarget,
+            GS: starts,
+            MPPG: parseFloat(mppg.toFixed(1)),
+            saves: totalSaves,
+            saves90: parseFloat(saves90.toFixed(2)),
+            goalsConceded: goalsConceded,
+            goalsConceded90: parseFloat(goalsConceded90.toFixed(2)),
+            transferredThisSeason: transferredThisSeason,
+            oldTeam: oldTeam,
+            news: el.news || "",
+            status: el.status || "a",
+            chanceOfPlaying: el.chance_of_playing_next_round !== null ? el.chance_of_playing_next_round : 100,
+            basePPG,
+            mppg,
+            starts,
+            minutes
+        };
+    });
+
+    // Computed from the full player pool now that pass 1 is complete, before any predictions
+    // run, so every player's clean-sheet nudge (Task 2, lib/predictionModel.js) compares
+    // against the same real, dynamically-computed baseline.
+    const leagueAvgGoalsConceded90 = computeLeagueAverageGoalsConceded90(playerBaseList);
+    // Sanity log: if this ever prints "null" during a real sync, the goalsConceded90 nudge is
+    // silently a no-op for every player -- a wiring bug (mismatched field name/shape between
+    // this array and computeLeagueAverageGoalsConceded90's expectations), not a real "no data"
+    // case, since every sync has hundreds of GKP/DEF players with real minutes.
+    console.log('League average goalsConceded90 (GKP/DEF, min. 450 mins):', leagueAvgGoalsConceded90);
+
+    const playersList = playerBaseList.map(player => {
+        // minutes is stripped from restFields here (not spread into the final player object) --
+        // it's only needed for the league-average computation above; the original data.js schema
+        // never exposed raw minutes (only the derived MPPG), and this preserves that exactly.
+        const { basePPG, mppg, starts, minutes, ...restFields } = player;
         const predictions = [];
-        const fixtures = fixturesSchedule[teamShort] || [];
+        const fixtures = fixturesSchedule[player.team] || [];
 
         for (let gw = 1; gw <= 38; gw++) {
             const fixture = fixtures.find(f => f.gw === gw) || { opp: 'BYE', loc: 'H', diff: 3 };
-            const chanceOfPlaying = el.chance_of_playing_next_round !== null ? el.chance_of_playing_next_round : 100;
 
             const { pts } = computeGwPrediction({
                 basePPG,
-                position,
-                xG90,
-                xA90,
-                saves90,
+                position: player.position,
+                xG90: player.xG90,
+                xA90: player.xA90,
+                saves90: player.saves90,
                 mppg,
                 starts,
-                chanceOfPlaying,
-                fixture
+                chanceOfPlaying: player.chanceOfPlaying,
+                fixture,
+                goalsConceded90: player.goalsConceded90,
+                leagueAvgGoalsConceded90
             });
 
             // Calculate deterministic actual points if the fixture is completed
             let actualPts = null;
             if (fixture.opp !== 'BYE') {
-                const teamId = data.teams.find(t => t.short_name === teamShort)?.id;
+                const teamId = data.teams.find(t => t.short_name === player.team)?.id;
                 const fData = fixturesData.find(f => f.event === gw && (f.team_h === teamId || f.team_a === teamId));
                 if (fData && fData.finished) {
                     let cleanSheet = false;
-                    if (position === 'GKP' || position === 'DEF') {
+                    if (player.position === 'GKP' || player.position === 'DEF') {
                         if (fData.team_h === teamId && fData.team_a_score === 0) cleanSheet = true;
                         if (fData.team_a === teamId && fData.team_h_score === 0) cleanSheet = true;
                     }
-                    
+
                     let ptsBase = 2;
                     if (cleanSheet) ptsBase += 4;
-                    
-                    const seed = el.id * 17 + gw * 31;
+
+                    const seed = player.id * 17 + gw * 31;
                     const pseudoRandom = (Math.abs(Math.sin(seed)) * 1000) % 1;
-                    
+
                     let attackingPts = 0;
-                    const goalChance = (xG / 38) * 1.5;
-                    const assistChance = (xA / 38) * 1.5;
-                    
+                    const goalChance = (player.xG / 38) * 1.5;
+                    const assistChance = (player.xA / 38) * 1.5;
+
                     if (pseudoRandom < goalChance) {
-                        attackingPts += (position === 'FWD' ? 4 : 5);
+                        attackingPts += (player.position === 'FWD' ? 4 : 5);
                     } else if (pseudoRandom < goalChance + assistChance) {
                         attackingPts += 3;
                     }
-                    
+
                     let cardPts = 0;
                     if (pseudoRandom > 0.88) cardPts = -1;
-                    
+
                     let bonusPts = 0;
                     if (pseudoRandom < 0.15) bonusPts = 3;
                     else if (pseudoRandom < 0.25) bonusPts = 2;
                     else if (pseudoRandom < 0.35) bonusPts = 1;
-                    
+
                     // GK: actual saves bonus from real match data
                     let savePts = 0;
-                    if (position === 'GKP') {
+                    if (player.position === 'GKP') {
                         // Use goals conceded as a proxy: teams that concede 2+ goals typically face 5+ shots saved
                         const goalsIn = fData.team_h === teamId ? fData.team_a_score : fData.team_h_score;
                         // Rough: 2-3 saves per goal scored on average (FPL-approximate)
                         const estimatedSaves = Math.round(goalsIn * 2.5 + (pseudoRandom * 2));
                         savePts = Math.floor(estimatedSaves / 3);
                     }
-                    
+
                     actualPts = ptsBase + attackingPts + cardPts + bonusPts + savePts;
-                    const playChance = el.starts / 38;
+                    const playChance = starts / 38;
                     if (pseudoRandom > playChance && playChance < 0.8) {
                         actualPts = 0;
                     }
@@ -463,39 +514,12 @@ async function parseAndWriteData(data, fixturesData) {
         }
 
         const totalXp10 = predictions.slice(0, 10).reduce((sum, pr) => sum + pr.pts, 0);
- 
+
         return {
-            id: el.id,
-            code: el.code,
-            name: `${el.first_name} ${el.second_name}`,
-            web_name: el.web_name,
-            team: teamShort,
-            position: position,
-            price: price,
-            ownership: ownership,
-            points: totalPoints,
-            xG: xG,
-            xA: xA,
-            xG90: parseFloat(xG90.toFixed(2)),
-            xA90: parseFloat(xA90.toFixed(2)),
-            xGI: parseFloat(el.expected_goal_involvements) || 0.0,
-            ictIndex: parseFloat(el.ict_index) || 0.0,
-            priceChangeTarget: changeTarget,
-            predictions: predictions,
-            GS: starts,
-            MPPG: parseFloat(mppg.toFixed(1)),
-            saves: totalSaves,
-            saves90: parseFloat(saves90.toFixed(2)),
-            goalsConceded: goalsConceded,
-            goalsConceded90: parseFloat(goalsConceded90.toFixed(2)),
-            transferredThisSeason: transferredThisSeason,
-            oldTeam: oldTeam,
-            news: el.news || "",
-            status: el.status || "a",
-            chanceOfPlaying: el.chance_of_playing_next_round !== null ? el.chance_of_playing_next_round : 100,
+            ...restFields,
+            predictions,
             xp10: parseFloat(totalXp10.toFixed(1))
         };
-
     });
 
     // Snapshot each player's real, FPL-official chanceOfPlaying *before* the rules-based
