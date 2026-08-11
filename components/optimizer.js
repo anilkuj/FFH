@@ -134,6 +134,23 @@ function updateOptimizerPhase(resultsGrid, text) {
     if (label) label.textContent = text;
 }
 
+// Single source of truth for "an optimization run is currently in flight", shared across
+// every trigger point (Run/Re-run buttons and all apply-transfer buttons) so concurrent
+// runs can't be started from two different controls at once.
+let isExecuting = false;
+
+function showOptimizerLoadingCard(resultsGrid, message) {
+    resultsGrid.innerHTML = `
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px; gap: 16px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px;">
+            <i data-lucide="loader" class="animate-spin" style="color: var(--primary); width: 32px; height: 32px;"></i>
+            <span id="optimizerPhaseLabel" style="font-weight: 700; color: var(--text-main); font-size: 15px;">${message || 'AI Solver is analyzing player data...'}</span>
+            <span style="color: var(--text-muted); font-size: 12px;">Running expected points projections and fixture constraints</span>
+        </div>
+    `;
+    resultsGrid.classList.remove('hidden');
+    lucide.createIcons();
+}
+
 export function getPlayerSetPieceDuty(player) {
     if (!player || !player.name || player.position === 'GKP') {
         return { pk: false, fk: false, ck: false, duties: [], label: '', hasDuty: false };
@@ -1054,7 +1071,6 @@ export function renderOptimizer(container, state, actions) {
         lucide.createIcons();
     };
 
-    let isExecuting = false;
     const executeAnalysis = async () => {
         if (isExecuting) return;
         isExecuting = true;
@@ -1114,15 +1130,7 @@ export function renderOptimizer(container, state, actions) {
         const mode = phaseSelect.value;
 
         // Show a loader card inside the resultsGrid before optimization runs to prevent clashing UI
-        resultsGrid.innerHTML = `
-            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px; gap: 16px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px;">
-                <i data-lucide="loader" class="animate-spin" style="color: var(--primary); width: 32px; height: 32px;"></i>
-                <span id="optimizerPhaseLabel" style="font-weight: 700; color: var(--text-main); font-size: 15px;">AI Solver is analyzing player data...</span>
-                <span style="color: var(--text-muted); font-size: 12px;">Running expected points projections and fixture constraints</span>
-            </div>
-        `;
-        resultsGrid.classList.remove('hidden');
-        lucide.createIcons();
+        showOptimizerLoadingCard(resultsGrid);
 
         try {
             await performOptimization(resultsGrid, state, actions, horizon, mode);
@@ -1132,6 +1140,9 @@ export function renderOptimizer(container, state, actions) {
         } catch (err) {
             console.error("AI Optimizer Execution Error:", err);
             actions.showToast("Optimizer notice: " + (err.message || "Optimization complete"), "warning");
+            // Don't leave the results panel frozen mid-sentence on a stale phase label
+            resultsGrid.innerHTML = '';
+            resultsGrid.classList.add('hidden');
         } finally {
             runBtn.disabled = false;
             if (reRunInBodyBtn) reRunInBodyBtn.disabled = false;
@@ -3399,25 +3410,40 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
         const applySingleBtns = resultsGrid.querySelectorAll('.apply-single-preseason-btn');
         applySingleBtns.forEach(btn => {
             btn.addEventListener('click', async () => {
-                const slotIdx = parseInt(btn.getAttribute('data-slot-idx'));
-                const inId = parseInt(btn.getAttribute('data-in-id'));
-                const outIdStr = btn.getAttribute('data-out-id');
-                const outId = outIdStr !== 'null' ? parseInt(outIdStr) : null;
+                if (isExecuting) return;
+                isExecuting = true;
 
-                state.squadSlots[slotIdx].playerId = inId;
-                state.optimizeCaptaincy();
-                state.saveState();
-
-                const pIn = PLAYERS.find(p => p.id === inId);
-                const pOut = outId !== null ? PLAYERS.find(p => p.id === outId) : null;
-
-                actions.syncTopBar();
-                actions.showToast(`Applied swap: ${pIn.name} in for ${pOut ? pOut.name : 'empty slot'}`, 'success');
+                const runBtnEl = document.getElementById('runOptBtn');
+                const reRunBtnEl = document.getElementById('reRunInBodyBtn');
+                if (runBtnEl) runBtnEl.disabled = true;
+                if (reRunBtnEl) reRunBtnEl.disabled = true;
                 btn.disabled = true;
+
                 try {
+                    const slotIdx = parseInt(btn.getAttribute('data-slot-idx'));
+                    const inId = parseInt(btn.getAttribute('data-in-id'));
+                    const outIdStr = btn.getAttribute('data-out-id');
+                    const outId = outIdStr !== 'null' ? parseInt(outIdStr) : null;
+
+                    state.squadSlots[slotIdx].playerId = inId;
+                    state.optimizeCaptaincy();
+                    state.saveState();
+
+                    const pIn = PLAYERS.find(p => p.id === inId);
+                    const pOut = outId !== null ? PLAYERS.find(p => p.id === outId) : null;
+
+                    actions.syncTopBar();
+                    actions.showToast(`Applied swap: ${pIn.name} in for ${pOut ? pOut.name : 'empty slot'}`, 'success');
+
+                    showOptimizerLoadingCard(resultsGrid);
                     await performOptimization(resultsGrid, state, actions, horizon, mode);
+                } catch (err) {
+                    console.error("AI Optimizer Execution Error:", err);
+                    actions.showToast("Optimizer notice: " + (err.message || "Optimization complete"), "warning");
                 } finally {
-                    btn.disabled = false;
+                    if (runBtnEl) runBtnEl.disabled = false;
+                    if (reRunBtnEl) reRunBtnEl.disabled = false;
+                    isExecuting = false;
                 }
             });
         });
@@ -3808,17 +3834,30 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
         const singleBtn = resultsGrid.querySelector('#applySingleBtn');
         if (singleBtn) {
             singleBtn.addEventListener('click', async () => {
+                if (isExecuting) return;
                 const ok = actions.addTransfer(state.currentGw, best1Tx.out.id, best1Tx.in.id);
                 if (ok) {
+                    isExecuting = true;
+                    const runBtnEl = document.getElementById('runOptBtn');
+                    const reRunBtnEl = document.getElementById('reRunInBodyBtn');
+                    if (runBtnEl) runBtnEl.disabled = true;
+                    if (reRunBtnEl) reRunBtnEl.disabled = true;
+                    singleBtn.disabled = true;
+
                     state.optimizeCaptaincy();
                     state.saveState();
                     actions.syncTopBar();
                     actions.showToast("AI single transfer applied successfully!", "success");
-                    singleBtn.disabled = true;
                     try {
+                        showOptimizerLoadingCard(resultsGrid);
                         await performOptimization(resultsGrid, state, actions, horizon, mode);
+                    } catch (err) {
+                        console.error("AI Optimizer Execution Error:", err);
+                        actions.showToast("Optimizer notice: " + (err.message || "Optimization complete"), "warning");
                     } finally {
-                        singleBtn.disabled = false;
+                        if (runBtnEl) runBtnEl.disabled = false;
+                        if (reRunBtnEl) reRunBtnEl.disabled = false;
+                        isExecuting = false;
                     }
                 }
             });
@@ -3827,19 +3866,32 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
         const doubleBtn = resultsGrid.querySelector('#applyDoubleBtn');
         if (doubleBtn) {
             doubleBtn.addEventListener('click', async () => {
+                if (isExecuting) return;
                 const ok1 = actions.addTransfer(state.currentGw, best2Tx.out1.id, best2Tx.in1.id);
                 if (ok1) {
                     const ok2 = actions.addTransfer(state.currentGw, best2Tx.out2.id, best2Tx.in2.id);
                     if (ok2) {
+                        isExecuting = true;
+                        const runBtnEl = document.getElementById('runOptBtn');
+                        const reRunBtnEl = document.getElementById('reRunInBodyBtn');
+                        if (runBtnEl) runBtnEl.disabled = true;
+                        if (reRunBtnEl) reRunBtnEl.disabled = true;
+                        doubleBtn.disabled = true;
+
                         state.optimizeCaptaincy();
                         state.saveState();
                         actions.syncTopBar();
                         actions.showToast("AI double transfer applied successfully!", "success");
-                        doubleBtn.disabled = true;
                         try {
+                            showOptimizerLoadingCard(resultsGrid);
                             await performOptimization(resultsGrid, state, actions, horizon, mode);
+                        } catch (err) {
+                            console.error("AI Optimizer Execution Error:", err);
+                            actions.showToast("Optimizer notice: " + (err.message || "Optimization complete"), "warning");
                         } finally {
-                            doubleBtn.disabled = false;
+                            if (runBtnEl) runBtnEl.disabled = false;
+                            if (reRunBtnEl) reRunBtnEl.disabled = false;
+                            isExecuting = false;
                         }
                     } else {
                         const list = state.transfers[state.currentGw];
