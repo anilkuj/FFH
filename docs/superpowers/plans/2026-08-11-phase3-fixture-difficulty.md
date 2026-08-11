@@ -1259,7 +1259,15 @@ New (two passes replacing it):
             basePPG,
             mppg,
             starts,
-            minutes
+            minutes,
+            // Raw, unmutated starts-to-date from FPL -- deliberately distinct from `starts` above,
+            // which gets overridden for early-season-merge/promoted-team-heuristic players and is
+            // used for *forward-looking projections*. The actualPts backtest-simulation gate in
+            // pass 2 needs the real, unmutated count to correctly decide whether a player actually
+            // played a given finished fixture -- using the mutated `starts` there was a real bug
+            // caught during code review (would fabricate non-zero actualPts for players who never
+            // played, corrupting calibration data).
+            rawStarts: el.starts || 0
         };
     });
 
@@ -1274,10 +1282,13 @@ New (two passes replacing it):
     console.log('League average goalsConceded90 (GKP/DEF, min. 450 mins):', leagueAvgGoalsConceded90);
 
     const playersList = playerBaseList.map(player => {
-        // minutes is stripped from restFields here (not spread into the final player object) --
-        // it's only needed for the league-average computation above; the original data.js schema
-        // never exposed raw minutes (only the derived MPPG), and this preserves that exactly.
-        const { basePPG, mppg, starts, minutes, ...restFields } = player;
+        // Pass-1-only scratch fields, needed for the prediction loop below but not part of the
+        // public data.js schema. Destructured here (not spread into the final object) so they
+        // never leak into the output -- the final return further below is an explicit allow-list
+        // of every public field by name (not a deny-list spread of "everything except these"),
+        // specifically so a future scratch field added to pass 1 can't silently leak into the
+        // public schema just because someone forgot to add it here too.
+        const { basePPG, mppg, starts, minutes, rawStarts } = player;
         const predictions = [];
         const fixtures = fixturesSchedule[player.team] || [];
 
@@ -1345,7 +1356,14 @@ New (two passes replacing it):
                     }
 
                     actualPts = ptsBase + attackingPts + cardPts + bonusPts + savePts;
-                    const playChance = starts / 38;
+                    // Deliberately rawStarts, not the (possibly heuristic-overridden) starts --
+                    // this gate decides whether a player *actually played* a real finished
+                    // fixture, which must be judged against real starts-to-date, not a
+                    // forward-looking projection. Using the mutated `starts` here was a real bug
+                    // caught during code review: a promoted-team player with 0 real starts but a
+                    // heuristic-assigned starts=25 would get playChance~=0.66 instead of 0,
+                    // fabricating non-zero actualPts for a player who never played.
+                    const playChance = rawStarts / 38;
                     if (pseudoRandom > playChance && playChance < 0.8) {
                         actualPts = 0;
                     }
@@ -1365,9 +1383,38 @@ New (two passes replacing it):
 
         const totalXp10 = predictions.slice(0, 10).reduce((sum, pr) => sum + pr.pts, 0);
 
+        // Explicit allow-list matching the original pre-two-pass field set exactly -- not a
+        // `...restFields` spread, so a scratch field added to pass 1 in the future can't
+        // silently leak into data.js's public schema just because someone forgot to strip it.
         return {
-            ...restFields,
+            id: player.id,
+            code: player.code,
+            name: player.name,
+            web_name: player.web_name,
+            team: player.team,
+            position: player.position,
+            price: player.price,
+            ownership: player.ownership,
+            points: player.points,
+            xG: player.xG,
+            xA: player.xA,
+            xG90: player.xG90,
+            xA90: player.xA90,
+            xGI: player.xGI,
+            ictIndex: player.ictIndex,
+            priceChangeTarget: player.priceChangeTarget,
             predictions,
+            GS: player.GS,
+            MPPG: player.MPPG,
+            saves: player.saves,
+            saves90: player.saves90,
+            goalsConceded: player.goalsConceded,
+            goalsConceded90: player.goalsConceded90,
+            transferredThisSeason: player.transferredThisSeason,
+            oldTeam: player.oldTeam,
+            news: player.news,
+            status: player.status,
+            chanceOfPlaying: player.chanceOfPlaying,
             xp10: parseFloat(totalXp10.toFixed(1))
         };
     });
