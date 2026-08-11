@@ -170,3 +170,22 @@ test('detectDisplacementRisk: picks the biggest threat when multiple new arrival
     assert.equal(result[1].threatenedByCode, 3);
     assert.equal(Math.round(result[1].gap * 100) / 100, 0.35);
 });
+
+test('detectDisplacementRisk: a player with startProbability null is never flagged as displaced (failed computation, not a real 0%)', () => {
+    const players = [
+        { code: 1, name: 'Failed Player', team: 'ARS', position: 'DEF', startProbability: null, isNewToCurrentTeam: false },
+        { code: 2, name: 'New Signing', team: 'ARS', position: 'DEF', startProbability: 0.8, isNewToCurrentTeam: true }
+    ];
+    const result = detectDisplacementRisk(players);
+    assert.equal(result[1], undefined);
+});
+
+test('detectDisplacementRisk: a player with startProbability null never counts as a threat to a teammate', () => {
+    const players = [
+        { code: 1, name: 'Old Def', team: 'ARS', position: 'DEF', startProbability: 0.5, isNewToCurrentTeam: false },
+        { code: 2, name: 'New Def (failed calc)', team: 'ARS', position: 'DEF', startProbability: null, isNewToCurrentTeam: true }
+    ];
+    const result = detectDisplacementRisk(players);
+    assert.equal(result[1], undefined); // null "threat" must not wrongly trigger a flag
+    assert.equal(result[2], undefined);
+});

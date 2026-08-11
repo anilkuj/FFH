@@ -547,8 +547,20 @@ async function parseAndWriteData(data, fixturesData) {
     const currentGwForWindow = getNextUnplayedGw(fixturesData) || 1;
 
     playersList.forEach(p => {
+        let window;
         try {
-            const window = getRecentWindow(rotationHistoryData, p.code, { asOfGw: currentGwForWindow, windowSize: 6 });
+            window = getRecentWindow(rotationHistoryData, p.code, { asOfGw: currentGwForWindow, windowSize: 6 });
+        } catch (err) {
+            console.warn(`Rotation: getRecentWindow failed for player id=${p.id} code=${p.code}:`, err.message);
+            // Deliberate sentinel: null means "computation failed, no signal", NOT "0% chance of starting".
+            // detectDisplacementRisk (lib/startProbability.js) explicitly excludes non-numeric values for
+            // this reason -- treating null as 0 via numeric coercion would fabricate/suppress flags.
+            p.startProbability = null;
+            p.dataConfidence = 'low';
+            return;
+        }
+
+        try {
             const priorSeasonRate = (typeof p.MPPG === 'number' && p.MPPG > 0 && typeof p.GS === 'number' && p.GS > 0)
                 ? Math.min(1.0, p.MPPG / 90)
                 : null;
@@ -566,7 +578,10 @@ async function parseAndWriteData(data, fixturesData) {
             p.startProbability = Math.round(result.startProbability * 1000) / 1000;
             p.dataConfidence = result.dataConfidence;
         } catch (err) {
-            console.warn(`Rotation: startProbability computation failed for player id=${p.id} code=${p.code}:`, err.message);
+            console.warn(`Rotation: computeStartProbability failed for player id=${p.id} code=${p.code}:`, err.message);
+            // Deliberate sentinel: null means "computation failed, no signal", NOT "0% chance of starting".
+            // detectDisplacementRisk (lib/startProbability.js) explicitly excludes non-numeric values for
+            // this reason -- treating null as 0 via numeric coercion would fabricate/suppress flags.
             p.startProbability = null;
             p.dataConfidence = 'low';
         }
