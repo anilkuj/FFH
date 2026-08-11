@@ -1482,8 +1482,9 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
         const starts = typeof p.GS === 'number' ? p.GS : 25;
         const mppg = typeof p.MPPG === 'number' ? p.MPPG : 80;
 
-        if (status === 'i' || chance === 0) {
-            return { risk: "High", reason: p.news || "Ruled out with injury.", details: "FPL official status flag set to unavailable." };
+        if (status === 'i' || status === 'u' || chance === 0) {
+            const fallbackReason = status === 'u' ? "Unavailable (e.g. left the club)." : "Ruled out with injury.";
+            return { risk: "High", reason: p.news || fallbackReason, details: "FPL official status flag set to unavailable." };
         }
         if (status === 's') {
             return { risk: "High", reason: p.news || "Suspended.", details: "FPL official status flag set to suspended." };

@@ -1233,7 +1233,10 @@ function isGuaranteedStart(player, state) {
     // Respect user's custom Guaranteed Start slider threshold if configured
     const minMins = (state && state.guaranteedStart) || 0;
     if (minMins > 0) {
-        if (isPromotedOrNew) return true;
+        // Bypass the slider only for genuine new-team arrivals with no minutes history to judge --
+        // NOT the broader isPromotedOrNew (which also covers any low-dataConfidence or low-points
+        // player and would otherwise let most of the pool skip the user's chosen threshold).
+        if (!isGKP && player.transferredThisSeason) return true;
         const minStarts = minMins >= 80 ? 25 : (minMins >= 60 ? 22 : 18);
         return mppg >= minMins && gs >= minStarts;
     }

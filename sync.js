@@ -453,6 +453,15 @@ async function parseAndWriteData(data, fixturesData) {
 
     });
 
+    // Snapshot each player's real, FPL-official chanceOfPlaying *before* the rules-based
+    // classifier below can overwrite it with a synthetic guess. computeStartProbability treats
+    // "official" chanceOfPlaying as its highest-precedence, most-trusted signal -- if the
+    // classifier's own inferred value were passed back in under that same channel, its guess
+    // would get relabeled as authoritative official status (and a misleadingly high
+    // dataConfidence), which is circular. This snapshot is consulted instead when computing
+    // startProbability further below.
+    const officialChanceOfPlayingById = new Map(playersList.map(p => [p.id, p.chanceOfPlaying]));
+
     // 4b. Rules-based fallback classifier: flags outfield players who started very few games
     // and played very few minutes last season as likely backups/rotation risks. This has real,
     // independent value regardless of any AI-provided news, so it always runs now (previously
@@ -567,7 +576,7 @@ async function parseAndWriteData(data, fixturesData) {
 
             const result = computeStartProbability({
                 officialStatus: p.status,
-                officialChanceOfPlaying: p.chanceOfPlaying,
+                officialChanceOfPlaying: officialChanceOfPlayingById.get(p.id),
                 recentWindow: window,
                 priorSeasonRate,
                 price: p.price,
