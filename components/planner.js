@@ -1247,7 +1247,7 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
         const existing = document.getElementById('tpRiskModal');
         if (existing) existing.remove();
 
-        const riskyPlayers = squadPlayers.filter(p => state.squadRisks && state.squadRisks[p.name]);
+        const riskyPlayers = squadPlayers.filter(p => (state.squadRisks && state.squadRisks[p.name]) || (state.squadDataConfidence && state.squadDataConfidence[p.name]));
 
         // Calculate dynamic starting XI vs bench rotation advice
         const currentSlotsCopy = JSON.parse(JSON.stringify(state.squadSlots));
@@ -1384,19 +1384,19 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
         ` : riskyPlayers.map(p => {
             const r = state.squadRisks[p.name];
             const confidence = state.squadDataConfidence && state.squadDataConfidence[p.name];
-            const borderCol = r.risk === 'High' ? '#ef4444' : (r.risk === 'Medium' ? '#f59e0b' : '#38bdf8');
-            const bgCol = r.risk === 'High' ? 'rgba(239, 68, 68, 0.05)' : (r.risk === 'Medium' ? 'rgba(245, 158, 11, 0.05)' : 'rgba(56, 189, 248, 0.05)');
+            const borderCol = r ? (r.risk === 'High' ? '#ef4444' : (r.risk === 'Medium' ? '#f59e0b' : '#38bdf8')) : '#94a3b8';
+            const bgCol = r ? (r.risk === 'High' ? 'rgba(239, 68, 68, 0.05)' : (r.risk === 'Medium' ? 'rgba(245, 158, 11, 0.05)' : 'rgba(56, 189, 248, 0.05)')) : 'rgba(148, 163, 184, 0.05)';
             return `
                 <div style="background:${bgCol}; border-left:4px solid ${borderCol}; border-radius:6px; padding:12px; display:flex; flex-direction:column; gap:4px; font-size:11.5px;">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <strong style="font-size:13px; color:var(--text-main); font-family:var(--font-heading);">${p.name} <span style="font-size:10px; font-weight:700; color:var(--text-muted); padding:2px 6px; background:rgba(0,0,0,0.15); border-radius:4px;">${p.team} - ${p.position}</span></strong>
                         <span style="display:flex; align-items:center; gap:6px;">
                             ${confidence ? `<span title="${confidence.reason}" style="font-size:10px; font-weight:800; text-transform:uppercase; color:#94a3b8; background:rgba(148,163,184,0.12); padding:2px 8px; border-radius:12px; border:1px solid rgba(148,163,184,0.33);">${confidence.label}</span>` : ''}
-                            <span style="font-size:10px; font-weight:800; text-transform:uppercase; color:${borderCol}; background:${borderCol}1a; padding:2px 8px; border-radius:12px; border:1px solid ${borderCol}33;">${r.risk} Risk</span>
+                            ${r ? `<span style="font-size:10px; font-weight:800; text-transform:uppercase; color:${borderCol}; background:${borderCol}1a; padding:2px 8px; border-radius:12px; border:1px solid ${borderCol}33;">${r.risk} Risk</span>` : ''}
                         </span>
                     </div>
-                    <p style="margin:4px 0 0 0; color:var(--text-main); font-weight:600;">⚠️ ${r.reason}</p>
-                    ${r.details ? `<p style="margin:2px 0 0 0; color:var(--text-muted); font-size:10.5px; font-style:italic;">ℹ️ ${r.details}</p>` : ''}
+                    ${r ? `<p style="margin:4px 0 0 0; color:var(--text-main); font-weight:600;">⚠️ ${r.reason}</p>` : ''}
+                    ${r && r.details ? `<p style="margin:2px 0 0 0; color:var(--text-muted); font-size:10.5px; font-style:italic;">ℹ️ ${r.details}</p>` : ''}
                 </div>
             `;
         }).join('<hr style="border:0; border-top:1px solid var(--border-color); margin:12px 0;">');
@@ -1492,7 +1492,10 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
             return { risk: "Medium", reason: p.news || `Doubtful starting chance (${chance}% play probability).`, details: "Player flagged by team medical staff." };
         }
 
-        // New: positional displacement risk (data-driven, not name-keyed)
+        // New: positional displacement risk (data-driven, not name-keyed).
+        // Displacement is a medium-term signal, checked after acute official-status risks
+        // (injury/suspension/doubtful above) but before the low-priority historical-pattern
+        // checks below.
         if (p.displacementRisk) {
             const gapPct = Math.round(p.displacementRisk.gap * 100);
             const risk = p.displacementRisk.gap > 0.3 ? "High" : "Medium";
@@ -1535,7 +1538,7 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
             label: 'Limited Data',
             reason: p.transferredThisSeason
                 ? 'New arrival with no Premier League track record yet at this club.'
-                : 'Very little recent playing time to base this projection on.'
+                : 'Limited data available for this projection -- treat with extra caution.'
         };
     };
 
@@ -1614,30 +1617,6 @@ ${squadListText}
                                 };
                             });
                         }
-                        
-                        // Rules-based backup GKP risk enforcer
-                        squadPlayers.forEach(p => {
-                            if (p.position === 'GKP' && p.price <= 4.0) {
-                                const primaryGKPs = PLAYERS.filter(other => 
-                                    other.position === 'GKP' && 
-                                    other.team === p.team && 
-                                    other.price >= 4.5
-                                );
-                                const hasActivePrimary = primaryGKPs.some(other => 
-                                    other.status !== 'i' && 
-                                    other.status !== 's' && 
-                                    (other.chanceOfPlaying === undefined || other.chanceOfPlaying > 0)
-                                );
-                                if (hasActivePrimary) {
-                                    state.squadRisks[p.name] = {
-                                        risk: "High",
-                                        reason: "Second-choice / backup goalkeeper.",
-                                        details: "Goalkeepers priced at £4.0m are backup options and will not start or score points on Bench Boost unless the first-choice keeper is injured or suspended."
-                                    };
-                                }
-                            }
-                        });
-
                     }
                 }
             } catch (err) {
