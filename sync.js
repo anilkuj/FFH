@@ -1,6 +1,8 @@
 import fs from 'fs';
 import { computeBasePPG, computeGwPrediction } from './lib/predictionModel.js';
 import { getNextUnplayedGw, getLatestFinishedGw } from './lib/gwStatus.js';
+import { computeStartProbability, detectDisplacementRisk } from './lib/startProbability.js';
+import { getRecentWindow } from './lib/rotationHistory.js';
 
 const BOOTSTRAP_URL = 'https://fantasy.premierleague.com/api/bootstrap-static/';
 const FIXTURES_URL = 'https://fantasy.premierleague.com/api/fixtures/';
@@ -82,6 +84,27 @@ async function syncBacktestTracking(playersList, fixturesData) {
                 if (actualsRes.ok) {
                     const actualsBody = await actualsRes.json();
                     console.log(`Backtest: scored GW${latestFinishedGw} (${actualsBody.pairCount} players matched).`);
+                }
+
+                if (liveData.elements.length > 0 && liveData.elements[0].stats.starts === undefined) {
+                    console.warn('Rotation snapshot: e.stats.starts is undefined in the live payload -- field may have been renamed by FPL, skipping this gw\'s snapshot.');
+                } else {
+                    const rotationPlayers = liveData.elements
+                        .map(e => {
+                            const p = playersList.find(pl => pl.id === e.id);
+                            if (!p) return null;
+                            return { code: p.code, team: p.team, position: p.position, minutesThisGw: e.stats.minutes, startedThisGw: !!e.stats.starts };
+                        })
+                        .filter(Boolean);
+                    const snapshotRes = await fetch(`${BACKTEST_API_BASE_URL}/api/rotation/snapshot`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ gw: latestFinishedGw, players: rotationPlayers }),
+                        signal: AbortSignal.timeout(5000)
+                    });
+                    if (snapshotRes.ok) {
+                        console.log(`Rotation: recorded snapshot for GW${latestFinishedGw} (${rotationPlayers.length} players).`);
+                    }
                 }
             }
         }
@@ -509,6 +532,53 @@ async function parseAndWriteData(data, fixturesData) {
     ];
 
     const calibrationFactor = await syncBacktestTracking(playersList, fixturesData);
+
+    let rotationHistoryData = { players: {} };
+    try {
+        const historyRes = await fetch(`${BACKTEST_API_BASE_URL}/api/rotation/history-bulk`, { signal: AbortSignal.timeout(5000) });
+        if (historyRes.ok) {
+            const body = await historyRes.json();
+            if (body.success) rotationHistoryData = body.data;
+        }
+    } catch (err) {
+        console.warn('Rotation history fetch skipped (non-fatal):', err.message);
+    }
+
+    const currentGwForWindow = getNextUnplayedGw(fixturesData) || 1;
+
+    playersList.forEach(p => {
+        try {
+            const window = getRecentWindow(rotationHistoryData, p.code, { asOfGw: currentGwForWindow, windowSize: 6 });
+            const priorSeasonRate = (typeof p.MPPG === 'number' && p.MPPG > 0 && typeof p.GS === 'number' && p.GS > 0)
+                ? Math.min(1.0, p.MPPG / 90)
+                : null;
+
+            const result = computeStartProbability({
+                officialStatus: p.status,
+                officialChanceOfPlaying: p.chanceOfPlaying,
+                recentWindow: window,
+                priorSeasonRate,
+                price: p.price,
+                ownership: p.ownership,
+                position: p.position
+            });
+
+            p.startProbability = Math.round(result.startProbability * 1000) / 1000;
+            p.dataConfidence = result.dataConfidence;
+        } catch (err) {
+            console.warn(`Rotation: startProbability computation failed for player id=${p.id} code=${p.code}:`, err.message);
+            p.startProbability = null;
+            p.dataConfidence = 'low';
+        }
+    });
+
+    const displacementMap = detectDisplacementRisk(playersList.map(p => ({
+        code: p.code, name: p.web_name, team: p.team, position: p.position,
+        startProbability: p.startProbability, isNewToCurrentTeam: p.transferredThisSeason
+    })));
+    playersList.forEach(p => {
+        p.displacementRisk = displacementMap[p.code] || null;
+    });
 
     // Write file content
     const fileContent = `// FPL Hub Synced Live Database
