@@ -226,6 +226,23 @@ test('getExpectedSavePts: missing/non-numeric diff falls back to the same neutra
     assert.equal(missing, neutral);
 });
 
+test('computeGwPrediction: player-scoring multiplier is dampened relative to getAttackMultiplier\'s wider team-level range, preventing unrealistic single-GW spikes', () => {
+    const fixture = { opp: 'COV', loc: 'H', diff: 2, ownStrength: 4, oppStrength: 2 }; // e.g. Arsenal vs a newly-promoted team
+    const rawTeamLevelMultiplier = getAttackMultiplier(fixture);
+    assert.equal(rawTeamLevelMultiplier, 2.0); // the wide range ticker.js correctly uses as-is
+
+    const { pts, breakdown } = computeGwPrediction({
+        basePPG: 6.0, position: 'FWD', xG90: 0.6, xA90: 0.3, saves90: 0,
+        mppg: 90, starts: 30, chanceOfPlaying: 100, fixture
+    });
+    assert.ok(breakdown.fdrMultiplier < rawTeamLevelMultiplier); // player-scoring value is dampened below the raw team-level value
+    assert.equal(breakdown.fdrMultiplier, 1.5);
+    // basePPG(6.0) * dampened fdrMultiplier(1.5) = 9.0, plus this fixture's diff:2 FWD attacking
+    // bonus (xgiAdj = (xG90+xA90)*0.8 = 0.72, independent of the fdrMultiplier clamp) = 9.72 -> 9.7.
+    // Still far below the undampened 12.7 (basePPG * raw 2.0 + xgiAdj), demonstrating the fix.
+    assert.equal(pts, 9.7);
+});
+
 test('computeGwPrediction: goalsConceded90 nudge is scaled down for MID relative to GKP/DEF (matches the 1:4 csAdj weight ratio)', () => {
     const fixture = { opp: 'AVL', loc: 'A', diff: 4, ownStrength: 5, oppStrength: 3 };
     const base = { basePPG: 4.0, xG90: 0, xA90: 0, saves90: 0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture };
