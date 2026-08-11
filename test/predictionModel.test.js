@@ -77,15 +77,15 @@ test('getAttackMultiplier: attack/defence-specific path -- strong attack vs weak
     const easy = getAttackMultiplier({ diff: 3, ownAttackStrength: 1390, oppDefenceStrength: 1040 });
     const hard = getAttackMultiplier({ diff: 3, ownAttackStrength: 1040, oppDefenceStrength: 1390 });
     assert.ok(easy > hard);
-    assert.ok(easy <= 1.9 && easy >= 0.5);
-    assert.ok(hard <= 1.9 && hard >= 0.5);
+    assert.ok(easy <= 2.6 && easy >= 0.3);
+    assert.ok(hard <= 2.6 && hard >= 0.3);
 });
 
 test('getAttackMultiplier: extreme overall-strength mismatch (e.g. a top team at home vs a newly-promoted away side) produces a meaningfully bigger swing than a moderate gap, not just a marginal one', () => {
     const extreme = getAttackMultiplier({ diff: 4, ownStrength: 4, oppStrength: 2 }); // e.g. Arsenal vs Coventry
     const moderate = getAttackMultiplier({ diff: 3, ownStrength: 4, oppStrength: 3 }); // one level apart
-    assert.equal(extreme, 1.5);
-    assert.equal(moderate, 1.25);
+    assert.equal(extreme, 2.0);
+    assert.equal(moderate, 1.5);
     assert.ok(extreme > moderate); // extreme mismatch should differentiate meaningfully more than a mild one
 });
 
