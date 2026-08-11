@@ -148,6 +148,10 @@ async function parseAndWriteData(data, fixturesData) {
         console.warn('Warning: Could not read/parse existing players from data.js: ', err.message);
     }
 
+    // Historical fallback for lib/teamStrength.js's resolveTeamStrength(): this season's
+    // strength_attack_*/strength_defence_* fields from FPL are still 0 for every team until
+    // FPL populates them (typically a few gameweeks into the season), so we prefetch last
+    // season's real values here to use as the tier-2 fallback in the meantime.
     let historicalStrengthByCode = new Map();
     try {
         const historicalRes = await fetch(HISTORICAL_TEAMS_CSV_URL, { signal: AbortSignal.timeout(5000) });
