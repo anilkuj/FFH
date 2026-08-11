@@ -20,7 +20,6 @@ import { renderLiveRank } from './components/liverank.js';
 import { renderReveals } from './components/reveals.js';
 import { renderTransferPlanner } from './components/transferplanner.js';
 
-const PROMOTED_TEAMS = ['COV', 'HUL', 'SUN', 'IPS', 'LEE'];
 if (typeof window !== 'undefined') {
     window.PLAYERS = PLAYERS;
 }
@@ -39,7 +38,7 @@ window.getPlayerMinutesFactor = function(player) {
         if (hasActivePrimary) return 0.0;
     }
 
-    if (typeof player.startProbability === 'number') {
+    if (typeof player.startProbability === 'number' && !Number.isNaN(player.startProbability)) {
         return Math.min(1.0, Math.max(0.15, player.startProbability));
     }
 
