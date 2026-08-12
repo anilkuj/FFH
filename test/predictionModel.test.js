@@ -4,6 +4,7 @@ import {
     computeBasePPG,
     getCleanSheetProb,
     getExpectedSavePts,
+    getExpectedDefconPts,
     getAttackMultiplier,
     computeGoalsConcededNudge,
     computeLeagueAverageGoalsConceded90,
@@ -224,6 +225,39 @@ test('getExpectedSavePts: missing/non-numeric diff falls back to the same neutra
     const missing = getExpectedSavePts({ position: 'GKP', diff: undefined, loc: 'H', saves90: 3.0 });
     const neutral = getExpectedSavePts({ position: 'GKP', diff: 3, loc: 'H', saves90: 3.0 });
     assert.equal(missing, neutral);
+});
+
+test('getExpectedDefconPts: GKP always returns 0 regardless of input', () => {
+    assert.equal(getExpectedDefconPts({ position: 'GKP', dcPer90: 20, mppg: 90 }), 0);
+});
+
+test('getExpectedDefconPts: DEF well above threshold gets the top hitProb tier (0.75 * 2 = 1.5, full minutes)', () => {
+    // threshold DEF = 10, ratio 14/10 = 1.4 -> top tier
+    const pts = getExpectedDefconPts({ position: 'DEF', dcPer90: 14, mppg: 90 });
+    assert.equal(pts, 1.5);
+});
+
+test('getExpectedDefconPts: MID right at threshold gets the mid tier (0.55 * 2 = 1.1, full minutes)', () => {
+    // threshold MID = 12, ratio 13.2/12 = 1.1 -> second tier
+    const pts = getExpectedDefconPts({ position: 'MID', dcPer90: 13.2, mppg: 90 });
+    assert.equal(pts, 1.1);
+});
+
+test('getExpectedDefconPts: FWD well below threshold gets the floor tier (0.05 * 2 = 0.1, full minutes)', () => {
+    // real league average FWD rate (4.50) is well under threshold 12 -> ratio 0.375 -> floor tier
+    const pts = getExpectedDefconPts({ position: 'FWD', dcPer90: 4.5, mppg: 90 });
+    assert.equal(Math.round(pts * 100) / 100, 0.1);
+});
+
+test('getExpectedDefconPts: mppg below 90 scales the result down proportionally', () => {
+    const full = getExpectedDefconPts({ position: 'DEF', dcPer90: 14, mppg: 90 });
+    const half = getExpectedDefconPts({ position: 'DEF', dcPer90: 14, mppg: 45 });
+    assert.equal(Math.round(half * 100) / 100, Math.round((full * 0.5) * 100) / 100);
+});
+
+test('getExpectedDefconPts: dcPer90 of 0 or missing returns 0, not NaN or negative', () => {
+    assert.equal(getExpectedDefconPts({ position: 'DEF', dcPer90: 0, mppg: 90 }), 0);
+    assert.equal(getExpectedDefconPts({ position: 'DEF', mppg: 90 }), 0);
 });
 
 test('computeGwPrediction: player-scoring multiplier is dampened relative to getAttackMultiplier\'s wider team-level range, preventing unrealistic single-GW spikes', () => {
