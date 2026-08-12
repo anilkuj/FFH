@@ -322,3 +322,23 @@ test('detectPositionalVacancy: more vacancies than candidates only boosts the si
     // The second, less severe vacancy (player 2) simply has no beneficiary -- not an error.
     assert.equal(Object.keys(result).length, 1);
 });
+
+test('detectPositionalVacancy: candidates already at/above the ceiling are skipped so the boost reaches a genuine backup', () => {
+    // Real scenario: Arsenal loses both starting CBs at once. Hincapie and Gabriel are already
+    // near/above the 0.85 ceiling -- boosting them further would be a no-op -- so the naive top-2
+    // pairing would waste both vacancies on them while Mosquera, a genuine third-choice option,
+    // never gets reached. The fix filters out already-certain candidates before ranking/pairing.
+    const players = [
+        { code: 1, name: 'Vacated A (bigger loss)', team: 'ARS', position: 'DEF', startProbability: 0, officialStatus: 'i', officialChanceOfPlaying: 0, historicalStartRate: 0.97 },
+        { code: 2, name: 'Vacated B', team: 'ARS', position: 'DEF', startProbability: 0, officialStatus: 'i', officialChanceOfPlaying: 0, historicalStartRate: 0.9 },
+        { code: 3, name: 'Already-certain A', team: 'ARS', position: 'DEF', startProbability: 0.99, officialStatus: 'a', historicalStartRate: 0.99 },
+        { code: 4, name: 'Already-certain B', team: 'ARS', position: 'DEF', startProbability: 0.93, officialStatus: 'a', historicalStartRate: 0.93 },
+        { code: 5, name: 'Genuine Backup', team: 'ARS', position: 'DEF', startProbability: 0.6, officialStatus: 'a', historicalStartRate: 0.6 }
+    ];
+    const result = detectPositionalVacancy(players);
+    assert.equal(result[3], undefined); // already-certain players never get touched
+    assert.equal(result[4], undefined);
+    assert.equal(result[5].boostedFrom, 0.6);
+    assert.equal(result[5].vacatedByCode, 1); // paired with the bigger vacancy
+    assert.ok(result[5].boostedTo > 0.6);
+});
