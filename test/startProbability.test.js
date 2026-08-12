@@ -275,26 +275,50 @@ test('detectPositionalVacancy: a player with officialChanceOfPlaying === 0 is ex
         { code: 1, name: 'Injured Starter', team: 'ARS', position: 'DEF', startProbability: 0, officialStatus: 'i', historicalStartRate: 0.9 },
         // historicalStartRate 0.9 also makes this player itself a qualifying "vacated" starter --
         // both 1 and 2 are unavailable-and-vacating here, so player 3 ends up the sole beneficiary
-        // of two vacancies; per the last-write-wins convention documented above, vacatedByCode
-        // reflects whichever of {1, 2} is processed last, not specifically 1.
+        // candidate against two vacancies. With grouped pairing, ties in historicalStartRate are
+        // resolved by stable sort (input order), so player 1 -- listed first -- is paired with the
+        // sole candidate; player 2's vacancy has no remaining candidate to pair with.
         { code: 2, name: 'Also Ruled Out', team: 'ARS', position: 'DEF', startProbability: 0.9, officialStatus: 'a', officialChanceOfPlaying: 0, historicalStartRate: 0.9 },
         { code: 3, name: 'Fit Backup', team: 'ARS', position: 'DEF', startProbability: 0.4, officialStatus: 'a', officialChanceOfPlaying: 100, historicalStartRate: 0.4 }
     ];
     const result = detectPositionalVacancy(players);
     assert.equal(result[2], undefined); // 0% chance of playing must not be picked despite the higher startProbability
     assert.equal(result[3].boostedFrom, 0.4);
-    assert.ok([1, 2].includes(result[3].vacatedByCode));
+    assert.equal(result[3].vacatedByCode, 1);
 });
 
-test('detectPositionalVacancy: two simultaneous vacancies at the same position each resolve independently', () => {
+test('detectPositionalVacancy: two simultaneous vacancies at the same position pair with the top-2 candidates by existing probability', () => {
+    const players = [
+        { code: 1, name: 'Injured Starter A', team: 'ARS', position: 'DEF', startProbability: 0, officialStatus: 'i', historicalStartRate: 0.9 },
+        { code: 2, name: 'Injured Starter B', team: 'ARS', position: 'DEF', startProbability: 0, officialStatus: 'i', historicalStartRate: 0.85 },
+        { code: 3, name: 'Top Backup', team: 'ARS', position: 'DEF', startProbability: 0.6, officialStatus: 'a', historicalStartRate: 0.6 },
+        { code: 4, name: 'Second Backup', team: 'ARS', position: 'DEF', startProbability: 0.3, officialStatus: 'a', historicalStartRate: 0.3 }
+    ];
+    const result = detectPositionalVacancy(players);
+    // Biggest vacancy (player 1, rate 0.9) pairs with the top candidate (player 3, prob 0.6).
+    assert.equal(result[3].boostedFrom, 0.6);
+    assert.equal(result[3].vacatedByCode, 1);
+    // 0.6 + (0.9-0.6)*0.6 = 0.78
+    assert.equal(result[3].boostedTo, 0.78);
+    // Second vacancy (player 2, rate 0.85) pairs with the second candidate (player 4, prob 0.3) --
+    // this is the real fix: player 4 gets a genuine boost instead of getting nothing while player 3
+    // is boosted twice (or the second vacancy is a no-op).
+    assert.equal(result[4].boostedFrom, 0.3);
+    assert.equal(result[4].vacatedByCode, 2);
+    // 0.3 + (0.85-0.3)*0.6 = 0.63
+    assert.equal(result[4].boostedTo, 0.63);
+});
+
+test('detectPositionalVacancy: more vacancies than candidates only boosts the single best candidate, paired with the bigger vacancy', () => {
     const players = [
         { code: 1, name: 'Injured Starter A', team: 'ARS', position: 'DEF', startProbability: 0, officialStatus: 'i', historicalStartRate: 0.9 },
         { code: 2, name: 'Injured Starter B', team: 'ARS', position: 'DEF', startProbability: 0, officialStatus: 'i', historicalStartRate: 0.85 },
         { code: 3, name: 'Only fit DEF', team: 'ARS', position: 'DEF', startProbability: 0.3, officialStatus: 'a', historicalStartRate: 0.3 }
     ];
     const result = detectPositionalVacancy(players);
-    // Benefits from both vacancies -- the second call's boostedFrom/vacatedByCode simply overwrites
-    // the first for the same beneficiary code, since both apply to the same single remaining option.
+    // Only one candidate exists, so it pairs with the bigger (more severe) vacancy, player 1.
     assert.equal(result[3].boostedFrom, 0.3);
-    assert.ok([1, 2].includes(result[3].vacatedByCode));
+    assert.equal(result[3].vacatedByCode, 1);
+    // The second, less severe vacancy (player 2) simply has no beneficiary -- not an error.
+    assert.equal(Object.keys(result).length, 1);
 });
