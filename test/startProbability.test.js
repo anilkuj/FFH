@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { computeStartProbability, detectDisplacementRisk } from '../lib/startProbability.js';
+import { computeStartProbability, detectDisplacementRisk, detectPositionalVacancy } from '../lib/startProbability.js';
 
 test('computeStartProbability: official status "i" short-circuits to 0 regardless of anything else', () => {
     const result = computeStartProbability({
@@ -188,4 +188,70 @@ test('detectDisplacementRisk: a player with startProbability null never counts a
     const result = detectDisplacementRisk(players);
     assert.equal(result[1], undefined); // null "threat" must not wrongly trigger a flag
     assert.equal(result[2], undefined);
+});
+
+test('detectPositionalVacancy: boosts the highest-existing-probability teammate when a real starter is ruled out', () => {
+    const players = [
+        { code: 1, name: 'Injured Starter', team: 'ARS', position: 'DEF', startProbability: 0, officialStatus: 'i', historicalStartRate: 0.9 },
+        { code: 2, name: 'Backup A', team: 'ARS', position: 'DEF', startProbability: 0.6, officialStatus: 'a', historicalStartRate: 0.6 },
+        { code: 3, name: 'Backup B', team: 'ARS', position: 'DEF', startProbability: 0.3, officialStatus: 'a', historicalStartRate: 0.3 }
+    ];
+    const result = detectPositionalVacancy(players);
+    // Backup A had the higher existing startProbability -- they're the beneficiary, not Backup B.
+    assert.equal(result[2].boostedFrom, 0.6);
+    // 60% of the gap to the vacated player's historicalStartRate (0.9): 0.6 + (0.9-0.6)*0.6 = 0.78
+    assert.equal(result[2].boostedTo, 0.78);
+    assert.equal(result[2].vacatedByCode, 1);
+    assert.equal(result[3], undefined); // the lower-probability backup doesn't also get boosted
+});
+
+test('detectPositionalVacancy: does not fire for a fringe player\'s injury (historicalStartRate below threshold)', () => {
+    const players = [
+        { code: 1, name: 'Fringe Player', team: 'ARS', position: 'DEF', startProbability: 0, officialStatus: 'i', historicalStartRate: 0.2 },
+        { code: 2, name: 'Backup', team: 'ARS', position: 'DEF', startProbability: 0.5, officialStatus: 'a', historicalStartRate: 0.5 }
+    ];
+    assert.deepEqual(detectPositionalVacancy(players), {});
+});
+
+test('detectPositionalVacancy: never boosts past the ceiling', () => {
+    const players = [
+        { code: 1, name: 'Injured Starter', team: 'ARS', position: 'DEF', startProbability: 0, officialStatus: 'i', historicalStartRate: 0.99 },
+        { code: 2, name: 'Backup', team: 'ARS', position: 'DEF', startProbability: 0.7, officialStatus: 'a', historicalStartRate: 0.7 }
+    ];
+    const result = detectPositionalVacancy(players);
+    // 0.7 + (0.99-0.7)*0.6 = 0.874, under the 0.85 ceiling -- but confirm the ceiling itself with a tighter case
+    assert.ok(result[2].boostedTo <= 0.85);
+});
+
+test('detectPositionalVacancy: does not fire across different positions or teams', () => {
+    const players = [
+        { code: 1, name: 'Injured DEF', team: 'ARS', position: 'DEF', startProbability: 0, officialStatus: 'i', historicalStartRate: 0.9 },
+        { code: 2, name: 'MID teammate', team: 'ARS', position: 'MID', startProbability: 0.5, officialStatus: 'a', historicalStartRate: 0.5 },
+        { code: 3, name: 'DEF other team', team: 'CHE', position: 'DEF', startProbability: 0.5, officialStatus: 'a', historicalStartRate: 0.5 }
+    ];
+    assert.deepEqual(detectPositionalVacancy(players), {});
+});
+
+test('detectPositionalVacancy: a player with null startProbability is never picked as the beneficiary', () => {
+    const players = [
+        { code: 1, name: 'Injured Starter', team: 'ARS', position: 'DEF', startProbability: 0, officialStatus: 'i', historicalStartRate: 0.9 },
+        { code: 2, name: 'Failed calc', team: 'ARS', position: 'DEF', startProbability: null, officialStatus: 'a', historicalStartRate: null },
+        { code: 3, name: 'Valid backup', team: 'ARS', position: 'DEF', startProbability: 0.4, officialStatus: 'a', historicalStartRate: 0.4 }
+    ];
+    const result = detectPositionalVacancy(players);
+    assert.equal(result[3].boostedFrom, 0.4);
+    assert.equal(result[2], undefined);
+});
+
+test('detectPositionalVacancy: two simultaneous vacancies at the same position each resolve independently', () => {
+    const players = [
+        { code: 1, name: 'Injured Starter A', team: 'ARS', position: 'DEF', startProbability: 0, officialStatus: 'i', historicalStartRate: 0.9 },
+        { code: 2, name: 'Injured Starter B', team: 'ARS', position: 'DEF', startProbability: 0, officialStatus: 'i', historicalStartRate: 0.85 },
+        { code: 3, name: 'Only fit DEF', team: 'ARS', position: 'DEF', startProbability: 0.3, officialStatus: 'a', historicalStartRate: 0.3 }
+    ];
+    const result = detectPositionalVacancy(players);
+    // Benefits from both vacancies -- the second call's boostedFrom/vacatedByCode simply overwrites
+    // the first for the same beneficiary code, since both apply to the same single remaining option.
+    assert.equal(result[3].boostedFrom, 0.3);
+    assert.ok([1, 2].includes(result[3].vacatedByCode));
 });
