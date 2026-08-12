@@ -156,6 +156,9 @@ function showOptimizerLoadingCard(resultsGrid, message) {
     `;
     resultsGrid.classList.remove('hidden');
     lucide.createIcons();
+    // The settings panel above can push this well below the fold, especially on first run
+    // before it auto-collapses -- scroll it into view so the progress bar is actually visible.
+    resultsGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 export function getPlayerSetPieceDuty(player) {
@@ -1284,17 +1287,13 @@ function getExpectedPtsOverHorizon(player, currentGw, horizon, state = null) {
     if (!player || !player.predictions) return 0;
     const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
     let sum = 0;
+    // Every gameweek in the horizon counts equally -- a squad picked for an N-GW horizon should
+    // be optimized for consistent strength across all N weeks, not skewed toward the earliest ones.
     for (let gw = currentGw; gw < currentGw + horizon; gw++) {
         const pred = player.predictions.find(pr => pr.gw === gw);
         if (pred) {
             const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
-            const t = gw - currentGw;
-            const isBbActive = state && (
-                (state.chips && state.chips[gw]?.benchBoost) || 
-                (state.planBenchBoost && state.benchBoostTargetGw === gw)
-            );
-            const weight = isBbActive ? 1.0 : Math.max(0.6, 1.0 - (t * 0.08));
-            sum += (raw * factor * weight);
+            sum += (raw * factor);
         }
     }
     return sum;
@@ -1372,7 +1371,8 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
         return slots;
     })();
 
-    // Helper: expected points over horizon
+    // Helper: expected points over horizon (every gameweek counts equally, see
+    // getExpectedPtsOverHorizon above for why this doesn't decay-weight later gameweeks)
     const getExpectedPts = (player) => {
         if (!player || !player.predictions) return 0;
         const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
@@ -1381,9 +1381,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
             const pred = player.predictions.find(pr => pr.gw === gw);
             if (pred) {
                 const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
-                const t = gw - state.currentGw;
-                const weight = Math.max(0.6, 1.0 - (t * 0.08));
-                sum += (raw * factor * weight);
+                sum += (raw * factor);
             }
         }
         return sum;
@@ -1504,10 +1502,10 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
             const isTcActive = !!(state.chips[gw]?.tripleCaptain);
             const captainMultiplier = isTcActive ? 2.0 : 1.0;
             gwTotal += maxStarterScore * captainMultiplier;
-            
-            const t = gw - state.currentGw;
-            const gwWeight = isBbActive ? 1.0 : Math.max(0.6, 1.0 - (t * 0.08));
-            total += gwTotal * gwWeight;
+
+            // Every gameweek in the horizon counts equally -- no decay weighting toward
+            // the earliest gameweeks (see getExpectedPtsOverHorizon for the rationale).
+            total += gwTotal;
         }
         
         return total;
