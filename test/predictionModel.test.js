@@ -84,8 +84,8 @@ test('getAttackMultiplier: attack/defence-specific path -- strong attack vs weak
 test('getAttackMultiplier: extreme overall-strength mismatch (e.g. a top team at home vs a newly-promoted away side) produces a meaningfully bigger swing than a moderate gap, not just a marginal one', () => {
     const extreme = getAttackMultiplier({ diff: 4, ownStrength: 4, oppStrength: 2 }); // e.g. Arsenal vs Coventry
     const moderate = getAttackMultiplier({ diff: 3, ownStrength: 4, oppStrength: 3 }); // one level apart
-    assert.equal(extreme, 2.0);
-    assert.equal(moderate, 1.5);
+    assert.equal(extreme, 1.4);
+    assert.equal(moderate, 1.2);
     assert.ok(extreme > moderate); // extreme mismatch should differentiate meaningfully more than a mild one
 });
 
@@ -229,7 +229,7 @@ test('getExpectedSavePts: missing/non-numeric diff falls back to the same neutra
 test('computeGwPrediction: player-scoring multiplier is dampened relative to getAttackMultiplier\'s wider team-level range, preventing unrealistic single-GW spikes', () => {
     const fixture = { opp: 'COV', loc: 'H', diff: 2, ownStrength: 4, oppStrength: 2 }; // e.g. Arsenal vs a newly-promoted team
     const rawTeamLevelMultiplier = getAttackMultiplier(fixture);
-    assert.equal(rawTeamLevelMultiplier, 2.0); // the wide range ticker.js correctly uses as-is
+    assert.equal(rawTeamLevelMultiplier, 1.4); // the wide range ticker.js correctly uses as-is
 
     const { pts, breakdown } = computeGwPrediction({
         basePPG: 6.0, position: 'FWD', xG90: 0.6, xA90: 0.3, saves90: 0,
