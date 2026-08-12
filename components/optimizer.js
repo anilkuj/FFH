@@ -1,130 +1,6 @@
 import { PLAYERS, TEAMS, getPlayerRatings, getPlayerEfficiency } from '../data.js';
 import { getFormationConstraints } from './formation.js';
 
-const SET_PIECE_DUTIES = {
-    // Manchester City
-    "Erling Haaland": { pk: true, fk: false, ck: false },
-    "Phil Foden": { pk: false, fk: true, ck: true },
-    "Ilkay Gündogan": { pk: false, fk: true, ck: false },
-    "Kevin De Bruyne": { pk: true, fk: true, ck: true },
-    "Bernardo Silva": { pk: false, fk: false, ck: true },
-
-    // Arsenal
-    "Bukayo Saka": { pk: true, fk: true, ck: true },
-    "Declan Rice": { pk: false, fk: true, ck: true },
-    "Martin Ødegaard": { pk: false, fk: true, ck: true },
-    "Kai Havertz": { pk: false, fk: false, ck: false },
-
-    // Chelsea
-    "Cole Palmer": { pk: true, fk: true, ck: true },
-    "Enzo Fernández": { pk: false, fk: true, ck: true },
-    "Christopher Nkunku": { pk: true, fk: false, ck: false },
-    "Pedro Neto": { pk: false, fk: true, ck: true },
-    "Pedro Lomba Neto": { pk: false, fk: true, ck: true },
-    "Reece James": { pk: false, fk: true, ck: true },
-
-    // Liverpool
-    "Mohamed Salah": { pk: true, fk: false, ck: false },
-    "Trent Alexander-Arnold": { pk: false, fk: true, ck: true },
-    "Dominik Szoboszlai": { pk: false, fk: true, ck: true },
-    "Alexis Mac Allister": { pk: true, fk: true, ck: true },
-    "Andrew Robertson": { pk: false, fk: false, ck: true },
-    "Cody Gakpo": { pk: false, fk: true, ck: true },
-
-    // Manchester United
-    "Bruno Fernandes": { pk: true, fk: true, ck: true },
-    "Bruno Borges Fernandes": { pk: true, fk: true, ck: true },
-    "Marcus Rashford": { pk: true, fk: true, ck: false },
-    "Mason Mount": { pk: false, fk: true, ck: true },
-    "Christian Eriksen": { pk: false, fk: true, ck: true },
-    "Matheus Santos Carneiro da Cunha": { pk: true, fk: true, ck: true },
-    "Matheus Cunha": { pk: true, fk: true, ck: true },
-    "Bryan Mbeumo": { pk: true, fk: true, ck: true },
-
-    // Tottenham Hotspur
-    "Son Heung-min": { pk: true, fk: true, ck: true },
-    "Heung-min Son": { pk: true, fk: true, ck: true },
-    "James Maddison": { pk: false, fk: true, ck: true },
-    "Dominic Solanke": { pk: true, fk: false, ck: false },
-    "Dominic Solanke-Mitchell": { pk: true, fk: false, ck: false },
-    "Pedro Porro": { pk: false, fk: true, ck: true },
-    "Pedro Porro Sauceda": { pk: false, fk: true, ck: true },
-    "Dejan Kulusevski": { pk: false, fk: false, ck: true },
-
-    // Newcastle United
-    "Alexander Isak": { pk: true, fk: false, ck: false },
-    "Kieran Trippier": { pk: false, fk: true, ck: true },
-    "Anthony Gordon": { pk: true, fk: true, ck: true },
-    "Bruno Guimarães": { pk: false, fk: true, ck: true },
-    "Bruno Guimarães Rodriguez Moura": { pk: false, fk: true, ck: true },
-    "Fabian Schär": { pk: true, fk: true, ck: false },
-
-    // Aston Villa
-    "Ollie Watkins": { pk: true, fk: false, ck: false },
-    "Youri Tielemans": { pk: true, fk: true, ck: true },
-    "Lucas Digne": { pk: false, fk: true, ck: true },
-    "Morgan Rogers": { pk: false, fk: false, ck: true },
-    "John McGinn": { pk: false, fk: false, ck: true },
-
-    // Crystal Palace
-    "Eberechi Eze": { pk: true, fk: true, ck: true },
-    "Jean-Philippe Mateta": { pk: true, fk: false, ck: false },
-    "Adam Wharton": { pk: false, fk: false, ck: true },
-    "Daichi Kamada": { pk: false, fk: true, ck: true },
-
-    // West Ham United
-    "James Ward-Prowse": { pk: true, fk: true, ck: true },
-    "Jarrod Bowen": { pk: true, fk: true, ck: true },
-    "Lucas Paquetá": { pk: true, fk: true, ck: true },
-    "Mohammed Kudus": { pk: false, fk: true, ck: true },
-
-    // Brighton & Hove Albion
-    "João Pedro": { pk: true, fk: false, ck: false },
-    "Danny Welbeck": { pk: true, fk: false, ck: false },
-    "Pascal Groß": { pk: true, fk: true, ck: true },
-    "Kaoru Mitoma": { pk: false, fk: false, ck: true },
-
-    // Brentford
-    "Yoane Wissa": { pk: true, fk: false, ck: false },
-    "Mathias Jensen": { pk: false, fk: true, ck: true },
-
-    // Nottingham Forest
-    "Chris Wood": { pk: true, fk: false, ck: false },
-    "Morgan Gibbs-White": { pk: true, fk: true, ck: true },
-    "Anthony Elanga": { pk: false, fk: false, ck: true },
-
-    // Everton
-    "Dominic Calvert-Lewin": { pk: true, fk: false, ck: false },
-    "Dwight McNeil": { pk: false, fk: true, ck: true },
-    "Jack Harrison": { pk: false, fk: false, ck: true },
-
-    // Fulham
-    "Andreas Pereira": { pk: true, fk: true, ck: true },
-    "Raúl Jiménez": { pk: true, fk: false, ck: false },
-    "Alex Iwobi": { pk: false, fk: false, ck: true },
-    "Harry Wilson": { pk: false, fk: true, ck: true },
-
-    // Bournemouth
-    "Evanilson": { pk: true, fk: false, ck: false },
-    "Justin Kluivert": { pk: true, fk: true, ck: true },
-    "Marcus Tavernier": { pk: false, fk: true, ck: true },
-    "Antoine Semenyo": { pk: true, fk: false, ck: false },
-
-    // Wolves
-    "Hwang Hee-chan": { pk: true, fk: false, ck: false },
-    "Pablo Sarabia": { pk: true, fk: true, ck: true },
-
-    // Ipswich Town
-    "Liam Delap": { pk: true, fk: false, ck: false },
-    "Leif Davis": { pk: false, fk: true, ck: true },
-    "Sam Szmodics": { pk: true, fk: false, ck: false }
-};
-
-function normalizeNameForSetPiece(str) {
-    if (!str) return '';
-    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').trim();
-}
-
 function yieldToEventLoop() {
     return new Promise(resolve => setTimeout(resolve, 0));
 }
@@ -162,41 +38,11 @@ function showOptimizerLoadingCard(resultsGrid, message) {
 }
 
 export function getPlayerSetPieceDuty(player) {
-    if (!player || !player.name || player.position === 'GKP') {
+    if (!player || player.position === 'GKP') {
         return { pk: false, fk: false, ck: false, duties: [], label: '', hasDuty: false };
     }
-    
-    // 1. Direct dictionary match
-    let info = SET_PIECE_DUTIES[player.name];
-    
-    if (!info) {
-        const pNorm = normalizeNameForSetPiece(player.name);
-        const pWords = pNorm.split(/\s+/).filter(Boolean);
-        
-        // 2. Case and accent normalized exact match
-        for (const [name, d] of Object.entries(SET_PIECE_DUTIES)) {
-            if (pNorm === normalizeNameForSetPiece(name)) {
-                info = d;
-                break;
-            }
-        }
-        
-        // 3. Token subset match (e.g. "Bruno Fernandes" matches "Bruno Borges Fernandes")
-        if (!info) {
-            for (const [name, d] of Object.entries(SET_PIECE_DUTIES)) {
-                const dWords = normalizeNameForSetPiece(name).split(/\s+/).filter(Boolean);
-                if (dWords.length >= 2 && dWords.every(w => pWords.includes(w))) {
-                    info = d;
-                    break;
-                } else if (dWords.length === 1 && dWords[0].length >= 5 && pWords.includes(dWords[0])) {
-                    info = d;
-                    break;
-                }
-            }
-        }
-    }
-    
-    if (!info) return { pk: false, fk: false, ck: false, duties: [], label: '', hasDuty: false };
+
+    const info = player.setPieceDuty || { pk: false, fk: false, ck: false };
 
     const duties = [];
     if (info.pk) duties.push('Penalties (PK)');
@@ -238,37 +84,6 @@ export function renderSetPieceLegend() {
         </div>
     `;
 }
-
-
-const SET_PIECE_REFRESH_INTERVAL = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
-
-export function checkAndRefreshSetPieceData() {
-    if (typeof window === 'undefined' || typeof localStorage === 'undefined') return;
-    const lastSync = parseInt(localStorage.getItem('fpl_hub_set_piece_last_sync') || '0');
-    const now = Date.now();
-
-    // Check cached custom duties from localStorage
-    try {
-        const cachedCustom = localStorage.getItem('fpl_hub_set_piece_custom_data');
-        if (cachedCustom) {
-            const parsed = JSON.parse(cachedCustom);
-            Object.assign(SET_PIECE_DUTIES, parsed);
-        }
-    } catch (e) {}
-
-    if (now - lastSync >= SET_PIECE_REFRESH_INTERVAL) {
-        console.log("[FPL HUB] 6 hours elapsed since last set-piece sync. Refreshing live set-piece duties from external sources...");
-        localStorage.setItem('fpl_hub_set_piece_last_sync', now.toString());
-        localStorage.setItem('fpl_hub_set_piece_custom_data', JSON.stringify(SET_PIECE_DUTIES));
-    }
-}
-
-// Automatically check on module load and schedule background 6-hour refresh
-if (typeof window !== 'undefined') {
-    checkAndRefreshSetPieceData();
-    setInterval(checkAndRefreshSetPieceData, SET_PIECE_REFRESH_INTERVAL);
-}
-
 
 
 
