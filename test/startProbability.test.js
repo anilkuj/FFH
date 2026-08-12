@@ -219,8 +219,10 @@ test('detectPositionalVacancy: never boosts past the ceiling', () => {
         { code: 2, name: 'Backup', team: 'ARS', position: 'DEF', startProbability: 0.7, officialStatus: 'a', historicalStartRate: 0.7 }
     ];
     const result = detectPositionalVacancy(players);
-    // 0.7 + (0.99-0.7)*0.6 = 0.874, under the 0.85 ceiling -- but confirm the ceiling itself with a tighter case
+    // 0.7 + (0.99-0.7)*0.6 = 0.874, which exceeds the 0.85 ceiling -- confirms the clamp actually
+    // engages here, not just coincidentally passes because the raw value happened to be under it.
     assert.ok(result[2].boostedTo <= 0.85);
+    assert.equal(result[2].boostedTo, 0.85);
 });
 
 test('detectPositionalVacancy: does not fire across different positions or teams', () => {
