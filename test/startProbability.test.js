@@ -342,3 +342,15 @@ test('detectPositionalVacancy: candidates already at/above the ceiling are skipp
     assert.equal(result[5].vacatedByCode, 1); // paired with the bigger vacancy
     assert.ok(result[5].boostedTo > 0.6);
 });
+
+test('detectPositionalVacancy: a genuine vacancy with no eligible candidate (everyone already at/above the ceiling) silently no-ops', () => {
+    const players = [
+        { code: 1, name: 'Vacated', team: 'ARS', position: 'DEF', startProbability: 0, officialStatus: 'i', officialChanceOfPlaying: 0, historicalStartRate: 0.9 },
+        { code: 2, name: 'Already-certain A', team: 'ARS', position: 'DEF', startProbability: 0.99, officialStatus: 'a', historicalStartRate: 0.99 },
+        { code: 3, name: 'Already-certain B', team: 'ARS', position: 'DEF', startProbability: 0.9, officialStatus: 'a', historicalStartRate: 0.9 }
+    ];
+    // No candidate is below VACANCY_BOOST_CEILING (0.85) -- there's no genuine backup to boost, and
+    // boosting an already-near-certain player would be a no-op anyway, so this should return {}
+    // rather than throw or produce a spurious entry.
+    assert.deepEqual(detectPositionalVacancy(players), {});
+});
