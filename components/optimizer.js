@@ -129,9 +129,13 @@ function yieldToEventLoop() {
     return new Promise(resolve => setTimeout(resolve, 0));
 }
 
-function updateOptimizerPhase(resultsGrid, text) {
+function updateOptimizerPhase(resultsGrid, text, percent) {
     const label = resultsGrid.querySelector('#optimizerPhaseLabel');
     if (label) label.textContent = text;
+    if (typeof percent === 'number') {
+        const fill = resultsGrid.querySelector('#optimizerProgressFill');
+        if (fill) fill.style.width = `${Math.max(0, Math.min(100, percent))}%`;
+    }
 }
 
 // Single source of truth for "an optimization run is currently in flight", shared across
@@ -145,6 +149,9 @@ function showOptimizerLoadingCard(resultsGrid, message) {
             <i data-lucide="loader" class="animate-spin" style="color: var(--primary); width: 32px; height: 32px;"></i>
             <span id="optimizerPhaseLabel" style="font-weight: 700; color: var(--text-main); font-size: 15px;">${message || 'AI Solver is analyzing player data...'}</span>
             <span style="color: var(--text-muted); font-size: 12px;">Running expected points projections and fixture constraints</span>
+            <div style="width: 100%; max-width: 320px; height: 8px; background: var(--border-color); border-radius: 999px; overflow: hidden; margin-top: 4px;">
+                <div id="optimizerProgressFill" style="width: 5%; height: 100%; background: var(--primary); border-radius: 999px; transition: width 0.25s ease;"></div>
+            </div>
         </div>
     `;
     resultsGrid.classList.remove('hidden');
@@ -1189,7 +1196,7 @@ async function performOptimization(resultsGrid, state, actions, horizon, mode) {
         let bestFormation = '3-5-2';
         let bestScore = -Infinity;
 
-        updateOptimizerPhase(resultsGrid, 'Scoring formations...');
+        updateOptimizerPhase(resultsGrid, 'Scoring formations...', 5);
         await yieldToEventLoop();
 
         for (const formation of ALL_FORMATIONS) {
@@ -1961,7 +1968,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
             return result;
         };
 
-        updateOptimizerPhase(resultsGrid, 'Building initial squad...');
+        updateOptimizerPhase(resultsGrid, 'Building initial squad...', 15);
         await yieldToEventLoop();
 
         // Initialize starting slots with budget-constrained top-scoring guaranteed starters
@@ -2279,7 +2286,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
             }
         };
 
-        updateOptimizerPhase(resultsGrid, 'Optimizing starting XI...');
+        updateOptimizerPhase(resultsGrid, 'Optimizing starting XI...', 30);
         await yieldToEventLoop();
 
         // --- OPTIMIZE STARTING 11 ---
@@ -2457,7 +2464,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
         // Ensure bench is clean and has no duplicates before starting bench optimization
         resolveBenchDuplicates();
 
-        updateOptimizerPhase(resultsGrid, 'Optimizing bench...');
+        updateOptimizerPhase(resultsGrid, 'Optimizing bench...', 45);
         await yieldToEventLoop();
 
         // --- OPTIMIZE BENCH ---
@@ -2560,7 +2567,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
             }
         }
 
-        updateOptimizerPhase(resultsGrid, 'Refining squad within budget...');
+        updateOptimizerPhase(resultsGrid, 'Refining squad within budget...', 55);
         await yieldToEventLoop();
 
         // --- HARD BENCH BUDGET SAFETY ENFORCER ---
@@ -2832,7 +2839,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
         }
 
 
-        updateOptimizerPhase(resultsGrid, 'Checking pairwise upgrades...');
+        updateOptimizerPhase(resultsGrid, 'Checking pairwise upgrades...', 70);
         await yieldToEventLoop();
 
         // --- PAIRWISE DOUBLE-UPGRADE STEP ---
@@ -3098,7 +3105,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
             }
         }
 
-        updateOptimizerPhase(resultsGrid, 'Finalizing...');
+        updateOptimizerPhase(resultsGrid, 'Finalizing...', 95);
         await yieldToEventLoop();
 
         // --- FINAL HARD BENCH BUDGET SAFETY ENFORCER ---
@@ -3518,7 +3525,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
             return newBenchCost <= maxBenchBudget + 0.001 || newBenchCost <= currentBenchCost + 0.001;
         };
 
-        updateOptimizerPhase(resultsGrid, 'Checking single transfers...');
+        updateOptimizerPhase(resultsGrid, 'Checking single transfers...', 75);
         await yieldToEventLoop();
 
         // --- FIND BEST 1-TRANSFER OPTION ---
@@ -3582,7 +3589,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
             }
         }
 
-        updateOptimizerPhase(resultsGrid, 'Checking double transfers...');
+        updateOptimizerPhase(resultsGrid, 'Checking double transfers...', 85);
         await yieldToEventLoop();
 
         // --- FIND BEST 2-TRANSFER OPTION ---
@@ -3672,7 +3679,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
         }
 
 
-        updateOptimizerPhase(resultsGrid, 'Finalizing...');
+        updateOptimizerPhase(resultsGrid, 'Finalizing...', 95);
         await yieldToEventLoop();
 
         // Calculate 1-GW expected points gains for display comparison
