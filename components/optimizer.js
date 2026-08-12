@@ -2007,7 +2007,11 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
                     (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 75)
                 ).sort((a, b) => getExpectedPtsOverHorizon(b, state.currentGw, horizon, state) - getExpectedPtsOverHorizon(a, state.currentGw, horizon, state));
                 
-                const chosen = pool[0] || PLAYERS.filter(p => p.position === slot.position && isStarterPriceFloorInit(p, slot.position) && !initUsedIds.includes(p.id) && (runningTeamCounts[p.team] || 0) < 3).sort((a, b) => getExpectedPtsOverHorizon(b, state.currentGw, horizon, state) - getExpectedPtsOverHorizon(a, state.currentGw, horizon, state))[0] || getCheapestPlayersList(slot.position, 1, initUsedIds, true)[0];
+                const chosen = pool[0] || PLAYERS.filter(p => p.position === slot.position && isStarterPriceFloorInit(p, slot.position) && !initUsedIds.includes(p.id) && (runningTeamCounts[p.team] || 0) < 3).sort((a, b) => getExpectedPtsOverHorizon(b, state.currentGw, horizon, state) - getExpectedPtsOverHorizon(a, state.currentGw, horizon, state))[0] || getCheapestPlayersList(slot.position, 1, initUsedIds, true)[0]
+                    // Absolute last resort: ignore the guaranteed-start requirement too, so a slot is
+                    // never left empty just because every remaining candidate misses a soft filter.
+                    // Only position + team-limit-3 + not-already-used are treated as hard constraints.
+                    || getCheapestPlayersList(slot.position, 1, initUsedIds, false)[0];
                 if (chosen) {
                     slot.playerId = chosen.id;
                     initUsedIds.push(chosen.id);
@@ -2048,7 +2052,12 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
 
                 // Get candidate list (getCheapestPlayersList mutates a copy so initUsedIds is safe)
                 const candidateUsedIds = [...initUsedIds];
-                const allCandidates = getCheapestPlayersList(slot.position, 50, candidateUsedIds, forceBenchGuaranteed);
+                let allCandidates = getCheapestPlayersList(slot.position, 50, candidateUsedIds, forceBenchGuaranteed);
+                if (allCandidates.length === 0 && forceBenchGuaranteed) {
+                    // Absolute last resort: the guaranteed-start-only pool (from Bench Boost planning)
+                    // is fully exhausted for this position. Relax it rather than leave the slot empty.
+                    allCandidates = getCheapestPlayersList(slot.position, 50, candidateUsedIds, false);
+                }
 
                 // Pick cheapest player that fits within budget ceiling, else just cheapest available (enforcer will fix later)
                 const withinBudget = allCandidates.filter(p => p.price <= maxPriceForThisSlot);
@@ -2062,6 +2071,18 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
             }
         }
 
+        // Warn rather than silently return an incomplete squad: this can only happen if the
+        // combined filters (Force Exclude, Guaranteed Start, Min FWD Price, team-limit-3) leave
+        // zero eligible players at a position after every fallback above has been exhausted.
+        const stillEmptySlots = optimizedSquadSlots.filter(s => !s.locked && s.playerId === null);
+        if (stillEmptySlots.length > 0) {
+            const byPosition = stillEmptySlots.reduce((acc, s) => {
+                acc[s.position] = (acc[s.position] || 0) + 1;
+                return acc;
+            }, {});
+            const summary = Object.entries(byPosition).map(([pos, count]) => `${count} ${pos}`).join(', ');
+            actions.showToast(`Could not fill ${summary} slot(s) — your filters (Force Exclude, Guaranteed Start, Min FWD Price) left no eligible players. Try loosening them.`, 'warning');
+        }
 
         // --- MANDATORY STARTER PRICE FLOOR SANITIZER ---
         // Forcefully ensure NO starting XI slot holds a non-starter, player below starter price floor, or team limit > 3
