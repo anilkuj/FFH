@@ -1220,9 +1220,13 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
 
         const duty = getPlayerSetPieceDuty(player);
         let setPieceBonus = 0;
-        if (duty.pk) setPieceBonus += state.prioritizeSpotKicks ? 3.5 : 0.8;
-        if (duty.fk) setPieceBonus += state.prioritizeSpotKicks ? 1.8 : 0.4;
-        if (duty.ck) setPieceBonus += state.prioritizeSpotKicks ? 1.2 : 0.35;
+        // Bonus values are deliberately modest: a player's underlying xG/xA already reflects
+        // their real scoring rate, including whatever penalties/set-pieces they've actually
+        // taken, so a large flat bonus on top would double-count that. This still credits
+        // recently-assigned takers whose historical xG hasn't caught up to their new duty yet.
+        if (duty.pk) setPieceBonus += state.prioritizeSpotKicks ? 2.0 : 0.4;
+        if (duty.fk) setPieceBonus += state.prioritizeSpotKicks ? 1.0 : 0.2;
+        if (duty.ck) setPieceBonus += state.prioritizeSpotKicks ? 0.7 : 0.15;
 
         let baseScore = 0;
         if (objective === 'efficiency') {
@@ -1277,9 +1281,9 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
         }
         if (includeHeuristics && state.prioritizeSpotKicks) {
             const duty = getPlayerSetPieceDuty(p);
-            if (duty.pk) score += 3.5;
-            else if (duty.fk) score += 1.8;
-            else if (duty.ck) score += 1.2;
+            if (duty.pk) score += 2.0;
+            else if (duty.fk) score += 1.0;
+            else if (duty.ck) score += 0.7;
         }
         _scoreCache.set(key, score);
         return score;
