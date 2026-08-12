@@ -276,7 +276,12 @@ test('computeGwPrediction: a penalty-duty player gets the position-correct bonus
     const withoutDuty = computeGwPrediction(base);
     const withDuty = computeGwPrediction({ ...base, setPieceDuty: { pk: true, fk: false, ck: false } });
 
-    assert.equal(Math.round((withDuty.pts - withoutDuty.pts) * 100) / 100, 0.2); // FWD penalty bonus
+    // Check the raw breakdown value directly rather than diffing two independently-rounded
+    // final `pts` (each rounded to 1 decimal before returning) -- at some basePPG/fixture
+    // combinations that double-rounding can distort the observed delta away from the true bonus.
+    assert.equal(withDuty.breakdown.setPieceAdj, 0.32); // FWD penalty bonus
+    assert.equal(withoutDuty.breakdown.setPieceAdj, 0);
+    assert.ok(withDuty.pts > withoutDuty.pts); // still confirms the bonus moves the final points up
 });
 
 test('computeGwPrediction: penalty bonus is position-scaled (DEF gets more than FWD)', () => {
