@@ -407,6 +407,11 @@ async function parseAndWriteData(data, fixturesData) {
             xGI: parseFloat(el.expected_goal_involvements) || 0.0,
             ictIndex: parseFloat(el.ict_index) || 0.0,
             priceChangeTarget: changeTarget,
+            setPieceDuty: {
+                pk: el.penalties_order === 1,
+                fk: el.direct_freekicks_order === 1,
+                ck: el.corners_and_indirect_freekicks_order === 1
+            },
             GS: starts,
             MPPG: parseFloat(mppg.toFixed(1)),
             saves: totalSaves,
@@ -554,6 +559,7 @@ async function parseAndWriteData(data, fixturesData) {
             xGI: player.xGI,
             ictIndex: player.ictIndex,
             priceChangeTarget: player.priceChangeTarget,
+            setPieceDuty: player.setPieceDuty,
             predictions,
             GS: player.GS,
             MPPG: player.MPPG,
