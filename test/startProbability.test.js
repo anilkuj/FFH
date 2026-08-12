@@ -245,6 +245,47 @@ test('detectPositionalVacancy: a player with null startProbability is never pick
     assert.equal(result[2], undefined);
 });
 
+test('detectPositionalVacancy: never DECREASES the beneficiary, even when their own startProbability already exceeds the vacated player\'s historicalStartRate', () => {
+    const players = [
+        { code: 1, name: 'Marginal Starter', team: 'ARS', position: 'DEF', startProbability: 0, officialStatus: 'i', historicalStartRate: 0.65 },
+        { code: 2, name: 'Hot Backup', team: 'ARS', position: 'DEF', startProbability: 0.75, officialStatus: 'a', historicalStartRate: 0.75 }
+    ];
+    const result = detectPositionalVacancy(players);
+    // Without a floor, boostedTo = 0.75 + (0.65-0.75)*0.6 = 0.69 -- LOWER than the beneficiary's
+    // starting 0.75. The floor must clamp this back up to at least boostedFrom.
+    assert.ok(result[2].boostedTo >= result[2].boostedFrom, `boostedTo (${result[2].boostedTo}) must never be below boostedFrom (${result[2].boostedFrom})`);
+    assert.equal(result[2].boostedFrom, 0.75);
+    assert.equal(result[2].boostedTo, 0.75);
+});
+
+test('detectPositionalVacancy: officialChanceOfPlaying === 0 counts as vacated even when officialStatus is still "a"', () => {
+    const players = [
+        { code: 1, name: 'Ruled Out This Round', team: 'ARS', position: 'DEF', startProbability: 0, officialStatus: 'a', officialChanceOfPlaying: 0, historicalStartRate: 0.9 },
+        { code: 2, name: 'Backup', team: 'ARS', position: 'DEF', startProbability: 0.5, officialStatus: 'a', officialChanceOfPlaying: 100, historicalStartRate: 0.5 }
+    ];
+    const result = detectPositionalVacancy(players);
+    // 0.5 + (0.9-0.5)*0.6 = 0.74
+    assert.equal(result[2].boostedFrom, 0.5);
+    assert.equal(result[2].boostedTo, 0.74);
+    assert.equal(result[2].vacatedByCode, 1);
+});
+
+test('detectPositionalVacancy: a player with officialChanceOfPlaying === 0 is excluded as a beneficiary candidate (they are unavailable, not a fit replacement)', () => {
+    const players = [
+        { code: 1, name: 'Injured Starter', team: 'ARS', position: 'DEF', startProbability: 0, officialStatus: 'i', historicalStartRate: 0.9 },
+        // historicalStartRate 0.9 also makes this player itself a qualifying "vacated" starter --
+        // both 1 and 2 are unavailable-and-vacating here, so player 3 ends up the sole beneficiary
+        // of two vacancies; per the last-write-wins convention documented above, vacatedByCode
+        // reflects whichever of {1, 2} is processed last, not specifically 1.
+        { code: 2, name: 'Also Ruled Out', team: 'ARS', position: 'DEF', startProbability: 0.9, officialStatus: 'a', officialChanceOfPlaying: 0, historicalStartRate: 0.9 },
+        { code: 3, name: 'Fit Backup', team: 'ARS', position: 'DEF', startProbability: 0.4, officialStatus: 'a', officialChanceOfPlaying: 100, historicalStartRate: 0.4 }
+    ];
+    const result = detectPositionalVacancy(players);
+    assert.equal(result[2], undefined); // 0% chance of playing must not be picked despite the higher startProbability
+    assert.equal(result[3].boostedFrom, 0.4);
+    assert.ok([1, 2].includes(result[3].vacatedByCode));
+});
+
 test('detectPositionalVacancy: two simultaneous vacancies at the same position each resolve independently', () => {
     const players = [
         { code: 1, name: 'Injured Starter A', team: 'ARS', position: 'DEF', startProbability: 0, officialStatus: 'i', historicalStartRate: 0.9 },
