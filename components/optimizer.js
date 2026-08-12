@@ -3017,6 +3017,35 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
         }
 
 
+        // --- RECONCILE STARTING XI ---
+        // isStarting was fixed once, right at the top of this preseason branch, purely by which
+        // array index each slot happened to occupy -- before any player had even been assigned
+        // into these slots (see the formation-constraint loop near the start of this branch).
+        // Every search step since then (initial fill, single-slot upgrades, pairwise swaps, budget
+        // reinvestment) only ever replaces WHICH player sits in a slot; nothing re-derives WHICH
+        // slots should count as starting from the players who actually ended up in the squad. That
+        // let a genuinely stronger player sit on the bench (worth only ~10% weight in the
+        // objective, see benchWeight in getSquadPointsForHorizon) indefinitely while a weaker
+        // same-position teammate started, purely because of slot-array luck, not projected points.
+        // Re-derive it now that the squad is final: for each position, the N players (N = this
+        // formation's requirement) with the highest real horizon score start; the rest bench.
+        // Locking (slot.locked) only protects a player's identity in their slot from being
+        // replaced by someone else during the search above -- it says nothing about whether that
+        // slot should count as starting, so it's deliberately not treated specially here.
+        for (const pos of ['GKP', 'DEF', 'MID', 'FWD']) {
+            const posSlots = optimizedSquadSlots.filter(s => s.position === pos && s.playerId !== null);
+            const requiredStarters = cons[pos];
+            const scored = posSlots
+                .map(slot => ({
+                    slot,
+                    score: getExpectedPtsOverHorizon(PLAYERS.find(p => p.id === slot.playerId), state.currentGw, horizon, state)
+                }))
+                .sort((a, b) => b.score - a.score);
+            scored.forEach((entry, idx) => {
+                entry.slot.isStarting = idx < requiredStarters;
+            });
+        }
+
         // Compare original and optimized squads by player ID SETS — not slot-by-slot.
         // Slot-by-slot comparison shows intermediate iteration swaps (A→B then B→C displayed
         // as two changes) when the net result is just A→C. We want net changes only.
