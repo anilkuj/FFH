@@ -227,20 +227,29 @@ test('getExpectedSavePts: missing/non-numeric diff falls back to the same neutra
 });
 
 test('computeGwPrediction: player-scoring multiplier is dampened relative to getAttackMultiplier\'s wider team-level range, preventing unrealistic single-GW spikes', () => {
-    const fixture = { opp: 'COV', loc: 'H', diff: 2, ownStrength: 4, oppStrength: 2 }; // e.g. Arsenal vs a newly-promoted team
+    // At the current PLAYER_ATTACK_MULTIPLIER_MAX (2.0), the overall-strength fallback path's own
+    // max possible raw value (a full 4-point gap on the 1-5 scale, K_ATTACK_OVERALL=0.20) is only
+    // 1.8 -- it can no longer exceed this ceiling at all. Only the attack/defence-specific path
+    // (raw range up to 2.6) still can, for a genuinely extreme real matchup: an elite attack vs a
+    // truly poor defence.
+    const fixture = { opp: 'WEAK', loc: 'H', diff: 2, ownAttackStrength: 1390, oppDefenceStrength: 1000 };
     const rawTeamLevelMultiplier = getAttackMultiplier(fixture);
-    assert.equal(rawTeamLevelMultiplier, 1.4); // the wide range ticker.js correctly uses as-is
+    assert.equal(rawTeamLevelMultiplier, 2.17); // the wide range ticker.js correctly uses as-is
 
     const { pts, breakdown } = computeGwPrediction({
         basePPG: 6.0, position: 'FWD', xG90: 0.6, xA90: 0.3, saves90: 0,
         mppg: 90, starts: 30, chanceOfPlaying: 100, fixture
     });
     assert.ok(breakdown.fdrMultiplier < rawTeamLevelMultiplier); // player-scoring value is dampened below the raw team-level value
-    assert.equal(breakdown.fdrMultiplier, 1.2);
-    // basePPG(6.0) * dampened fdrMultiplier(1.2) = 7.2, plus this fixture's diff:2 FWD attacking
-    // bonus (xgiAdj = (xG90+xA90)*0.8 = 0.72, independent of the fdrMultiplier clamp) = 7.92 -> 7.9.
-    // Still far below the undampened 9.12 (basePPG * raw 1.4 + xgiAdj), demonstrating the fix.
-    assert.equal(pts, 7.9);
+    assert.equal(breakdown.fdrMultiplier, 2.0);
+    // basePPG(6.0) * dampened fdrMultiplier(2.0) = 12.0, plus this fixture's diff:2 FWD attacking
+    // bonus (xgiAdj = (xG90+xA90)*0.8 = 0.72, independent of the fdrMultiplier clamp) = 12.72 -> 12.7.
+    // Still below the undampened 13.74 (basePPG * raw 2.17 + xgiAdj), demonstrating the fix still
+    // does something even at the higher ceiling -- though the accepted tradeoff (see
+    // PLAYER_ATTACK_MULTIPLIER_MAX's comment) is that 12.7 itself now exceeds the original "12+ is
+    // unrealistic" line for the most extreme real fixtures, a deliberate choice to hit the
+    // season-pace target.
+    assert.equal(pts, 12.7);
 });
 
 test('computeGwPrediction: goalsConceded90 nudge is scaled down for MID relative to GKP/DEF (matches the 1:4 csAdj weight ratio)', () => {
