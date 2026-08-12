@@ -268,3 +268,51 @@ test('computeGwPrediction: goalsConceded90 nudge is scaled down for MID relative
     assert.ok(midNudgeEffect < defNudgeEffect); // but proportionally smaller than GKP/DEF's
     assert.equal(Math.round(midNudgeEffect * 10000) / 10000, Math.round(defNudgeEffect * 0.25 * 10000) / 10000);
 });
+
+test('computeGwPrediction: a penalty-duty player gets the position-correct bonus', () => {
+    const fixture = { opp: 'AVL', loc: 'H', diff: 3 };
+    const base = { basePPG: 6.0, position: 'FWD', xG90: 0.4, xA90: 0.1, saves90: 0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture };
+
+    const withoutDuty = computeGwPrediction(base);
+    const withDuty = computeGwPrediction({ ...base, setPieceDuty: { pk: true, fk: false, ck: false } });
+
+    assert.equal(Math.round((withDuty.pts - withoutDuty.pts) * 100) / 100, 0.2); // FWD penalty bonus
+});
+
+test('computeGwPrediction: penalty bonus is position-scaled (DEF gets more than FWD)', () => {
+    const fwdFixture = { opp: 'AVL', loc: 'H', diff: 3 };
+    const fwd = computeGwPrediction({ basePPG: 6.0, position: 'FWD', xG90: 0.4, xA90: 0.1, saves90: 0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture: fwdFixture, setPieceDuty: { pk: true, fk: false, ck: false } });
+    const fwdBase = computeGwPrediction({ basePPG: 6.0, position: 'FWD', xG90: 0.4, xA90: 0.1, saves90: 0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture: fwdFixture });
+
+    const defFixture = { opp: 'AVL', loc: 'H', diff: 3 };
+    const def = computeGwPrediction({ basePPG: 3.0, position: 'DEF', xG90: 0.05, xA90: 0.05, saves90: 0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture: defFixture, setPieceDuty: { pk: true, fk: false, ck: false } });
+    const defBase = computeGwPrediction({ basePPG: 3.0, position: 'DEF', xG90: 0.05, xA90: 0.05, saves90: 0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture: defFixture });
+
+    const fwdBonus = fwd.pts - fwdBase.pts;
+    const defBonus = def.pts - defBase.pts;
+    assert.ok(defBonus > fwdBonus);
+});
+
+test('computeGwPrediction: a GKP gets no set-piece bonus even if (hypothetically) flagged', () => {
+    const fixture = { opp: 'AVL', loc: 'H', diff: 3 };
+    const base = { basePPG: 3.5, position: 'GKP', xG90: 0, xA90: 0, saves90: 3.0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture };
+    const withoutDuty = computeGwPrediction(base);
+    const withDuty = computeGwPrediction({ ...base, setPieceDuty: { pk: true, fk: true, ck: true } });
+    assert.equal(withDuty.pts, withoutDuty.pts);
+});
+
+test('computeGwPrediction: fk and ck together do not double the assist bonus', () => {
+    const fixture = { opp: 'AVL', loc: 'H', diff: 3 };
+    const base = { basePPG: 4.0, position: 'MID', xG90: 0.15, xA90: 0.15, saves90: 0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture };
+    const fkOnly = computeGwPrediction({ ...base, setPieceDuty: { pk: false, fk: true, ck: false } });
+    const both = computeGwPrediction({ ...base, setPieceDuty: { pk: false, fk: true, ck: true } });
+    assert.equal(fkOnly.pts, both.pts);
+});
+
+test('computeGwPrediction: omitting setPieceDuty entirely matches passing all-false (backward compatible)', () => {
+    const fixture = { opp: 'AVL', loc: 'H', diff: 3 };
+    const base = { basePPG: 4.0, position: 'MID', xG90: 0.15, xA90: 0.15, saves90: 0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture };
+    const omitted = computeGwPrediction(base);
+    const explicit = computeGwPrediction({ ...base, setPieceDuty: { pk: false, fk: false, ck: false } });
+    assert.equal(omitted.pts, explicit.pts);
+});

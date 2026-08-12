@@ -1219,14 +1219,17 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
         }
 
         const duty = getPlayerSetPieceDuty(player);
+        // Baseline set-piece credit now lives in the embedded XP itself (computeGwPrediction's
+        // PENALTY_DUTY_BONUS/SET_PIECE_ASSIST_BONUS, via getExpectedPts below) -- no separate baseline
+        // bonus here anymore, that would double-count it. This toggle-gated bonus is a DELIBERATE
+        // additional squad-building preference ("prioritize spot-kick takers"), on top of real XP, not
+        // a duplicate of it.
         let setPieceBonus = 0;
-        // Bonus values are deliberately modest: a player's underlying xG/xA already reflects
-        // their real scoring rate, including whatever penalties/set-pieces they've actually
-        // taken, so a large flat bonus on top would double-count that. This still credits
-        // recently-assigned takers whose historical xG hasn't caught up to their new duty yet.
-        if (duty.pk) setPieceBonus += state.prioritizeSpotKicks ? 2.0 : 0.4;
-        if (duty.fk) setPieceBonus += state.prioritizeSpotKicks ? 1.0 : 0.2;
-        if (duty.ck) setPieceBonus += state.prioritizeSpotKicks ? 0.7 : 0.15;
+        if (state.prioritizeSpotKicks) {
+            if (duty.pk) setPieceBonus += 2.0;
+            if (duty.fk) setPieceBonus += 1.0;
+            if (duty.ck) setPieceBonus += 0.7;
+        }
 
         let baseScore = 0;
         if (objective === 'efficiency') {
@@ -1279,6 +1282,10 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
                 score += 15.0 + (5.0 - avgFdr) * 3.0;
             }
         }
+        // Toggle-gated only (no baseline branch) -- `pts` above already includes the embedded
+        // set-piece XP bonus from computeGwPrediction via pred.pts/_rawPts, so this stays a
+        // DELIBERATE additional squad-building preference on top of real XP when the user opts in,
+        // not a duplicate of it. See the matching comment on setPieceBonus in getSolverScore.
         if (includeHeuristics && state.prioritizeSpotKicks) {
             const duty = getPlayerSetPieceDuty(p);
             if (duty.pk) score += 2.0;

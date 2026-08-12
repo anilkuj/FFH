@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { computeBasePPG, computeGwPrediction, computeLeagueAverageGoalsConceded90 } from './lib/predictionModel.js';
 import { getNextUnplayedGw, getLatestFinishedGw } from './lib/gwStatus.js';
-import { computeStartProbability, detectDisplacementRisk } from './lib/startProbability.js';
+import { computeStartProbability, detectDisplacementRisk, detectPositionalVacancy } from './lib/startProbability.js';
 import { getRecentWindow } from './lib/rotationHistory.js';
 import { buildHistoricalStrengthByCode, resolveTeamStrength, HISTORICAL_TEAMS_CSV_URL } from './lib/teamStrength.js';
 import { parseCsv } from './lib/csv.js';
@@ -472,7 +472,8 @@ async function parseAndWriteData(data, fixturesData) {
                 chanceOfPlaying: player.chanceOfPlaying,
                 fixture,
                 goalsConceded90: player.goalsConceded90,
-                leagueAvgGoalsConceded90
+                leagueAvgGoalsConceded90,
+                setPieceDuty: player.setPieceDuty
             });
 
             // Calculate deterministic actual points if the fixture is completed
@@ -692,8 +693,9 @@ async function parseAndWriteData(data, fixturesData) {
             return;
         }
 
+        let priorSeasonRate = null;
         try {
-            const priorSeasonRate = (typeof p.MPPG === 'number' && p.MPPG > 0 && typeof p.GS === 'number' && p.GS > 0)
+            priorSeasonRate = (typeof p.MPPG === 'number' && p.MPPG > 0 && typeof p.GS === 'number' && p.GS > 0)
                 ? Math.min(1.0, p.MPPG / 90)
                 : null;
 
@@ -717,6 +719,14 @@ async function parseAndWriteData(data, fixturesData) {
             p.startProbability = null;
             p.dataConfidence = 'low';
         }
+
+        // Historical start rate reflects the player's real recent-minutes-based starting pattern,
+        // independent of their current official-availability status -- needed because an unavailable
+        // player's own startProbability is already zeroed by computeStartProbability above, but
+        // detectPositionalVacancy (below) needs to know how nailed-on they normally are.
+        p.historicalStartRate = (window && window.games > 0)
+            ? Math.round((window.starts / window.games) * 10000) / 10000
+            : priorSeasonRate;
     });
 
     const displacementMap = detectDisplacementRisk(playersList.map(p => ({
@@ -725,6 +735,19 @@ async function parseAndWriteData(data, fixturesData) {
     })));
     playersList.forEach(p => {
         p.displacementRisk = displacementMap[p.code] || null;
+    });
+
+    const vacancyMap = detectPositionalVacancy(playersList.map(p => ({
+        code: p.code, name: p.web_name, team: p.team, position: p.position,
+        startProbability: p.startProbability, officialStatus: p.status,
+        officialChanceOfPlaying: officialChanceOfPlayingById.get(p.id),
+        historicalStartRate: p.historicalStartRate
+    })));
+    playersList.forEach(p => {
+        const boost = vacancyMap[p.code];
+        if (boost) {
+            p.startProbability = boost.boostedTo;
+        }
     });
 
     const leagueAvgGoalsPerGame = computeLeagueAvgGoalsPerGame(fixturesData);
