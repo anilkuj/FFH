@@ -100,17 +100,27 @@ get the exact same `pts *= fdrMultiplier` applied too, so an inflated Arsenal at
 literally everyone on the team, just less obviously for attackers (who are "supposed" to score more
 anyway).
 
-**Second, separate mechanism found — data staleness, not a code bug.** Nwaneri/Dowman/Lewis-Skelly
-are all fringe academy players currently showing real `chanceOfPlaying: 15` (i.e. FPL's own live
-data says ~15% likely to play). Recomputing Nwaneri fresh through the pure `computeGwPrediction`
-function with that real 15% correctly applied gives GW1 = **0.6** pts. But his *stored* prediction in
-`data.js` shows GW1 = **2.8** — proving the stored predictions were computed at an earlier sync, when
-his `chanceOfPlaying` was much higher, and `data.js` on `main` simply hasn't been refreshed since his
-availability dropped. This is an operational fix (re-run `node sync.js`), not a model bug — but it's
-real and inflates every low-availability fringe player across the WHOLE app, not just Arsenal's.
-**Before trusting any further Arsenal-specific diagnosis, re-sync `main`'s `data.js` first and
-re-measure the gap** — some of the "170% higher" figure will shrink once fringe players reflect their
-real current availability. What's left after that re-sync is the real, model-level signal to fix.
+**Second, separate mechanism found — CORRECTED after live re-sync, this is NOT staleness.** Original
+hypothesis (now disproven): Nwaneri/Dowman/Lewis-Skelly show real `chanceOfPlaying: 15`, and a
+simplified manual reconstruction of `computeGwPrediction` with that 15% applied gave GW1 ≈ 0.6 vs.
+the stored 2.8, which looked like stale pre-drop data. **`node sync.js` was actually re-run live on
+`main` this session (fresh FPL fetch, not simulated) — the squad total and every individual number
+were IDENTICAL afterward (still 149.1 total, still `chanceOfPlaying: 15` for the same three
+players).** That rules out staleness: 15% is genuinely their current, live availability, confirmed
+twice. The real discrepancy still stands and is now MORE puzzling, not less: Nwaneri's real inputs
+(`points: 8`, `GS (starts): 0`, low minutes) should push `computeBasePPG` toward its low-minutes
+fallback branch (likely basePPG well under 1.0, not the ~3.2 guessed in the disproven check above) —
+meaning a correctly-`chanceOfPlaying`-dampened GW1 prediction should be even lower than 0.6, yet the
+real stored value is 2.8. **Not yet root-caused.** Leading candidate: something in the actual
+pass-2 `computeGwPrediction` call site in `sync.js` isn't receiving the same `chanceOfPlaying` value
+that ends up in the final public object — possibly related to the ordering already flagged in an
+earlier commit this session ("`sync.js` classifier mutates `chanceOfPlaying` before
+`startProbability` treats it as authoritative") — i.e. predictions may be computed before a later
+classifier step adjusts `chanceOfPlaying`, or vice versa. **Needs direct instrumentation of the real
+pass-2 loop in `sync.js`** (e.g. a temporary `console.log` at the actual `computeGwPrediction` call
+for a known low-`chanceOfPlaying` player) to see what value is actually passed in at prediction time
+— don't trust a reconstruction outside the real pipeline again, it already produced one wrong
+conclusion this session.
 
 ### Root cause (attack-multiplier-for-all-positions), confirmed via direct inspection (not guessed)
 
@@ -151,11 +161,14 @@ where attacking-strength gap isn't the relevant signal**."
 
 ### Recommended direction for next session (not yet designed, don't just patch blindly)
 
-- **Step 0, do this first:** re-run `node sync.js` on `main` to refresh `data.js` with current real
-  availability data, then re-run the full-squad comparison table above. This will shrink (not
-  eliminate) the gap for fringe/low-minutes players. Don't redesign the model against numbers that
-  are partly a stale-data artifact.
-- **Most likely real fix (for what remains after re-sync):** give DEF (and maybe GKP) a separate, more dampened fixture multiplier
+- **Step 0 already done this session, don't repeat it:** `main`'s `data.js` was live re-synced
+  (`node sync.js`, real FPL fetch, committed nowhere yet as of this writing — check `git status`
+  when resuming) — the Arsenal gap was completely unchanged (149.1 total, still 170% higher). Data
+  freshness is ruled out as a contributor. Go straight to root-causing the two real mechanisms below.
+- **First, root-cause the chanceOfPlaying/Nwaneri anomaly** (see above) — instrument the real
+  `sync.js` pass-2 loop directly, don't reconstruct outside it. This affects every low-availability
+  player app-wide, not just Arsenal, so it's arguably higher-leverage than the DEF-multiplier fix.
+- **Second, the attack-multiplier-for-all-positions fix:** give DEF (and maybe GKP) a separate, more dampened fixture multiplier
   tied to defensive strength (opponent attack vs. own defence — `K_DEFENCE_SPECIFIC`/
   `K_DEFENCE_OVERALL` already exist in `lib/predictionModel.js` for `getCleanSheetProb`; investigate
   whether an analogous defence-oriented multiplier should replace or dampen `fdrMultiplier` for the
