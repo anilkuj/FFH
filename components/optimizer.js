@@ -1168,6 +1168,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
     const squadInfo = state.getSquadForGw(state.currentGw);
     const { starters, bench } = squadInfo;
     let bank = squadInfo.bank;
+    const originalBank = bank; // preserved for multi-start reset
     const currentSquadIds = [...starters, ...bench];
 
     // Resolve current active squad slots for the active gameweek (applying prior transfers)
@@ -1709,10 +1710,57 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
             }
         }
 
+        // === MULTI-START OPTIMIZER SETUP ===
+        // Snapshot the locked skeleton (must-include players assigned, all other slots empty).
+        // Each solver run deep-clones this skeleton and fills it differently, then runs the full
+        // hill-climbing + pairwise pipeline. We keep whichever run produces the highest XP squad.
+        const _lockedSkeleton = JSON.parse(JSON.stringify(optimizedSquadSlots));
+        const _lockedInitIds = [...initUsedIds];
+
+        // Deterministic seeded PRNG (Mulberry32) for reproducible perturbations.
+        // Same input always produces the same squad across page reloads.
+        const _makeRunRng = (seed) => {
+            let s = (seed ^ 0xdeadbeef) >>> 0;
+            return () => {
+                s = Math.imul(s ^ (s >>> 16), 0x45d9f3b) >>> 0;
+                s = Math.imul(s ^ (s >>> 4), 0x1b873593) >>> 0;
+                return (s >>> 0) / 0x100000000;
+            };
+        };
+
+        let _globalBestSlots = null;
+        let _globalBestScore = -Infinity;
+        const _NUM_SOLVER_RUNS = 8; // run 0=greedy, 1-6=perturbed seeds, 7=elite injection
+
+        for (let _solverRun = 0; _solverRun < _NUM_SOLVER_RUNS; _solverRun++) {
+        // Reset working squad and budget for this run
+        optimizedSquadSlots = JSON.parse(JSON.stringify(_lockedSkeleton));
+        initUsedIds.length = 0;
+        _lockedInitIds.forEach(id => initUsedIds.push(id));
+        bank = originalBank;
+
+        // Per-run score-noise map for greedy initialization.
+        // Run 0 = greedy (no noise). Runs 1-6 = ±2 XP noise per player (unique seed per run).
+        // Run 7 = elite injection (no noise, relaxed budget ceiling in greedy fill).
+        const _initNoise = new Map();
+        if (_solverRun >= 1 && _solverRun <= 6) {
+            const _rng = _makeRunRng(_solverRun * 13337);
+            PLAYERS.forEach(p => _initNoise.set(p.id, (_rng() - 0.5) * 4.0));
+        }
+        const _getInitXp = (p) => getExpectedPtsOverHorizon(p, state.currentGw, horizon, state) + (_initNoise.get(p.id) || 0);
+
+        updateOptimizerPhase(resultsGrid,
+            _solverRun === 0 ? 'AI solver: greedy seed (1/8)...' :
+            _solverRun < 7  ? `AI solver: exploring seed ${_solverRun + 1} of ${_NUM_SOLVER_RUNS}...` :
+                              `AI solver: elite injection (${_NUM_SOLVER_RUNS}/${_NUM_SOLVER_RUNS})...`,
+            8 + Math.round((_solverRun / _NUM_SOLVER_RUNS) * 78));
+        await yieldToEventLoop();
+
         // Budget boundaries based on user selection
         const minBenchBudget = state.benchBudget || 17.0;
         const maxBenchBudget = minBenchBudget;
         
+
         // Initial bench cost after initial slot assignment
         const initialBenchCost = benchIndices.reduce((sum, bIdx) => {
             const pId = optimizedSquadSlots[bIdx].playerId;
@@ -1820,7 +1868,12 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
             const slot = optimizedSquadSlots[idx];
             if (!slot.locked && slot.playerId === null) {
                 const remainingSlotsCount = startingIndices.length - 1 - i;
-                const maxAllowedPrice = maxStartingBudget - runningStartingCost - (remainingSlotsCount * 4.5);
+                // Run 7 elite injection: relax the per-slot budget ceiling so the greedy fill can
+                // anchor on the highest-XP player (even expensive ones) and the optimizer will then
+                // compress the bench to fit. All other runs use the normal budget-aware ceiling.
+                const maxAllowedPrice = _solverRun === 7
+                    ? Math.max(4.5, totalValue - runningStartingCost - (remainingSlotsCount * 4.5) - 16.0)
+                    : maxStartingBudget - runningStartingCost - (remainingSlotsCount * 4.5);
                 
                 const isStarterPriceFloorInit = (player, pos) => {
                     if (!player) return false;
@@ -1840,9 +1893,9 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
                     isStarterPriceFloorInit(p, slot.position) &&
                     passesMinFwd(p) &&
                     (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 75)
-                ).sort((a, b) => getExpectedPtsOverHorizon(b, state.currentGw, horizon, state) - getExpectedPtsOverHorizon(a, state.currentGw, horizon, state));
+                ).sort((a, b) => _getInitXp(b) - _getInitXp(a));
                 
-                const chosen = pool[0] || PLAYERS.filter(p => p.position === slot.position && isStarterPriceFloorInit(p, slot.position) && !initUsedIds.includes(p.id) && (runningTeamCounts[p.team] || 0) < 3).sort((a, b) => getExpectedPtsOverHorizon(b, state.currentGw, horizon, state) - getExpectedPtsOverHorizon(a, state.currentGw, horizon, state))[0] || getCheapestPlayersList(slot.position, 1, initUsedIds, true)[0]
+                const chosen = pool[0] || PLAYERS.filter(p => p.position === slot.position && isStarterPriceFloorInit(p, slot.position) && !initUsedIds.includes(p.id) && (runningTeamCounts[p.team] || 0) < 3).sort((a, b) => _getInitXp(b) - _getInitXp(a))[0] || getCheapestPlayersList(slot.position, 1, initUsedIds, true)[0]
                     // Absolute last resort: ignore the guaranteed-start requirement too, so a slot is
                     // never left empty just because every remaining candidate misses a soft filter.
                     // Only position + team-limit-3 + not-already-used are treated as hard constraints.
@@ -3019,6 +3072,18 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
                 }
             }
         }
+
+        // === END OF SINGLE SOLVE PASS: capture best result across all multi-start runs ===
+        const _runScore = getSquadExpectedPts(optimizedSquadSlots, true);
+        if (_runScore > _globalBestScore) {
+            _globalBestScore = _runScore;
+            _globalBestSlots = JSON.parse(JSON.stringify(optimizedSquadSlots));
+        }
+
+        } // end _solverRun loop
+
+        // Use the highest-scoring squad found across all runs
+        optimizedSquadSlots = _globalBestSlots;
 
 
         // --- RECONCILE STARTING XI ---
