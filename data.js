@@ -134179,7 +134179,7 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 2.4,
+                "pts": 4.58,
                 "opp": "NEW",
                 "loc": "A",
                 "diff": 3,
@@ -134187,7 +134187,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 2,
-                "pts": 5.7,
+                "pts": 4.94,
                 "opp": "NFO",
                 "loc": "H",
                 "diff": 3,
@@ -134195,7 +134195,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 6.8,
+                "pts": 5.02,
                 "opp": "IPS",
                 "loc": "A",
                 "diff": 2,
@@ -134203,7 +134203,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 6.1,
+                "pts": 5.07,
                 "opp": "FUL",
                 "loc": "H",
                 "diff": 2,
@@ -134211,7 +134211,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 2.9,
+                "pts": 4.41,
                 "opp": "BOU",
                 "loc": "A",
                 "diff": 3,
@@ -150852,7 +150852,7 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 4.7,
+                "pts": 3.01,
                 "opp": "HUL",
                 "loc": "A",
                 "diff": 2,
@@ -150860,7 +150860,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 2,
-                "pts": 4.6,
+                "pts": 3.7,
                 "opp": "IPS",
                 "loc": "H",
                 "diff": 2,
@@ -150868,7 +150868,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 2.7,
+                "pts": 3.25,
                 "opp": "EVE",
                 "loc": "A",
                 "diff": 3,
@@ -150876,7 +150876,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 2.1,
+                "pts": 3.08,
                 "opp": "MCI",
                 "loc": "H",
                 "diff": 4,
@@ -150884,7 +150884,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 2.2,
+                "pts": 3.26,
                 "opp": "FUL",
                 "loc": "A",
                 "diff": 3,
@@ -151198,7 +151198,7 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 4.4,
+                "pts": 3.35,
                 "opp": "HUL",
                 "loc": "A",
                 "diff": 2,
@@ -151206,7 +151206,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 2,
-                "pts": 4.4,
+                "pts": 3.46,
                 "opp": "IPS",
                 "loc": "H",
                 "diff": 2,
@@ -151214,7 +151214,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 2.6,
+                "pts": 3.03,
                 "opp": "EVE",
                 "loc": "A",
                 "diff": 3,
@@ -151222,7 +151222,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 2.1,
+                "pts": 2.88,
                 "opp": "MCI",
                 "loc": "H",
                 "diff": 4,
@@ -151230,7 +151230,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 2.2,
+                "pts": 3,
                 "opp": "FUL",
                 "loc": "A",
                 "diff": 3,
@@ -151544,7 +151544,7 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 0,
+                "pts": 0.05,
                 "opp": "HUL",
                 "loc": "A",
                 "diff": 2,
@@ -151552,7 +151552,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 2,
-                "pts": 0,
+                "pts": 0.05,
                 "opp": "IPS",
                 "loc": "H",
                 "diff": 2,
@@ -151560,7 +151560,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 0,
+                "pts": 0.04,
                 "opp": "EVE",
                 "loc": "A",
                 "diff": 3,
@@ -151568,7 +151568,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 0.1,
+                "pts": 0.04,
                 "opp": "MCI",
                 "loc": "H",
                 "diff": 4,
@@ -151576,7 +151576,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 0.1,
+                "pts": 0.04,
                 "opp": "FUL",
                 "loc": "A",
                 "diff": 3,
@@ -151891,7 +151891,7 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 4.2,
+                "pts": 3.96,
                 "opp": "HUL",
                 "loc": "A",
                 "diff": 2,
@@ -151899,7 +151899,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 2,
-                "pts": 4.1,
+                "pts": 3.85,
                 "opp": "IPS",
                 "loc": "H",
                 "diff": 2,
@@ -151907,7 +151907,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 3.7,
+                "pts": 3.52,
                 "opp": "EVE",
                 "loc": "A",
                 "diff": 3,
@@ -151915,7 +151915,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 3.8,
+                "pts": 2.85,
                 "opp": "MCI",
                 "loc": "H",
                 "diff": 4,
@@ -151923,7 +151923,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 3.7,
+                "pts": 3.34,
                 "opp": "FUL",
                 "loc": "A",
                 "diff": 3,
@@ -152937,7 +152937,7 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 2,
+                "pts": 2.06,
                 "opp": "HUL",
                 "loc": "A",
                 "diff": 2,
@@ -152945,7 +152945,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 2,
-                "pts": 2,
+                "pts": 1.36,
                 "opp": "IPS",
                 "loc": "H",
                 "diff": 2,
@@ -152953,7 +152953,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 1.1,
+                "pts": 1.18,
                 "opp": "EVE",
                 "loc": "A",
                 "diff": 3,
@@ -152961,7 +152961,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 0.9,
+                "pts": 1.11,
                 "opp": "MCI",
                 "loc": "H",
                 "diff": 4,
@@ -152969,7 +152969,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 0.9,
+                "pts": 1.17,
                 "opp": "FUL",
                 "loc": "A",
                 "diff": 3,
@@ -153303,7 +153303,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 0.1,
+                "pts": 0,
                 "opp": "EVE",
                 "loc": "A",
                 "diff": 3,
@@ -153311,7 +153311,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 0.1,
+                "pts": 0,
                 "opp": "MCI",
                 "loc": "H",
                 "diff": 4,
@@ -153319,7 +153319,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 0.1,
+                "pts": 0.25,
                 "opp": "FUL",
                 "loc": "A",
                 "diff": 3,
@@ -153633,7 +153633,7 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 3.7,
+                "pts": 4.5,
                 "opp": "HUL",
                 "loc": "A",
                 "diff": 2,
@@ -153641,7 +153641,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 2,
-                "pts": 3.7,
+                "pts": 3.76,
                 "opp": "IPS",
                 "loc": "H",
                 "diff": 2,
@@ -153649,7 +153649,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 3.2,
+                "pts": 3.02,
                 "opp": "EVE",
                 "loc": "A",
                 "diff": 3,
@@ -153657,7 +153657,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 3.2,
+                "pts": 2.44,
                 "opp": "MCI",
                 "loc": "H",
                 "diff": 4,
@@ -153665,7 +153665,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 3,
+                "pts": 3.02,
                 "opp": "FUL",
                 "loc": "A",
                 "diff": 3,
@@ -153979,7 +153979,7 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 4.1,
+                "pts": 3.11,
                 "opp": "HUL",
                 "loc": "A",
                 "diff": 2,
@@ -153987,7 +153987,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 2,
-                "pts": 4.1,
+                "pts": 3.94,
                 "opp": "IPS",
                 "loc": "H",
                 "diff": 2,
@@ -153995,7 +153995,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 3.6,
+                "pts": 3.61,
                 "opp": "EVE",
                 "loc": "A",
                 "diff": 3,
@@ -154003,7 +154003,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 3.6,
+                "pts": 2.67,
                 "opp": "MCI",
                 "loc": "H",
                 "diff": 4,
@@ -154011,7 +154011,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 3.6,
+                "pts": 3.18,
                 "opp": "FUL",
                 "loc": "A",
                 "diff": 3,
@@ -154325,7 +154325,7 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 3.4,
+                "pts": 1.31,
                 "opp": "HUL",
                 "loc": "A",
                 "diff": 2,
@@ -154333,7 +154333,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 2,
-                "pts": 3.4,
+                "pts": 4.11,
                 "opp": "IPS",
                 "loc": "H",
                 "diff": 2,
@@ -154341,7 +154341,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 2.8,
+                "pts": 3.75,
                 "opp": "EVE",
                 "loc": "A",
                 "diff": 3,
@@ -154349,7 +154349,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 2.9,
+                "pts": 2.74,
                 "opp": "MCI",
                 "loc": "H",
                 "diff": 4,
@@ -154357,7 +154357,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 2.9,
+                "pts": 3.51,
                 "opp": "FUL",
                 "loc": "A",
                 "diff": 3,
@@ -154671,7 +154671,7 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 1.5,
+                "pts": 2.22,
                 "opp": "HUL",
                 "loc": "A",
                 "diff": 2,
@@ -154679,7 +154679,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 2,
-                "pts": 1.5,
+                "pts": 1.19,
                 "opp": "IPS",
                 "loc": "H",
                 "diff": 2,
@@ -154687,7 +154687,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 1.1,
+                "pts": 1.08,
                 "opp": "EVE",
                 "loc": "A",
                 "diff": 3,
@@ -154695,7 +154695,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 1.1,
+                "pts": 0.91,
                 "opp": "MCI",
                 "loc": "H",
                 "diff": 4,
@@ -154703,7 +154703,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 1.2,
+                "pts": 0.99,
                 "opp": "FUL",
                 "loc": "A",
                 "diff": 3,
@@ -155018,7 +155018,7 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 1.2,
+                "pts": 3.33,
                 "opp": "HUL",
                 "loc": "A",
                 "diff": 2,
@@ -155026,7 +155026,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 2,
-                "pts": 1.2,
+                "pts": 0.51,
                 "opp": "IPS",
                 "loc": "H",
                 "diff": 2,
@@ -155034,7 +155034,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 1,
+                "pts": 0.5,
                 "opp": "EVE",
                 "loc": "A",
                 "diff": 3,
@@ -155042,7 +155042,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 1,
+                "pts": 0.46,
                 "opp": "MCI",
                 "loc": "H",
                 "diff": 4,
@@ -155050,7 +155050,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 0.9,
+                "pts": 0.49,
                 "opp": "FUL",
                 "loc": "A",
                 "diff": 3,
@@ -155364,7 +155364,7 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 1.1,
+                "pts": 0.88,
                 "opp": "HUL",
                 "loc": "A",
                 "diff": 2,
@@ -155372,7 +155372,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 2,
-                "pts": 1.1,
+                "pts": 1.16,
                 "opp": "IPS",
                 "loc": "H",
                 "diff": 2,
@@ -155380,7 +155380,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 1,
+                "pts": 1.05,
                 "opp": "EVE",
                 "loc": "A",
                 "diff": 3,
@@ -155388,7 +155388,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 0.9,
+                "pts": 0.94,
                 "opp": "MCI",
                 "loc": "H",
                 "diff": 4,
@@ -155396,7 +155396,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 1,
+                "pts": 1.03,
                 "opp": "FUL",
                 "loc": "A",
                 "diff": 3,
@@ -155710,7 +155710,7 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 3.8,
+                "pts": 4.1,
                 "opp": "HUL",
                 "loc": "A",
                 "diff": 2,
@@ -155718,7 +155718,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 2,
-                "pts": 3.7,
+                "pts": 3.99,
                 "opp": "IPS",
                 "loc": "H",
                 "diff": 2,
@@ -155726,7 +155726,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 3.2,
+                "pts": 3.25,
                 "opp": "EVE",
                 "loc": "A",
                 "diff": 3,
@@ -155734,7 +155734,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 3.2,
+                "pts": 2.5,
                 "opp": "MCI",
                 "loc": "H",
                 "diff": 4,
@@ -155742,7 +155742,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 3.1,
+                "pts": 3.12,
                 "opp": "FUL",
                 "loc": "A",
                 "diff": 3,
@@ -156056,7 +156056,7 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 0.2,
+                "pts": 0.19,
                 "opp": "HUL",
                 "loc": "A",
                 "diff": 2,
@@ -156072,7 +156072,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 0.2,
+                "pts": 0.19,
                 "opp": "EVE",
                 "loc": "A",
                 "diff": 3,
@@ -156080,7 +156080,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 0.2,
+                "pts": 0.19,
                 "opp": "MCI",
                 "loc": "H",
                 "diff": 4,
@@ -156088,7 +156088,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 0.2,
+                "pts": 0.19,
                 "opp": "FUL",
                 "loc": "A",
                 "diff": 3,
@@ -156748,7 +156748,7 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 10,
+                "pts": 6.8,
                 "opp": "HUL",
                 "loc": "A",
                 "diff": 2,
@@ -156756,7 +156756,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 2,
-                "pts": 10,
+                "pts": 7.3,
                 "opp": "IPS",
                 "loc": "H",
                 "diff": 2,
@@ -156764,7 +156764,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 5.9,
+                "pts": 5.64,
                 "opp": "EVE",
                 "loc": "A",
                 "diff": 3,
@@ -156772,7 +156772,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 4.7,
+                "pts": 5.27,
                 "opp": "MCI",
                 "loc": "H",
                 "diff": 4,
@@ -156780,7 +156780,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 4.8,
+                "pts": 5.84,
                 "opp": "FUL",
                 "loc": "A",
                 "diff": 3,
@@ -157094,7 +157094,7 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 7.2,
+                "pts": 6.64,
                 "opp": "HUL",
                 "loc": "A",
                 "diff": 2,
@@ -157102,7 +157102,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 2,
-                "pts": 7.2,
+                "pts": 5.46,
                 "opp": "IPS",
                 "loc": "H",
                 "diff": 2,
@@ -157110,7 +157110,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 4.1,
+                "pts": 4.28,
                 "opp": "EVE",
                 "loc": "A",
                 "diff": 3,
@@ -157118,7 +157118,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 3.1,
+                "pts": 4.06,
                 "opp": "MCI",
                 "loc": "H",
                 "diff": 4,
@@ -157126,7 +157126,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 3.3,
+                "pts": 4.44,
                 "opp": "FUL",
                 "loc": "A",
                 "diff": 3,
@@ -157440,7 +157440,7 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 5.8,
+                "pts": 3.65,
                 "opp": "HUL",
                 "loc": "A",
                 "diff": 2,
@@ -157448,7 +157448,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 2,
-                "pts": 5.7,
+                "pts": 4.78,
                 "opp": "IPS",
                 "loc": "H",
                 "diff": 2,
@@ -157456,7 +157456,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 3.3,
+                "pts": 3.81,
                 "opp": "EVE",
                 "loc": "A",
                 "diff": 3,
@@ -157464,7 +157464,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 2.5,
+                "pts": 3.67,
                 "opp": "MCI",
                 "loc": "H",
                 "diff": 4,
@@ -157472,7 +157472,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 2.6,
+                "pts": 3.92,
                 "opp": "FUL",
                 "loc": "A",
                 "diff": 3,
@@ -157786,7 +157786,7 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 0.6,
+                "pts": 0.37,
                 "opp": "HUL",
                 "loc": "A",
                 "diff": 2,
@@ -157794,7 +157794,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 2,
-                "pts": 0.5,
+                "pts": 0.42,
                 "opp": "IPS",
                 "loc": "H",
                 "diff": 2,
@@ -157802,7 +157802,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 0.2,
+                "pts": 0.36,
                 "opp": "EVE",
                 "loc": "A",
                 "diff": 3,
@@ -157810,7 +157810,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 0.3,
+                "pts": 0.36,
                 "opp": "MCI",
                 "loc": "H",
                 "diff": 4,
@@ -157818,7 +157818,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 0.3,
+                "pts": 0.37,
                 "opp": "FUL",
                 "loc": "A",
                 "diff": 3,
@@ -158132,7 +158132,7 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 1.3,
+                "pts": 1.14,
                 "opp": "HUL",
                 "loc": "A",
                 "diff": 2,
@@ -158140,7 +158140,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 2,
-                "pts": 1.3,
+                "pts": 0.87,
                 "opp": "IPS",
                 "loc": "H",
                 "diff": 2,
@@ -158148,7 +158148,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 0.7,
+                "pts": 0.8,
                 "opp": "EVE",
                 "loc": "A",
                 "diff": 3,
@@ -158156,7 +158156,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 0.6,
+                "pts": 0.79,
                 "opp": "MCI",
                 "loc": "H",
                 "diff": 4,
@@ -158164,7 +158164,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 0.5,
+                "pts": 0.8,
                 "opp": "FUL",
                 "loc": "A",
                 "diff": 3,
@@ -158478,7 +158478,7 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 3.9,
+                "pts": 3.98,
                 "opp": "HUL",
                 "loc": "A",
                 "diff": 2,
@@ -158486,7 +158486,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 2,
-                "pts": 3.8,
+                "pts": 2.63,
                 "opp": "IPS",
                 "loc": "H",
                 "diff": 2,
@@ -158494,7 +158494,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 2.1,
+                "pts": 2.12,
                 "opp": "EVE",
                 "loc": "A",
                 "diff": 3,
@@ -158502,7 +158502,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 1.6,
+                "pts": 2.06,
                 "opp": "MCI",
                 "loc": "H",
                 "diff": 4,
@@ -158510,7 +158510,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 1.6,
+                "pts": 2.18,
                 "opp": "FUL",
                 "loc": "A",
                 "diff": 3,
@@ -158824,7 +158824,7 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 1.5,
+                "pts": 1.04,
                 "opp": "HUL",
                 "loc": "A",
                 "diff": 2,
@@ -158832,7 +158832,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 2,
-                "pts": 1.5,
+                "pts": 1.11,
                 "opp": "IPS",
                 "loc": "H",
                 "diff": 2,
@@ -158840,7 +158840,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 0.9,
+                "pts": 1.05,
                 "opp": "EVE",
                 "loc": "A",
                 "diff": 3,
@@ -158848,7 +158848,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 0.7,
+                "pts": 1.03,
                 "opp": "MCI",
                 "loc": "H",
                 "diff": 4,
@@ -158856,7 +158856,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 0.7,
+                "pts": 1.04,
                 "opp": "FUL",
                 "loc": "A",
                 "diff": 3,
@@ -159174,7 +159174,7 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 0.5,
+                "pts": 0.49,
                 "opp": "HUL",
                 "loc": "A",
                 "diff": 2,
@@ -159182,7 +159182,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 2,
-                "pts": 0.6,
+                "pts": 0.53,
                 "opp": "IPS",
                 "loc": "H",
                 "diff": 2,
@@ -159190,7 +159190,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 0.6,
+                "pts": 0.52,
                 "opp": "EVE",
                 "loc": "A",
                 "diff": 3,
@@ -159198,7 +159198,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 0.6,
+                "pts": 0.52,
                 "opp": "MCI",
                 "loc": "H",
                 "diff": 4,
@@ -159206,7 +159206,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 0.6,
+                "pts": 0.52,
                 "opp": "FUL",
                 "loc": "A",
                 "diff": 3,
@@ -159874,7 +159874,7 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 0.3,
+                "pts": 0.15,
                 "opp": "HUL",
                 "loc": "A",
                 "diff": 2,
@@ -159882,7 +159882,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 2,
-                "pts": 0.2,
+                "pts": 0.15,
                 "opp": "IPS",
                 "loc": "H",
                 "diff": 2,
@@ -159890,7 +159890,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 0.1,
+                "pts": 0.15,
                 "opp": "EVE",
                 "loc": "A",
                 "diff": 3,
@@ -159898,7 +159898,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 0.1,
+                "pts": 0.15,
                 "opp": "MCI",
                 "loc": "H",
                 "diff": 4,
@@ -159906,7 +159906,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 0.1,
+                "pts": 0.15,
                 "opp": "FUL",
                 "loc": "A",
                 "diff": 3,
@@ -160924,7 +160924,7 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 0.3,
+                "pts": 0.16,
                 "opp": "HUL",
                 "loc": "A",
                 "diff": 2,
@@ -160932,7 +160932,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 2,
-                "pts": 0.3,
+                "pts": 0.18,
                 "opp": "IPS",
                 "loc": "H",
                 "diff": 2,
@@ -160940,7 +160940,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 0.1,
+                "pts": 0.17,
                 "opp": "EVE",
                 "loc": "A",
                 "diff": 3,
@@ -160948,7 +160948,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 0.1,
+                "pts": 0.17,
                 "opp": "MCI",
                 "loc": "H",
                 "diff": 4,
@@ -160956,7 +160956,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 0.1,
+                "pts": 0.17,
                 "opp": "FUL",
                 "loc": "A",
                 "diff": 3,
@@ -161274,7 +161274,7 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 4.6,
+                "pts": 1.57,
                 "opp": "HUL",
                 "loc": "A",
                 "diff": 2,
@@ -161282,7 +161282,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 2,
-                "pts": 4.6,
+                "pts": 4.31,
                 "opp": "IPS",
                 "loc": "H",
                 "diff": 2,
@@ -161290,7 +161290,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 2.7,
+                "pts": 3.36,
                 "opp": "EVE",
                 "loc": "A",
                 "diff": 3,
@@ -161298,7 +161298,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 2.1,
+                "pts": 3.29,
                 "opp": "MCI",
                 "loc": "H",
                 "diff": 4,
@@ -161306,7 +161306,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 2.1,
+                "pts": 3.52,
                 "opp": "FUL",
                 "loc": "A",
                 "diff": 3,
@@ -161620,7 +161620,7 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 0.5,
+                "pts": 0.35,
                 "opp": "HUL",
                 "loc": "A",
                 "diff": 2,
@@ -161628,7 +161628,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 2,
-                "pts": 0.5,
+                "pts": 0.36,
                 "opp": "IPS",
                 "loc": "H",
                 "diff": 2,
@@ -161636,7 +161636,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 0.3,
+                "pts": 0.34,
                 "opp": "EVE",
                 "loc": "A",
                 "diff": 3,
@@ -161644,7 +161644,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 0.3,
+                "pts": 0.34,
                 "opp": "MCI",
                 "loc": "H",
                 "diff": 4,
@@ -161652,7 +161652,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 0.2,
+                "pts": 0.34,
                 "opp": "FUL",
                 "loc": "A",
                 "diff": 3,
@@ -191815,7 +191815,7 @@ export const PLAYERS = [
         "predictions": [
             {
                 "gw": 1,
-                "pts": 2.6,
+                "pts": 6.8,
                 "opp": "BRE",
                 "loc": "A",
                 "diff": 3,
@@ -191823,7 +191823,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 2,
-                "pts": 4.4,
+                "pts": 7.3,
                 "opp": "NEW",
                 "loc": "H",
                 "diff": 2,
@@ -191831,7 +191831,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 3,
-                "pts": 3.6,
+                "pts": 5.64,
                 "opp": "NFO",
                 "loc": "A",
                 "diff": 3,
@@ -191839,7 +191839,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 4,
-                "pts": 3.9,
+                "pts": 5.27,
                 "opp": "EVE",
                 "loc": "H",
                 "diff": 3,
@@ -191847,7 +191847,7 @@ export const PLAYERS = [
             },
             {
                 "gw": 5,
-                "pts": 3.8,
+                "pts": 5.84,
                 "opp": "AVL",
                 "loc": "H",
                 "diff": 3,
