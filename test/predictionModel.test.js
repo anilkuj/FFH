@@ -4,6 +4,7 @@ import {
     computeBasePPG,
     getCleanSheetProb,
     getExpectedSavePts,
+    getExpectedDefconPts,
     getAttackMultiplier,
     computeGoalsConcededNudge,
     computeLeagueAverageGoalsConceded90,
@@ -224,6 +225,90 @@ test('getExpectedSavePts: missing/non-numeric diff falls back to the same neutra
     const missing = getExpectedSavePts({ position: 'GKP', diff: undefined, loc: 'H', saves90: 3.0 });
     const neutral = getExpectedSavePts({ position: 'GKP', diff: 3, loc: 'H', saves90: 3.0 });
     assert.equal(missing, neutral);
+});
+
+test('getExpectedDefconPts: GKP always returns 0 regardless of input', () => {
+    assert.equal(getExpectedDefconPts({ position: 'GKP', dcPer90: 20, mppg: 90 }), 0);
+});
+
+test('getExpectedDefconPts: DEF well above threshold gets the top hitProb tier (0.75 * 2 = 1.5, full minutes)', () => {
+    // threshold DEF = 10, ratio 14/10 = 1.4 -> top tier
+    const pts = getExpectedDefconPts({ position: 'DEF', dcPer90: 14, mppg: 90 });
+    assert.equal(pts, 1.5);
+});
+
+test('getExpectedDefconPts: MID right at threshold gets the mid tier (0.55 * 2 = 1.1, full minutes)', () => {
+    // threshold MID = 12, ratio 13.2/12 = 1.1 -> second tier
+    const pts = getExpectedDefconPts({ position: 'MID', dcPer90: 13.2, mppg: 90 });
+    assert.equal(pts, 1.1);
+});
+
+test('getExpectedDefconPts: FWD well below threshold gets the floor tier (0.05 * 2 = 0.1, full minutes)', () => {
+    // real league average FWD rate (4.50) is well under threshold 12 -> ratio 0.375 -> floor tier
+    const pts = getExpectedDefconPts({ position: 'FWD', dcPer90: 4.5, mppg: 90 });
+    assert.equal(Math.round(pts * 100) / 100, 0.1);
+});
+
+test('getExpectedDefconPts: mppg below 90 scales the result down proportionally', () => {
+    const full = getExpectedDefconPts({ position: 'DEF', dcPer90: 14, mppg: 90 });
+    const half = getExpectedDefconPts({ position: 'DEF', dcPer90: 14, mppg: 45 });
+    assert.equal(Math.round(half * 100) / 100, Math.round((full * 0.5) * 100) / 100);
+});
+
+test('getExpectedDefconPts: dcPer90 of 0 or missing returns 0, not NaN or negative', () => {
+    assert.equal(getExpectedDefconPts({ position: 'DEF', dcPer90: 0, mppg: 90 }), 0);
+    assert.equal(getExpectedDefconPts({ position: 'DEF', mppg: 90 }), 0);
+});
+
+test('getExpectedDefconPts: exact tier boundaries resolve to the tier they belong to (>= is inclusive)', () => {
+    // DEF threshold = 10. ratio exactly 1.0 falls in [0.9, 1.1) -> 0.35 tier, not the 1.1 tier.
+    assert.equal(getExpectedDefconPts({ position: 'DEF', dcPer90: 10, mppg: 90 }), 0.7);
+    // ratio exactly 0.9 -> still the 0.35 tier (>= 0.9, not > 0.9).
+    assert.equal(getExpectedDefconPts({ position: 'DEF', dcPer90: 9, mppg: 90 }), 0.7);
+    // ratio exactly 0.7 -> the 0.15 tier (>= 0.7, not > 0.7).
+    assert.equal(getExpectedDefconPts({ position: 'DEF', dcPer90: 7, mppg: 90 }), 0.3);
+    // just under 0.7 -> drops to the 0.05 floor tier.
+    assert.equal(getExpectedDefconPts({ position: 'DEF', dcPer90: 6.9, mppg: 90 }), 0.1);
+});
+
+test('computeGwPrediction: DEF gets defconAdj from a real dcPer90 rate', () => {
+    const fixture = { opp: 'AVL', loc: 'H', diff: 3 };
+    const base = { basePPG: 4.0, position: 'DEF', xG90: 0, xA90: 0, saves90: 0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture };
+    const withDc = computeGwPrediction({ ...base, dcPer90: 14 });
+    const withoutDc = computeGwPrediction(base);
+    assert.equal(withDc.breakdown.defconAdj, 1.5);
+    assert.equal(withoutDc.breakdown.defconAdj, 0);
+    assert.ok(withDc.pts > withoutDc.pts);
+});
+
+test('computeGwPrediction: MID gets defconAdj from a real dcPer90 rate', () => {
+    const fixture = { opp: 'AVL', loc: 'H', diff: 3 };
+    const base = { basePPG: 4.5, position: 'MID', xG90: 0.1, xA90: 0.1, saves90: 0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture, dcPer90: 13.2 };
+    const { breakdown } = computeGwPrediction(base);
+    assert.equal(breakdown.defconAdj, 1.1);
+});
+
+test('computeGwPrediction: FWD gets a small defconAdj from a real (low) dcPer90 rate', () => {
+    const fixture = { opp: 'AVL', loc: 'H', diff: 3 };
+    const base = { basePPG: 5.0, position: 'FWD', xG90: 0.4, xA90: 0.1, saves90: 0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture, dcPer90: 4.5 };
+    const { breakdown } = computeGwPrediction(base);
+    assert.equal(Math.round(breakdown.defconAdj * 100) / 100, 0.1);
+});
+
+test('computeGwPrediction: GKP never gets defconAdj even if dcPer90 is passed', () => {
+    const fixture = { opp: 'AVL', loc: 'H', diff: 3 };
+    const base = { basePPG: 3.5, position: 'GKP', xG90: 0, xA90: 0, saves90: 3.0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture, dcPer90: 20 };
+    const { breakdown } = computeGwPrediction(base);
+    assert.equal(breakdown.defconAdj, 0);
+});
+
+test('computeGwPrediction: omitting dcPer90 entirely does not throw and matches passing 0', () => {
+    const fixture = { opp: 'AVL', loc: 'H', diff: 3 };
+    const base = { basePPG: 4.0, position: 'DEF', xG90: 0, xA90: 0, saves90: 0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture };
+    const omitted = computeGwPrediction(base);
+    const explicitZero = computeGwPrediction({ ...base, dcPer90: 0 });
+    assert.equal(omitted.pts, explicitZero.pts);
+    assert.equal(omitted.breakdown.defconAdj, explicitZero.breakdown.defconAdj);
 });
 
 test('computeGwPrediction: player-scoring multiplier is dampened relative to getAttackMultiplier\'s wider team-level range, preventing unrealistic single-GW spikes', () => {

@@ -386,7 +386,7 @@ export function renderOptimizer(container, state, actions) {
                                     <input type="checkbox" id="prioritizeDefconCheckbox" ${state.prioritizeDefcon ? 'checked' : ''} style="width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0;">
                                     🛡️ Prioritize Defcon Monsters
                                 </label>
-                                <span class="setting-help">Boosts GKPs, DEFs, and MIDs with elite Defcon Potential (A/B rating) and favors easiest fixture difficulties (FDR).</span>
+                                <span class="setting-help">Boosts DEFs and MIDs with elite Defcon Potential (A/B rating) and favors easiest fixture difficulties (FDR).</span>
                             </div>
 
                             <div class="setting-group" id="prioritizeSpotKicksGroup">
@@ -1238,8 +1238,11 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
             baseScore = getExpectedPts(player) + (setPieceBonus * horizon);
         }
 
-        // Add Defcon Monster with easiest FDR bonus if prioritizeDefcon option is checked
-        if (state.prioritizeDefcon && (player.position === 'GKP' || player.position === 'DEF' || player.position === 'MID')) {
+        // Add Defcon Monster with easiest FDR bonus if prioritizeDefcon option is checked.
+        // GKP excluded: getPlayerRatings' defconPotential is always 'N/A' for GKP (real FPL
+        // defensive-contribution points don't apply to goalkeepers), so a GKP check here would
+        // always be dead -- see the "Defcon Potential" badge fix in sync.js's getPlayerRatings.
+        if (state.prioritizeDefcon && (player.position === 'DEF' || player.position === 'MID')) {
             const ratings = getPlayerRatings(player, state.currentGw);
             if (ratings.defconPotential === 'A' || ratings.defconPotential === 'B') {
                 const avgFdr = parseFloat(getAvgFDR(player)) || 3.0;
@@ -1275,7 +1278,8 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
         const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(p) : 1.0;
         const pts = raw * chance * factor;
         let score = objective === 'efficiency' ? getPlayerEfficiency(p, state.currentGw) * 10 : pts;
-        if (includeHeuristics && state.prioritizeDefcon && (p.position === 'GKP' || p.position === 'DEF' || p.position === 'MID')) {
+        // GKP excluded here too -- same reason as the other prioritizeDefcon check above.
+        if (includeHeuristics && state.prioritizeDefcon && (p.position === 'DEF' || p.position === 'MID')) {
             const ratings = getPlayerRatings(p, state.currentGw);
             if (ratings.defconPotential === 'A' || ratings.defconPotential === 'B') {
                 const avgFdr = parseFloat(getAvgFDR(p)) || 3.0;

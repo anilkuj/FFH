@@ -2517,7 +2517,7 @@ function renderModalPlayerRows(players, bank, state, gwWindow) {
             }
             if (isBestDefcon) {
                 badgesHtml = `
-                    <span class="badge-best-defcon" style="font-size: 9px; padding: 1px 5px; border-radius: 4px; background: rgba(0, 242, 254, 0.15); color: #00f2fe; border: 1px solid rgba(0, 242, 254, 0.3); font-weight: 700; display: inline-flex; align-items: center; gap: 2px;" title="Vibrant clean sheet defense (A/B Rating)">
+                    <span class="badge-best-defcon" style="font-size: 9px; padding: 1px 5px; border-radius: 4px; background: rgba(0, 242, 254, 0.15); color: #00f2fe; border: 1px solid rgba(0, 242, 254, 0.3); font-weight: 700; display: inline-flex; align-items: center; gap: 2px;" title="Elite real defensive output: tackles/interceptions/clearances(+recoveries) per 90 vs. the real FPL Defensive Contribution threshold (A/B Rating)">
                         🛡️ Best Defcon
                     </span>
                 `;

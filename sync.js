@@ -366,6 +366,18 @@ async function parseAndWriteData(data, fixturesData) {
         const rawGc90 = minutes > 0 ? (goalsConceded / minutes) * 90 : baseGc90;
         const goalsConceded90 = minutes >= 450 ? rawGc90 : baseGc90 + (rawGc90 - baseGc90) * sampleSizeFactor;
 
+        // Real league averages this season (min. 900 minutes, i.e. ~10 full games, so the baseline
+        // itself isn't distorted by the same small-sample problem this regression exists to fix):
+        // DEF 7.76 (n=98), MID 8.38 (n=126), FWD 4.50 (n=24) -- computed directly from a fresh
+        // bootstrap-static pull. Only ~16% of qualifying DEF and ~6% of qualifying MID average at or
+        // above their own real threshold across a full season -- confirms sitting at the threshold
+        // is already an elite outcome, not a median one (see getExpectedDefconPts's comment in
+        // lib/predictionModel.js, which the hit-probability mapping is calibrated against).
+        const BASE_DC90 = { GKP: 0, DEF: 7.76, MID: 8.38, FWD: 4.50 };
+        const rawDcPer90 = parseFloat(el.defensive_contribution_per_90) || 0;
+        const baseDc90 = BASE_DC90[position] || 0;
+        const dcPer90 = minutes >= 450 ? rawDcPer90 : baseDc90 + (rawDcPer90 - baseDc90) * sampleSizeFactor;
+
         let appearances = starts;
         if (minutes > starts * 90) {
             appearances = starts + Math.round((minutes - starts * 90) / 20);
@@ -418,6 +430,7 @@ async function parseAndWriteData(data, fixturesData) {
             saves90: parseFloat(saves90.toFixed(2)),
             goalsConceded: goalsConceded,
             goalsConceded90: parseFloat(goalsConceded90.toFixed(2)),
+            dcPer90: parseFloat(dcPer90.toFixed(2)),
             transferredThisSeason: transferredThisSeason,
             oldTeam: oldTeam,
             news: el.news || "",
@@ -454,7 +467,7 @@ async function parseAndWriteData(data, fixturesData) {
         // The final return object is an explicit allow-list (not `...restFields`) precisely so
         // that a forgotten scratch field here is a loud "undefined" bug, not a silent leak into
         // the public schema.
-        const { basePPG, mppg, starts, minutes, rawStarts } = player;
+        const { basePPG, mppg, starts, minutes, rawStarts, dcPer90 } = player;
         const predictions = [];
         const fixtures = fixturesSchedule[player.team] || [];
 
@@ -473,7 +486,8 @@ async function parseAndWriteData(data, fixturesData) {
                 fixture,
                 goalsConceded90: player.goalsConceded90,
                 leagueAvgGoalsConceded90,
-                setPieceDuty: player.setPieceDuty
+                setPieceDuty: player.setPieceDuty,
+                dcPer90
             });
 
             // Calculate deterministic actual points if the fixture is completed
@@ -568,6 +582,7 @@ async function parseAndWriteData(data, fixturesData) {
             saves90: player.saves90,
             goalsConceded: player.goalsConceded,
             goalsConceded90: player.goalsConceded90,
+            dcPer90: player.dcPer90,
             transferredThisSeason: player.transferredThisSeason,
             oldTeam: player.oldTeam,
             news: player.news,
@@ -854,33 +869,24 @@ export function getPlayerRatings(player, currentGw = 1) {
         attackingPotential = 'E'; // GKP
     }
 
-    // 5. Defcon Potential (clean sheet potential. N/A for FWD)
+    // 5. Defcon Potential (real defensive-contribution output: combined tackles/interceptions/
+    // clearances(+recoveries for MID/FWD) per 90, vs. the real FPL per-match threshold. N/A for
+    // FWD/GKP -- FWD real rates average well under threshold (4.50 vs. 12, see BASE_DC90's comment
+    // in the pass-1 loop above), so a graded badge for them would mostly just read "E" and add no
+    // useful signal; GKP don't earn these points at all under the real rule.
     let defconPotential = 'N/A';
-    if (pos !== 'FWD') {
-        let sumOdds = 0;
-        let count = 0;
-        if (player.predictions && player.predictions.length > 0) {
-            for (let gw = currentGw; gw < currentGw + 5; gw++) {
-                const pred = player.predictions.find(p => p.gw === gw);
-                if (pred && pred.opp !== 'BYE') {
-                    let base = 30;
-                    if (pred.diff === 2) base = 48;
-                    else if (pred.diff === 4) base = 18;
-                    else if (pred.diff === 5) base = 8;
-                    
-                    if (pred.loc === 'H') base += 5;
-                    else base -= 5;
-                    
-                    sumOdds += base;
-                    count++;
-                }
-            }
-        }
-        const avgOdds = count > 0 ? (sumOdds / count) : 25;
-        if (avgOdds >= 40) defconPotential = 'A';
-        else if (avgOdds >= 30) defconPotential = 'B';
-        else if (avgOdds >= 20) defconPotential = 'C';
-        else if (avgOdds >= 10) defconPotential = 'D';
+    if (pos === 'DEF' || pos === 'MID') {
+        const threshold = pos === 'DEF' ? 10 : 12;
+        // Rounded to 6dp before the tier comparisons -- same IEEE 754 boundary-value fix as
+        // getExpectedDefconPts in lib/predictionModel.js (e.g. 13.2/12 evaluates to
+        // 1.0999999999999999 in JS, not 1.1, misclassifying at the exact tier boundary). Without
+        // this, the badge and the xP model's internal tier can silently disagree for a player
+        // sitting exactly at a threshold multiple.
+        const dcRatio = Math.round(((player.dcPer90 || 0) / threshold) * 1e6) / 1e6;
+        if (dcRatio >= 1.4) defconPotential = 'A';
+        else if (dcRatio >= 1.1) defconPotential = 'B';
+        else if (dcRatio >= 0.9) defconPotential = 'C';
+        else if (dcRatio >= 0.7) defconPotential = 'D';
         else defconPotential = 'E';
     }
 
