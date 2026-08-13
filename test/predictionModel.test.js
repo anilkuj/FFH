@@ -271,6 +271,46 @@ test('getExpectedDefconPts: exact tier boundaries resolve to the tier they belon
     assert.equal(getExpectedDefconPts({ position: 'DEF', dcPer90: 6.9, mppg: 90 }), 0.1);
 });
 
+test('computeGwPrediction: DEF gets defconAdj from a real dcPer90 rate', () => {
+    const fixture = { opp: 'AVL', loc: 'H', diff: 3 };
+    const base = { basePPG: 4.0, position: 'DEF', xG90: 0, xA90: 0, saves90: 0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture };
+    const withDc = computeGwPrediction({ ...base, dcPer90: 14 });
+    const withoutDc = computeGwPrediction(base);
+    assert.equal(withDc.breakdown.defconAdj, 1.5);
+    assert.equal(withoutDc.breakdown.defconAdj, 0);
+    assert.ok(withDc.pts > withoutDc.pts);
+});
+
+test('computeGwPrediction: MID gets defconAdj from a real dcPer90 rate', () => {
+    const fixture = { opp: 'AVL', loc: 'H', diff: 3 };
+    const base = { basePPG: 4.5, position: 'MID', xG90: 0.1, xA90: 0.1, saves90: 0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture, dcPer90: 13.2 };
+    const { breakdown } = computeGwPrediction(base);
+    assert.equal(breakdown.defconAdj, 1.1);
+});
+
+test('computeGwPrediction: FWD gets a small defconAdj from a real (low) dcPer90 rate', () => {
+    const fixture = { opp: 'AVL', loc: 'H', diff: 3 };
+    const base = { basePPG: 5.0, position: 'FWD', xG90: 0.4, xA90: 0.1, saves90: 0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture, dcPer90: 4.5 };
+    const { breakdown } = computeGwPrediction(base);
+    assert.equal(Math.round(breakdown.defconAdj * 100) / 100, 0.1);
+});
+
+test('computeGwPrediction: GKP never gets defconAdj even if dcPer90 is passed', () => {
+    const fixture = { opp: 'AVL', loc: 'H', diff: 3 };
+    const base = { basePPG: 3.5, position: 'GKP', xG90: 0, xA90: 0, saves90: 3.0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture, dcPer90: 20 };
+    const { breakdown } = computeGwPrediction(base);
+    assert.equal(breakdown.defconAdj, 0);
+});
+
+test('computeGwPrediction: omitting dcPer90 entirely does not throw and matches passing 0', () => {
+    const fixture = { opp: 'AVL', loc: 'H', diff: 3 };
+    const base = { basePPG: 4.0, position: 'DEF', xG90: 0, xA90: 0, saves90: 0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture };
+    const omitted = computeGwPrediction(base);
+    const explicitZero = computeGwPrediction({ ...base, dcPer90: 0 });
+    assert.equal(omitted.pts, explicitZero.pts);
+    assert.equal(omitted.breakdown.defconAdj, explicitZero.breakdown.defconAdj);
+});
+
 test('computeGwPrediction: player-scoring multiplier is dampened relative to getAttackMultiplier\'s wider team-level range, preventing unrealistic single-GW spikes', () => {
     // At the current PLAYER_ATTACK_MULTIPLIER_MAX (2.0), the overall-strength fallback path's own
     // max possible raw value (a full 4-point gap on the 1-5 scale, K_ATTACK_OVERALL=0.20) is only
