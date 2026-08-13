@@ -366,6 +366,18 @@ async function parseAndWriteData(data, fixturesData) {
         const rawGc90 = minutes > 0 ? (goalsConceded / minutes) * 90 : baseGc90;
         const goalsConceded90 = minutes >= 450 ? rawGc90 : baseGc90 + (rawGc90 - baseGc90) * sampleSizeFactor;
 
+        // Real league averages this season (min. 900 minutes, i.e. ~10 full games, so the baseline
+        // itself isn't distorted by the same small-sample problem this regression exists to fix):
+        // DEF 7.76 (n=98), MID 8.38 (n=126), FWD 4.50 (n=24) -- computed directly from a fresh
+        // bootstrap-static pull. Only ~16% of qualifying DEF and ~6% of qualifying MID average at or
+        // above their own real threshold across a full season -- confirms sitting at the threshold
+        // is already an elite outcome, not a median one (see getExpectedDefconPts's comment in
+        // lib/predictionModel.js, which the hit-probability mapping is calibrated against).
+        const BASE_DC90 = { GKP: 0, DEF: 7.76, MID: 8.38, FWD: 4.50 };
+        const rawDcPer90 = parseFloat(el.defensive_contribution_per_90) || 0;
+        const baseDc90 = BASE_DC90[position] || 0;
+        const dcPer90 = minutes >= 450 ? rawDcPer90 : baseDc90 + (rawDcPer90 - baseDc90) * sampleSizeFactor;
+
         let appearances = starts;
         if (minutes > starts * 90) {
             appearances = starts + Math.round((minutes - starts * 90) / 20);
@@ -418,6 +430,7 @@ async function parseAndWriteData(data, fixturesData) {
             saves90: parseFloat(saves90.toFixed(2)),
             goalsConceded: goalsConceded,
             goalsConceded90: parseFloat(goalsConceded90.toFixed(2)),
+            dcPer90: parseFloat(dcPer90.toFixed(2)),
             transferredThisSeason: transferredThisSeason,
             oldTeam: oldTeam,
             news: el.news || "",
@@ -454,7 +467,7 @@ async function parseAndWriteData(data, fixturesData) {
         // The final return object is an explicit allow-list (not `...restFields`) precisely so
         // that a forgotten scratch field here is a loud "undefined" bug, not a silent leak into
         // the public schema.
-        const { basePPG, mppg, starts, minutes, rawStarts } = player;
+        const { basePPG, mppg, starts, minutes, rawStarts, dcPer90 } = player;
         const predictions = [];
         const fixtures = fixturesSchedule[player.team] || [];
 
@@ -473,7 +486,8 @@ async function parseAndWriteData(data, fixturesData) {
                 fixture,
                 goalsConceded90: player.goalsConceded90,
                 leagueAvgGoalsConceded90,
-                setPieceDuty: player.setPieceDuty
+                setPieceDuty: player.setPieceDuty,
+                dcPer90
             });
 
             // Calculate deterministic actual points if the fixture is completed
@@ -568,6 +582,7 @@ async function parseAndWriteData(data, fixturesData) {
             saves90: player.saves90,
             goalsConceded: player.goalsConceded,
             goalsConceded90: player.goalsConceded90,
+            dcPer90: player.dcPer90,
             transferredThisSeason: player.transferredThisSeason,
             oldTeam: player.oldTeam,
             news: player.news,
