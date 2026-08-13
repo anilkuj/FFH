@@ -416,6 +416,33 @@ test('computeGwPrediction: penalty bonus is position-scaled (DEF gets more than 
     assert.ok(defBonus > fwdBonus);
 });
 
+test('computeGwPrediction: DEF with real attacking output gets a positive xgiAdj on an easy fixture', () => {
+    const fixture = { opp: 'SUN', loc: 'H', diff: 2 };
+    const { breakdown } = computeGwPrediction({ basePPG: 4.5, position: 'DEF', xG90: 0.15, xA90: 0.10, saves90: 0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture });
+    // xGI90 = 0.25 (> 0.1 gate), diff=2 -> xgiAdj = 0.25 * 0.8 = 0.2, same formula as MID/FWD.
+    assert.equal(Math.round(breakdown.xgiAdj * 100) / 100, 0.2);
+});
+
+test('computeGwPrediction: DEF with real attacking output gets a negative xgiAdj on a hard fixture', () => {
+    const fixture = { opp: 'MCI', loc: 'A', diff: 5 };
+    const { breakdown } = computeGwPrediction({ basePPG: 4.5, position: 'DEF', xG90: 0.15, xA90: 0.10, saves90: 0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture });
+    // xGI90 = 0.25 (> 0.1 gate), diff=5 -> xgiAdj = -0.25 * 0.6 = -0.15.
+    assert.equal(Math.round(breakdown.xgiAdj * 100) / 100, -0.15);
+});
+
+test('computeGwPrediction: a pure-stopper DEF (near-zero xG90/xA90) gets no xgiAdj regardless of fixture difficulty', () => {
+    const easy = computeGwPrediction({ basePPG: 4.5, position: 'DEF', xG90: 0.02, xA90: 0.01, saves90: 0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture: { opp: 'SUN', loc: 'H', diff: 2 } });
+    const hard = computeGwPrediction({ basePPG: 4.5, position: 'DEF', xG90: 0.02, xA90: 0.01, saves90: 0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture: { opp: 'MCI', loc: 'A', diff: 5 } });
+    // xGI90 = 0.03, below the 0.1 gate both times.
+    assert.equal(easy.breakdown.xgiAdj, 0);
+    assert.equal(hard.breakdown.xgiAdj, 0);
+});
+
+test('computeGwPrediction: DEF xgiAdj is 0 on a neutral-difficulty fixture (diff 1/3/4), same gating as MID/FWD', () => {
+    const { breakdown } = computeGwPrediction({ basePPG: 4.5, position: 'DEF', xG90: 0.15, xA90: 0.10, saves90: 0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture: { opp: 'X', loc: 'H', diff: 3 } });
+    assert.equal(breakdown.xgiAdj, 0);
+});
+
 test('computeGwPrediction: a GKP gets no set-piece bonus even if (hypothetically) flagged', () => {
     const fixture = { opp: 'AVL', loc: 'H', diff: 3 };
     const base = { basePPG: 3.5, position: 'GKP', xG90: 0, xA90: 0, saves90: 3.0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture };
