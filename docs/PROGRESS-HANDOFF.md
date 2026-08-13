@@ -1,132 +1,131 @@
-# Progress Handoff — xP Model Improvement Effort
+# Progress Handoff — xP Model + AI Optimizer Effort
 
-_Last updated 2026-08-11 (usage-limit break) to allow clean resumption._
+_Last updated 2026-08-12 (mid-session, approaching usage limit — this file is a real resume point,
+not historical context)._
 
-## Big picture
+## Immediate next action (pick up here)
 
-Multi-phase effort to fix an FPL app's points-projection model, which a deep review found relied on
-hardcoded, never-verified calibration and rotation heuristics instead of real data.
+Resuming subagent-driven-development on branch `feature/defensive-contribution`, worktree at
+`.worktrees/defensive-contribution`. Tasks 1-4 of the plan are implemented, spec-reviewed, and
+code-quality-reviewed. **One fix from Task 4's code-quality review has NOT been applied yet:**
 
-- **Phase 1 (backtest infrastructure): ✅ DONE, MERGED, DEPLOYED, LIVE.**
-- **Phase 2 (rotation/availability modeling): ✅ DONE, MERGED, DEPLOYED, VERIFIED LIVE.**
-- **Phase 3 (fixture difficulty from real team-strength data): 🔄 5 of 6 tasks done, all
-  reviewed/approved, 102/102 tests passing. NOT yet merged. One task left (manual verification),
-  then finish the branch (push/PR/merge/deploy, same as Phases 1-2).**
+- `sync.js`'s `getPlayerRatings` computes `dcRatio = (player.dcPer90 || 0) / threshold` with no
+  float-precision guard. `lib/predictionModel.js`'s `getExpectedDefconPts` computes the identical
+  ratio and explicitly rounds it (`Math.round(x * 1e6) / 1e6`) specifically because IEEE 754 breaks
+  exact boundary values — e.g. a MID with `dcPer90 = 13.2` computes `13.2/12 = 1.0999999999999999`,
+  not `1.1`, misclassifying into the wrong tier. `dcPer90` is stored via `.toFixed(2)`, so real
+  boundary values reproduce this. Net effect: the "Defcon Potential" UI badge and the xP model's
+  internal hit-probability tier can silently disagree for players sitting exactly at a threshold
+  multiple. **Fix:** apply the same rounding guard in `sync.js` (search for `const dcRatio =`).
+- After that fix: re-run `npm test` (should stay 133/133 — this isn't a new-test-covered path), then
+  a quick manual check that a known boundary-value player now grades consistently between the badge
+  and the model, then commit.
+- Then: **Task 5** (full regression + manual verification, per
+  `docs/superpowers/plans/2026-08-12-defensive-contribution.md`) — not started yet.
+- Then: final holistic cross-file review (per `superpowers:subagent-driven-development`'s process —
+  a dedicated reviewer subagent looking at the WHOLE branch diff together, the way the earlier
+  vacancy/set-piece branch caught a real double-counting bug that per-task review missed).
+- Then: `superpowers:finishing-a-development-branch` (push, PR, merge into `main`, verify live).
 
----
+**Worktree housekeeping:** `git status` in the worktree shows `data.js` modified (from a live
+`node sync.js` run done to verify Task 4) plus `package-lock.json`/`node_modules/.package-lock.json`
+noise (npm side effects, not related to this feature — do not commit those). Decide at
+finishing-the-branch time whether to commit a fresh `data.js` sync (matching the pattern from the
+vacancy/set-piece branch, which ended with a `chore(sync): refresh data.js` commit) or let the next
+real sync pick it up.
 
-## Phase 3 — exact current state (pick up here)
-
-**Branch:** `feature/phase3-fixture-difficulty`
-**Worktree:** `.worktrees/phase3-fixture-difficulty` (already set up, `npm install` done)
-**Plan:** `docs/superpowers/plans/2026-08-11-phase3-fixture-difficulty.md` (6 tasks — the plan file
-itself was corrected mid-implementation, see below, so it now matches what actually shipped)
-**Design spec:** `docs/superpowers/specs/2026-08-11-phase3-fixture-difficulty-design.md`
-**Execution mode:** Subagent-driven-development (same process as Phases 1-2)
-**Latest commit on the branch:** `4361cb0`. Test suite: **102/102 passing.**
-
-### Task status
-
-| # | Task | Status |
-|---|------|--------|
-| 1 | `lib/teamStrength.js` — 3-tier team-strength resolution (this season → last season archive → null) | ✅ done, reviewed, one real fix (NaN could slip through `typeof v==='number'` tier-1 check; switched to `Number.isFinite`, added mixed-zero/non-numeric test coverage) |
-| 2 | `lib/predictionModel.js` — `getAttackMultiplier`, restructured `getCleanSheetProb`, `computeGoalsConcededNudge`, `computeLeagueAverageGoalsConceded90`, rewired `computeGwPrediction` | ✅ done, reviewed, 3 real fixes: (a) `usedStrengthPath` only checked tier-2 fields, not tier-1 — widened to a `fixtureHasStrengthData` helper checking either; (b) the `goalsConceded90` nudge cap wasn't scaled for MID's smaller csAdj weight (×1 vs ×4 for GKP/DEF), made it proportionally ~4x too strong for MID — added a `MID_GOALS_CONCEDED_NUDGE_SCALE=0.25`; (c) missing/undefined `diff` behaved inconsistently (neutral in one function, worst-case in two others) — standardized to neutral everywhere |
-| 3 | `sync.js` — wire team strength into `teamsList`/`fixturesSchedule` | ✅ done, reviewed, no real bugs (2 comment-only additions requested and added) |
-| 4 | `sync.js` — two-pass restructure for the `goalsConceded90` league average | ✅ done, reviewed, **1 real Critical bug found and fixed — this was a mistake in the plan itself, not the implementer's**: the `actualPts` backtest-simulation gate used the *mutated* `starts` local (overridden to e.g. 25 by the "expected starter" heuristic for promoted-team players) instead of the original code's raw `el.starts`, which would have fabricated non-zero `actualPts` for players who never actually played a finished fixture, corrupting data fed into `lib/calibration.js`. Fixed with a distinct `rawStarts` field; also replaced a fragile deny-list destructure (`...restFields`) with an explicit allow-list return object. **The plan document itself was corrected to match** (commit `c050c7e` on `main`), so re-reading the plan now shows the fixed version, not the original bug. |
-| 5 | `sync.js` `LEAGUE_AVG_GOALS_PER_GAME` seed + `ticker.js` uses the real model | ✅ done, reviewed, no real bugs (2 suggestion-level notes, not required: a missing comment on `getFixtureForGw`'s GW>10 fallback lacking strength fields, and a minor style nit) — **this is the task that actually fixes the original bug that kicked off Phase 3**: `ticker.js`'s hardcoded `CS_ODDS_LOOKUP`/`PROJ_GOALS_LOOKUP` tables (hand-copied from a competitor site, causing the ticker's three tabs to visually disagree) are now fully removed, confirmed via grep — the Clean Sheet%/Projected Goals tabs call the real `getCleanSheetProb`/`getAttackMultiplier` functions. Verified live: the ARS@AVL GW2 case (the motivating example throughout this phase) now reads as *easier* by the new strength-based model (attack multiplier 1.144) even though FPL's official `diff` still says hard — exactly as designed. |
-| 6 | Manual verification | ⏳ **NOT STARTED — next task to dispatch** |
-
-### To resume
-
-1. Re-open this conversation or start a fresh one with this file as context.
-2. `cd` into `.worktrees/phase3-fixture-difficulty`, confirm `npm test` still shows 102/102 and
-   `git log --oneline -3` shows `4361cb0` at the tip.
-3. Dispatch Task 6 (plan file, section "### Task 6: Manual verification" — search for it near the
-   end of the plan doc): full test suite, `npm run build`, re-check the ARS@AVL GW2 case
-   end-to-end including in the actual rendered UI, spot-check a newly-promoted team's fixture to
-   confirm the tier-3/`null` fallback engages correctly (not a fake `0`), confirm the hardcoded
-   tables are gone (`grep -n "CS_ODDS_LOOKUP\|PROJ_GOALS_LOOKUP" components/ticker.js` → no output).
-4. After Task 6: dispatch a final holistic cross-file reviewer (same pattern as Phases 1-2 — this
-   caught real bugs both previous times, don't skip it) before calling the branch done.
-5. Then `finishing-a-development-branch` skill: verify tests → present 4 options → push/PR/merge →
-   confirm Railway redeploy → **re-run `npm run build` explicitly** before considering it deployed
-   (Phase 1's production-incident precedent — this phase changes `data.js`'s team-object shape, so
-   don't skip this).
-
-### User's pending request, not yet done
-
-User asked for a **side-by-side comparison** of what's actually shown on screen (not the underlying
-calculation — they were explicit about this: "i dont want underlying calculation just what is shown
-on screen") for the Fixture Difficulty Ticker's three tabs (Difficulty/Clean Sheet%/Projected Goals),
-presumably comparing our now-real numbers against Fantasy Football Scout's published ticker
-(`https://www.fantasyfootballscout.co.uk/fpl/ticker`) for the same fixtures, using screenshots the
-user already shared earlier in the conversation (Arsenal/Man City/Man Utd rows, GW1-10, all three
-tabs). **Do this next, before or alongside Task 6.** Approach: run the app locally (`npm run build`
-+ preview, or `npm run sync` in the worktree + open the built site), navigate to the ticker, and
-screenshot/describe the actual rendered values for the same rows/gameweeks the user's FFS
-screenshots showed, so the user can compare visually. Do NOT reproduce FFS's specific numbers
-verbatim in any file/artifact — only describe OUR OWN app's rendered output; if putting both side by
-side, that's fine as an ephemeral chat comparison (not a copied dataset committed anywhere).
-
-**Important context on why FFS's raw data was not used as a data source** (in case asked again):
-User pushed multiple times to use Fantasy Football Scout's or Solio Analytics' published FDR/Clean
-Sheet%/Projected Goals numbers as a temporary hardcoded stopgap "until we have real Gameweek data",
-including asserting the data was confirmed free-to-use. Declined each time — reproducing another
-site's computed proprietary output (their Elo model's results) into this codebase is a copyright/
-reproduction concern independent of whether their tool is free-to-view (free-to-view ≠ licensed for
-reuse), and it would also reintroduce the exact hardcoded-data anti-pattern this whole phase exists
-to remove. Instead built a real, free, FPL-sourced 3-tier fallback (this season's real data → last
-season's real archived data → null) — this is what Tasks 1-5 above actually deliver, and it was
-confirmed to already resolve the user's underlying need (accurate data for personal team-building)
-without needing FFS's numbers at all. If this comes up again, the answer hasn't changed; point back
-to this section rather than re-relitigating from scratch.
+Design spec: `docs/superpowers/specs/2026-08-12-defensive-contribution-design.md`
+Plan: `docs/superpowers/plans/2026-08-12-defensive-contribution.md`
 
 ---
 
-## Phase 1 & Phase 2 — final state (for reference, nothing left to do here)
+## New, NOT YET INVESTIGATED: Arsenal XP looks overpriced vs. Solio
 
-Both fully merged to `main`, deployed, verified live on `https://ffh-production.up.railway.app`.
+User flagged this via a screenshot of the Projections table (points-sorted, all Arsenal shown):
+Gabriel 4.96 avg, Saka 4.57, Mosquera 4.18, Raya 3.95, Bruno G. 3.88, Rice 3.67, Havertz 3.52,
+Tzolis 3.41, Calafiori 3.40 — an unusually large cluster of one team's players at the top of a
+GW1-5 points table. User's explicit ask: "we need to scale that down to be realistic."
 
-- **Phase 1**: real backtest/calibration infrastructure. MAE 2.83/RMSE 3.24 baseline against last
-  season's real data. `/api/backtest/report?source=retro` is live.
-- **Phase 2**: replaced `ROLE_OVERRIDES`/`KNOWN_TRANSFERS`/hardcoded promoted-team lists with a real
-  `startProbability`/`dataConfidence`/`displacementRisk` model. Also removed a hardcoded patch that
-  cloned Calafiori's exact predictions onto Mosquera — this was the root cause of a real user-
-  reported bug ("XP looks identical for some players"), found and fixed as part of this phase's
-  final holistic review + a follow-up user report.
+**Not yet done, do this first when resuming (after the Defcon branch is merged, or in parallel if
+more urgent):**
+1. Get real, current Solio numbers for the same Arsenal players/window to confirm this is a real gap
+   and not just "Arsenal genuinely have good fixtures + a stacked squad this window" (which alone
+   wouldn't be a bug). Same methodology as the earlier Ndiaye/Calvert-Lewin investigations this
+   session — controlled comparison, not vibes.
+2. Consider whether this is confounded by the **positional vacancy boost** (Saliba+Timber both out
+   → Mosquera boosted, and possibly interacting with Gabriel/others) landed earlier this session —
+   worth checking whether removing that boost's effect still leaves Arsenal overpriced, to isolate
+   root cause before touching anything.
+3. Consider whether Arsenal's real team-strength inputs (`lib/teamStrength.js`) are simply rated
+   very high right now (real, not a bug) vs. whether there's a genuine calibration skew specific to
+   this team.
+4. **Standing constraint still applies:** no further changes to the AGGREGATE season-pace
+   calibration (`PLAYER_ATTACK_MULTIPLIER_MIN/MAX` in `lib/predictionModel.js`) without a fresh
+   explicit user request — user previously confirmed that pair's current value is correct. If this
+   Arsenal issue turns out to be team-specific (not aggregate), a fix likely lives elsewhere (team
+   strength inputs, or a per-team check) — don't reach for the MIN/MAX pair by default.
+5. Do NOT reproduce or rely on Solio's actual displayed numbers beyond what's needed for a real,
+   narrow comparison — same copyright-awareness as the rest of this session.
 
-**Recently discussed but NOT yet investigated**: user asked how Phase 1/2/3 changes affect XP
-calculation and noted some players seem to have lower XP than expected. Answered conceptually
-(Phase 2's `startProbability` is more conservative than the old heuristic for players without 3+
-real current-season games yet — a cold-start effect that should ease as the season progresses,
-not a bug) but no specific player was named/traced through the actual live computation. If the user
-raises specific players, trace `startProbability`/`dataConfidence`/the resulting minutes factor for
-them directly (same method used earlier in this project for Mosquera/Bruno G./Shaw).
+---
 
-## Important context to carry forward (still applies)
+## Big picture — what's DONE, MERGED, DEPLOYED, LIVE on `main`
 
-### The Phase 1 production incident (don't repeat it)
+- **Phases 1-3 (xP model rework):** backtest infra, rotation/availability modeling, real
+  fixture-difficulty model.
+- **Phase 4 (set-piece duty from real FPL API data):** penalty/free-kick/corner duty replaces old
+  hardcoded name lists; `PENALTY_DUTY_BONUS` currently `{ FWD: 0.32, MID: 0.4, DEF: 0.49 }` (75% of
+  full real-anchored credit, raised from 50% per explicit user direction; see
+  `lib/predictionModel.js`'s comment above that constant for the full derivation).
+- **Positional vacancy boost + set-piece duty wired into core XP** (not just the Optimizer's
+  internal ranking) — PR #6, merged. `lib/startProbability.js`'s `detectPositionalVacancy`.
+- **AI Optimizer perf/correctness fixes** (PR #4 + follow-ups): non-blocking progress UI, decay-
+  weighting bug fix (every horizon GW now weighted equally), squad-fill fallback hardening.
+- **AI Optimizer starting-XI reconciliation bug (`86d376e`, pushed to `origin/main` this session):**
+  `isStarting` was assigned once, by slot array index, before any player was placed — never
+  re-derived from which players actually ended up in the squad. A genuinely stronger player could
+  sit on the bench indefinitely while a weaker same-position teammate started. Real example that
+  surfaced it: Thomas (6.4 XP/5GW) started over Heaven (20.4) and Hickey (17.7), with budget still
+  unspent. Fixed by re-deriving `isStarting` from real horizon score after the squad is final.
+  **Verified live in-browser** (fresh preseason optimizer run): every starting DEF/MID now strictly
+  outscores the benched options at that position.
+  - **Known, deliberately untouched:** `midseason` mode (limited transfers) uses a separate code
+    path that inherits `isStarting` from the user's existing saved lineup rather than reassigning
+    it. Not confirmed broken — if the same symptom shows up there, apply the same fix pattern.
+- **Calibration state:** `PLAYER_ATTACK_MULTIPLIER_MIN=0.5` / `MAX=2.0`, `K_ATTACK_OVERALL=0.20`,
+  `K_ATTACK_SPECIFIC=0.003` in `lib/predictionModel.js`. Season-pace re-checked this session with a
+  corrected methodology (real max-3-per-club + £100m budget constraint, previously missing) →
+  ≈2734.3 pts (no captain/chips, free weekly lineup swaps) vs. real #1-overall-rank range
+  2557-2844 (which includes captain doubling + chips) — directionally sane, not re-tuned. **Do not
+  touch `PLAYER_ATTACK_MULTIPLIER_MIN/MAX` without a fresh explicit user request** — this is a
+  standing constraint from earlier in the session.
 
-Named ES imports of not-yet-existing `data.js` exports are a **hard build-time error** under
-Vite/Rollup's static export validation — not runtime-catchable, `npm test` won't catch it. Always
-use a namespace import (`import * as X from './data.js'`) for any field that might not exist in the
-currently-committed `data.js` yet. Phase 3 already follows this correctly for its new
-`LEAGUE_AVG_GOALS_PER_GAME` export in `ticker.js` (see Task 5 above). Always run `npm run build`,
-not just `npm test`, before considering any `data.js`-schema-touching change deploy-ready.
+## Deferred, non-blocking items (user confirmed wants these after Defcon Contribution ships)
 
-### Process discipline that's worked well across all three phases so far
+1. **Displacement-risk staleness:** `detectDisplacementRisk` runs before the positional vacancy
+   boost in `sync.js`, so a boosted player (e.g. Mosquera) could still show a stale "High risk of
+   displacement" badge alongside their now-boosted `startProbability`.
+2. **`scripts/retro-backtest.js` gaps:** doesn't pass `setPieceDuty` OR (as of this session)
+   `dcPer90` into `computeGwPrediction`. Low priority — doesn't affect live calibration, only the
+   offline backtest script.
+3. Smaller nits already noted in earlier commits' comments: `sync.js`'s `historicalStartRate` left
+   `undefined` rather than the established `null` sentinel on a failed-computation path;
+   `SET_PIECE_ASSIST_BONUS` (flat 0.06) is a low-confidence estimate, revisit if better data shows up.
 
-Subagent-driven-development (implementer → independent spec-compliance reviewer → independent
-code-quality reviewer → fix loop, repeated per task) + a final holistic cross-file review before
-finishing any branch + independent re-verification after any post-review fix pass. **Every phase so
-far has found at least one real, non-trivial bug this way that a single-pass review would have
-missed** — including, this time, a bug in the plan document itself (Task 4's `rawStarts` issue),
-caught by code-quality review rather than the plan's own self-review. Keep doing this discipline for
-Task 6 and any future phase.
+## Standing behavioral constraints (both explicit, both still active)
 
-## Files worth reading first when resuming
+- **Minimize AskUserQuestion for implementation-level decisions.** User was explicit earlier this
+  session: use engineering judgment for pairing algorithms, ceiling-exclusion filters, etc. — only
+  ask about genuine product/scope-level calls with no clear right answer.
+- **No further `PLAYER_ATTACK_MULTIPLIER_MIN/MAX` changes without fresh explicit request** — see
+  above. Narrower, targeted parameter tweaks (like the 75% penalty-dampening change) are a different,
+  already-approved category, not a re-opening of this.
+
+## Files worth reading first if picking this back up
 
 1. This file.
-2. `docs/superpowers/plans/2026-08-11-phase3-fixture-difficulty.md` — the task specs (now corrected
-   to match what actually shipped).
-3. `git log --oneline` in the worktree — commit messages document what happened and why in detail.
+2. `git log --oneline` on `main` — commit messages document what happened and why, in detail.
+3. `git log --oneline` in `.worktrees/defensive-contribution` (branch `feature/defensive-contribution`)
+   for the in-progress Defcon Contribution work.
+4. `docs/superpowers/plans/2026-08-12-defensive-contribution.md` — the plan currently being executed.
+5. `docs/superpowers/specs/2026-08-12-defensive-contribution-design.md` — the design it implements.
