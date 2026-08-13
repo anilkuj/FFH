@@ -41,11 +41,6 @@ window.getPlayerMinutesFactor = function(player) {
     if (player.web_name === 'Shaw') {
         return 0.88; // Guaranteed starter at Man United left back
     }
-    if (player.web_name === 'Sangaré') {
-        return 1.0; // Guaranteed BRE CM starter — squad-bloat decay wrongly demotes him because
-                    // BRE have 12 FPL-MID players (many are wingers/attackers) pushing him to index 7.
-                    // Solio projects 19 pts over 5 GWs vs our 2.6 without this fix.
-    }
 
     // Backup goalkeeper suppression stays -- this is a squad-slot rule (bench-budget economics: a
     // 4.0m backup GK behind an active 4.5m+ primary contributes ~0 realistic points), not a
@@ -66,8 +61,13 @@ window.getPlayerMinutesFactor = function(player) {
         rawProb = chance;
     }
 
-    // Dynamic squad-bloat scaling (allocating available starting spots to avoid squad-inflation)
-    if (player.team) {
+    // Dynamic squad-bloat scaling (allocating available starting spots to avoid squad-inflation).
+    // Only applied to the top 5 rotation-heavy clubs (ARS, CHE, MCI, MUN, LIV) where genuine
+    // positional competition across many FPL-listed players occurs. Smaller clubs (e.g. BRE) have
+    // wingers/attackers FPL-classified as MID alongside true CMs, which inflates the position
+    // count and falsely penalises guaranteed starters like Sangaré.
+    const _BLOAT_DECAY_TEAMS = new Set(['ARS', 'CHE', 'MCI', 'MUN', 'LIV']);
+    if (player.team && _BLOAT_DECAY_TEAMS.has(player.team)) {
         const pos = player.position;
         const teammates = allPlayers.filter(p => p.team === player.team && p.position === pos && p.status !== 'u' && p.status !== 's' && p.status !== 'i');
         
