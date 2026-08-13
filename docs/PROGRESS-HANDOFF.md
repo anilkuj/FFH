@@ -39,33 +39,96 @@ Plan: `docs/superpowers/plans/2026-08-12-defensive-contribution.md`
 
 ---
 
-## New, NOT YET INVESTIGATED: Arsenal XP looks overpriced vs. Solio
+## HIGH PRIORITY, ROOT-CAUSE FOUND, NOT YET FIXED: Arsenal (and likely others) overpriced
 
-User flagged this via a screenshot of the Projections table (points-sorted, all Arsenal shown):
-Gabriel 4.96 avg, Saka 4.57, Mosquera 4.18, Raya 3.95, Bruno G. 3.88, Rice 3.67, Havertz 3.52,
-Tzolis 3.41, Calafiori 3.40 — an unusually large cluster of one team's players at the top of a
-GW1-5 points table. User's explicit ask: "we need to scale that down to be realistic."
+User flagged this via Solio screenshots (a third-party FPL projection site — confirmed both
+screenshots were Solio's own UI, not ours, after comparing layouts). Real, controlled comparison run
+this session (our model's real 5-GW average vs. Solio's, same players, `node` one-liner against
+local `data.js` — reproducible any time, not a one-off):
 
-**Not yet done, do this first when resuming (after the Defcon branch is merged, or in parallel if
-more urgent):**
-1. Get real, current Solio numbers for the same Arsenal players/window to confirm this is a real gap
-   and not just "Arsenal genuinely have good fixtures + a stacked squad this window" (which alone
-   wouldn't be a bug). Same methodology as the earlier Ndiaye/Calvert-Lewin investigations this
-   session — controlled comparison, not vibes.
-2. Consider whether this is confounded by the **positional vacancy boost** (Saliba+Timber both out
-   → Mosquera boosted, and possibly interacting with Gabriel/others) landed earlier this session —
-   worth checking whether removing that boost's effect still leaves Arsenal overpriced, to isolate
-   root cause before touching anything.
-3. Consider whether Arsenal's real team-strength inputs (`lib/teamStrength.js`) are simply rated
-   very high right now (real, not a bug) vs. whether there's a genuine calibration skew specific to
-   this team.
-4. **Standing constraint still applies:** no further changes to the AGGREGATE season-pace
-   calibration (`PLAYER_ATTACK_MULTIPLIER_MIN/MAX` in `lib/predictionModel.js`) without a fresh
-   explicit user request — user previously confirmed that pair's current value is correct. If this
-   Arsenal issue turns out to be team-specific (not aggregate), a fix likely lives elsewhere (team
-   strength inputs, or a per-team check) — don't reach for the MIN/MAX pair by default.
-5. Do NOT reproduce or rely on Solio's actual displayed numbers beyond what's needed for a real,
-   narrow comparison — same copyright-awareness as the rest of this session.
+| Player | Ours | Solio | Diff |
+|---|---|---|---|
+| Saka | 10.26 | 4.57 | **+5.69** |
+| Gabriel | 8.04 | 4.96 | **+3.08** |
+| O'Reilly | 6.44 | 4.08 | +2.36 |
+| Anderson | 6.30 | 4.24 | +2.06 |
+| Semenyo | 7.10 | 4.98 | +2.12 |
+| B.Fernandes | 7.64 | 6.20 | +1.44 |
+| Haaland | 8.08 | 6.68 | +1.40 |
+| Buendía | 5.38 | 4.10 | +1.28 |
+| Ndiaye | 3.94 | 4.43 | -0.49 |
+| Tavernier | 3.40 | 4.22 | -0.82 |
+
+(Full 28-player table is reproducible — see the `node -e` one-liner used, not saved as a script;
+recreate by loading `data.js`'s `PLAYERS`, averaging `predictions.slice(0,5)`, against a hand-entered
+Solio baseline if the user provides a fresh screenshot.) Not every player is over — some are under —
+but the biggest outliers are dramatic and skew toward specific teams/positions, not random noise.
+
+### Root cause, confirmed via direct inspection (not guessed)
+
+`computeGwPrediction` (`lib/predictionModel.js`) applies one multiplier —
+`breakdown.fdrMultiplier = clamp(getAttackMultiplier(fixture), PLAYER_ATTACK_MULTIPLIER_MIN, MAX)`
+— to `pts *= fdrMultiplier` **before** branching into GKP/DEF/MID/FWD-specific logic. This means a
+**defender's** baseline points get scaled by the team's ATTACKING-strength gap vs. the opponent's
+defence, not by a defensive/clean-sheet-relevant signal. `csAdj` (the clean-sheet-probability term)
+is a separate, smaller additive term layered on top — it doesn't correct for this.
+
+Checked real team-strength data (`TEAMS` in `data.js`, sourced from FPL's own `bootstrap-static`):
+
+```
+ARS  strengthAttackHome=1340  strengthAttackAway=1390   <- higher than Man City below
+MCI  strengthAttackHome=1220  strengthAttackAway=1310
+AVL  strengthDefenceHome=1150 (Arsenal's GW2 opponent)
+SUN  strengthDefenceHome=1040 strengthDefenceAway=1130  (Arsenal's GW4 opponent, promoted team)
+COV  strengthAttack/Defence: null/null                  (promoted, no data yet -> fallback path)
+```
+
+Arsenal's real, FPL-official attack rating is currently higher than Man City's, and several of their
+next-5 opponents (Sunderland, Aston Villa, newly-promoted Coventry) have weak/missing defence
+ratings. The attack-vs-defence gap repeatedly approaches `PLAYER_ATTACK_MULTIPLIER_MAX` (2.0) across
+*multiple* of the 5 gameweeks, not just one — confirmed via per-fixture breakdown:
+
+```
+Saka:    GW1 9.6, GW2 10.9(diff=4!), GW3 8.2, GW4 12.6(diff=3), GW5 10.0  -> avg 10.26
+Gabriel: GW1 7.5, GW2 8.6(diff=4!),  GW3 6.3, GW4 10.0(diff=3), GW5 7.8   -> avg 8.04
+```
+
+Note GW2 (diff=4, "hard" per FPL's own official difficulty) scoring *higher* than GW1/GW3 (easier
+diff) for both players — the strength-based path is overriding FPL's own diff rating in the
+"favorable" direction here, which is a previously-accepted, *intentional* design choice for
+attackers (there's an existing test for exactly this: `getAttackMultiplier: real ARS @ AVL GW2 case
+-- overall strength disagrees with FPL official diff, and we side with strength`). The bug is less
+"the multiplier disagrees with diff" and more "**this same multiplier gets applied to defenders,
+where attacking-strength gap isn't the relevant signal**."
+
+### Recommended direction for next session (not yet designed, don't just patch blindly)
+
+- **Most likely real fix:** give DEF (and maybe GKP) a separate, more dampened fixture multiplier
+  tied to defensive strength (opponent attack vs. own defence — `K_DEFENCE_SPECIFIC`/
+  `K_DEFENCE_OVERALL` already exist in `lib/predictionModel.js` for `getCleanSheetProb`; investigate
+  whether an analogous defence-oriented multiplier should replace or dampen `fdrMultiplier` for the
+  DEF/GKP branches specifically, instead of reusing the attack-oriented one).
+  Attack-strength-based `fdrMultiplier`is not the right coupling for Gabriel's basePPG; the same
+  applies to any other Arsenal/high-attack-team defender.
+- Saka/Haaland/B.Fernandes-style overages (elite attackers on a team with a genuinely high, real
+  attack rating) are smaller in magnitude and more defensible — may just need the existing
+  `PLAYER_ATTACK_MULTIPLIER_MAX` re-examined for whether 2.0 is still right now that it's compounding
+  across most of a 5-GW window for a top attacking side, not firing rarely as originally intended.
+  **This DOES touch the standing-constraint constant** — needs a fresh, explicit user conversation
+  before changing it, not a unilateral tweak. Bring the new evidence (this table) to that
+  conversation rather than re-deriving it.
+- This needs the full `superpowers:brainstorming` → spec → plan → subagent-driven-development cycle,
+  same rigor as every other scoring change this session — don't shortcut it just because the evidence
+  is strong. A DEF-specific multiplier is a real architecture change to `computeGwPrediction`, not a
+  one-line tweak.
+- Do NOT reproduce or rely on Solio's actual displayed numbers beyond what's needed for this internal
+  comparison — same copyright-awareness as the rest of this session.
+
+**Priority call for next session:** user pushed on this harder than the Defcon Contribution branch
+in this session's final messages — consider asking the user whether to finish/merge Defcon
+Contribution first (small remaining surface, already 4/5 tasks reviewed) or pivot to this
+Arsenal/defender-multiplier investigation first. Don't assume the order — this is a genuine
+priority call, not an implementation detail.
 
 ---
 
