@@ -260,6 +260,17 @@ test('getExpectedDefconPts: dcPer90 of 0 or missing returns 0, not NaN or negati
     assert.equal(getExpectedDefconPts({ position: 'DEF', mppg: 90 }), 0);
 });
 
+test('getExpectedDefconPts: exact tier boundaries resolve to the tier they belong to (>= is inclusive)', () => {
+    // DEF threshold = 10. ratio exactly 1.0 falls in [0.9, 1.1) -> 0.35 tier, not the 1.1 tier.
+    assert.equal(getExpectedDefconPts({ position: 'DEF', dcPer90: 10, mppg: 90 }), 0.7);
+    // ratio exactly 0.9 -> still the 0.35 tier (>= 0.9, not > 0.9).
+    assert.equal(getExpectedDefconPts({ position: 'DEF', dcPer90: 9, mppg: 90 }), 0.7);
+    // ratio exactly 0.7 -> the 0.15 tier (>= 0.7, not > 0.7).
+    assert.equal(getExpectedDefconPts({ position: 'DEF', dcPer90: 7, mppg: 90 }), 0.3);
+    // just under 0.7 -> drops to the 0.05 floor tier.
+    assert.equal(getExpectedDefconPts({ position: 'DEF', dcPer90: 6.9, mppg: 90 }), 0.1);
+});
+
 test('computeGwPrediction: player-scoring multiplier is dampened relative to getAttackMultiplier\'s wider team-level range, preventing unrealistic single-GW spikes', () => {
     // At the current PLAYER_ATTACK_MULTIPLIER_MAX (2.0), the overall-strength fallback path's own
     // max possible raw value (a full 4-point gap on the 1-5 scale, K_ATTACK_OVERALL=0.20) is only
