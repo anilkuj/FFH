@@ -238,12 +238,12 @@ async function parseAndWriteData(data, fixturesData) {
                     opp: awayTeam,
                     loc: 'H',
                     diff: f.team_h_difficulty,
-                    ownStrength: homeTeamObj.strengthOverallHome,
-                    oppStrength: awayTeamObj.strengthOverallAway,
-                    ownAttackStrength: homeTeamObj.strengthAttackHome,
-                    oppDefenceStrength: awayTeamObj.strengthDefenceAway,
-                    ownDefenceStrength: homeTeamObj.strengthDefenceHome,
-                    oppAttackStrength: awayTeamObj.strengthAttackAway
+                    ownStrength: homeTeamObj.strengthOverallAway,
+                    oppStrength: awayTeamObj.strengthOverallHome,
+                    ownAttackStrength: homeTeamObj.strengthAttackAway,
+                    oppDefenceStrength: awayTeamObj.strengthDefenceHome,
+                    ownDefenceStrength: homeTeamObj.strengthDefenceAway,
+                    oppAttackStrength: awayTeamObj.strengthAttackHome
                 });
             }
             if (fixturesSchedule[awayTeam]) {
@@ -252,12 +252,12 @@ async function parseAndWriteData(data, fixturesData) {
                     opp: homeTeam,
                     loc: 'A',
                     diff: f.team_a_difficulty,
-                    ownStrength: awayTeamObj.strengthOverallAway,
-                    oppStrength: homeTeamObj.strengthOverallHome,
-                    ownAttackStrength: awayTeamObj.strengthAttackAway,
-                    oppDefenceStrength: homeTeamObj.strengthDefenceHome,
-                    ownDefenceStrength: awayTeamObj.strengthDefenceAway,
-                    oppAttackStrength: homeTeamObj.strengthAttackHome
+                    ownStrength: awayTeamObj.strengthOverallHome,
+                    oppStrength: homeTeamObj.strengthOverallAway,
+                    ownAttackStrength: awayTeamObj.strengthAttackHome,
+                    oppDefenceStrength: homeTeamObj.strengthDefenceAway,
+                    ownDefenceStrength: awayTeamObj.strengthDefenceHome,
+                    oppAttackStrength: homeTeamObj.strengthAttackAway
                 });
             }
         }
