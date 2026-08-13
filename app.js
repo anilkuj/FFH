@@ -38,13 +38,66 @@ window.getPlayerMinutesFactor = function(player) {
         if (hasActivePrimary) return 0.0;
     }
 
+    // Base start probability or chance of playing
+    let rawProb = 1.0;
     if (typeof player.startProbability === 'number' && !Number.isNaN(player.startProbability)) {
-        return Math.min(1.0, Math.max(0.15, player.startProbability));
+        rawProb = player.startProbability;
+    } else {
+        const chance = (player.chanceOfPlaying !== undefined && player.chanceOfPlaying !== null) ? (player.chanceOfPlaying / 100) : 1.0;
+        rawProb = chance;
     }
 
-    // Fallback for the transition period before data.js has been re-synced with startProbability.
-    const chance = (player.chanceOfPlaying !== undefined && player.chanceOfPlaying !== null) ? (player.chanceOfPlaying / 100) : 1.0;
-    return Math.min(1.0, Math.max(0.15, chance));
+    // Dynamic squad-bloat scaling (allocating available starting spots to avoid squad-inflation)
+    if (player.team) {
+        const pos = player.position;
+        const teammates = allPlayers.filter(p => p.team === player.team && p.position === pos && p.status !== 'u' && p.status !== 's' && p.status !== 'i');
+        
+        const targets = { GKP: 1.0, DEF: 4.0, MID: 4.5, FWD: 1.5 };
+        const target = targets[pos] || 4.0;
+
+        const rawProbs = teammates.map(p => {
+            const pChance = p.chanceOfPlaying !== null && p.chanceOfPlaying !== undefined ? p.chanceOfPlaying / 100 : 1.0;
+            const pProb = typeof p.startProbability === 'number' && !Number.isNaN(p.startProbability) ? p.startProbability : pChance;
+            return { id: p.id, prob: pProb, price: p.price || 5.0, ownership: p.ownership || 0.0 };
+        });
+
+        const sum = rawProbs.reduce((s, p) => s + p.prob, 0);
+
+        if (sum > target) {
+            // Sort by raw probability, with price & ownership as tie-breaker/priority indicators
+            rawProbs.sort((a, b) => {
+                if (Math.abs(b.prob - a.prob) > 0.05) {
+                    return b.prob - a.prob;
+                }
+                const scoreA = a.price * 2 + a.ownership;
+                const scoreB = b.price * 2 + b.ownership;
+                return scoreB - scoreA;
+            });
+
+            const myIndex = rawProbs.findIndex(p => p.id === player.id);
+            if (myIndex !== -1) {
+                let low = 0.0, high = 1.0;
+                let decayFactor = 1.0;
+                for (let iter = 0; iter < 15; iter++) {
+                    const mid = (low + high) / 2;
+                    let testSum = 0;
+                    for (let i = 0; i < rawProbs.length; i++) {
+                        testSum += rawProbs[i].prob * Math.pow(mid, i);
+                    }
+                    if (testSum > target) {
+                        high = mid;
+                    } else {
+                        low = mid;
+                    }
+                    decayFactor = mid;
+                }
+                const scale = Math.pow(decayFactor, myIndex);
+                rawProb = rawProb * scale;
+            }
+        }
+    }
+
+    return Math.min(1.0, Math.max(0.15, rawProb));
 };
 
 
