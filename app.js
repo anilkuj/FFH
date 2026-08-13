@@ -41,6 +41,10 @@ window.getPlayerMinutesFactor = function(player) {
     if (player.web_name === 'Shaw') {
         return 0.88; // Guaranteed starter at Man United left back
     }
+    if (player.web_name === 'Sangaré') {
+        return 1.0; // Guaranteed BRE CM starter; basePPG manually set to 4.22 in sync.js
+                    // to target ~19 XP over 5 GWs — don't apply startProb discount on top.
+    }
 
     // Backup goalkeeper suppression stays -- this is a squad-slot rule (bench-budget economics: a
     // 4.0m backup GK behind an active 4.5m+ primary contributes ~0 realistic points), not a

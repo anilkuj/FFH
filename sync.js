@@ -401,6 +401,7 @@ async function parseAndWriteData(data, fixturesData) {
             isPromotedOrTransfer,
             manualOverridePPG: el.web_name === 'Mosquera' ? 4.5
                 : el.web_name === 'Shaw' ? 3.8
+                : el.web_name === 'Sangaré' ? 4.22  // Guaranteed BRE CM starter; targets ~19 XP over 5 GWs to align with Solio
                 : undefined
         });
 
