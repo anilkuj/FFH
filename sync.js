@@ -869,33 +869,19 @@ export function getPlayerRatings(player, currentGw = 1) {
         attackingPotential = 'E'; // GKP
     }
 
-    // 5. Defcon Potential (clean sheet potential. N/A for FWD)
+    // 5. Defcon Potential (real defensive-contribution output: combined tackles/interceptions/
+    // clearances(+recoveries for MID/FWD) per 90, vs. the real FPL per-match threshold. N/A for
+    // FWD/GKP -- FWD real rates average well under threshold (4.50 vs. 12, see BASE_DC90's comment
+    // in the pass-1 loop above), so a graded badge for them would mostly just read "E" and add no
+    // useful signal; GKP don't earn these points at all under the real rule.
     let defconPotential = 'N/A';
-    if (pos !== 'FWD') {
-        let sumOdds = 0;
-        let count = 0;
-        if (player.predictions && player.predictions.length > 0) {
-            for (let gw = currentGw; gw < currentGw + 5; gw++) {
-                const pred = player.predictions.find(p => p.gw === gw);
-                if (pred && pred.opp !== 'BYE') {
-                    let base = 30;
-                    if (pred.diff === 2) base = 48;
-                    else if (pred.diff === 4) base = 18;
-                    else if (pred.diff === 5) base = 8;
-                    
-                    if (pred.loc === 'H') base += 5;
-                    else base -= 5;
-                    
-                    sumOdds += base;
-                    count++;
-                }
-            }
-        }
-        const avgOdds = count > 0 ? (sumOdds / count) : 25;
-        if (avgOdds >= 40) defconPotential = 'A';
-        else if (avgOdds >= 30) defconPotential = 'B';
-        else if (avgOdds >= 20) defconPotential = 'C';
-        else if (avgOdds >= 10) defconPotential = 'D';
+    if (pos === 'DEF' || pos === 'MID') {
+        const threshold = pos === 'DEF' ? 10 : 12;
+        const dcRatio = (player.dcPer90 || 0) / threshold;
+        if (dcRatio >= 1.4) defconPotential = 'A';
+        else if (dcRatio >= 1.1) defconPotential = 'B';
+        else if (dcRatio >= 0.9) defconPotential = 'C';
+        else if (dcRatio >= 0.7) defconPotential = 'D';
         else defconPotential = 'E';
     }
 
