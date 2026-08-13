@@ -99,6 +99,34 @@ test('getAttackMultiplier: real ARS @ AVL GW2 case -- overall strength disagrees
     assert.ok(strengthMultiplier > legacyMultiplier);
 });
 
+test('computeGwPrediction: GKP always gets fdrMultiplier=1.0, strength-based path (attack-strength gap is the wrong signal for a keeper)', () => {
+    const easyFixture = { opp: 'SUN', loc: 'H', diff: 2, ownStrength: 5, oppStrength: 2 };
+    const hardFixture = { opp: 'MCI', loc: 'A', diff: 5, ownStrength: 2, oppStrength: 5 };
+    const easy = computeGwPrediction({ basePPG: 3.5, position: 'GKP', xG90: 0, xA90: 0, saves90: 3.0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture: easyFixture });
+    const hard = computeGwPrediction({ basePPG: 3.5, position: 'GKP', xG90: 0, xA90: 0, saves90: 3.0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture: hardFixture });
+    assert.equal(easy.breakdown.fdrMultiplier, 1.0);
+    assert.equal(hard.breakdown.fdrMultiplier, 1.0);
+});
+
+test('computeGwPrediction: DEF always gets fdrMultiplier=1.0, strength-based path (attack-strength gap is the wrong signal for a defender)', () => {
+    const easyFixture = { opp: 'SUN', loc: 'H', diff: 2, ownStrength: 5, oppStrength: 2 };
+    const { breakdown } = computeGwPrediction({ basePPG: 4.0, position: 'DEF', xG90: 0, xA90: 0, saves90: 0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture: easyFixture });
+    assert.equal(breakdown.fdrMultiplier, 1.0);
+});
+
+test('computeGwPrediction: DEF always gets fdrMultiplier=1.0, legacy diff-based fallback path too', () => {
+    const { breakdown } = computeGwPrediction({ basePPG: 4.0, position: 'DEF', xG90: 0, xA90: 0, saves90: 0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture: { opp: 'X', loc: 'H', diff: 2 } });
+    assert.equal(breakdown.fdrMultiplier, 1.0);
+});
+
+test('computeGwPrediction: MID/FWD fdrMultiplier behavior is completely unchanged by the GKP/DEF fix', () => {
+    const fixture = { opp: 'SUN', loc: 'H', diff: 2, ownStrength: 5, oppStrength: 2 };
+    const mid = computeGwPrediction({ basePPG: 4.0, position: 'MID', xG90: 0, xA90: 0, saves90: 0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture });
+    const fwd = computeGwPrediction({ basePPG: 4.0, position: 'FWD', xG90: 0, xA90: 0, saves90: 0, mppg: 90, starts: 20, chanceOfPlaying: 100, fixture });
+    assert.ok(mid.breakdown.fdrMultiplier > 1.0); // a real, strength-based favorable multiplier, same as before this fix
+    assert.ok(fwd.breakdown.fdrMultiplier > 1.0);
+});
+
 test('getExpectedSavePts: only applies to GKP', () => {
     assert.equal(getExpectedSavePts({ position: 'MID', diff: 5, loc: 'A', saves90: 3.6 }), 0);
     const gkSaves = getExpectedSavePts({ position: 'GKP', diff: 5, loc: 'A', saves90: 3.6 });
@@ -142,13 +170,18 @@ test('computeGwPrediction: MID, easy home fixture with attacking output (legacy 
     assert.equal(pts, 5.4);
 });
 
-test('computeGwPrediction: GKP, hard away fixture leans on saves, not clean sheet (legacy fallback path, unchanged from before this phase)', () => {
+test('computeGwPrediction: GKP, hard away fixture leans on saves, not clean sheet (legacy fallback path -- fdrMultiplier no longer scales GKP basePPG, see defence-aware fixture scaling fix)', () => {
     const { pts } = computeGwPrediction({
         basePPG: 3.5, position: 'GKP', xG90: 0, xA90: 0, saves90: 3.6,
         mppg: 90, starts: 25, chanceOfPlaying: 100,
         fixture: { opp: 'MCI', loc: 'A', diff: 5 }
     });
-    assert.equal(pts, 2.9);
+    // Hand-recalculated for fdrMultiplier=1.0 (previously 0.70 under the old scaling):
+    // pts = 3.5*1.0 = 3.5; homeAwayAdj (legacy, loc=A) = -0.35 -> 3.15;
+    // csAdj = (getCleanSheetProb(diff=5,loc=A)=0.03 - getCleanSheetProb(diff=3,loc=H)=0.35)*4 = -1.28 -> 1.87;
+    // savesAdj = getExpectedSavePts(diff=5,loc=A,saves90=3.6) = (3.6*1.60*1.10)/3 = 2.112 -> 3.982;
+    // chance=1.0 (no change); floor doesn't apply (already above 0.8); rounds to 4.0.
+    assert.equal(pts, 4.0);
 });
 
 test('computeGwPrediction: BYE gameweek always scores 0', () => {
