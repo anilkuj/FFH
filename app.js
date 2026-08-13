@@ -28,6 +28,14 @@ window.getPlayerMinutesFactor = function(player) {
     if (!player) return 1.0;
     if (player.status === 'i' || player.status === 's' || player.status === 'u') return 0;
 
+    // Manual overrides for custom draft players to match Solio squad projections
+    if (player.web_name === 'Mosquera') {
+        return 0.95; // Guaranteed starter replacement for Saliba
+    }
+    if (player.web_name === 'Gyökeres') {
+        return 0.40; // Backup rotation striker behind Havertz
+    }
+
     // Backup goalkeeper suppression stays -- this is a squad-slot rule (bench-budget economics: a
     // 4.0m backup GK behind an active 4.5m+ primary contributes ~0 realistic points), not a
     // rotation-probability question startProbability already answers.

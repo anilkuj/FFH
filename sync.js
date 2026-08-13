@@ -399,7 +399,7 @@ async function parseAndWriteData(data, fixturesData) {
             teamShort,
             price,
             isPromotedOrTransfer,
-            manualOverridePPG: undefined
+            manualOverridePPG: el.web_name === 'Mosquera' ? 4.5 : undefined
         });
 
         return {
@@ -520,7 +520,8 @@ async function parseAndWriteData(data, fixturesData) {
                 leagueAvgGoalsConceded90,
                 setPieceDuty: player.setPieceDuty,
                 dcPer90,
-                teamShort: player.team
+                teamShort: player.team,
+                price: player.price
             });
 
             // Calculate deterministic actual points if the fixture is completed
@@ -774,6 +775,7 @@ async function parseAndWriteData(data, fixturesData) {
         const boost = vacancyMap[p.code];
         if (boost) {
             p.startProbability = boost.boostedTo;
+            p.isVacancyBeneficiary = true;
         }
     });
 
