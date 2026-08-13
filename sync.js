@@ -399,7 +399,9 @@ async function parseAndWriteData(data, fixturesData) {
             teamShort,
             price,
             isPromotedOrTransfer,
-            manualOverridePPG: el.web_name === 'Mosquera' ? 4.5 : undefined
+            manualOverridePPG: el.web_name === 'Mosquera' ? 4.5
+                : el.web_name === 'Shaw' ? 3.8
+                : undefined
         });
 
         return {

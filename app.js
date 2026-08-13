@@ -38,6 +38,9 @@ window.getPlayerMinutesFactor = function(player) {
     if (player.web_name === 'Rice') {
         return 0.61; // Defensive midfielder with lower expected points in Solio
     }
+    if (player.web_name === 'Shaw') {
+        return 0.88; // Guaranteed starter at Man United left back
+    }
 
     // Backup goalkeeper suppression stays -- this is a squad-slot rule (bench-budget economics: a
     // 4.0m backup GK behind an active 4.5m+ primary contributes ~0 realistic points), not a
