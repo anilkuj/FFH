@@ -193,13 +193,13 @@ export function renderPlanner(container, state, actions) {
     // Calculate AI Squad Rating (0-100).
     // Calibrated against 24 years of FPL Overall World Winners historical data.
     // Modern 10-year champion average is 70.5 pts/GW (~2,680 pts/season).
-    // Benchmark: 4.90 base XP/player average (53.9 base starters XP + ~6.1 captaincy bonus = 60.0 GW total) = 100 rating.
-    // Distribution: Average squad (~48 total GW xP) → ~78 rating | Strong template (~54 total xP) → ~88 | Elite AI (~58 total xP) → ~94 | World #1 Pace (61+ total xP) → 100
+    // Benchmark: 5.28 base XP/player average (58.1 base starters XP + ~6.7 captaincy bonus = 64.8 GW total) = 100 rating.
+    // Distribution: Average squad (~50 total GW xP) → ~78 rating | Strong template (~57 total xP) → ~88 | Elite AI (~62 total xP) → ~95 | World #1 Pace (65+ total xP) → 100
     const captainPlayer = PLAYERS.find(p => p.id === state.captain);
     const captainBonus = captainPlayer ? (captainPlayer.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0) * (state.chips[state.currentGw]?.tripleCaptain ? 2 : 1) : 0;
     const rawExpectedPoints = Math.max(0, expectedPoints - captainBonus);
     const averagePlayerXP = rawExpectedPoints / 11;
-    const ratingScore = Math.min(100, Math.round((averagePlayerXP / 4.90) * 100));
+    const ratingScore = Math.min(100, Math.round((averagePlayerXP / 5.28) * 100));
 
     container.innerHTML = `
         <div class="planner-grid">
