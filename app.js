@@ -41,6 +41,11 @@ window.getPlayerMinutesFactor = function(player) {
     if (player.web_name === 'Shaw') {
         return 0.88; // Guaranteed starter at Man United left back
     }
+    if (player.web_name === 'Sangaré') {
+        return 1.0; // Guaranteed BRE CM starter — squad-bloat decay wrongly demotes him because
+                    // BRE have 12 FPL-MID players (many are wingers/attackers) pushing him to index 7.
+                    // Solio projects 19 pts over 5 GWs vs our 2.6 without this fix.
+    }
 
     // Backup goalkeeper suppression stays -- this is a squad-slot rule (bench-budget economics: a
     // 4.0m backup GK behind an active 4.5m+ primary contributes ~0 realistic points), not a
