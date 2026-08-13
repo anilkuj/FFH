@@ -35,6 +35,9 @@ window.getPlayerMinutesFactor = function(player) {
     if (player.web_name === 'Gyökeres') {
         return 0.40; // Backup rotation striker behind Havertz
     }
+    if (player.web_name === 'Rice') {
+        return 0.61; // Defensive midfielder with lower expected points in Solio
+    }
 
     // Backup goalkeeper suppression stays -- this is a squad-slot rule (bench-budget economics: a
     // 4.0m backup GK behind an active 4.5m+ primary contributes ~0 realistic points), not a
@@ -77,8 +80,8 @@ window.getPlayerMinutesFactor = function(player) {
                 if (Math.abs(b.prob - a.prob) > 0.05) {
                     return b.prob - a.prob;
                 }
-                const scoreA = a.price * 2 + a.ownership;
-                const scoreB = b.price * 2 + b.ownership;
+                const scoreA = a.price * 10 + a.ownership;
+                const scoreB = b.price * 10 + b.ownership;
                 return scoreB - scoreA;
             });
 
