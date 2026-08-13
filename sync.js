@@ -461,6 +461,38 @@ async function parseAndWriteData(data, fixturesData) {
     // case, since every sync has hundreds of GKP/DEF players with real minutes.
     console.log('League average goalsConceded90 (GKP/DEF, min. 450 mins):', leagueAvgGoalsConceded90);
 
+    // Snapshot each player's real, FPL-official chanceOfPlaying *before* the rules-based
+    // classifier below can overwrite it with a synthetic guess. computeStartProbability treats
+    // "official" chanceOfPlaying as its highest-precedence, most-trusted signal -- if the
+    // classifier's own inferred value were passed back in under that same channel, its guess
+    // would get relabeled as authoritative official status (and a misleadingly high
+    // dataConfidence), which is circular. This snapshot is consulted instead when computing
+    // startProbability further below.
+    const officialChanceOfPlayingById = new Map(playerBaseList.map(p => [p.id, p.chanceOfPlaying]));
+
+    // 4b. Rules-based fallback classifier: flags outfield players who started very few games
+    // and played very few minutes last season as likely backups/rotation risks. This has real,
+    // independent value regardless of any AI-provided news, so it always runs now (previously
+    // gated behind "if no AI override" -- that AI-news path has been removed).
+    //
+    // Runs here, on playerBaseList, BEFORE the prediction loop below -- not after, on the
+    // finished playersList. Running it after predictions were already computed (the original
+    // bug) meant a flagged player's chanceOfPlaying showed 15% everywhere in the UI while their
+    // predictions/xP had already been computed by computeGwPrediction using the old, higher
+    // value -- so the classification never actually dampened anything. Real example that
+    // surfaced this: a fringe player showing chanceOfPlaying=15 with a GW1 prediction of 2.8,
+    // when a fresh computeGwPrediction call using that same 15% correctly produces well under
+    // 1.0. Moving the classifier here means the prediction loop below sees the already-classified
+    // value, so it's correctly reflected from the start.
+    playerBaseList.forEach(p => {
+        const isPromotedOrRecentTransfer = PROMOTED_TEAMS.includes(p.team) || p.transferredThisSeason;
+        const hasLowStarts = typeof p.GS === 'number' && p.GS < 8 && typeof p.MPPG === 'number' && p.MPPG < 45;
+        if (hasLowStarts && !p.news && p.status === 'a' && !isPromotedOrRecentTransfer) {
+            p.chanceOfPlaying = 15;
+            p.news = "Backup/squad rotation option based on low historical starts.";
+        }
+    });
+
     const playersList = playerBaseList.map(player => {
         // basePPG/mppg/starts/minutes/rawStarts are pass-1 scratch fields (not part of the
         // public data.js schema) destructured out here for use in the prediction loop below.
@@ -592,27 +624,6 @@ async function parseAndWriteData(data, fixturesData) {
         };
     });
 
-    // Snapshot each player's real, FPL-official chanceOfPlaying *before* the rules-based
-    // classifier below can overwrite it with a synthetic guess. computeStartProbability treats
-    // "official" chanceOfPlaying as its highest-precedence, most-trusted signal -- if the
-    // classifier's own inferred value were passed back in under that same channel, its guess
-    // would get relabeled as authoritative official status (and a misleadingly high
-    // dataConfidence), which is circular. This snapshot is consulted instead when computing
-    // startProbability further below.
-    const officialChanceOfPlayingById = new Map(playersList.map(p => [p.id, p.chanceOfPlaying]));
-
-    // 4b. Rules-based fallback classifier: flags outfield players who started very few games
-    // and played very few minutes last season as likely backups/rotation risks. This has real,
-    // independent value regardless of any AI-provided news, so it always runs now (previously
-    // gated behind "if no AI override" -- that AI-news path has been removed).
-    playersList.forEach(p => {
-        const isPromotedOrRecentTransfer = PROMOTED_TEAMS.includes(p.team) || p.transferredThisSeason;
-        const hasLowStarts = typeof p.GS === 'number' && p.GS < 8 && typeof p.MPPG === 'number' && p.MPPG < 45;
-        if (hasLowStarts && !p.news && p.status === 'a' && !isPromotedOrRecentTransfer) {
-            p.chanceOfPlaying = 15;
-            p.news = "Backup/squad rotation option based on low historical starts.";
-        }
-    });
 
 
     const getBestOwned = (pos, count) => {
