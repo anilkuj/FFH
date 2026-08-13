@@ -877,7 +877,12 @@ export function getPlayerRatings(player, currentGw = 1) {
     let defconPotential = 'N/A';
     if (pos === 'DEF' || pos === 'MID') {
         const threshold = pos === 'DEF' ? 10 : 12;
-        const dcRatio = (player.dcPer90 || 0) / threshold;
+        // Rounded to 6dp before the tier comparisons -- same IEEE 754 boundary-value fix as
+        // getExpectedDefconPts in lib/predictionModel.js (e.g. 13.2/12 evaluates to
+        // 1.0999999999999999 in JS, not 1.1, misclassifying at the exact tier boundary). Without
+        // this, the badge and the xP model's internal tier can silently disagree for a player
+        // sitting exactly at a threshold multiple.
+        const dcRatio = Math.round(((player.dcPer90 || 0) / threshold) * 1e6) / 1e6;
         if (dcRatio >= 1.4) defconPotential = 'A';
         else if (dcRatio >= 1.1) defconPotential = 'B';
         else if (dcRatio >= 0.9) defconPotential = 'C';
