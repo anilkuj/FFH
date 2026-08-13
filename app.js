@@ -28,27 +28,7 @@ window.getPlayerMinutesFactor = function(player) {
     if (!player) return 1.0;
     if (player.status === 'i' || player.status === 's' || player.status === 'u') return 0;
 
-    // Manual overrides for custom draft players to match Solio squad projections
-    if (player.web_name === 'Mosquera') {
-        return 0.95; // Guaranteed starter replacement for Saliba
-    }
-    if (player.web_name === 'Gyökeres') {
-        return 0.40; // Backup rotation striker behind Havertz
-    }
-    if (player.web_name === 'Rice') {
-        return 0.61; // Defensive midfielder with lower expected points in Solio
-    }
-    if (player.web_name === 'Shaw') {
-        return 0.88; // Guaranteed starter at Man United left back
-    }
-    if (player.web_name === 'Sangaré') {
-        return 1.0; // Guaranteed BRE CM starter; basePPG manually set to 4.22 in sync.js
-                    // to target ~19 XP over 5 GWs — don't apply startProb discount on top.
-    }
-
-    // Backup goalkeeper suppression stays -- this is a squad-slot rule (bench-budget economics: a
-    // 4.0m backup GK behind an active 4.5m+ primary contributes ~0 realistic points), not a
-    // rotation-probability question startProbability already answers.
+    // Backup goalkeeper suppression stays -- this is a squad-slot rule
     const allPlayers = (typeof PLAYERS !== 'undefined' && Array.isArray(PLAYERS)) ? PLAYERS : (typeof window !== 'undefined' && window.PLAYERS ? window.PLAYERS : []);
     if (player.position === 'GKP' && player.price <= 4.0) {
         const primaryGKPs = allPlayers.filter(p => p.position === 'GKP' && p.team === player.team && p.price >= 4.5);
@@ -56,81 +36,13 @@ window.getPlayerMinutesFactor = function(player) {
         if (hasActivePrimary) return 0.0;
     }
 
-    // Base start probability or chance of playing
-    let rawProb = 1.0;
-    if (typeof player.startProbability === 'number' && !Number.isNaN(player.startProbability)) {
-        rawProb = player.startProbability;
-    } else {
-        const chance = (player.chanceOfPlaying !== undefined && player.chanceOfPlaying !== null) ? (player.chanceOfPlaying / 100) : 1.0;
-        rawProb = chance;
-    }
-
-    // Dynamic squad-bloat scaling (allocating available starting spots to avoid squad-inflation).
-    // Only applied to the top 5 rotation-heavy clubs (ARS, CHE, MCI, MUN, LIV) where genuine
-    // positional competition across many FPL-listed players occurs. Smaller clubs (e.g. BRE) have
-    // wingers/attackers FPL-classified as MID alongside true CMs, which inflates the position
-    // count and falsely penalises guaranteed starters like Sangaré.
-    const _BLOAT_DECAY_TEAMS = new Set(['ARS', 'CHE', 'MCI', 'MUN', 'LIV']);
-    if (player.team && _BLOAT_DECAY_TEAMS.has(player.team)) {
-        const pos = player.position;
-        const teammates = allPlayers.filter(p => p.team === player.team && p.position === pos && p.status !== 'u' && p.status !== 's' && p.status !== 'i');
-        
-        const targets = { GKP: 1.0, DEF: 4.0, MID: 4.5, FWD: 1.5 };
-        const target = targets[pos] || 4.0;
-
-        const rawProbs = teammates.map(p => {
-            const pChance = p.chanceOfPlaying !== null && p.chanceOfPlaying !== undefined ? p.chanceOfPlaying / 100 : 1.0;
-            const pProb = typeof p.startProbability === 'number' && !Number.isNaN(p.startProbability) ? p.startProbability : pChance;
-            return { id: p.id, prob: pProb, price: p.price || 5.0, ownership: p.ownership || 0.0 };
-        });
-
-        const sum = rawProbs.reduce((s, p) => s + p.prob, 0);
-
-        if (sum > target) {
-            // Sort by raw probability, with price & ownership as tie-breaker/priority indicators
-            rawProbs.sort((a, b) => {
-                if (Math.abs(b.prob - a.prob) > 0.05) {
-                    return b.prob - a.prob;
-                }
-                const scoreA = a.price * 10 + a.ownership;
-                const scoreB = b.price * 10 + b.ownership;
-                return scoreB - scoreA;
-            });
-
-            const myIndex = rawProbs.findIndex(p => p.id === player.id);
-            if (myIndex !== -1) {
-                let low = 0.0, high = 1.0;
-                let decayFactor = 1.0;
-                for (let iter = 0; iter < 15; iter++) {
-                    const mid = (low + high) / 2;
-                    let testSum = 0;
-                    for (let i = 0; i < rawProbs.length; i++) {
-                        testSum += rawProbs[i].prob * Math.pow(mid, i);
-                    }
-                    if (testSum > target) {
-                        high = mid;
-                    } else {
-                        low = mid;
-                    }
-                    decayFactor = mid;
-                }
-                const scale = Math.pow(decayFactor, myIndex);
-                rawProb = rawProb * scale;
-            }
-        }
-    }
-
-    return Math.min(1.0, Math.max(0.15, rawProb));
+    return 1.0;
 };
 
 
 
-// Calibration factor is now computed and auto-tuned server-side by the backtest
-// infrastructure (see lib/calibration.js), baked into data.js by sync.js on each
-// sync run. 0.90 here is only the fallback used before data.js has ever been
-// re-synced with the new export (or if a sync run failed to reach the backtest
-// server) — see docs/superpowers/specs/2026-08-10-xp-backtest-infra-design.md.
-const XP_CALIBRATION_FACTOR = (typeof SYNCED_XP_CALIBRATION_FACTOR === 'number') ? SYNCED_XP_CALIBRATION_FACTOR : 0.90;
+// Calibration factor disabled as requested: set to 1.0 to use Solio numbers as-is.
+const XP_CALIBRATION_FACTOR = 1.0;
 
 window.applyUniversalMinutesDiscount = function() {
     if (typeof PLAYERS === 'undefined' || !Array.isArray(PLAYERS)) return;

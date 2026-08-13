@@ -798,7 +798,7 @@ export const EXPERT_REVEALS = ${JSON.stringify(expertReveals, null, 4)};
 
 export const TICKER_DATA = ${JSON.stringify(fixturesSchedule, null, 4)};
 
-export const XP_CALIBRATION_FACTOR = ${calibrationFactor};
+export const XP_CALIBRATION_FACTOR = 1.0;
 
 export const LEAGUE_AVG_GOALS_PER_GAME = ${leagueAvgGoalsPerGame};
 
