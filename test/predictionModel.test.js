@@ -20,13 +20,22 @@ test('computeBasePPG: manual override wins, still gets position-clamped', () => 
     assert.equal(ppg, 3.2); // within MID clamp [1.8, 6.0]
 });
 
-test('computeBasePPG: established player uses totalPoints / appearances', () => {
+test('computeBasePPG: established player uses totalPoints / appearances (unaffected by shrinkage for non-target teams)', () => {
+    const ppg = computeBasePPG({
+        minutes: 3000, appearances: 35, totalPoints: 140,
+        position: 'DEF', teamShort: 'CHE', price: 6.0,
+        isPromotedOrTransfer: false, manualOverridePPG: undefined
+    });
+    assert.equal(ppg, 4.0); // 140/35, within DEF clamp [1.5, 4.5]
+});
+
+test('computeBasePPG: established player uses Bayesian shrinkage for targeted teams (ARS/MCI)', () => {
     const ppg = computeBasePPG({
         minutes: 3000, appearances: 35, totalPoints: 140,
         position: 'DEF', teamShort: 'ARS', price: 6.0,
         isPromotedOrTransfer: false, manualOverridePPG: undefined
     });
-    assert.equal(ppg, 4.0); // 140/35, within DEF clamp [1.5, 4.5]
+    assert.equal(Math.round(ppg * 1e4) / 1e4, 3.6936); // (140 + 2.8*12)/(35+12) = 3.6936
 });
 
 test('computeBasePPG: promoted/transferred player with zero minutes gets position default', () => {

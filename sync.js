@@ -519,7 +519,8 @@ async function parseAndWriteData(data, fixturesData) {
                 goalsConceded90: player.goalsConceded90,
                 leagueAvgGoalsConceded90,
                 setPieceDuty: player.setPieceDuty,
-                dcPer90
+                dcPer90,
+                teamShort: player.team
             });
 
             // Calculate deterministic actual points if the fixture is completed
