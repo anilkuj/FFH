@@ -3085,6 +3085,37 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
         // Use the highest-scoring squad found across all runs
         optimizedSquadSlots = _globalBestSlots;
 
+        // --- RESTORE ORIGINAL BENCH (ignoreBench mode) ---
+        // The optimizer runs freely overwrote bench slots because they were not locked.
+        // Now that the best starting XI has been chosen, put the user's original bench back.
+        if (state.ignoreBench) {
+            const restoredBenchPlayers = [...activeBenchPlayers]; // copy so we can splice
+            const usedRestore = new Set();
+
+            // Pass 1: match by position
+            for (const bIdx of benchIndices) {
+                const slot = optimizedSquadSlots[bIdx];
+                const matchIdx = restoredBenchPlayers.findIndex(p => p.position === slot.position && !usedRestore.has(p.id));
+                if (matchIdx !== -1) {
+                    slot.playerId = restoredBenchPlayers[matchIdx].id;
+                    usedRestore.add(restoredBenchPlayers[matchIdx].id);
+                } else {
+                    slot.playerId = null; // clear for pass 2
+                }
+            }
+            // Pass 2: fill any remaining bench slots with leftover bench players (position-agnostic)
+            for (const bIdx of benchIndices) {
+                if (optimizedSquadSlots[bIdx].playerId === null) {
+                    const remaining = restoredBenchPlayers.find(p => !usedRestore.has(p.id));
+                    if (remaining) {
+                        optimizedSquadSlots[bIdx].playerId = remaining.id;
+                        usedRestore.add(remaining.id);
+                    }
+                }
+            }
+        }
+
+
 
         // --- RECONCILE STARTING XI ---
         // isStarting was fixed once, right at the top of this preseason branch, purely by which
