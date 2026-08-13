@@ -64,7 +64,55 @@ recreate by loading `data.js`'s `PLAYERS`, averaging `predictions.slice(0,5)`, a
 Solio baseline if the user provides a fresh screenshot.) Not every player is over — some are under —
 but the biggest outliers are dramatic and skew toward specific teams/positions, not random noise.
 
-### Root cause, confirmed via direct inspection (not guessed)
+**User pushed back: this isn't defender-specific — it's the whole Arsenal squad.** Confirmed with a
+full-roster comparison (23 Arsenal players, every position, using the exact Solio numbers from the
+user's Arsenal-filtered screenshot):
+
+| Player | Pos | Ours | Solio | Diff |
+|---|---|---|---|---|
+| Eze | MID | 8.46 | 2.01 | **+6.45** |
+| White | DEF | 8.02 | 1.57 | **+6.45** |
+| Merino | MID | 6.94 | 0.91 | +6.03 |
+| Hincapie | DEF | 7.70 | 1.79 | +5.91 |
+| Saka | MID | 10.26 | 4.57 | +5.69 |
+| Gyökeres | FWD | 7.94 | 2.40 | +5.54 |
+| Martinelli | MID | 6.34 | 1.16 | +5.18 |
+| Bruno G. | MID | 9.00 | 3.88 | +5.12 |
+| Rice | MID | 8.70 | 3.67 | +5.03 |
+| Zubimendi | MID | 6.46 | 1.48 | +4.98 |
+| Ødegaard | MID | 7.60 | 2.66 | +4.94 |
+| Havertz | FWD | 8.28 | 3.52 | +4.76 |
+| Calafiori | DEF | 8.04 | 3.40 | +4.64 |
+| Raya | GKP | 8.14 | 3.95 | +4.19 |
+| Gabriel | DEF | 8.04 | 4.96 | +3.08 |
+| Nwaneri | MID | 3.06 | 0.11 | +2.95 |
+| Dowman | MID | 3.08 | 0.24 | +2.84 |
+| G.Jesus | FWD | 3.26 | 0.48 | +2.78 |
+| Lewis-Skelly | MID | 2.98 | 0.74 | +2.24 |
+| Tzolis | MID | 5.02 | 3.41 | +1.61 |
+| Mosquera | DEF | 4.38 | 4.18 | +0.20 |
+| J.Timber | DEF | 0.00 | 2.86 | **-2.86** |
+
+**Squad total: ours 149.1 vs. Solio 55.2 — 170% higher, every single position included.** This is
+far bigger than the DEF-multiplier theory alone can explain — that mechanism inflates DEF the most
+visibly (because defenders "shouldn't" benefit from an attack multiplier at all), but MID/FWD/GKP
+get the exact same `pts *= fdrMultiplier` applied too, so an inflated Arsenal attack rating inflates
+literally everyone on the team, just less obviously for attackers (who are "supposed" to score more
+anyway).
+
+**Second, separate mechanism found — data staleness, not a code bug.** Nwaneri/Dowman/Lewis-Skelly
+are all fringe academy players currently showing real `chanceOfPlaying: 15` (i.e. FPL's own live
+data says ~15% likely to play). Recomputing Nwaneri fresh through the pure `computeGwPrediction`
+function with that real 15% correctly applied gives GW1 = **0.6** pts. But his *stored* prediction in
+`data.js` shows GW1 = **2.8** — proving the stored predictions were computed at an earlier sync, when
+his `chanceOfPlaying` was much higher, and `data.js` on `main` simply hasn't been refreshed since his
+availability dropped. This is an operational fix (re-run `node sync.js`), not a model bug — but it's
+real and inflates every low-availability fringe player across the WHOLE app, not just Arsenal's.
+**Before trusting any further Arsenal-specific diagnosis, re-sync `main`'s `data.js` first and
+re-measure the gap** — some of the "170% higher" figure will shrink once fringe players reflect their
+real current availability. What's left after that re-sync is the real, model-level signal to fix.
+
+### Root cause (attack-multiplier-for-all-positions), confirmed via direct inspection (not guessed)
 
 `computeGwPrediction` (`lib/predictionModel.js`) applies one multiplier —
 `breakdown.fdrMultiplier = clamp(getAttackMultiplier(fixture), PLAYER_ATTACK_MULTIPLIER_MIN, MAX)`
@@ -103,7 +151,11 @@ where attacking-strength gap isn't the relevant signal**."
 
 ### Recommended direction for next session (not yet designed, don't just patch blindly)
 
-- **Most likely real fix:** give DEF (and maybe GKP) a separate, more dampened fixture multiplier
+- **Step 0, do this first:** re-run `node sync.js` on `main` to refresh `data.js` with current real
+  availability data, then re-run the full-squad comparison table above. This will shrink (not
+  eliminate) the gap for fringe/low-minutes players. Don't redesign the model against numbers that
+  are partly a stale-data artifact.
+- **Most likely real fix (for what remains after re-sync):** give DEF (and maybe GKP) a separate, more dampened fixture multiplier
   tied to defensive strength (opponent attack vs. own defence — `K_DEFENCE_SPECIFIC`/
   `K_DEFENCE_OVERALL` already exist in `lib/predictionModel.js` for `getCleanSheetProb`; investigate
   whether an analogous defence-oriented multiplier should replace or dampen `fdrMultiplier` for the
