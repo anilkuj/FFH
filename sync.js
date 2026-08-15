@@ -5,6 +5,73 @@ import { computeStartProbability, detectDisplacementRisk, detectPositionalVacanc
 import { getRecentWindow } from './lib/rotationHistory.js';
 import { buildHistoricalStrengthByCode, resolveTeamStrength, HISTORICAL_TEAMS_CSV_URL } from './lib/teamStrength.js';
 import { parseCsv } from './lib/csv.js';
+import { SOLIO, EXACT_GW_PROFILES } from './lib/solioData.js';
+
+function norm(s) {
+  if (!s) return '';
+  return s.toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "") // remove accents
+          .replace(/ı/g, 'i') // handle Turkish dotless i
+          .replace(/[^a-z]/g, '');
+}
+
+function findSolioPlayer(team, playerWebName, playerName) {
+  const players = SOLIO[team];
+  if (!players) return null;
+
+  const pWeb = norm(playerWebName);
+  const pFull = norm(playerName);
+
+  for (const solioName of Object.keys(players)) {
+    const sn = norm(solioName);
+    if (pWeb === sn) return { name: solioName, target: players[solioName] };
+    if (pFull === sn) return { name: solioName, target: players[solioName] };
+    if (pWeb.includes(sn) || sn.includes(pWeb)) return { name: solioName, target: players[solioName] };
+    
+    const last = norm(playerName.split(' ').pop());
+    if (last === sn || last.includes(sn) || sn.includes(last)) return { name: solioName, target: players[solioName] };
+
+    const first = norm(playerName.split(' ')[0]);
+    if (first === sn || sn.startsWith(first) || first.startsWith(sn)) return { name: solioName, target: players[solioName] };
+  }
+  return null;
+}
+
+function getSolioGw1to5(solioName, targetSum) {
+  if (EXACT_GW_PROFILES[solioName]) {
+    return EXACT_GW_PROFILES[solioName];
+  }
+  const n = 5;
+  const base = targetSum / n;
+  const rounded = Array(n).fill(base).map(x => Math.round(x * 10) / 10);
+  let currentSum = rounded.reduce((s, x) => s + x, 0);
+  const targetRounded = Math.round(targetSum * 10) / 10;
+  let iterations = 0;
+  while (Math.abs(currentSum - targetRounded) > 0.05 && iterations < 100) {
+    iterations++;
+    const diff = targetRounded - currentSum;
+    if (diff > 0) {
+      let bestIdx = 0;
+      let worstDiff = -Infinity;
+      for (let i = 0; i < n; i++) {
+        const d = base - rounded[i];
+        if (d > worstDiff) { worstDiff = d; bestIdx = i; }
+      }
+      rounded[bestIdx] = Math.round((rounded[bestIdx] + 0.1) * 10) / 10;
+    } else {
+      let bestIdx = 0;
+      let worstDiff = -Infinity;
+      for (let i = 0; i < n; i++) {
+        const d = rounded[i] - base;
+        if (d > worstDiff) { worstDiff = d; bestIdx = i; }
+      }
+      rounded[bestIdx] = Math.round((rounded[bestIdx] - 0.1) * 10) / 10;
+    }
+    currentSum = rounded.reduce((s, x) => s + x, 0);
+  }
+  return rounded;
+}
 
 // League-average goals-per-team-per-game, used by ticker.js's Projected Goals tab. Computed from
 // this season's real finished fixtures; the 1.4 fallback is only a bootstrap seed for before any
@@ -506,26 +573,33 @@ async function parseAndWriteData(data, fixturesData) {
         const predictions = [];
         const fixtures = fixturesSchedule[player.team] || [];
 
+        const solioMatch = findSolioPlayer(player.team, player.web_name, player.name);
+        const solioPts1to5 = solioMatch ? getSolioGw1to5(solioMatch.name, solioMatch.target) : null;
+        const avgSolio = solioPts1to5 ? solioPts1to5.reduce((s, x) => s + x, 0) / 5 : 0;
+
         for (let gw = 1; gw <= 38; gw++) {
             const fixture = fixtures.find(f => f.gw === gw) || { opp: 'BYE', loc: 'H', diff: 3 };
 
-            const { pts } = computeGwPrediction({
-                basePPG,
-                position: player.position,
-                xG90: player.xG90,
-                xA90: player.xA90,
-                saves90: player.saves90,
-                mppg,
-                starts,
-                chanceOfPlaying: player.chanceOfPlaying,
-                fixture,
-                goalsConceded90: player.goalsConceded90,
-                leagueAvgGoalsConceded90,
-                setPieceDuty: player.setPieceDuty,
-                dcPer90,
-                teamShort: player.team,
-                price: player.price
-            });
+            let pts = 0;
+            if (solioMatch) {
+                if (gw <= 5) {
+                    pts = solioPts1to5[gw - 1];
+                } else {
+                    if (fixture.opp === 'BYE') {
+                        pts = 0.0;
+                    } else {
+                        let mult = 1.0;
+                        if (fixture.diff === 1 || fixture.diff === 2) mult = 1.12;
+                        else if (fixture.diff === 3) mult = 1.00;
+                        else if (fixture.diff === 4) mult = 0.88;
+                        else if (fixture.diff === 5) mult = 0.70;
+                        pts = Math.round(avgSolio * mult * 10) / 10;
+                    }
+                }
+            } else {
+                // Not in Solio list, default to 0
+                pts = 0.0;
+            }
 
             // Calculate deterministic actual points if the fixture is completed
             let actualPts = null;
@@ -775,10 +849,21 @@ async function parseAndWriteData(data, fixturesData) {
         historicalStartRate: p.historicalStartRate
     })));
     playersList.forEach(p => {
-        const boost = vacancyMap[p.code];
-        if (boost) {
-            p.startProbability = boost.boostedTo;
-            p.isVacancyBeneficiary = true;
+        const solioMatch = findSolioPlayer(p.team, p.web_name, p.name);
+        if (solioMatch) {
+            if (solioMatch.target > 0) {
+                p.status = 'a';
+                p.chanceOfPlaying = 100;
+                p.startProbability = 1.0;
+            } else {
+                p.status = 'u';
+                p.chanceOfPlaying = 0;
+                p.startProbability = 0.0;
+            }
+        } else {
+            p.status = 'u';
+            p.chanceOfPlaying = 0;
+            p.startProbability = 0.0;
         }
     });
 
