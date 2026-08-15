@@ -1041,6 +1041,9 @@ function isGuaranteedStart(player, state) {
     if (!player) return false;
     if (state && state.mustInclude && state.mustInclude.includes(player.id)) return true;
     
+    // Reject any player whose Expected Minutes rating is not 'A' (i.e. MPPG < 80 or not defined)
+    if (player.MPPG === undefined || player.MPPG === null || player.MPPG < 80) return false;
+
     // Injured, suspended, or unavailable players are NEVER starters for that GW
     if (player.status === 'i' || player.status === 's' || player.status === 'u') return false;
 
@@ -1128,7 +1131,7 @@ function _scoreOptimizationForFormation(state, horizon, mode) {
             p.status === 'a' &&
             !state.mustExclude.includes(p.id) &&
             !initUsedIds.includes(p.id) &&
-            (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 75)
+            (isGuaranteedStart(p, state) || (p.chanceOfPlaying >= 75 && p.MPPG !== undefined && p.MPPG >= 80))
         ).sort((a, b) => getExpectedPtsOverHorizon(b, state.currentGw, horizon, state) - getExpectedPtsOverHorizon(a, state.currentGw, horizon, state));
         
         const result = [];
@@ -1832,7 +1835,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
                 !state.mustExclude.includes(p.id) &&
                 !usedIds.includes(p.id) &&
                 passesMinFwd(p) &&
-                (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 75)
+                (isGuaranteedStart(p, state) || (p.chanceOfPlaying >= 75 && p.MPPG !== undefined && p.MPPG >= 80))
             ).sort((a, b) => getSolverScore(b) - getSolverScore(a));
             
             const result = [];
@@ -1892,7 +1895,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
                     p.price <= Math.max(4.5, maxAllowedPrice) &&
                     isStarterPriceFloorInit(p, slot.position) &&
                     passesMinFwd(p) &&
-                    (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 75)
+                    (isGuaranteedStart(p, state) || (p.chanceOfPlaying >= 75 && p.MPPG !== undefined && p.MPPG >= 80))
                 ).sort((a, b) => _getInitXp(b) - _getInitXp(a));
                 
                 const chosen = pool[0] || PLAYERS.filter(p => p.position === slot.position && isStarterPriceFloorInit(p, slot.position) && !initUsedIds.includes(p.id) && (runningTeamCounts[p.team] || 0) < 3).sort((a, b) => _getInitXp(b) - _getInitXp(a))[0] || getCheapestPlayersList(slot.position, 1, initUsedIds, true)[0]
@@ -2044,7 +2047,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
                     p.price >= minReqPrice &&
                     !currentSquadIds.includes(p.id) &&
                     !state.mustExclude.includes(p.id) &&
-                    (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 75)
+                    (isGuaranteedStart(p, state) || (p.chanceOfPlaying >= 75 && p.MPPG !== undefined && p.MPPG >= 80))
                 ).sort((a, b) => a.price - b.price)[0];
 
                 if (!validStarterCand) break;
@@ -2070,7 +2073,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
                             p.price >= donorMinFloor &&
                             p.price <= donorTargetPrice &&
                             !currentSquadIds.includes(p.id) &&
-                            (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 75)
+                            (isGuaranteedStart(p, state) || (p.chanceOfPlaying >= 75 && p.MPPG !== undefined && p.MPPG >= 80))
                         ).sort((a, b) => getSolverScore(b) - getSolverScore(a))[0];
 
                         if (donorReplacement) {
@@ -2095,7 +2098,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
                             p.price >= 5.0 &&
                             p.price < donorPlayer.price &&
                             !currentSquadIds.includes(p.id) &&
-                            (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 75)
+                            (isGuaranteedStart(p, state) || (p.chanceOfPlaying >= 75 && p.MPPG !== undefined && p.MPPG >= 80))
                         ).sort((a, b) => getSolverScore(b) - getSolverScore(a))[0];
 
                         if (cheaperDonor) {
@@ -2225,13 +2228,13 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
                 };
 
                 const guaranteedCandidates = candidates.filter(p => 
-                    (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 75) && 
+                    (isGuaranteedStart(p, state) || (p.chanceOfPlaying >= 75 && p.MPPG !== undefined && p.MPPG >= 80)) && 
                     isStarterPriceFloor(p, currentSlot.position)
                 );
                 if (guaranteedCandidates.length > 0) {
                     candidates = guaranteedCandidates;
                 } else {
-                    candidates = candidates.filter(p => (p.chanceOfPlaying >= 50) && isStarterPriceFloor(p, currentSlot.position));
+                    candidates = candidates.filter(p => (p.chanceOfPlaying >= 50 && p.MPPG !== undefined && p.MPPG >= 80) && isStarterPriceFloor(p, currentSlot.position));
                 }
                 candidates.sort((a, b) => getSolverScore(b) - getSolverScore(a));
 
@@ -2259,7 +2262,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
                                     p.price <= maxDonorPrice &&
                                     !usedStartingIds.includes(p.id) &&
                                     p.id !== cand.id &&
-                                    (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 75)
+                                    (isGuaranteedStart(p, state) || (p.chanceOfPlaying >= 75 && p.MPPG !== undefined && p.MPPG >= 80))
                                 ).sort((a, b) => getSolverScore(b) - getSolverScore(a))[0];
 
                                 if (donorReplacement) {
@@ -2736,7 +2739,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
                 let list = PLAYERS.filter(p =>
                     p.position === pos &&
                     !state.mustExclude.includes(p.id) &&
-                    (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 75)
+                    (isGuaranteedStart(p, state) || (p.chanceOfPlaying >= 75 && p.MPPG !== undefined && p.MPPG >= 80))
                 );
                 if (pos === 'GKP') {
                     list = list.filter(p => p.price >= 4.5 || isGuaranteedStart(p, state));
@@ -2968,7 +2971,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
                             p.position === slot.position &&
                             p.price < player.price &&
                             !currentSquadSet.has(p.id) &&
-                            (isGuaranteedStart(p, state) || p.chanceOfPlaying >= 50)
+                            (isGuaranteedStart(p, state) || (p.chanceOfPlaying >= 50 && p.MPPG !== undefined && p.MPPG >= 80))
                         ).sort((a, b) => a.price - b.price)[0];
 
                         if (cheapestFallback) {
