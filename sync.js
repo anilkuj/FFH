@@ -40,7 +40,11 @@ function findSolioPlayer(team, playerWebName, playerName) {
 
 function getSolioGw1to5(solioName, targetSum) {
   if (EXACT_GW_PROFILES[solioName]) {
-    return EXACT_GW_PROFILES[solioName];
+    const profile = EXACT_GW_PROFILES[solioName];
+    const profileSum = profile.reduce((s, x) => s + x, 0);
+    if (Math.abs(profileSum - targetSum) < 0.5) {
+      return profile;
+    }
   }
   const n = 5;
   const base = targetSum / n;

@@ -1669,12 +1669,15 @@ ${squadListText}
 
         const isGuaranteedStart = (player) => {
             if (state.mustInclude && state.mustInclude.includes(player.id)) return true;
+            if (player.status === 'i' || player.status === 's' || player.status === 'u') return false;
+            if (player.MPPG === undefined || player.MPPG === null || player.MPPG < 80) return false;
+            const chance = (player.chanceOfPlaying !== undefined && player.chanceOfPlaying !== null) ? player.chanceOfPlaying : 100;
+            if (chance < 50) return false;
             const minMins = state.guaranteedStart || 0;
-            if (minMins === 0) return true;
-            const mppg = player.MPPG || 0;
-            if (mppg >= minMins) return true;
-            if (mppg === 0 && player.price >= 5.0) return true;
-            return false;
+            if (minMins > 0) {
+                return player.MPPG >= minMins;
+            }
+            return true;
         };
 
         const checkTeamConstraints = (slots, soldId, boughtId) => {
