@@ -620,36 +620,9 @@ export function renderOptimizer(container, state, actions) {
             const newIdx = parseInt(draftSelect.value);
             if (newIdx === state.activeDraftIndex) return;
 
-            // Auto-save current squad state to previous active draft slot
-            state.drafts[state.activeDraftIndex].squadSlots = JSON.parse(JSON.stringify(state.squadSlots));
-            state.drafts[state.activeDraftIndex].captain = state.captain;
-            state.drafts[state.activeDraftIndex].vice = state.vice;
-            state.drafts[state.activeDraftIndex].formation = state.formation;
-
-            // Load new active draft state
-            const targetDraft = state.drafts[newIdx];
-            if (!targetDraft.squadSlots) {
-                // Initialize to current squad state if first time loaded
-                targetDraft.squadSlots = JSON.parse(JSON.stringify(state.squadSlots));
-                targetDraft.captain = state.captain;
-                targetDraft.vice = state.vice;
-                targetDraft.formation = state.formation;
-            }
-
-            // Set active state variables
-            state.squadSlots = JSON.parse(JSON.stringify(targetDraft.squadSlots));
-            state.captain = targetDraft.captain;
-            state.vice = targetDraft.vice;
-            state.formation = targetDraft.formation;
-            state.activeDraftIndex = newIdx;
-
-            // Auto-rotate squad slots based on new draft's lineup
-            state.autoRotateLineup(state.currentGw);
-
-            // Save and render optimizer view
-            state.saveState();
+            state.switchDraft(newIdx);
             renderOptimizer(container, state, actions);
-            actions.showToast(`Loaded ${targetDraft.name} for optimization`, 'success');
+            actions.showToast(`Loaded ${state.drafts[newIdx].name} for optimization`, 'success');
         });
     }
 
@@ -694,13 +667,7 @@ export function renderOptimizer(container, state, actions) {
             if (!confirmOverwrite) return;
             
             // Perform clone
-            targetDraft.squadSlots = JSON.parse(JSON.stringify(state.squadSlots));
-            targetDraft.captain = state.captain;
-            targetDraft.vice = state.vice;
-            targetDraft.formation = state.formation;
-            targetDraft.name = `Copy of ${currentDraft.name}`;
-            
-            state.saveState();
+            state.cloneDraft(targetIndex);
             renderOptimizer(container, state, actions);
             actions.showToast(`Successfully cloned into slot ${targetNum} ("${targetDraft.name}")`, "success");
         });

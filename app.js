@@ -319,6 +319,8 @@ class AppState {
             this.drafts[this.activeDraftIndex].captain = this.captain;
             this.drafts[this.activeDraftIndex].vice = this.vice;
             this.drafts[this.activeDraftIndex].formation = this.formation;
+            this.drafts[this.activeDraftIndex].transfers = JSON.parse(JSON.stringify(this.transfers));
+            this.drafts[this.activeDraftIndex].chips = JSON.parse(JSON.stringify(this.chips));
         }
 
         localStorage.setItem('fpl_hub_tier', this.tier);
@@ -482,14 +484,7 @@ class AppState {
                         this.saveBackupSnapshot('Pre-sync auto backup');
                         this.drafts = data.drafts;
                         this.activeDraftIndex = typeof data.activeDraftIndex === 'number' ? data.activeDraftIndex : 0;
-                        
-                        const activeDraft = this.drafts[this.activeDraftIndex];
-                        if (activeDraft && activeDraft.squadSlots) {
-                            this.squadSlots = JSON.parse(JSON.stringify(activeDraft.squadSlots));
-                            this.captain = activeDraft.captain;
-                            this.vice = activeDraft.vice;
-                            this.formation = activeDraft.formation;
-                        }
+                        this.loadActiveDraftState();
 
 
                         this.lastLocalUpdate = cloudTime > 0 ? cloudTime : Date.now();
@@ -590,15 +585,7 @@ class AppState {
                     this.saveBackupSnapshot('Pre-sync auto backup');
                     this.drafts = cloudData.drafts;
                     this.activeDraftIndex = typeof cloudData.activeDraftIndex === 'number' ? cloudData.activeDraftIndex : 0;
-
-                    
-                    const activeDraft = this.drafts[this.activeDraftIndex];
-                    if (activeDraft && activeDraft.squadSlots) {
-                        this.squadSlots = JSON.parse(JSON.stringify(activeDraft.squadSlots));
-                        this.captain = activeDraft.captain;
-                        this.vice = activeDraft.vice;
-                        this.formation = activeDraft.formation;
-                    }
+                    this.loadActiveDraftState();
 
                     this.lastLocalUpdate = cloudTime > 0 ? cloudTime : Date.now();
                     localStorage.setItem('fpl_hub_last_local_update', this.lastLocalUpdate.toString());
@@ -638,14 +625,7 @@ class AppState {
                 if (syncData && Array.isArray(syncData.drafts)) {
                     this.drafts = syncData.drafts;
                     this.activeDraftIndex = typeof syncData.activeDraftIndex === 'number' ? syncData.activeDraftIndex : 0;
-                    
-                    const activeDraft = this.drafts[this.activeDraftIndex];
-                    if (activeDraft && activeDraft.squadSlots) {
-                        this.squadSlots = JSON.parse(JSON.stringify(activeDraft.squadSlots));
-                        this.captain = activeDraft.captain;
-                        this.vice = activeDraft.vice;
-                        this.formation = activeDraft.formation;
-                    }
+                    this.loadActiveDraftState();
                     
                     this.saveState();
                     
@@ -855,6 +835,102 @@ class AppState {
         return 'fpl_hub_active_draft_idx';
     }
 
+    loadActiveDraftState() {
+        const activeDraft = this.drafts[this.activeDraftIndex];
+        if (activeDraft) {
+            let autoPreserved = false;
+
+            // 1. Squad slots
+            if (activeDraft.squadSlots) {
+                this.squadSlots = JSON.parse(JSON.stringify(activeDraft.squadSlots));
+                this.captain = activeDraft.captain;
+                this.vice = activeDraft.vice;
+                this.formation = activeDraft.formation;
+            } else if (this.squadSlots) {
+                activeDraft.squadSlots = JSON.parse(JSON.stringify(this.squadSlots));
+                activeDraft.captain = this.captain;
+                activeDraft.vice = this.vice;
+                activeDraft.formation = this.formation;
+                autoPreserved = true;
+            }
+
+            // 2. Transfers
+            if (activeDraft.transfers) {
+                this.transfers = JSON.parse(JSON.stringify(activeDraft.transfers));
+            } else {
+                activeDraft.transfers = JSON.parse(JSON.stringify(this.transfers));
+                autoPreserved = true;
+            }
+
+            // 3. Chips
+            if (activeDraft.chips) {
+                this.chips = JSON.parse(JSON.stringify(activeDraft.chips));
+            } else {
+                activeDraft.chips = JSON.parse(JSON.stringify(this.chips));
+                autoPreserved = true;
+            }
+
+            // Ensure chips is fully populated
+            let chipsUpdated = false;
+            for (let gw = 1; gw <= 38; gw++) {
+                if (!this.chips[gw]) {
+                    this.chips[gw] = { wildcard: false, tripleCaptain: false, benchBoost: false };
+                    chipsUpdated = true;
+                }
+            }
+            if (chipsUpdated) {
+                activeDraft.chips = JSON.parse(JSON.stringify(this.chips));
+                autoPreserved = true;
+            }
+
+            if (autoPreserved) {
+                this.saveState();
+            }
+        }
+    }
+
+    switchDraft(newIdx) {
+        if (newIdx === this.activeDraftIndex) return;
+
+        // Auto-save current squad state to previous active draft slot
+        if (this.drafts && this.drafts[this.activeDraftIndex]) {
+            this.drafts[this.activeDraftIndex].squadSlots = JSON.parse(JSON.stringify(this.squadSlots));
+            this.drafts[this.activeDraftIndex].captain = this.captain;
+            this.drafts[this.activeDraftIndex].vice = this.vice;
+            this.drafts[this.activeDraftIndex].formation = this.formation;
+            this.drafts[this.activeDraftIndex].transfers = JSON.parse(JSON.stringify(this.transfers));
+            this.drafts[this.activeDraftIndex].chips = JSON.parse(JSON.stringify(this.chips));
+        }
+
+        // Set active index
+        this.activeDraftIndex = newIdx;
+
+        // Apply new draft state
+        this.loadActiveDraftState();
+
+        this.autoRotateLineup(this.currentGw);
+        this.saveState();
+    }
+
+    cloneDraft(targetIdx) {
+        if (targetIdx === this.activeDraftIndex) return false;
+
+        const sourceDraft = this.drafts[this.activeDraftIndex];
+        const targetDraft = this.drafts[targetIdx];
+        if (!sourceDraft || !targetDraft) return false;
+
+        targetDraft.squadSlots = JSON.parse(JSON.stringify(this.squadSlots));
+        targetDraft.captain = this.captain;
+        targetDraft.vice = this.vice;
+        targetDraft.formation = this.formation;
+        targetDraft.transfers = JSON.parse(JSON.stringify(this.transfers));
+        targetDraft.chips = JSON.parse(JSON.stringify(this.chips));
+        targetDraft.name = `Copy of ${sourceDraft.name}`;
+
+        this.saveState();
+        return true;
+    }
+
     loadUserDrafts() {
         const draftsKey = this.getDraftsStorageKey();
         const activeIdxKey = this.getActiveDraftIdxStorageKey();
@@ -875,27 +951,16 @@ class AppState {
             squadSlots: null,
             captain: null,
             vice: null,
-            formation: '4-4-2'
+            formation: '4-4-2',
+            transfers: null,
+            chips: null
         }));
 
         const savedActiveDraftIdx = localStorage.getItem(activeIdxKey);
         this.activeDraftIndex = savedActiveDraftIdx ? parseInt(savedActiveDraftIdx) : 0;
 
-        // Apply active draft to squad slots if it exists
-        const activeDraft = this.drafts[this.activeDraftIndex];
-        if (activeDraft && activeDraft.squadSlots) {
-            this.squadSlots = JSON.parse(JSON.stringify(activeDraft.squadSlots));
-            this.captain = activeDraft.captain;
-            this.vice = activeDraft.vice;
-            this.formation = activeDraft.formation;
-        } else if (this.squadSlots) {
-            // Auto-preserve in-memory squad into active draft
-            this.drafts[this.activeDraftIndex].squadSlots = JSON.parse(JSON.stringify(this.squadSlots));
-            this.drafts[this.activeDraftIndex].captain = this.captain;
-            this.drafts[this.activeDraftIndex].vice = this.vice;
-            this.drafts[this.activeDraftIndex].formation = this.formation;
-            this.saveState();
-        }
+        // Apply active draft state
+        this.loadActiveDraftState();
     }
 
 
@@ -1600,14 +1665,7 @@ const actions = {
                         if (syncData && Array.isArray(syncData.drafts)) {
                             state.drafts = syncData.drafts;
                             state.activeDraftIndex = typeof syncData.activeDraftIndex === 'number' ? syncData.activeDraftIndex : 0;
-                            
-                            const activeDraft = state.drafts[state.activeDraftIndex];
-                            if (activeDraft && activeDraft.squadSlots) {
-                                state.squadSlots = JSON.parse(JSON.stringify(activeDraft.squadSlots));
-                                state.captain = activeDraft.captain;
-                                state.vice = activeDraft.vice;
-                                state.formation = activeDraft.formation;
-                            }
+                            state.loadActiveDraftState();
                             
                             state.saveState();
                             actions.hideModal();

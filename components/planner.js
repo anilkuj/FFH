@@ -1015,36 +1015,9 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
             const newIdx = parseInt(e.target.value);
             if (newIdx === state.activeDraftIndex) return;
 
-            // Auto-save current squad state to previous active draft slot
-            state.drafts[state.activeDraftIndex].squadSlots = JSON.parse(JSON.stringify(state.squadSlots));
-            state.drafts[state.activeDraftIndex].captain = state.captain;
-            state.drafts[state.activeDraftIndex].vice = state.vice;
-            state.drafts[state.activeDraftIndex].formation = state.formation;
-
-            // Load new active draft state
-            const targetDraft = state.drafts[newIdx];
-            if (!targetDraft.squadSlots) {
-                // Initialize to current squad state if first time loaded
-                targetDraft.squadSlots = JSON.parse(JSON.stringify(state.squadSlots));
-                targetDraft.captain = state.captain;
-                targetDraft.vice = state.vice;
-                targetDraft.formation = state.formation;
-            }
-
-            // Set active state variables
-            state.squadSlots = JSON.parse(JSON.stringify(targetDraft.squadSlots));
-            state.captain = targetDraft.captain;
-            state.vice = targetDraft.vice;
-            state.formation = targetDraft.formation;
-            state.activeDraftIndex = newIdx;
-
-            // Auto-rotate squad slots based on new draft's lineup
-            state.autoRotateLineup(state.currentGw);
-
-            // Save and render
-            state.saveState();
+            state.switchDraft(newIdx);
             actions.renderActiveView();
-            actions.showToast(`Loaded ${targetDraft.name}`, 'success');
+            actions.showToast(`Loaded ${state.drafts[newIdx].name}`, 'success');
         });
     }
 
@@ -1099,13 +1072,7 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
             if (!confirmOverwrite) return;
             
             // Perform clone
-            targetDraft.squadSlots = JSON.parse(JSON.stringify(state.squadSlots));
-            targetDraft.captain = state.captain;
-            targetDraft.vice = state.vice;
-            targetDraft.formation = state.formation;
-            targetDraft.name = `Copy of ${currentDraft.name}`;
-            
-            state.saveState();
+            state.cloneDraft(targetIndex);
             actions.renderActiveView();
             actions.showToast(`Successfully cloned into slot ${targetNum} ("${targetDraft.name}")`, "success");
         });
@@ -1116,12 +1083,6 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
     if (exportDraftsBtn) {
         exportDraftsBtn.addEventListener('click', () => {
             // Sync current active view to the active draft slot first
-            if (state.drafts && state.drafts[state.activeDraftIndex]) {
-                state.drafts[state.activeDraftIndex].squadSlots = JSON.parse(JSON.stringify(state.squadSlots));
-                state.drafts[state.activeDraftIndex].captain = state.captain;
-                state.drafts[state.activeDraftIndex].vice = state.vice;
-                state.drafts[state.activeDraftIndex].formation = state.formation;
-            }
             state.saveState();
 
             try {
@@ -1165,7 +1126,9 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
                             squadSlots: Array.isArray(draft.squadSlots) ? draft.squadSlots : null,
                             captain: typeof draft.captain === 'number' || draft.captain === null ? draft.captain : null,
                             vice: typeof draft.vice === 'number' || draft.vice === null ? draft.vice : null,
-                            formation: draft.formation || '4-4-2'
+                            formation: draft.formation || '4-4-2',
+                            transfers: draft.transfers || null,
+                            chips: draft.chips || null
                         };
                     });
 
@@ -1176,22 +1139,16 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
                             squadSlots: null,
                             captain: null,
                             vice: null,
-                            formation: '4-4-2'
+                            formation: '4-4-2',
+                            transfers: null,
+                            chips: null
                         });
                     }
 
                     state.drafts = validatedDrafts.slice(0, 10);
 
                     // Sync the active draft to current state
-                    const currentDraft = state.drafts[state.activeDraftIndex];
-                    if (currentDraft && currentDraft.squadSlots) {
-                        state.squadSlots = JSON.parse(JSON.stringify(currentDraft.squadSlots));
-                        state.captain = currentDraft.captain;
-                        state.vice = currentDraft.vice;
-                        state.formation = currentDraft.formation;
-                    }
-
-                    state.saveState();
+                    state.loadActiveDraftState();
                     actions.renderActiveView();
                     actions.showToast("All drafts imported successfully!", "success");
                 } catch (err) {
