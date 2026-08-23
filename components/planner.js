@@ -1241,7 +1241,11 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
                     const tempVice = picks.find(p => p.is_vice_captain)?.element || null;
                     const tempFormation = detectFormation(importedSlots);
 
+                    const teamName = responseData.teamName;
+                    const finalDraftName = teamName ? `${teamName} (ID: ${teamId})` : `FPL Team (ID: ${teamId})`;
+
                     // Overwrite the first draft slot (FPL Team ID)
+                    state.drafts[0].name = finalDraftName;
                     state.drafts[0].squadSlots = importedSlots;
                     state.drafts[0].captain = tempCaptain;
                     state.drafts[0].vice = tempVice;
@@ -1250,6 +1254,11 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
 
                     // Save last imported caches
                     localStorage.setItem('fpl_hub_last_imported_team_id', teamId);
+                    if (teamName) {
+                        localStorage.setItem('fpl_hub_last_imported_team_name', teamName);
+                    } else {
+                        localStorage.removeItem('fpl_hub_last_imported_team_name');
+                    }
                     localStorage.setItem('fpl_hub_last_imported_squad_slots', JSON.stringify(importedSlots));
                     localStorage.setItem('fpl_hub_last_imported_captain', (tempCaptain || '').toString());
                     localStorage.setItem('fpl_hub_last_imported_vice', (tempVice || '').toString());
@@ -1258,7 +1267,7 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
                     // Auto switch to draft 0 (FPL Team ID) and load it
                     state.switchDraft(0);
                     
-                    actions.showToast(`Imported FPL Team ID ${teamId} successfully!`, "success");
+                    actions.showToast(`Imported FPL Team "${teamName || teamId}" successfully!`, "success");
                     actions.renderActiveView();
                 } else {
                     throw new Error("Invalid picks data format");

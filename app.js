@@ -947,8 +947,12 @@ class AppState {
             }
         }
 
+        const lastTeamId = localStorage.getItem('fpl_hub_last_imported_team_id');
+        const lastTeamName = localStorage.getItem('fpl_hub_last_imported_team_name');
+        const defaultName = lastTeamName ? `${lastTeamName} (ID: ${lastTeamId})` : (lastTeamId ? `FPL Team (ID: ${lastTeamId})` : 'FPL Team ID');
+
         this.drafts = safeJsonParse(savedDrafts, null) || Array.from({ length: 10 }, (_, i) => ({
-            name: i === 0 ? 'FPL Team ID' : `Draft ${i + 1}`,
+            name: i === 0 ? defaultName : `Draft ${i + 1}`,
             squadSlots: null,
             captain: null,
             vice: null,
@@ -957,9 +961,11 @@ class AppState {
             chips: null
         }));
 
-        // Migration: Ensure the first item is FPL Team ID
-        if (this.drafts && this.drafts[0] && (this.drafts[0].name === 'Draft 1' || !this.drafts[0].name)) {
-            this.drafts[0].name = 'FPL Team ID';
+        // Migration: Ensure the first item is named after the last imported FPL team
+        if (this.drafts && this.drafts[0]) {
+            if (this.drafts[0].name === 'Draft 1' || this.drafts[0].name === 'FPL Team ID' || !this.drafts[0].name || (lastTeamId && this.drafts[0].name.startsWith('FPL Team (ID:'))) {
+                this.drafts[0].name = defaultName;
+            }
         }
 
         const savedActiveDraftIdx = localStorage.getItem(activeIdxKey);

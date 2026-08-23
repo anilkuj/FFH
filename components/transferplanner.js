@@ -1002,7 +1002,11 @@ export function renderTransferPlanner(container, state, actions) {
                 tempVice = picks.find(p => p.is_vice_captain)?.element || null;
                 tempBank = bankVal;
 
+                const teamName = responseData.teamName;
+                const finalDraftName = teamName ? `${teamName} (ID: ${teamId})` : `FPL Team (ID: ${teamId})`;
+
                 // Overwrite the first draft slot (FPL Team ID)
+                state.drafts[0].name = finalDraftName;
                 state.drafts[0].squadSlots = importedSlots;
                 state.drafts[0].captain = tempCaptain;
                 state.drafts[0].vice = tempVice;
@@ -1011,6 +1015,11 @@ export function renderTransferPlanner(container, state, actions) {
 
                 // Save to localStorage cache
                 localStorage.setItem('fpl_hub_last_imported_team_id', teamId);
+                if (teamName) {
+                    localStorage.setItem('fpl_hub_last_imported_team_name', teamName);
+                } else {
+                    localStorage.removeItem('fpl_hub_last_imported_team_name');
+                }
                 localStorage.setItem('fpl_hub_last_imported_squad_slots', JSON.stringify(tempSourceSlots));
                 localStorage.setItem('fpl_hub_last_imported_captain', (tempCaptain || '').toString());
                 localStorage.setItem('fpl_hub_last_imported_vice', (tempVice || '').toString());
@@ -1019,7 +1028,7 @@ export function renderTransferPlanner(container, state, actions) {
                 // Persist state
                 state.saveState();
 
-                actions.showToast(`Imported Team ID ${teamId} into FPL Team ID Draft successfully!`, "success");
+                actions.showToast(`Imported FPL Team "${teamName || teamId}" successfully!`, "success");
                 updateSquadPreview();
             } else {
                 throw new Error("Invalid picks data format");

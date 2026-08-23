@@ -218,6 +218,19 @@ const server = http.createServer(async (req, res) => {
         let data = null;
         let success = false;
         let resolvedGw = gw;
+        let teamName = null;
+
+        // Fetch team entry info to get team name
+        try {
+            const entryUrl = `https://fantasy.premierleague.com/api/entry/${teamId}/`;
+            const entryRes = await fetch(entryUrl);
+            if (entryRes.ok) {
+                const entryData = await entryRes.json();
+                teamName = entryData.name || null;
+            }
+        } catch (e) {
+            console.error('Failed to fetch team entry info:', e);
+        }
 
         // FPL API returns 404 for future gameweeks. Try to find the latest active picks by looping down.
         for (let g = gw; g >= 1; g--) {
@@ -237,7 +250,7 @@ const server = http.createServer(async (req, res) => {
 
         if (success && data) {
             res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ success: true, data: data, resolvedGw: resolvedGw }));
+            res.end(JSON.stringify({ success: true, data: data, resolvedGw: resolvedGw, teamName: teamName }));
         } else {
             res.writeHead(404, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ success: false, error: 'Could not retrieve picks for any gameweek. Check team ID.' }));
