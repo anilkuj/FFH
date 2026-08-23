@@ -276,6 +276,8 @@ export function renderPlanner(container, state, actions) {
                             </option>
                         `).join('')}
                     </select>
+                    <input type="text" id="plannerFplTeamId" class="formation-select" placeholder="FPL ID" style="display: ${state.activeDraftIndex === 0 ? 'inline-block' : 'none'}; width: 70px; height: 32px; font-size: 12px; padding: 4px 10px; border-radius: 6px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); margin-left: 4px; box-sizing: border-box;" value="${localStorage.getItem('fpl_hub_last_imported_team_id') || ''}" />
+                    <button class="pitch-btn" id="plannerImportBtn" title="Import from FPL Team ID" style="display: ${state.activeDraftIndex === 0 ? 'flex' : 'none'}; height: 32px; padding: 0 10px; align-items: center; justify-content: center; border-radius: 6px; background: var(--primary); border: 1px solid var(--primary-glow); color: #000; font-weight: 700; cursor: pointer; font-size: 12px; margin-left: 4px; border: none;">Import</button>
                     <button class="pitch-btn" id="renameDraftBtn" title="Rename Current Draft" style="height: 32px; width: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); cursor: pointer;"><i data-lucide="edit-3" style="width: 14px; height: 14px;"></i></button>
                     <button class="pitch-btn" id="cloneDraftBtn" title="Clone Current Draft" style="height: 32px; width: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); cursor: pointer;"><i data-lucide="copy" style="width: 14px; height: 14px;"></i></button>
                     <button class="pitch-btn" id="exportDraftsBtn" title="Export All Drafts" style="height: 32px; width: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); cursor: pointer;"><i data-lucide="download" style="width: 14px; height: 14px;"></i></button>
@@ -1158,6 +1160,116 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
                 importDraftsInput.value = '';
             };
             reader.readAsText(file);
+        });
+    }
+
+    // FPL Team ID Import handler directly from My Team Planner
+    const plannerImportBtn = container.querySelector('#plannerImportBtn');
+    const plannerFplTeamId = container.querySelector('#plannerFplTeamId');
+    if (plannerImportBtn && plannerFplTeamId) {
+        plannerImportBtn.addEventListener('click', async () => {
+            const teamId = plannerFplTeamId.value.trim();
+            if (!teamId) {
+                actions.showToast("Please enter a valid FPL Team ID.", "error");
+                return;
+            }
+
+            plannerImportBtn.innerText = "Loading...";
+            plannerImportBtn.disabled = true;
+
+            const mapFplPicksToSquadSlots = (picks) => {
+                const slots = [];
+                const pickPlayers = picks.map(pick => {
+                    const p = PLAYERS.find(pl => pl.id === pick.element);
+                    return {
+                        id: pick.element,
+                        position: p ? p.position : 'MID',
+                        isStarting: pick.multiplier > 0
+                    };
+                });
+
+                const gkps = pickPlayers.filter(p => p.position === 'GKP');
+                const defs = pickPlayers.filter(p => p.position === 'DEF');
+                const mids = pickPlayers.filter(p => p.position === 'MID');
+                const fwds = pickPlayers.filter(p => p.position === 'FWD');
+
+                const addSlotsForPosition = (posName, posPlayers, totalCount) => {
+                    let players = [...posPlayers];
+                    while (players.length < totalCount) {
+                        players.push({ id: null, position: posName, isStarting: false });
+                    }
+                    players.forEach((p, idx) => {
+                        let isStarting = false;
+                        if (posName === 'GKP' && idx === 0) isStarting = true;
+                        if (posName === 'DEF' && idx < 3) isStarting = true;
+                        if (posName === 'MID' && idx < 4) isStarting = true;
+                        if (posName === 'FWD' && idx < 3) isStarting = true;
+
+                        slots.push({
+                            position: posName,
+                            playerId: p.id,
+                            isStarting
+                        });
+                    });
+                };
+
+                addSlotsForPosition('GKP', gkps, 2);
+                addSlotsForPosition('DEF', defs, 5);
+                addSlotsForPosition('MID', mids, 5);
+                addSlotsForPosition('FWD', fwds, 3);
+
+                return slots;
+            };
+
+            const detectFormation = (slots) => {
+                const startingDef = slots.filter(s => s.position === 'DEF' && s.isStarting).length;
+                const startingMid = slots.filter(s => s.position === 'MID' && s.isStarting).length;
+                const startingFwd = slots.filter(s => s.position === 'FWD' && s.isStarting).length;
+                return `${startingDef}-${startingMid}-${startingFwd}`;
+            };
+
+            try {
+                const res = await fetch(`/api/fpl-picks?teamId=${teamId}&gw=${state.currentGw}`);
+                if (!res.ok) throw new Error("Failed to fetch FPL picks");
+                const responseData = await res.json();
+                if (responseData && responseData.success && responseData.data && responseData.data.picks) {
+                    const picks = responseData.data.picks;
+                    const importedSlots = mapFplPicksToSquadSlots(picks);
+                    const bankVal = (responseData.data.entry_history ? responseData.data.entry_history.bank : 0) / 10;
+                    
+                    const tempCaptain = picks.find(p => p.is_captain)?.element || null;
+                    const tempVice = picks.find(p => p.is_vice_captain)?.element || null;
+                    const tempFormation = detectFormation(importedSlots);
+
+                    // Overwrite the first draft slot (FPL Team ID)
+                    state.drafts[0].squadSlots = importedSlots;
+                    state.drafts[0].captain = tempCaptain;
+                    state.drafts[0].vice = tempVice;
+                    state.drafts[0].formation = tempFormation;
+                    state.drafts[0].transfers = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+
+                    // Save last imported caches
+                    localStorage.setItem('fpl_hub_last_imported_team_id', teamId);
+                    localStorage.setItem('fpl_hub_last_imported_squad_slots', JSON.stringify(importedSlots));
+                    localStorage.setItem('fpl_hub_last_imported_captain', (tempCaptain || '').toString());
+                    localStorage.setItem('fpl_hub_last_imported_vice', (tempVice || '').toString());
+                    localStorage.setItem('fpl_hub_last_imported_bank', bankVal.toString());
+
+                    // Auto switch to draft 0 (FPL Team ID) and load it
+                    state.switchDraft(0);
+                    
+                    actions.showToast(`Imported FPL Team ID ${teamId} successfully!`, "success");
+                    actions.renderActiveView();
+                } else {
+                    throw new Error("Invalid picks data format");
+                }
+            } catch (err) {
+                console.error(err);
+                actions.showToast("Failed to fetch FPL picks. Verify ID is active.", "error");
+            } finally {
+                plannerImportBtn.innerText = "Import";
+                plannerImportBtn.disabled = false;
+            }
         });
     }
 

@@ -948,7 +948,7 @@ class AppState {
         }
 
         this.drafts = safeJsonParse(savedDrafts, null) || Array.from({ length: 10 }, (_, i) => ({
-            name: `Draft ${i + 1}`,
+            name: i === 0 ? 'FPL Team ID' : `Draft ${i + 1}`,
             squadSlots: null,
             captain: null,
             vice: null,
@@ -956,6 +956,11 @@ class AppState {
             transfers: null,
             chips: null
         }));
+
+        // Migration: Ensure the first item is FPL Team ID
+        if (this.drafts && this.drafts[0] && (this.drafts[0].name === 'Draft 1' || !this.drafts[0].name)) {
+            this.drafts[0].name = 'FPL Team ID';
+        }
 
         const savedActiveDraftIdx = localStorage.getItem(activeIdxKey);
         this.activeDraftIndex = savedActiveDraftIdx ? parseInt(savedActiveDraftIdx) : 0;

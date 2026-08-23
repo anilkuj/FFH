@@ -981,19 +981,33 @@ export function renderTransferPlanner(container, state, actions) {
         tpImportBtn.innerText = "Loading...";
         tpImportBtn.disabled = true;
 
+        const detectFormation = (slots) => {
+            const startingDef = slots.filter(s => s.position === 'DEF' && s.isStarting).length;
+            const startingMid = slots.filter(s => s.position === 'MID' && s.isStarting).length;
+            const startingFwd = slots.filter(s => s.position === 'FWD' && s.isStarting).length;
+            return `${startingDef}-${startingMid}-${startingFwd}`;
+        };
+
         try {
-            const url = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(`https://fantasy.premierleague.com/api/entry/${teamId}/event/${state.currentGw}/picks/`);
-            const response = await fetch(url);
-            if (!response.ok) throw new Error("Network response error");
-            const data = await response.json();
-            if (data && data.picks) {
-                const importedSlots = mapFplPicksToSquadSlots(data.picks);
-                const bankVal = (data.entry_history ? data.entry_history.bank : 0) / 10;
+            const res = await fetch(`/api/fpl-picks?teamId=${teamId}&gw=${state.currentGw}`);
+            if (!res.ok) throw new Error("Network response error");
+            const responseData = await res.json();
+            if (responseData && responseData.success && responseData.data && responseData.data.picks) {
+                const picks = responseData.data.picks;
+                const importedSlots = mapFplPicksToSquadSlots(picks);
+                const bankVal = (responseData.data.entry_history ? responseData.data.entry_history.bank : 0) / 10;
                 
                 tempSourceSlots = importedSlots;
-                tempCaptain = data.picks.find(p => p.is_captain)?.element || null;
-                tempVice = data.picks.find(p => p.is_vice_captain)?.element || null;
+                tempCaptain = picks.find(p => p.is_captain)?.element || null;
+                tempVice = picks.find(p => p.is_vice_captain)?.element || null;
                 tempBank = bankVal;
+
+                // Overwrite the first draft slot (FPL Team ID)
+                state.drafts[0].squadSlots = importedSlots;
+                state.drafts[0].captain = tempCaptain;
+                state.drafts[0].vice = tempVice;
+                state.drafts[0].formation = detectFormation(importedSlots);
+                state.drafts[0].transfers = { 1: [], 2: [], 3: [], 4: [], 5: [] };
 
                 // Save to localStorage cache
                 localStorage.setItem('fpl_hub_last_imported_team_id', teamId);
@@ -1002,10 +1016,13 @@ export function renderTransferPlanner(container, state, actions) {
                 localStorage.setItem('fpl_hub_last_imported_vice', (tempVice || '').toString());
                 localStorage.setItem('fpl_hub_last_imported_bank', tempBank.toString());
 
-                actions.showToast(`Imported Team ID ${teamId} successfully!`, "success");
+                // Persist state
+                state.saveState();
+
+                actions.showToast(`Imported Team ID ${teamId} into FPL Team ID Draft successfully!`, "success");
                 updateSquadPreview();
             } else {
-                throw new Error("Invalid picks data");
+                throw new Error("Invalid picks data format");
             }
         } catch (err) {
             console.error(err);

@@ -205,6 +205,46 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
+    // API Route: Fetch live FPL picks for a team ID with fallback scanning downwards
+    if (pathname === '/api/fpl-picks') {
+        const teamId = reqUrl.searchParams.get('teamId');
+        let gw = parseInt(reqUrl.searchParams.get('gw')) || 1;
+        if (!teamId) {
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Missing teamId parameter' }));
+            return;
+        }
+
+        let data = null;
+        let success = false;
+        let resolvedGw = gw;
+
+        // FPL API returns 404 for future gameweeks. Try to find the latest active picks by looping down.
+        for (let g = gw; g >= 1; g--) {
+            try {
+                const url = `https://fantasy.premierleague.com/api/entry/${teamId}/event/${g}/picks/`;
+                const response = await fetch(url);
+                if (response.ok) {
+                    data = await response.json();
+                    success = true;
+                    resolvedGw = g;
+                    break;
+                }
+            } catch (err) {
+                // Ignore and try next gameweek down
+            }
+        }
+
+        if (success && data) {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: true, data: data, resolvedGw: resolvedGw }));
+        } else {
+            res.writeHead(404, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, error: 'Could not retrieve picks for any gameweek. Check team ID.' }));
+        }
+        return;
+    }
+
     // API Route: Save Cloud Drafts (Google Account & Email)
     if (req.method === 'POST' && pathname === '/api/sync-drafts') {
         let body = '';
