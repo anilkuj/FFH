@@ -36,6 +36,10 @@ const ROTATION_HISTORY_FILE = resolvePersistentFile('rotation_history.json');
 // In-memory cache
 let cloudDraftsStore = {};
 
+// Solio Projections cache
+let solioCache = null;
+let solioCacheTime = 0;
+
 // Load existing store from disk if present
 if (fs.existsSync(STORAGE_FILE)) {
     try {
@@ -144,7 +148,7 @@ const MIME_TYPES = {
     '.woff2': 'font/woff2'
 };
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
     // CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -163,6 +167,41 @@ const server = http.createServer((req, res) => {
     if (pathname === '/health' || pathname === '/api/health') {
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ status: 'ok', uptime: process.uptime(), timestamp: Date.now() }));
+        return;
+    }
+
+    // API Route: Fetch live Solio Analytics points projections with cache proxy
+    if (pathname === '/api/solio-projections') {
+        const now = Date.now();
+        // 10-minute cache expiration
+        if (solioCache && (now - solioCacheTime < 10 * 60 * 1000)) {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: true, data: solioCache }));
+            return;
+        }
+
+        try {
+            const response = await fetch('https://fpl.solioanalytics.com/api/data/latest.json');
+            if (response.ok) {
+                const data = await response.json();
+                solioCache = data;
+                solioCacheTime = now;
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: true, data: data }));
+            } else {
+                throw new Error(`Solio API returned status: ${response.status}`);
+            }
+        } catch (e) {
+            console.error('Failed to fetch Solio projections:', e);
+            if (solioCache) {
+                // Return stale cache if remote fetch fails
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: true, data: solioCache, fallback: true }));
+            } else {
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: false, error: e.message }));
+            }
+        }
         return;
     }
 

@@ -19,6 +19,7 @@ import { renderLeague } from './components/league.js';
 import { renderLiveRank } from './components/liverank.js';
 import { renderReveals } from './components/reveals.js';
 import { renderTransferPlanner } from './components/transferplanner.js';
+import { renderSolioProjections } from './components/solioprojections.js';
 
 if (typeof window !== 'undefined') {
     window.PLAYERS = PLAYERS;
@@ -1236,6 +1237,9 @@ const actions = {
                 break;
             case 'reveals':
                 renderReveals(container, state, actions);
+                break;
+            case 'solio':
+                renderSolioProjections(container, state, actions);
                 break;
         }
     },
