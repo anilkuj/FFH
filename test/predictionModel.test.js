@@ -20,22 +20,13 @@ test('computeBasePPG: manual override wins, still gets position-clamped', () => 
     assert.equal(ppg, 3.2); // within MID clamp [1.8, 6.0]
 });
 
-test('computeBasePPG: established player uses totalPoints / appearances (unaffected by shrinkage for non-target teams)', () => {
+test('computeBasePPG: established player uses Bayesian shrinkage for all teams', () => {
     const ppg = computeBasePPG({
         minutes: 3000, appearances: 35, totalPoints: 140,
         position: 'DEF', teamShort: 'CHE', price: 6.0,
         isPromotedOrTransfer: false, manualOverridePPG: undefined
     });
-    assert.equal(ppg, 4.0); // 140/35, within DEF clamp [1.5, 4.5]
-});
-
-test('computeBasePPG: established player uses Bayesian shrinkage for targeted teams (ARS/MCI)', () => {
-    const ppg = computeBasePPG({
-        minutes: 3000, appearances: 35, totalPoints: 140,
-        position: 'DEF', teamShort: 'ARS', price: 6.0,
-        isPromotedOrTransfer: false, manualOverridePPG: undefined
-    });
-    assert.equal(Math.round(ppg * 1e4) / 1e4, 3.6936); // (140 + 2.8*12)/(35+12) = 3.6936
+    assert.equal(Math.round(ppg * 1e4) / 1e4, 3.3753); // (140 + 2.8*38)/(35+38) = 3.3753
 });
 
 test('computeBasePPG: promoted/transferred player with zero minutes gets position default', () => {
@@ -94,8 +85,8 @@ test('getAttackMultiplier: attack/defence-specific path -- strong attack vs weak
 test('getAttackMultiplier: extreme overall-strength mismatch (e.g. a top team at home vs a newly-promoted away side) produces a meaningfully bigger swing than a moderate gap, not just a marginal one', () => {
     const extreme = getAttackMultiplier({ diff: 4, ownStrength: 4, oppStrength: 2 }); // e.g. Arsenal vs Coventry
     const moderate = getAttackMultiplier({ diff: 3, ownStrength: 4, oppStrength: 3 }); // one level apart
-    assert.equal(extreme, 1.4);
-    assert.equal(moderate, 1.2);
+    assert.equal(Math.round(extreme * 100) / 100, 1.28);
+    assert.equal(Math.round(moderate * 100) / 100, 1.14);
     assert.ok(extreme > moderate); // extreme mismatch should differentiate meaningfully more than a mild one
 });
 
@@ -361,22 +352,17 @@ test('computeGwPrediction: player-scoring multiplier is dampened relative to get
     // truly poor defence.
     const fixture = { opp: 'WEAK', loc: 'H', diff: 2, ownAttackStrength: 1390, oppDefenceStrength: 1000 };
     const rawTeamLevelMultiplier = getAttackMultiplier(fixture);
-    assert.equal(rawTeamLevelMultiplier, 2.17); // the wide range ticker.js correctly uses as-is
+    assert.equal(rawTeamLevelMultiplier, 1.78); // the wide range ticker.js correctly uses as-is
 
     const { pts, breakdown } = computeGwPrediction({
         basePPG: 6.0, position: 'FWD', xG90: 0.6, xA90: 0.3, saves90: 0,
         mppg: 90, starts: 30, chanceOfPlaying: 100, fixture
     });
     assert.ok(breakdown.fdrMultiplier < rawTeamLevelMultiplier); // player-scoring value is dampened below the raw team-level value
-    assert.equal(breakdown.fdrMultiplier, 2.0);
-    // basePPG(6.0) * dampened fdrMultiplier(2.0) = 12.0, plus this fixture's diff:2 FWD attacking
-    // bonus (xgiAdj = (xG90+xA90)*0.8 = 0.72, independent of the fdrMultiplier clamp) = 12.72 -> 12.7.
-    // Still below the undampened 13.74 (basePPG * raw 2.17 + xgiAdj), demonstrating the fix still
-    // does something even at the higher ceiling -- though the accepted tradeoff (see
-    // PLAYER_ATTACK_MULTIPLIER_MAX's comment) is that 12.7 itself now exceeds the original "12+ is
-    // unrealistic" line for the most extreme real fixtures, a deliberate choice to hit the
-    // season-pace target.
-    assert.equal(pts, 12.7);
+    assert.equal(breakdown.fdrMultiplier, 1.5);
+    // basePPG(6.0) * dampened fdrMultiplier(1.5) = 9.0, plus this fixture's diff:2 FWD attacking
+    // bonus (xgiAdj = (xG90+xA90)*0.8 = 0.72, independent of the fdrMultiplier clamp) = 9.72 -> 9.7.
+    assert.equal(pts, 9.7);
 });
 
 test('computeGwPrediction: goalsConceded90 nudge is scaled down for MID relative to GKP/DEF (matches the 1:4 csAdj weight ratio)', () => {

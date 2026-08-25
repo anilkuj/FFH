@@ -577,33 +577,26 @@ async function parseAndWriteData(data, fixturesData) {
         const predictions = [];
         const fixtures = fixturesSchedule[player.team] || [];
 
-        const solioMatch = findSolioPlayer(player.team, player.web_name, player.name);
-        const solioPts1to5 = solioMatch ? getSolioGw1to5(solioMatch.name, solioMatch.target) : null;
-        const avgSolio = solioPts1to5 ? solioPts1to5.reduce((s, x) => s + x, 0) / 5 : 0;
-
         for (let gw = 1; gw <= 38; gw++) {
             const fixture = fixtures.find(f => f.gw === gw) || { opp: 'BYE', loc: 'H', diff: 3 };
 
-            let pts = 0;
-            if (solioMatch) {
-                if (gw <= 5) {
-                    pts = solioPts1to5[gw - 1];
-                } else {
-                    if (fixture.opp === 'BYE') {
-                        pts = 0.0;
-                    } else {
-                        let mult = 1.0;
-                        if (fixture.diff === 1 || fixture.diff === 2) mult = 1.12;
-                        else if (fixture.diff === 3) mult = 1.00;
-                        else if (fixture.diff === 4) mult = 0.88;
-                        else if (fixture.diff === 5) mult = 0.70;
-                        pts = Math.round(avgSolio * mult * 10) / 10;
-                    }
-                }
-            } else {
-                // Not in Solio list, default to 0
-                pts = 0.0;
-            }
+            const { pts } = computeGwPrediction({
+                basePPG,
+                position: player.position,
+                xG90: player.xG90,
+                xA90: player.xA90,
+                saves90: player.saves90,
+                mppg,
+                starts,
+                chanceOfPlaying: player.chanceOfPlaying,
+                fixture,
+                goalsConceded90: player.goalsConceded90,
+                leagueAvgGoalsConceded90,
+                setPieceDuty: player.setPieceDuty,
+                dcPer90,
+                teamShort: player.team,
+                price: player.price
+            });
 
             // Calculate deterministic actual points if the fixture is completed
             let actualPts = null;
@@ -853,22 +846,17 @@ async function parseAndWriteData(data, fixturesData) {
         historicalStartRate: p.historicalStartRate
     })));
     playersList.forEach(p => {
-        const solioMatch = findSolioPlayer(p.team, p.web_name, p.name);
-        if (solioMatch) {
-            if (solioMatch.target > 0) {
-                p.status = 'a';
-                p.chanceOfPlaying = 100;
-                p.startProbability = 1.0;
-            } else {
-                p.status = 'u';
-                p.chanceOfPlaying = 0;
-                p.startProbability = 0.0;
-            }
-        } else {
-            p.status = 'u';
-            p.chanceOfPlaying = 0;
-            p.startProbability = 0.0;
+        const boost = vacancyMap[p.code];
+        if (boost) {
+            p.startProbability = boost.boostedTo;
+            p.isVacancyBeneficiary = true;
         }
+        
+        // Scale predictions by final resolved startProbability to align points with actual expected starts/minutes
+        const startProb = (p.startProbability !== null && p.startProbability !== undefined) ? p.startProbability : 1.0;
+        p.predictions.forEach(pred => {
+            pred.pts = Math.round(pred.pts * startProb * 10) / 10;
+        });
     });
 
     const leagueAvgGoalsPerGame = computeLeagueAvgGoalsPerGame(fixturesData);
