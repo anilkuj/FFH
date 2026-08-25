@@ -205,6 +205,40 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
+    // API Route: Fetch live actual points from FPL for a gameweek
+    if (pathname === '/api/live-points') {
+        const gw = reqUrl.searchParams.get('gw');
+        if (!gw || isNaN(parseInt(gw))) {
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Missing or invalid gw parameter' }));
+            return;
+        }
+
+        try {
+            const fplRes = await fetch(`https://fantasy.premierleague.com/api/event/${gw}/live/`, {
+                headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
+            });
+            if (fplRes.ok) {
+                const data = await fplRes.json();
+                const pointsMap = {};
+                if (data && Array.isArray(data.elements)) {
+                    data.elements.forEach(el => {
+                        pointsMap[el.id] = el.stats.total_points;
+                    });
+                }
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: true, gw: parseInt(gw), points: pointsMap }));
+            } else {
+                throw new Error(`FPL API returned status: ${fplRes.status}`);
+            }
+        } catch (e) {
+            console.error(`Failed to fetch live points for GW${gw}:`, e);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, error: e.message }));
+        }
+        return;
+    }
+
     // API Route: Fetch live FPL picks for a team ID with fallback scanning downwards
     if (pathname === '/api/fpl-picks') {
         const teamId = reqUrl.searchParams.get('teamId');

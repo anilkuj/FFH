@@ -221,6 +221,7 @@ class AppState {
         const savedWeeklyLineups = localStorage.getItem('fpl_hub_weekly_lineups');
         this.weeklyLineups = safeJsonParse(savedWeeklyLineups, {});
 
+        this.livePoints = {};
         this.loadUserDrafts();
         this.loadCloudDrafts();
         this.checkUrlSync();
@@ -991,6 +992,24 @@ class AppState {
             return `fpl_hub_drafts_${this.userProfile.sub}`;
         }
         return 'fpl_hub_drafts';
+    }
+
+    async loadLivePoints(gw) {
+        if (this.livePoints[gw]) return this.livePoints[gw];
+        try {
+            const res = await fetch(`/api/live-points?gw=${gw}`);
+            if (res.ok) {
+                const data = await res.json();
+                if (data && data.success && data.points) {
+                    this.livePoints[gw] = data.points;
+                    return data.points;
+                }
+            }
+        } catch (e) {
+            console.warn(`Failed to load live points for GW${gw}:`, e);
+        }
+        this.livePoints[gw] = {};
+        return {};
     }
 
     getActiveDraftIdxStorageKey() {

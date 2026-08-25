@@ -75,6 +75,17 @@ export function renderPlanner(container, state, actions) {
         document.head.appendChild(style);
     }
 
+    // Asynchronously fetch live points for this gameweek to display actual stats
+    if (!state.livePoints[state.currentGw]) {
+        state.loadLivePoints(state.currentGw).then(points => {
+            if (points && Object.keys(points).length > 0) {
+                actions.renderActiveView();
+            }
+        });
+    }
+
+    const livePointsMap = state.livePoints[state.currentGw] || {};
+
     // Determine active squad and lineup for this gameweek.
     const squadInfo = state.getSquadForGw(state.currentGw);
     const { bank, freeTransfers } = squadInfo;
@@ -123,9 +134,13 @@ export function renderPlanner(container, state, actions) {
             const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
             expectedPoints += (raw * factor) * multiplier;
 
-            if (pred.actualPts !== undefined && pred.actualPts !== null) {
+            const livePts = livePointsMap[id];
+            const hasLive = (livePts !== undefined && livePts !== null);
+            const actualVal = hasLive ? livePts : pred.actualPts;
+
+            if (actualVal !== undefined && actualVal !== null) {
                 hasActualPoints = true;
-                actualPoints += pred.actualPts * multiplier;
+                actualPoints += actualVal * multiplier;
             }
         }
     });
@@ -141,8 +156,12 @@ export function renderPlanner(container, state, actions) {
                 const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
                 expectedPoints += (raw * factor);
 
-                if (pred.actualPts !== undefined && pred.actualPts !== null) {
-                    actualPoints += pred.actualPts;
+                const livePts = livePointsMap[id];
+                const hasLive = (livePts !== undefined && livePts !== null);
+                const actualVal = hasLive ? livePts : pred.actualPts;
+
+                if (actualVal !== undefined && actualVal !== null) {
+                    actualPoints += actualVal;
                 }
             }
         });
@@ -674,6 +693,11 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
 
         const prediction = player.predictions.find(pr => pr.gw === currentGw) || { pts: 0, opp: "BYE", loc: "" };
         const teamObj = TEAMS.find(t => t.shortName === player.team) || { color: "#ffffff" };
+
+        const livePointsMap = (state && state.livePoints && state.livePoints[currentGw]) || {};
+        const livePts = livePointsMap[player.id];
+        const hasLive = (livePts !== undefined && livePts !== null);
+        const actualVal = hasLive ? livePts : prediction.actualPts;
         
         let designationBadge = '';
         if (player.id === captain) {
@@ -734,13 +758,13 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
                             ${riskLabel}
                             <span class="player-pitch-price">£${player.price.toFixed(1)}m</span>
                             <span class="player-pitch-sep" style="color: var(--text-muted);"> • </span>
-                            ${prediction.actualPts !== undefined && prediction.actualPts !== null ? `
+                            ${actualVal !== undefined && actualVal !== null ? `
                                 <span class="player-pitch-xp" style="display: inline-flex; align-items: center; gap: 3px;">
                                     <span style="color: var(--text-muted); font-size: 9.5px; font-weight: 600; text-transform: uppercase;">xP:</span>
                                     <strong style="color: var(--primary); font-weight: 700;">${prediction.pts.toFixed(1)}</strong>
                                     <span style="color: var(--text-muted); font-weight: 500;">•</span>
                                     <span style="color: var(--text-muted); font-size: 9.5px; font-weight: 600; text-transform: uppercase;">Act:</span>
-                                    <strong style="color: ${prediction.actualPts >= 8 ? '#10b981' : (prediction.actualPts >= 2 ? '#f59e0b' : '#ef4444')}; font-weight: 800;">${prediction.actualPts}</strong>
+                                    <strong style="color: ${actualVal >= 8 ? '#10b981' : (actualVal >= 2 ? '#f59e0b' : '#ef4444')}; font-weight: 800;">${actualVal}</strong>
                                 </span>
                             ` : `
                                 <span class="player-pitch-xp" style="display: inline-flex; align-items: center; gap: 3px;">
@@ -797,6 +821,11 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions, is
         if (!player) return '';
         const prediction = player.predictions.find(pr => pr.gw === currentGw) || { pts: 0, opp: "BYE", loc: "" };
         const teamObj = TEAMS.find(t => t.shortName === player.team) || { color: "#ffffff" };
+
+        const livePointsMap = (state && state.livePoints && state.livePoints[currentGw]) || {};
+        const livePts = livePointsMap[player.id];
+        const hasLive = (livePts !== undefined && livePts !== null);
+        const actualVal = hasLive ? livePts : prediction.actualPts;
 
         let designationBadge = '';
         if (player.id === captain) {
@@ -859,13 +888,13 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions, is
                                 ${riskLabel}
                                 <span class="player-pitch-price">£${player.price.toFixed(1)}m</span>
                                 <span class="player-pitch-sep" style="color: var(--text-muted);"> • </span>
-                                ${prediction.actualPts !== undefined && prediction.actualPts !== null ? `
+                                ${actualVal !== undefined && actualVal !== null ? `
                                     <span class="player-pitch-xp" style="display: inline-flex; align-items: center; gap: 3px;">
                                         <span style="color: var(--text-muted); font-size: 9.5px; font-weight: 600; text-transform: uppercase;">xP:</span>
                                         <strong style="color: var(--primary); font-weight: 700;">${prediction.pts.toFixed(1)}</strong>
                                         <span style="color: var(--text-muted); font-weight: 500;">•</span>
                                         <span style="color: var(--text-muted); font-size: 9.5px; font-weight: 600; text-transform: uppercase;">Act:</span>
-                                        <strong style="color: ${prediction.actualPts >= 8 ? '#10b981' : (prediction.actualPts >= 2 ? '#f59e0b' : '#ef4444')}; font-weight: 800;">${prediction.actualPts}</strong>
+                                        <strong style="color: ${actualVal >= 8 ? '#10b981' : (actualVal >= 2 ? '#f59e0b' : '#ef4444')}; font-weight: 800;">${actualVal}</strong>
                                     </span>
                                 ` : `
                                     <span class="player-pitch-xp" style="display: inline-flex; align-items: center; gap: 3px;">
