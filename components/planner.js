@@ -1281,7 +1281,11 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
                     localStorage.setItem('fpl_hub_last_imported_bank', bankVal.toString());
 
                     // Auto switch to draft 0 (FPL Team ID) and load it
-                    state.switchDraft(0);
+                    if (state.activeDraftIndex === 0) {
+                        state.loadActiveDraftState();
+                    } else {
+                        state.switchDraft(0);
+                    }
                     
                     actions.showToast(`Imported FPL Team "${teamName || teamId}" successfully!`, "success");
                     actions.renderActiveView();

@@ -1029,6 +1029,11 @@ export function renderTransferPlanner(container, state, actions) {
                 localStorage.setItem('fpl_hub_last_imported_vice', (tempVice || '').toString());
                 localStorage.setItem('fpl_hub_last_imported_bank', tempBank.toString());
 
+                // Force state update if we are already on draft 0
+                if (state.activeDraftIndex === 0) {
+                    state.loadActiveDraftState();
+                }
+
                 // Persist state
                 state.saveState();
 
