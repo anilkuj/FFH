@@ -1101,8 +1101,6 @@ class AppState {
 
         // Apply new draft state
         this.loadActiveDraftState();
-
-        this.autoRotateLineup(this.currentGw);
         this.saveState();
     }
 
@@ -2741,7 +2739,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('prevGwBtn').addEventListener('click', () => {
         if (state.currentGw > 1) {
             state.currentGw--;
-            state.autoRotateLineup(state.currentGw);
             actions.renderActiveView();
         }
     });
@@ -2749,7 +2746,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('nextGwBtn').addEventListener('click', () => {
         if (state.currentGw < 38) {
             state.currentGw++;
-            state.autoRotateLineup(state.currentGw);
             actions.renderActiveView();
         }
     });

@@ -329,7 +329,10 @@ export function renderPlanner(container, state, actions) {
                             <option value="5-4-1" ${state.formation === '5-4-1' ? 'selected' : ''}>5-4-1</option>
                             <option value="5-2-3" ${state.formation === '5-2-3' ? 'selected' : ''}>5-2-3</option>
                         </select>
-                        <button class="pitch-btn" id="resetTeamBtn" title="Reset/Clear Team">
+                        <button class="pitch-btn" id="autoRotateBtn" title="Auto-Optimize Lineup & Captaincy" style="background: rgba(0, 255, 136, 0.1); border: 1px solid var(--primary-glow); color: var(--primary); margin-left: 8px;">
+                            <i data-lucide="sparkles" style="width: 14px; height: 14px; margin-right: 4px;"></i> Auto Pick
+                        </button>
+                        <button class="pitch-btn" id="resetTeamBtn" title="Reset/Clear Team" style="margin-left: 8px;">
                             <i data-lucide="rotate-ccw"></i> Reset Team
                         </button>
                     </div>
@@ -1384,7 +1387,15 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
                     state.drafts[activeIdx].vice = tempVice;
                     state.drafts[activeIdx].formation = tempFormation;
                     state.drafts[activeIdx].transfers = { 1: [], 2: [], 3: [], 4: [], 5: [] };
-                    state.drafts[activeIdx].weeklyLineups = {};
+                    state.drafts[activeIdx].weeklyLineups = {
+                        [state.currentGw]: {
+                            starters: importedSlots.filter(s => s.isStarting && s.playerId !== null).map(s => s.playerId),
+                            bench: importedSlots.filter(s => !s.isStarting && s.playerId !== null).map(s => s.playerId),
+                            captain: tempCaptain,
+                            vice: tempVice,
+                            formation: tempFormation
+                        }
+                    };
 
                     // Save last imported caches
                     localStorage.setItem('fpl_hub_last_imported_team_id', teamId);
@@ -1961,6 +1972,16 @@ ${squadListText}
     if (resetBtn) {
         resetBtn.addEventListener('click', () => {
             openResetModal(state, actions);
+        });
+    }
+
+    // Auto Pick / Optimize Lineup
+    const autoRotateBtn = container.querySelector('#autoRotateBtn');
+    if (autoRotateBtn) {
+        autoRotateBtn.addEventListener('click', () => {
+            state.autoRotateLineup(state.currentGw);
+            actions.renderActiveView();
+            actions.showToast('AI optimized starting XI, formation, and captaincy!', 'success');
         });
     }
 
