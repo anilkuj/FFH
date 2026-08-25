@@ -107,8 +107,10 @@ export function renderPlanner(container, state, actions) {
         }
     });
 
-    // Calculate total predicted points for starters
+    // Calculate total predicted & actual points for starters
     let expectedPoints = 0;
+    let actualPoints = 0;
+    let hasActualPoints = false;
     starters.forEach(id => {
         const player = PLAYERS.find(p => p.id === id);
         if (player) {
@@ -120,6 +122,11 @@ export function renderPlanner(container, state, actions) {
             }
             const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
             expectedPoints += (raw * factor) * multiplier;
+
+            if (pred.actualPts !== undefined && pred.actualPts !== null) {
+                hasActualPoints = true;
+                actualPoints += pred.actualPts * multiplier;
+            }
         }
     });
 
@@ -133,6 +140,10 @@ export function renderPlanner(container, state, actions) {
                 const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
                 const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
                 expectedPoints += (raw * factor);
+
+                if (pred.actualPts !== undefined && pred.actualPts !== null) {
+                    actualPoints += pred.actualPts;
+                }
             }
         });
     }
@@ -249,28 +260,36 @@ export function renderPlanner(container, state, actions) {
                             <span style="height: 12px; width: 1px; background: rgba(255,255,255,0.15);"></span>
 
                             <div style="display: flex; align-items: center; gap: 4px;" title="GW${state.currentGw} Expected Points">
-                                <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">GW1 XP:</span>
+                                <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">GW${state.currentGw} XP:</span>
                                 <strong class="highlight-bank" style="font-size: 13.5px; font-weight: 800; color: var(--primary);">${gw1XP.toFixed(1)}</strong>
                             </div>
+
+                            ${hasActualPoints ? `
+                                <span style="height: 12px; width: 1px; background: rgba(255,255,255,0.15);"></span>
+                                <div style="display: flex; align-items: center; gap: 4px;" title="GW${state.currentGw} Actual Points Scored">
+                                    <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">GW${state.currentGw} ACTUAL:</span>
+                                    <strong style="font-size: 13.5px; font-weight: 800; color: #10b981;">${actualPoints} pts</strong>
+                                </div>
+                            ` : ''}
 
                             <span style="height: 12px; width: 1px; background: rgba(255,255,255,0.15);"></span>
 
                             <div style="display: flex; align-items: center; gap: 4px;" title="Cumulative XP over 3 Gameweeks">
-                                <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">GW3 XP:</span>
+                                <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">3 GW XP:</span>
                                 <strong style="font-size: 13.5px; font-weight: 800; color: #00f2fe;">${gw3XP.toFixed(1)}</strong>
                             </div>
 
                             <span style="height: 12px; width: 1px; background: rgba(255,255,255,0.15);"></span>
 
                             <div style="display: flex; align-items: center; gap: 4px;" title="Cumulative XP over 5 Gameweeks">
-                                <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">GW5 XP:</span>
+                                <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">5 GW XP:</span>
                                 <strong style="font-size: 13.5px; font-weight: 800; color: #38bdf8;">${gw5XP.toFixed(1)}</strong>
                             </div>
 
                             <span style="height: 12px; width: 1px; background: rgba(255,255,255,0.15);"></span>
 
                             <div style="display: flex; align-items: center; gap: 4px;" title="Cumulative XP over 10 Gameweeks">
-                                <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">GW10 XP:</span>
+                                <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">10 GW XP:</span>
                                 <strong style="font-size: 13.5px; font-weight: 800; color: #a78bfa;">${gw10XP.toFixed(1)}</strong>
                             </div>
                         </div>
@@ -711,16 +730,27 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
                             <span>${actions.getWebName(player)}</span>
                             ${renderSetPieceBadges(player)}
                         </div>
-                        <div class="player-pitch-points">
+                        <div class="player-pitch-points" style="display: flex; align-items: center; justify-content: center; gap: 4px; flex-wrap: wrap; line-height: 1.2;">
                             ${riskLabel}
                             <span class="player-pitch-price">£${player.price.toFixed(1)}m</span>
-                            <span class="player-pitch-sep"> • </span>
-                            <span class="player-pitch-xp">
-                                ${prediction.actualPts !== undefined && prediction.actualPts !== null ? 
-                                    `<strong style="color: var(--primary);">${prediction.actualPts} pts</strong> <span class="player-xp-subtext">(5 GW: ${get5GwXp(player, currentGw).toFixed(1)} XP)</span>` : 
-                                    `<span class="player-xp-prefix">5 GW: </span>${get5GwXp(player, currentGw).toFixed(1)}<span class="player-xp-suffix"> XP</span>`
-                                }
-                            </span>
+                            <span class="player-pitch-sep" style="color: var(--text-muted);"> • </span>
+                            ${prediction.actualPts !== undefined && prediction.actualPts !== null ? `
+                                <span class="player-pitch-xp" style="display: inline-flex; align-items: center; gap: 3px;">
+                                    <span style="color: var(--text-muted); font-size: 9.5px; font-weight: 600; text-transform: uppercase;">xP:</span>
+                                    <strong style="color: var(--primary); font-weight: 700;">${prediction.pts.toFixed(1)}</strong>
+                                    <span style="color: var(--text-muted); font-weight: 500;">•</span>
+                                    <span style="color: var(--text-muted); font-size: 9.5px; font-weight: 600; text-transform: uppercase;">Act:</span>
+                                    <strong style="color: ${prediction.actualPts >= 8 ? '#10b981' : (prediction.actualPts >= 2 ? '#f59e0b' : '#ef4444')}; font-weight: 800;">${prediction.actualPts}</strong>
+                                </span>
+                            ` : `
+                                <span class="player-pitch-xp" style="display: inline-flex; align-items: center; gap: 3px;">
+                                    <span style="color: var(--text-muted); font-size: 9.5px; font-weight: 600; text-transform: uppercase;">xP:</span>
+                                    <strong style="color: var(--primary); font-weight: 700;">${prediction.pts.toFixed(1)}</strong>
+                                    <span style="color: var(--text-muted); font-weight: 500;">•</span>
+                                    <span style="color: var(--text-muted); font-size: 9.5px; font-weight: 600; text-transform: uppercase;">5GW:</span>
+                                    <strong style="color: var(--secondary); font-weight: 700;">${get5GwXp(player, currentGw).toFixed(1)}</strong>
+                                </span>
+                            `}
                         </div>
                     </div>
                     <div class="pitch-card-fixtures-grid">
@@ -825,16 +855,27 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions, is
                                 <span>${actions.getWebName(player)}</span>
                                 ${renderSetPieceBadges(player)}
                             </div>
-                            <div class="player-pitch-points">
+                            <div class="player-pitch-points" style="display: flex; align-items: center; justify-content: center; gap: 4px; flex-wrap: wrap; line-height: 1.2;">
                                 ${riskLabel}
                                 <span class="player-pitch-price">£${player.price.toFixed(1)}m</span>
-                                <span class="player-pitch-sep"> • </span>
-                                <span class="player-pitch-xp">
-                                    ${prediction.actualPts !== undefined && prediction.actualPts !== null ? 
-                                        `<strong style="color: var(--primary);">${prediction.actualPts} pts</strong> <span class="player-xp-subtext">(5 GW: ${get5GwXp(player, currentGw).toFixed(1)} XP)</span>` : 
-                                        `<span class="player-xp-prefix">5 GW: </span>${get5GwXp(player, currentGw).toFixed(1)}<span class="player-xp-suffix"> XP</span>`
-                                    }
-                                </span>
+                                <span class="player-pitch-sep" style="color: var(--text-muted);"> • </span>
+                                ${prediction.actualPts !== undefined && prediction.actualPts !== null ? `
+                                    <span class="player-pitch-xp" style="display: inline-flex; align-items: center; gap: 3px;">
+                                        <span style="color: var(--text-muted); font-size: 9.5px; font-weight: 600; text-transform: uppercase;">xP:</span>
+                                        <strong style="color: var(--primary); font-weight: 700;">${prediction.pts.toFixed(1)}</strong>
+                                        <span style="color: var(--text-muted); font-weight: 500;">•</span>
+                                        <span style="color: var(--text-muted); font-size: 9.5px; font-weight: 600; text-transform: uppercase;">Act:</span>
+                                        <strong style="color: ${prediction.actualPts >= 8 ? '#10b981' : (prediction.actualPts >= 2 ? '#f59e0b' : '#ef4444')}; font-weight: 800;">${prediction.actualPts}</strong>
+                                    </span>
+                                ` : `
+                                    <span class="player-pitch-xp" style="display: inline-flex; align-items: center; gap: 3px;">
+                                        <span style="color: var(--text-muted); font-size: 9.5px; font-weight: 600; text-transform: uppercase;">xP:</span>
+                                        <strong style="color: var(--primary); font-weight: 700;">${prediction.pts.toFixed(1)}</strong>
+                                        <span style="color: var(--text-muted); font-weight: 500;">•</span>
+                                        <span style="color: var(--text-muted); font-size: 9.5px; font-weight: 600; text-transform: uppercase;">5GW:</span>
+                                        <strong style="color: var(--secondary); font-weight: 700;">${get5GwXp(player, currentGw).toFixed(1)}</strong>
+                                    </span>
+                                `}
                             </div>
                         </div>
                         <div class="pitch-card-fixtures-grid">
