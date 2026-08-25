@@ -505,7 +505,21 @@ class AppState {
 
                     if (force || !localTime || cloudTime > (localTime + 500)) {
                         this.saveBackupSnapshot('Pre-sync auto backup');
-                        this.drafts = data.drafts;
+                        
+                        const mergedDrafts = JSON.parse(JSON.stringify(data.drafts));
+                        if (this.drafts && Array.isArray(this.drafts)) {
+                            this.drafts.forEach((localDraft, idx) => {
+                                const cloudDraft = mergedDrafts[idx];
+                                if (cloudDraft && localDraft) {
+                                    const localPopulated = localDraft.squadSlots && localDraft.squadSlots.some(s => s.playerId !== null);
+                                    const cloudPopulated = cloudDraft.squadSlots && cloudDraft.squadSlots.some(s => s.playerId !== null);
+                                    if (localPopulated && !cloudPopulated) {
+                                        mergedDrafts[idx] = JSON.parse(JSON.stringify(localDraft));
+                                    }
+                                }
+                            });
+                        }
+                        this.drafts = mergedDrafts;
                         this.activeDraftIndex = typeof data.activeDraftIndex === 'number' ? data.activeDraftIndex : 0;
                         this.loadActiveDraftState();
 
@@ -606,7 +620,21 @@ class AppState {
                 
                 if (force || currentStr !== cloudStr || this.activeDraftIndex !== cloudData.activeDraftIndex) {
                     this.saveBackupSnapshot('Pre-sync auto backup');
-                    this.drafts = cloudData.drafts;
+                    
+                    const mergedDrafts = JSON.parse(JSON.stringify(cloudData.drafts));
+                    if (this.drafts && Array.isArray(this.drafts)) {
+                        this.drafts.forEach((localDraft, idx) => {
+                            const cloudDraft = mergedDrafts[idx];
+                            if (cloudDraft && localDraft) {
+                                const localPopulated = localDraft.squadSlots && localDraft.squadSlots.some(s => s.playerId !== null);
+                                const cloudPopulated = cloudDraft.squadSlots && cloudDraft.squadSlots.some(s => s.playerId !== null);
+                                if (localPopulated && !cloudPopulated) {
+                                    mergedDrafts[idx] = JSON.parse(JSON.stringify(localDraft));
+                                }
+                            }
+                        });
+                    }
+                    this.drafts = mergedDrafts;
                     this.activeDraftIndex = typeof cloudData.activeDraftIndex === 'number' ? cloudData.activeDraftIndex : 0;
                     this.loadActiveDraftState();
 

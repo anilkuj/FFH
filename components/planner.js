@@ -308,10 +308,11 @@ export function renderPlanner(container, state, actions) {
                             </option>
                         `).join('')}
                     </select>
-                    <input type="text" id="plannerFplTeamId" class="formation-select" placeholder="FPL ID" style="display: ${state.activeDraftIndex === 0 ? 'inline-block' : 'none'}; width: 70px; height: 32px; font-size: 12px; padding: 4px 10px; border-radius: 6px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); margin-left: 4px; box-sizing: border-box;" value="${localStorage.getItem('fpl_hub_last_imported_team_id') || ''}" />
-                    <button class="pitch-btn" id="plannerImportBtn" title="Import from FPL Team ID" style="display: ${state.activeDraftIndex === 0 ? 'flex' : 'none'}; height: 32px; padding: 0 10px; align-items: center; justify-content: center; border-radius: 6px; background: var(--primary); border: 1px solid var(--primary-glow); color: #000; font-weight: 700; cursor: pointer; font-size: 12px; margin-left: 4px; border: none;">Import</button>
+                    <input type="text" id="plannerFplTeamId" class="formation-select" placeholder="FPL ID" style="display: inline-block; width: 70px; height: 32px; font-size: 12px; padding: 4px 10px; border-radius: 6px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); margin-left: 4px; box-sizing: border-box;" value="${localStorage.getItem('fpl_hub_last_imported_team_id') || ''}" />
+                    <button class="pitch-btn" id="plannerImportBtn" title="Import from FPL Team ID" style="display: flex; height: 32px; padding: 0 10px; align-items: center; justify-content: center; border-radius: 6px; background: var(--primary); border: 1px solid var(--primary-glow); color: #000; font-weight: 700; cursor: pointer; font-size: 12px; margin-left: 4px; border: none;">Import</button>
                     <button class="pitch-btn" id="renameDraftBtn" title="Rename Current Draft" style="height: 32px; width: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); cursor: pointer;"><i data-lucide="edit-3" style="width: 14px; height: 14px;"></i></button>
                     <button class="pitch-btn" id="cloneDraftBtn" title="Clone Current Draft" style="height: 32px; width: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); cursor: pointer;"><i data-lucide="copy" style="width: 14px; height: 14px;"></i></button>
+                    <button class="pitch-btn" id="deleteDraftBtn" title="Reset/Clear Current Draft" style="height: 32px; width: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; cursor: pointer;"><i data-lucide="trash-2" style="width: 14px; height: 14px;"></i></button>
                     <button class="pitch-btn" id="exportDraftsBtn" title="Export All Drafts" style="height: 32px; width: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); cursor: pointer;"><i data-lucide="download" style="width: 14px; height: 14px;"></i></button>
                     <button class="pitch-btn" id="importDraftsBtn" title="Import Drafts from File" style="height: 32px; width: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); cursor: pointer;"><i data-lucide="upload" style="width: 14px; height: 14px;"></i></button>
                     <button class="pitch-btn" id="copySquadClipboardBtn" title="Copy Current Squad to Clipboard" style="height: 32px; width: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); cursor: pointer;"><i data-lucide="clipboard" style="width: 14px; height: 14px;"></i></button>
@@ -1080,6 +1081,32 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
         });
     }
 
+    // Draft deleting/resetting
+    const deleteDraftBtn = container.querySelector('#deleteDraftBtn');
+    if (deleteDraftBtn) {
+        deleteDraftBtn.addEventListener('click', () => {
+            const currentDraft = state.drafts[state.activeDraftIndex];
+            if (confirm(`Are you sure you want to reset and clear the draft "${currentDraft.name}"? This will empty the squad and clear all transfers.`)) {
+                currentDraft.squadSlots = null;
+                currentDraft.captain = null;
+                currentDraft.vice = null;
+                currentDraft.formation = '4-4-2';
+                currentDraft.transfers = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+                currentDraft.chips = {};
+                for (let gw = 1; gw <= 38; gw++) {
+                    currentDraft.chips[gw] = { wildcard: false, tripleCaptain: false, benchBoost: false, freeHit: false };
+                }
+                currentDraft.weeklyLineups = {};
+                currentDraft.name = state.activeDraftIndex === 0 ? 'FPL Team ID' : `Draft ${state.activeDraftIndex + 1}`;
+                
+                state.loadActiveDraftState();
+                state.saveState();
+                actions.renderActiveView();
+                actions.showToast('Draft has been reset and cleared.', 'info');
+            }
+        });
+    }
+
     // Draft cloning
     const cloneDraftBtn = container.querySelector('#cloneDraftBtn');
     if (cloneDraftBtn) {
@@ -1279,13 +1306,15 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
                     const teamName = responseData.teamName;
                     const finalDraftName = teamName ? `${teamName} (ID: ${teamId})` : `FPL Team (ID: ${teamId})`;
 
-                    // Overwrite the first draft slot (FPL Team ID)
-                    state.drafts[0].name = finalDraftName;
-                    state.drafts[0].squadSlots = importedSlots;
-                    state.drafts[0].captain = tempCaptain;
-                    state.drafts[0].vice = tempVice;
-                    state.drafts[0].formation = tempFormation;
-                    state.drafts[0].transfers = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+                    // Overwrite the current active draft slot
+                    const activeIdx = state.activeDraftIndex;
+                    state.drafts[activeIdx].name = finalDraftName;
+                    state.drafts[activeIdx].squadSlots = importedSlots;
+                    state.drafts[activeIdx].captain = tempCaptain;
+                    state.drafts[activeIdx].vice = tempVice;
+                    state.drafts[activeIdx].formation = tempFormation;
+                    state.drafts[activeIdx].transfers = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+                    state.drafts[activeIdx].weeklyLineups = {};
 
                     // Save last imported caches
                     localStorage.setItem('fpl_hub_last_imported_team_id', teamId);
@@ -1299,12 +1328,8 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
                     localStorage.setItem('fpl_hub_last_imported_vice', (tempVice || '').toString());
                     localStorage.setItem('fpl_hub_last_imported_bank', bankVal.toString());
 
-                    // Auto switch to draft 0 (FPL Team ID) and load it
-                    if (state.activeDraftIndex === 0) {
-                        state.loadActiveDraftState();
-                    } else {
-                        state.switchDraft(0);
-                    }
+                    // Load active draft directly
+                    state.loadActiveDraftState();
                     
                     state.saveState();
                     
