@@ -419,35 +419,47 @@ async function parseAndWriteData(data, fixturesData) {
                 goalsConceded = (position === 'GKP' || position === 'DEF') ? starts * 1.2 : 0;
             }
         }
-
         const xG = parseFloat(el.expected_goals) || 0.0;
         const xA = parseFloat(el.expected_assists) || 0.0;
+        const currentMins = el.minutes || 0;
+        const histWeight = 1800; // Prior weight of 20 games (1800 minutes) to stabilize early season metrics
 
-        // Regress per-90 metrics for low minutes (< 450 minutes) to prevent small sample size inflation
-        const sampleSizeFactor = minutes >= 450 ? 1.0 : (minutes / 450);
-        const xG90 = minutes > 0 ? ((xG / minutes) * 90) * sampleSizeFactor : 0.0;
-        const xA90 = minutes > 0 ? ((xA / minutes) * 90) * sampleSizeFactor : 0.0;
+        // 1. Expected Goals per 90 (xG90)
+        const histXG90 = (existingPlayer && existingPlayer.xG90 !== undefined) ? existingPlayer.xG90 : 0.0;
+        const currentXG90 = el.expected_goals_per_90 !== undefined 
+            ? (parseFloat(el.expected_goals_per_90) || 0.0)
+            : (currentMins > 0 ? (parseFloat(el.expected_goals) / currentMins) * 90 : 0.0);
+        const xG90 = (histXG90 * histWeight + currentXG90 * currentMins) / (histWeight + currentMins);
 
-        // GK-specific stats regression
+        // 2. Expected Assists per 90 (xA90)
+        const histXA90 = (existingPlayer && existingPlayer.xA90 !== undefined) ? existingPlayer.xA90 : 0.0;
+        const currentXA90 = el.expected_assists_per_90 !== undefined 
+            ? (parseFloat(el.expected_assists_per_90) || 0.0)
+            : (currentMins > 0 ? (parseFloat(el.expected_assists) / currentMins) * 90 : 0.0);
+        const xA90 = (histXA90 * histWeight + currentXA90 * currentMins) / (histWeight + currentMins);
+
+        // 3. Goalkeeper Saves per 90 (saves90)
         const baseSaves90 = 3.0;
-        const rawSaves90 = minutes > 0 ? (totalSaves / minutes) * 90 : baseSaves90;
-        const saves90 = minutes >= 450 ? rawSaves90 : baseSaves90 + (rawSaves90 - baseSaves90) * sampleSizeFactor;
+        const histSaves90 = (existingPlayer && existingPlayer.saves90 !== undefined) ? existingPlayer.saves90 : baseSaves90;
+        const currentSaves90 = el.saves_per_90 !== undefined 
+            ? (parseFloat(el.saves_per_90) || 0.0)
+            : (currentMins > 0 ? (parseInt(el.saves) / currentMins) * 90 : baseSaves90);
+        const saves90 = (histSaves90 * histWeight + currentSaves90 * currentMins) / (histWeight + currentMins);
 
+        // 4. Goals Conceded per 90 (goalsConceded90)
         const baseGc90 = 1.37;
-        const rawGc90 = minutes > 0 ? (goalsConceded / minutes) * 90 : baseGc90;
-        const goalsConceded90 = minutes >= 450 ? rawGc90 : baseGc90 + (rawGc90 - baseGc90) * sampleSizeFactor;
+        const histGc90 = (existingPlayer && existingPlayer.goalsConceded90 !== undefined) ? existingPlayer.goalsConceded90 : baseGc90;
+        const currentGc90 = el.goals_conceded_per_90 !== undefined 
+            ? (parseFloat(el.goals_conceded_per_90) || 0.0)
+            : (currentMins > 0 ? (parseInt(el.goals_conceded) / currentMins) * 90 : baseGc90);
+        const goalsConceded90 = (histGc90 * histWeight + currentGc90 * currentMins) / (histWeight + currentMins);
 
-        // Real league averages this season (min. 900 minutes, i.e. ~10 full games, so the baseline
-        // itself isn't distorted by the same small-sample problem this regression exists to fix):
-        // DEF 7.76 (n=98), MID 8.38 (n=126), FWD 4.50 (n=24) -- computed directly from a fresh
-        // bootstrap-static pull. Only ~16% of qualifying DEF and ~6% of qualifying MID average at or
-        // above their own real threshold across a full season -- confirms sitting at the threshold
-        // is already an elite outcome, not a median one (see getExpectedDefconPts's comment in
-        // lib/predictionModel.js, which the hit-probability mapping is calibrated against).
+        // 5. Defensive Contribution per 90 (dcPer90)
         const BASE_DC90 = { GKP: 0, DEF: 7.76, MID: 8.38, FWD: 4.50 };
-        const rawDcPer90 = parseFloat(el.defensive_contribution_per_90) || 0;
         const baseDc90 = BASE_DC90[position] || 0;
-        const dcPer90 = minutes >= 450 ? rawDcPer90 : baseDc90 + (rawDcPer90 - baseDc90) * sampleSizeFactor;
+        const histDcPer90 = (existingPlayer && existingPlayer.dcPer90 !== undefined) ? existingPlayer.dcPer90 : baseDc90;
+        const rawDcPer90 = parseFloat(el.defensive_contribution_per_90) || 0;
+        const dcPer90 = (histDcPer90 * histWeight + rawDcPer90 * currentMins) / (histWeight + currentMins);
 
         let appearances = starts;
         if (minutes > starts * 90) {
