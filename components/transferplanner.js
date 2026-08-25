@@ -102,12 +102,8 @@ export function renderTransferPlanner(container, state, actions) {
             if (pred) {
                 const color = getFdrColor(pred.diff);
                 const oppText = formatFdrOpponentText(pred);
-                const ptsVal = pred.actualPts !== undefined && pred.actualPts !== null 
-                    ? pred.actualPts 
-                    : ((pred._rawPts !== undefined ? pred._rawPts : pred.pts) * factor);
-                const ptsText = pred.actualPts !== undefined && pred.actualPts !== null
-                    ? `${Math.round(ptsVal)} pts`
-                    : `${ptsVal.toFixed(1)} XP`;
+                const ptsVal = ((pred._rawPts !== undefined ? pred._rawPts : pred.pts) * factor);
+                const ptsText = `${ptsVal.toFixed(1)} XP`;
 
                 const isDarkBg = pred.diff === 4 || pred.diff === 5 || pred.diff === 1;
                 const textColor = isDarkBg ? '#ffffff' : '#0f172a';

@@ -123,12 +123,8 @@ function renderFdrFixtures(player, currentGw) {
 
         if (pr) {
             const oppText = formatFdrOpponentText(pr);
-            const ptsVal = pr.actualPts !== undefined && pr.actualPts !== null 
-                ? pr.actualPts 
-                : ((pr._rawPts !== undefined ? pr._rawPts : pr.pts) * factor);
-            const ptsText = pr.actualPts !== undefined && pr.actualPts !== null
-                ? `${Math.round(ptsVal)} pts`
-                : `${ptsVal.toFixed(1)} XP`;
+            const ptsVal = ((pr._rawPts !== undefined ? pr._rawPts : pr.pts) * factor);
+            const ptsText = `${ptsVal.toFixed(1)} XP`;
 
             const isDarkBg = pr.diff === 4 || pr.diff === 5 || pr.diff === 1;
             const textColor = isDarkBg ? '#ffffff' : '#0f172a';

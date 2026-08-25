@@ -477,8 +477,8 @@ function renderPitchFixtures(player, currentGw) {
             const oppText = formatFdrOpponentText(pr);
             const fdrColor = getFdrColor(pr.diff);
             
-            // Resolve XP or actual points
-            const ptsVal = pr.actualPts !== undefined && pr.actualPts !== null ? pr.actualPts : pr.pts;
+            // Resolve XP
+            const ptsVal = pr.pts;
             const ptsText = ptsVal.toFixed(1).endsWith('.0') ? Math.round(ptsVal) : ptsVal.toFixed(1);
             
             // Uppercase opponent team name with (H) or (A)
@@ -520,12 +520,8 @@ function renderFdrFixtures(player, currentGw) {
         const pr = player.predictions.find(p => p.gw == gw);
         if (pr) {
             const oppText = formatFdrOpponentText(pr);
-            const ptsVal = pr.actualPts !== undefined && pr.actualPts !== null 
-                ? pr.actualPts 
-                : ((pr._rawPts !== undefined ? pr._rawPts : pr.pts) * factor);
-            const ptsText = pr.actualPts !== undefined && pr.actualPts !== null
-                ? `${Math.round(ptsVal)} pts`
-                : `${ptsVal.toFixed(1)} XP`;
+            const ptsVal = ((pr._rawPts !== undefined ? pr._rawPts : pr.pts) * factor);
+            const ptsText = `${ptsVal.toFixed(1)} XP`;
 
             const isDarkBg = pr.diff === 4 || pr.diff === 5 || pr.diff === 1;
             const textColor = isDarkBg ? '#ffffff' : '#0f172a';
