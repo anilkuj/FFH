@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="light-theme">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,11 +18,16 @@
     <!-- Confetti CDN -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
-        // Force light theme by default
-        document.documentElement.classList.add('light-theme');
-        localStorage.setItem('fpl_hub_theme', 'light');
+        // Load saved theme or default to dark (matching Solio's visual style)
+        const savedTheme = localStorage.getItem('fpl_hub_theme') || 'dark';
+        if (savedTheme === 'light') {
+            document.documentElement.classList.add('light-theme');
+        } else {
+            document.documentElement.classList.remove('light-theme');
+            localStorage.setItem('fpl_hub_theme', 'dark');
+        }
     </script>
-  <script type="module" crossorigin src="/assets/index-C_-wSKcm.js"></script>
+  <script type="module" crossorigin src="/assets/index-CbBzInf_.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-Yy0aWmg6.css">
 </head>
 <body>
@@ -175,7 +180,8 @@
                     </div>
                     <!-- Top Bar Authentication Container -->
                     <div id="topBarAuthContainer" style="display: flex; align-items: center;"></div>
-                    <!-- Theme Toggle Removed -->
+                    <!-- Theme Toggle Button -->
+                    <button class="gw-btn" id="themeToggleBtn" title="Toggle Theme" style="width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); cursor: pointer;"></button>
                 </div>
             </header>
 

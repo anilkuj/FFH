@@ -2445,11 +2445,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // Theme Toggle Handler
     const themeBtn = document.getElementById('themeToggleBtn');
     if (themeBtn) {
+        const updateThemeIcon = () => {
+            const isLight = document.documentElement.classList.contains('light-theme');
+            themeBtn.innerHTML = isLight ? '<i data-lucide="moon"></i>' : '<i data-lucide="sun"></i>';
+            lucide.createIcons();
+        };
+        updateThemeIcon();
+
         themeBtn.addEventListener('click', () => {
             const isLight = document.documentElement.classList.toggle('light-theme');
             localStorage.setItem('fpl_hub_theme', isLight ? 'light' : 'dark');
+            updateThemeIcon();
             actions.renderActiveView();
-            lucide.createIcons();
         });
     }
 
