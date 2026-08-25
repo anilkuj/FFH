@@ -2543,6 +2543,10 @@ const actions = {
                         state.chips[g].wildcard = false;
                     }
                 }
+                state.transfers[gw] = [];
+                if (state.weeklyLineups && state.weeklyLineups[gw]) {
+                    delete state.weeklyLineups[gw];
+                }
             } else {
                 state.chips[gw].wildcard = true;
                 state.planWildcard = true;
@@ -2564,6 +2568,10 @@ const actions = {
                     if (state.chips[g]) {
                         state.chips[g].freeHit = false;
                     }
+                }
+                state.transfers[gw] = [];
+                if (state.weeklyLineups && state.weeklyLineups[gw]) {
+                    delete state.weeklyLineups[gw];
                 }
             } else {
                 state.chips[gw].freeHit = true;

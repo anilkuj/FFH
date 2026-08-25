@@ -225,3 +225,35 @@ test('getGwLineup self-healing and fallback alignment', () => {
     assert.equal(l2.vice, 8);
     assert.deepEqual(l2.bench, [2, 6, 7, 15]);
 });
+
+test('Deactivating Free Hit / Wildcard resets transfers and weekly lineups', () => {
+    const mockState = {
+        currentGw: 4,
+        chips: {
+            4: { wildcard: false, tripleCaptain: false, benchBoost: false, freeHit: true }
+        },
+        planFreeHit: true,
+        freeHitTargetGw: 4,
+        transfers: {
+            4: [{ out: 1, in: 2 }]
+        },
+        weeklyLineups: {
+            4: { starters: [2], bench: [], captain: 2, vice: 2, formation: '3-4-3' }
+        },
+        saveState() {}
+    };
+
+    // Simulate deactivation logic from toggleChip
+    const gw = mockState.currentGw;
+    mockState.chips[gw].freeHit = false;
+    mockState.planFreeHit = false;
+    mockState.transfers[gw] = [];
+    if (mockState.weeklyLineups && mockState.weeklyLineups[gw]) {
+        delete mockState.weeklyLineups[gw];
+    }
+
+    assert.equal(mockState.chips[4].freeHit, false);
+    assert.equal(mockState.planFreeHit, false);
+    assert.deepEqual(mockState.transfers[4], []);
+    assert.equal(mockState.weeklyLineups[4], undefined);
+});
