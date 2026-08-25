@@ -1287,6 +1287,8 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
                         state.switchDraft(0);
                     }
                     
+                    state.saveState();
+                    
                     actions.showToast(`Imported FPL Team "${teamName || teamId}" successfully!`, "success");
                     actions.renderActiveView();
                 } else {
