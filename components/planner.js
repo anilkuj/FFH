@@ -75,10 +75,12 @@ export function renderPlanner(container, state, actions) {
         document.head.appendChild(style);
     }
 
-    // Determine active squad for this gameweek.
-    // The active squad is computed by applying transfers from previous gameweeks up to the current one.
+    // Determine active squad and lineup for this gameweek.
     const squadInfo = state.getSquadForGw(state.currentGw);
-    const { starters, bench, bank, freeTransfers } = squadInfo;
+    const { bank, freeTransfers } = squadInfo;
+
+    const lineupInfo = state.getGwLineup(state.currentGw);
+    const { starters, bench, captain, vice, formation } = lineupInfo;
 
     // Clone baseline slots and apply planned transfers to show correct week-by-week squad
     let currentSlots = JSON.parse(JSON.stringify(state.squadSlots));
@@ -96,6 +98,15 @@ export function renderPlanner(container, state, actions) {
         });
     }
 
+    // Dynamic lineup assignment: set isStarting on each slot in currentSlots based on the resolved starters list
+    currentSlots.forEach(slot => {
+        if (slot.playerId !== null) {
+            slot.isStarting = starters.includes(slot.playerId);
+        } else {
+            slot.isStarting = false;
+        }
+    });
+
     // Calculate total predicted points for starters
     let expectedPoints = 0;
     starters.forEach(id => {
@@ -104,7 +115,7 @@ export function renderPlanner(container, state, actions) {
             const pred = player.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 };
             const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
             let multiplier = 1;
-            if (id === state.captain) {
+            if (id === captain) {
                 multiplier = state.chips[state.currentGw]?.tripleCaptain ? 3 : 2;
             }
             const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
@@ -131,14 +142,18 @@ export function renderPlanner(container, state, actions) {
         let total = 0;
         for (let gw = state.currentGw; gw < state.currentGw + numGws; gw++) {
             if (gw > 38) break;
+
+            const gwLineup = state.getGwLineup(gw);
+            const { starters: gwStarters, bench: gwBench, captain: gwCaptain } = gwLineup;
+
             let gwTotal = 0;
-            starters.forEach(id => {
+            gwStarters.forEach(id => {
                 const player = PLAYERS.find(p => p.id === id);
                 if (player) {
                     const pred = player.predictions.find(pr => pr.gw === gw) || { pts: 0 };
                     const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
                     let multiplier = 1;
-                    if (id === state.captain) {
+                    if (id === gwCaptain) {
                         multiplier = state.chips[gw]?.tripleCaptain ? 3 : 2;
                     }
                     const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
@@ -147,7 +162,7 @@ export function renderPlanner(container, state, actions) {
             });
             const isBbActiveGw = !!(state.chips[gw]?.benchBoost || (state.planBenchBoost && state.benchBoostTargetGw === gw));
             if (isBbActiveGw) {
-                bench.forEach(id => {
+                gwBench.forEach(id => {
                     const player = PLAYERS.find(p => p.id === id);
                     if (player) {
                         const pred = player.predictions.find(pr => pr.gw === gw) || { pts: 0 };
@@ -212,7 +227,7 @@ export function renderPlanner(container, state, actions) {
     // Modern 10-year champion average is 70.5 pts/GW (~2,680 pts/season).
     // Benchmark: 4.1 base XP/player average (45.1 base starters XP + ~5.5 captaincy bonus = 50.6 GW total) = 100 rating.
     // Distribution: Average squad (~36 total GW xP) → ~80 rating | Strong template (~41 total xP) → ~91 | Elite AI (~45+ total xP) → 100
-    const captainPlayer = PLAYERS.find(p => p.id === state.captain);
+    const captainPlayer = PLAYERS.find(p => p.id === captain);
     const captainBonus = captainPlayer ? (captainPlayer.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0) * (state.chips[state.currentGw]?.tripleCaptain ? 2 : 1) : 0;
     const rawExpectedPoints = Math.max(0, expectedPoints - captainBonus);
     const averagePlayerXP = rawExpectedPoints / 11;
@@ -328,22 +343,22 @@ export function renderPlanner(container, state, actions) {
 
                     <!-- GKP Row -->
                     <div class="pitch-row" data-row="GKP">
-                        ${renderPlayerRow(currentSlots, "GKP", state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked, state)}
+                        ${renderPlayerRow(currentSlots, "GKP", state.currentGw, captain, vice, actions, state.isSquadUnlocked, state)}
                     </div>
 
                     <!-- DEF Row -->
                     <div class="pitch-row" data-row="DEF">
-                        ${renderPlayerRow(currentSlots, "DEF", state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked, state)}
+                        ${renderPlayerRow(currentSlots, "DEF", state.currentGw, captain, vice, actions, state.isSquadUnlocked, state)}
                     </div>
 
                     <!-- MID Row -->
                     <div class="pitch-row" data-row="MID">
-                        ${renderPlayerRow(currentSlots, "MID", state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked, state)}
+                        ${renderPlayerRow(currentSlots, "MID", state.currentGw, captain, vice, actions, state.isSquadUnlocked, state)}
                     </div>
 
                     <!-- FWD Row -->
                     <div class="pitch-row" data-row="FWD">
-                        ${renderPlayerRow(currentSlots, "FWD", state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked, state)}
+                        ${renderPlayerRow(currentSlots, "FWD", state.currentGw, captain, vice, actions, state.isSquadUnlocked, state)}
                     </div>
                 </div>
 
@@ -351,7 +366,7 @@ export function renderPlanner(container, state, actions) {
                 <div class="bench-container">
                     <span class="bench-title">Bench (Click starter to swap with bench)</span>
                     <div class="bench-row" id="benchRow">
-                        ${renderBenchRow(currentSlots, state.currentGw, state.captain, state.vice, actions, state.isSquadUnlocked, state)}
+                        ${renderBenchRow(currentSlots, state.currentGw, captain, vice, actions, state.isSquadUnlocked, state)}
                     </div>
                 </div>
             </div>
@@ -1912,7 +1927,8 @@ ${squadListText}
                     <div style="display: flex; flex-direction: column; gap: 14px;">
                         ${options.map((item, index) => {
                             const { player, pred } = item;
-                            const isCurrentCap = state.captain === player.id;
+                            const currentLineup = state.getGwLineup(currentGw);
+                            const isCurrentCap = currentLineup.captain === player.id;
                             const rankLabel = index === 0 ? "🥇 Primary Pick" : (index === 1 ? "🥈 Secondary Pick" : "🥉 Alternative Pick");
                             const xGI = player.xGI !== undefined ? player.xGI.toFixed(2) : '0.00';
                             
@@ -1985,8 +2001,9 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
     const prediction = player.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0, opp: "BYE", loc: "" };
     const teamObj = TEAMS.find(t => t.shortName === player.team);
 
-    const isCaptain = state.captain === playerId;
-    const isVice = state.vice === playerId;
+    const lineup = state.getGwLineup(state.currentGw);
+    const isCaptain = lineup.captain === playerId;
+    const isVice = lineup.vice === playerId;
 
     const ratings = getPlayerRatings(player, state.currentGw);
     const getBadgeClass = (val) => {

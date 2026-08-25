@@ -218,6 +218,9 @@ class AppState {
             1: [], 2: [], 3: [], 4: [], 5: []
         };
 
+        const savedWeeklyLineups = localStorage.getItem('fpl_hub_weekly_lineups');
+        this.weeklyLineups = safeJsonParse(savedWeeklyLineups, {});
+
         this.loadUserDrafts();
         this.loadCloudDrafts();
         this.checkUrlSync();
@@ -334,7 +337,10 @@ class AppState {
             this.drafts[this.activeDraftIndex].formation = this.formation;
             this.drafts[this.activeDraftIndex].transfers = JSON.parse(JSON.stringify(this.transfers));
             this.drafts[this.activeDraftIndex].chips = JSON.parse(JSON.stringify(this.chips));
+            this.drafts[this.activeDraftIndex].weeklyLineups = JSON.parse(JSON.stringify(this.weeklyLineups));
         }
+
+        localStorage.setItem('fpl_hub_weekly_lineups', JSON.stringify(this.weeklyLineups));
 
         localStorage.setItem('fpl_hub_tier', this.tier);
         localStorage.setItem('fpl_hub_squad', JSON.stringify(this.squad));
@@ -762,6 +768,113 @@ class AppState {
         };
     }
 
+    getGwLineup(gw) {
+        const squadInfo = this.getSquadForGw(gw);
+        const { squad } = squadInfo;
+        
+        let starters = [];
+        let bench = [];
+        let captain = null;
+        let vice = null;
+        let formation = this.formation; // default to global baseline formation
+        
+        const weekly = this.weeklyLineups[gw];
+        if (weekly) {
+            if (weekly.formation) formation = weekly.formation;
+            
+            // Check if weekly starters/bench are still in the resolved squad for this week
+            const validStarters = (weekly.starters || []).filter(id => squad.includes(id));
+            const validBench = (weekly.bench || []).filter(id => squad.includes(id));
+            const missing = squad.filter(id => !validStarters.includes(id) && !validBench.includes(id));
+            
+            // Reconstruct starters and bench preserving valid ones
+            starters = validStarters;
+            bench = validBench;
+            
+            // Fill in any missing players based on position constraints of the formation
+            const cons = getFormationConstraints(formation);
+            
+            // We want to fill starters up to the formation constraints
+            // Group missing players by position
+            const missingByPos = { GKP: [], DEF: [], MID: [], FWD: [] };
+            missing.forEach(id => {
+                const p = PLAYERS.find(pl => pl.id === id);
+                if (p) missingByPos[p.position].push(id);
+            });
+            
+            // Helper to get count of starters in a position
+            const getStarterCount = (pos) => starters.filter(id => PLAYERS.find(pl => pl.id === id)?.position === pos).length;
+            
+            // GK
+            while (getStarterCount('GKP') < cons.GKP && missingByPos.GKP.length > 0) {
+                starters.push(missingByPos.GKP.shift());
+            }
+            // DEF
+            while (getStarterCount('DEF') < cons.DEF && missingByPos.DEF.length > 0) {
+                starters.push(missingByPos.DEF.shift());
+            }
+            // MID
+            while (getStarterCount('MID') < cons.MID && missingByPos.MID.length > 0) {
+                starters.push(missingByPos.MID.shift());
+            }
+            // FWD
+            while (getStarterCount('FWD') < cons.FWD && missingByPos.FWD.length > 0) {
+                starters.push(missingByPos.FWD.shift());
+            }
+            
+            // Any remaining missing go to the bench
+            ['GKP', 'DEF', 'MID', 'FWD'].forEach(pos => {
+                bench.push(...missingByPos[pos]);
+            });
+            
+            // Resolve captain and vice
+            if (weekly.captain && squad.includes(weekly.captain)) {
+                captain = weekly.captain;
+            }
+            if (weekly.vice && squad.includes(weekly.vice)) {
+                vice = weekly.vice;
+            }
+        }
+        
+        // Default fallback if weekly lineup is not set, or is incomplete/corrupted
+        if (starters.length + bench.length !== 15 || starters.length !== 11) {
+            // Run default formation constraints alignment
+            const cons = getFormationConstraints(formation);
+            starters = [];
+            bench = [];
+            
+            const squadByPos = { GKP: [], DEF: [], MID: [], FWD: [] };
+            squad.forEach(id => {
+                const p = PLAYERS.find(pl => pl.id === id);
+                if (p) squadByPos[p.position].push(id);
+            });
+            
+            // Assign starters up to constraints, rest to bench
+            ['GKP', 'DEF', 'MID', 'FWD'].forEach(pos => {
+                const limit = cons[pos];
+                starters.push(...squadByPos[pos].slice(0, limit));
+                bench.push(...squadByPos[pos].slice(limit));
+            });
+        }
+        
+        // Ensure captain and vice are set from starters
+        if (!captain || !starters.includes(captain)) {
+            // Find highest value/XP player in starters
+            captain = starters[0] || null;
+        }
+        if (!vice || !starters.includes(vice) || vice === captain) {
+            vice = starters.find(id => id !== captain) || null;
+        }
+        
+        return {
+            starters,
+            bench,
+            captain,
+            vice,
+            formation
+        };
+    }
+
     autoRotateLineup(gw) {
         if (!this.squadSlots || this.squadSlots.every(s => s.playerId === null)) return;
 
@@ -907,6 +1020,15 @@ class AppState {
                 autoPreserved = true;
             }
 
+            // 4. Weekly Lineups
+            if (activeDraft.weeklyLineups) {
+                this.weeklyLineups = JSON.parse(JSON.stringify(activeDraft.weeklyLineups));
+            } else {
+                this.weeklyLineups = {};
+                activeDraft.weeklyLineups = {};
+                autoPreserved = true;
+            }
+
             if (autoPreserved) {
                 this.saveState();
             }
@@ -924,6 +1046,7 @@ class AppState {
             this.drafts[this.activeDraftIndex].formation = this.formation;
             this.drafts[this.activeDraftIndex].transfers = JSON.parse(JSON.stringify(this.transfers));
             this.drafts[this.activeDraftIndex].chips = JSON.parse(JSON.stringify(this.chips));
+            this.drafts[this.activeDraftIndex].weeklyLineups = JSON.parse(JSON.stringify(this.weeklyLineups));
         }
 
         // Set active index
@@ -1903,6 +2026,19 @@ const actions = {
     },
 
     setCaptain(playerId) {
+        const gw = state.currentGw;
+        if (!state.weeklyLineups[gw]) {
+            const current = state.getGwLineup(gw);
+            state.weeklyLineups[gw] = { 
+                starters: current.starters, 
+                bench: current.bench, 
+                captain: current.captain, 
+                vice: current.vice, 
+                formation: current.formation 
+            };
+        }
+        state.weeklyLineups[gw].captain = playerId;
+        // Fallback global update
         state.captain = playerId;
         state.saveState();
         actions.renderActiveView();
@@ -1910,6 +2046,19 @@ const actions = {
     },
 
     setVice(playerId) {
+        const gw = state.currentGw;
+        if (!state.weeklyLineups[gw]) {
+            const current = state.getGwLineup(gw);
+            state.weeklyLineups[gw] = { 
+                starters: current.starters, 
+                bench: current.bench, 
+                captain: current.captain, 
+                vice: current.vice, 
+                formation: current.formation 
+            };
+        }
+        state.weeklyLineups[gw].vice = playerId;
+        // Fallback global update
         state.vice = playerId;
         state.saveState();
         actions.renderActiveView();
@@ -1918,108 +2067,111 @@ const actions = {
 
     // Set formation and adjust starters accordingly
     setFormation(formation) {
-        state.formation = formation;
-        // Recalculate starters based on formation constraints
+        const gw = state.currentGw;
+        if (!state.weeklyLineups[gw]) {
+            const current = state.getGwLineup(gw);
+            state.weeklyLineups[gw] = { 
+                starters: current.starters, 
+                bench: current.bench, 
+                captain: current.captain, 
+                vice: current.vice, 
+                formation: current.formation 
+            };
+        }
+        state.weeklyLineups[gw].formation = formation;
+        
+        // Re-align starters based on the new formation
+        const squadInfo = state.getSquadForGw(gw);
+        const { squad } = squadInfo;
         const cons = getFormationConstraints(formation);
-        // Reset starters
-        state.squadSlots.forEach(s => s.isStarting = false);
-        // Assign GK starters
-        let assigned = 0;
-        for (const slot of state.squadSlots) {
-            if (slot.position === 'GKP' && assigned < cons.GKP) {
-                slot.isStarting = true;
-                assigned++;
-            }
-        }
-        // Assign DEF starters
-        assigned = 0;
-        for (const slot of state.squadSlots) {
-            if (slot.position === 'DEF' && assigned < cons.DEF) {
-                slot.isStarting = true;
-                assigned++;
-            }
-        }
-        // Assign MID starters
-        assigned = 0;
-        for (const slot of state.squadSlots) {
-            if (slot.position === 'MID' && assigned < cons.MID) {
-                slot.isStarting = true;
-                assigned++;
-            }
-        }
-        // Assign FWD starters
-        assigned = 0;
-        for (const slot of state.squadSlots) {
-            if (slot.position === 'FWD' && assigned < cons.FWD) {
-                slot.isStarting = true;
-                assigned++;
-            }
-        }
+        
+        const starters = [];
+        const bench = [];
+        const squadByPos = { GKP: [], DEF: [], MID: [], FWD: [] };
+        squad.forEach(id => {
+            const p = PLAYERS.find(pl => pl.id === id);
+            if (p) squadByPos[p.position].push(id);
+        });
+        
+        ['GKP', 'DEF', 'MID', 'FWD'].forEach(pos => {
+            const limit = cons[pos];
+            starters.push(...squadByPos[pos].slice(0, limit));
+            bench.push(...squadByPos[pos].slice(limit));
+        });
+        
+        state.weeklyLineups[gw].starters = starters;
+        state.weeklyLineups[gw].bench = bench;
+        state.formation = formation;
         state.saveState();
         actions.renderActiveView();
         actions.showToast(`Formation set to ${formation}`, 'success');
     },
 
     swapPlayers(id1, id2) {
-        // Find positions
-        const inStarters1 = state.starters.includes(id1);
-        const inStarters2 = state.starters.includes(id2);
-
+        const gw = state.currentGw;
+        if (!state.weeklyLineups[gw]) {
+            const current = state.getGwLineup(gw);
+            state.weeklyLineups[gw] = { 
+                starters: current.starters, 
+                bench: current.bench, 
+                captain: current.captain, 
+                vice: current.vice, 
+                formation: current.formation 
+            };
+        }
+        const lineup = state.weeklyLineups[gw];
+        
+        const inStarters1 = lineup.starters.includes(id1);
+        const inStarters2 = lineup.starters.includes(id2);
+        
         if (inStarters1 === inStarters2) {
-            // Swap ordering in starters or bench directly by swapping the player IDs and positions in their slots
-            const slot1 = state.squadSlots.find(s => s.playerId === id1);
-            const slot2 = state.squadSlots.find(s => s.playerId === id2);
-            if (slot1 && slot2) {
-                const tempId = slot1.playerId;
-                const tempPos = slot1.position;
-                
-                slot1.playerId = slot2.playerId;
-                slot1.position = slot2.position;
-                
-                slot2.playerId = tempId;
-                slot2.position = tempPos;
+            // Swap ordering in starters or bench directly
+            if (inStarters1) {
+                const idx1 = lineup.starters.indexOf(id1);
+                const idx2 = lineup.starters.indexOf(id2);
+                lineup.starters[idx1] = id2;
+                lineup.starters[idx2] = id1;
+            } else {
+                const idx1 = lineup.bench.indexOf(id1);
+                const idx2 = lineup.bench.indexOf(id2);
+                lineup.bench[idx1] = id2;
+                lineup.bench[idx2] = id1;
             }
         } else {
-            // Starters vs Bench swap. Check formation validation and automatically adjust formation
-            const hypStarters = state.starters.map(id => id === id1 ? id2 : (id === id2 ? id1 : id));
+            // Starters vs Bench swap. Swap starting status and validate formation
+            const hypStarters = lineup.starters.map(id => id === id1 ? id2 : (id === id2 ? id1 : id));
             
-            if (hypStarters.length === 11) {
-                const gkpCount = hypStarters.filter(id => PLAYERS.find(p => p.id === id)?.position === 'GKP').length;
-                const defCount = hypStarters.filter(id => PLAYERS.find(p => p.id === id)?.position === 'DEF').length;
-                const midCount = hypStarters.filter(id => PLAYERS.find(p => p.id === id)?.position === 'MID').length;
-                const fwdCount = hypStarters.filter(id => PLAYERS.find(p => p.id === id)?.position === 'FWD').length;
+            // Validate formation
+            const gkpCount = hypStarters.filter(id => PLAYERS.find(p => p.id === id)?.position === 'GKP').length;
+            const defCount = hypStarters.filter(id => PLAYERS.find(p => p.id === id)?.position === 'DEF').length;
+            const midCount = hypStarters.filter(id => PLAYERS.find(p => p.id === id)?.position === 'MID').length;
+            const fwdCount = hypStarters.filter(id => PLAYERS.find(p => p.id === id)?.position === 'FWD').length;
 
-                if (gkpCount !== 1) {
-                    actions.showToast('Starting lineup must contain exactly 1 Goalkeeper.', 'error');
-                    return;
-                }
-                if (defCount < 3 || defCount > 5) {
-                    actions.showToast('Starting lineup must contain between 3 and 5 Defenders.', 'error');
-                    return;
-                }
-                if (midCount < 2 || midCount > 5) {
-                    actions.showToast('Starting lineup must contain between 2 and 5 Midfielders.', 'error');
-                    return;
-                }
-                if (fwdCount < 1 || fwdCount > 3) {
-                    actions.showToast('Starting lineup must contain between 1 and 3 Forwards.', 'error');
-                    return;
-                }
-
-                const newFormation = `${defCount}-${midCount}-${fwdCount}`;
-                if (FORMATIONS && FORMATIONS[newFormation]) {
-                    state.formation = newFormation;
-                }
+            if (gkpCount !== 1) {
+                actions.showToast('Starting lineup must contain exactly 1 Goalkeeper.', 'error');
+                return;
+            }
+            if (defCount < 3 || defCount > 5) {
+                actions.showToast('Starting lineup must contain between 3 and 5 Defenders.', 'error');
+                return;
+            }
+            if (midCount < 2 || midCount > 5) {
+                actions.showToast('Starting lineup must contain between 2 and 5 Midfielders.', 'error');
+                return;
+            }
+            if (fwdCount < 1 || fwdCount > 3) {
+                actions.showToast('Starting lineup must contain between 1 and 3 Forwards.', 'error');
+                return;
             }
 
-            // Apply swap by toggling the starting statuses of the two slots
-            const slot1 = state.squadSlots.find(s => s.playerId === id1);
-            const slot2 = state.squadSlots.find(s => s.playerId === id2);
-            if (slot1 && slot2) {
-                const temp = slot1.isStarting;
-                slot1.isStarting = slot2.isStarting;
-                slot2.isStarting = temp;
-            }
+            // If valid, apply swap
+            const idxS = lineup.starters.indexOf(inStarters1 ? id1 : id2);
+            const idxB = lineup.bench.indexOf(inStarters1 ? id2 : id1);
+            lineup.starters[idxS] = inStarters1 ? id2 : id1;
+            lineup.bench[idxB] = inStarters1 ? id1 : id2;
+
+            lineup.formation = `${defCount}-${midCount}-${fwdCount}`;
+            state.formation = lineup.formation;
         }
 
         state.saveState();
