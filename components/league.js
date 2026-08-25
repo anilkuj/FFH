@@ -7,24 +7,27 @@ export function renderLeague(container, state, actions) {
     const squadInfo = state.getSquadForGw(currentGw);
     const userStarters = state.squadSlots.filter(s => s.isStarting && s.playerId !== null).map(s => PLAYERS.find(p => p.id === s.playerId));
     
+    const currentWeekChips = state.chips[currentGw] || { wildcard: false, tripleCaptain: false, benchBoost: false, freeHit: false };
+
     // Sum active expected points for user starters
     let userGwPts = userStarters.reduce((sum, p) => {
         const pred = p.predictions.find(pr => pr.gw === currentGw) || { pts: 0 };
-        // double captain points
-        const multiplier = (state.captain === p.id) ? 2 : 1;
+        // double or triple captain points
+        const multiplier = (state.captain === p.id) ? (currentWeekChips.tripleCaptain ? 3 : 2) : 1;
         return sum + (pred.pts * multiplier);
     }, 0);
 
     const capPlayer = PLAYERS.find(p => p.id === state.captain);
     const userCaptain = capPlayer ? actions.getWebName(capPlayer.name) : 'None';
     const userTransfersCount = (state.transfers[currentGw] || []).length;
-    const userActiveChip = Object.keys(state.chips).find(k => state.chips[k] === true) || 'None';
+    const userActiveChip = Object.keys(currentWeekChips).find(k => currentWeekChips[k] === true) || 'None';
     
     // Format chip display name
     const formatChip = (chip) => {
         if (chip === 'tripleCaptain') return 'Triple Captain';
         if (chip === 'benchBoost') return 'Bench Boost';
         if (chip === 'wildcard') return 'Wildcard';
+        if (chip === 'freeHit') return 'Free Hit';
         return 'None';
     };
 

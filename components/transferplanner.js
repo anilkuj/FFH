@@ -9,8 +9,8 @@ export function renderTransferPlanner(container, state, actions) {
     
     // Determine context-aware default transfers based on available Free Transfers or active chips
     let defaultNumTransfers = squadInfo.freeTransfers;
-    if (state.currentGw === 1 || state.chips[state.currentGw]?.wildcard) {
-        defaultNumTransfers = 15; // Preseason or Wildcard unlimited
+    if (state.currentGw === 1 || state.chips[state.currentGw]?.wildcard || state.chips[state.currentGw]?.freeHit) {
+        defaultNumTransfers = 15; // Preseason or Wildcard/Free Hit unlimited
     } else if (defaultNumTransfers === 0 || isNaN(defaultNumTransfers)) {
         defaultNumTransfers = 1;
     }
@@ -500,8 +500,9 @@ export function renderTransferPlanner(container, state, actions) {
                             <div style="display:flex; flex-direction:column; gap:6px;">
                                 <label style="font-size:11px; font-weight:700; color:var(--text-muted);">Active Chip</label>
                                 <select id="tpActiveChip" class="settings-select" style="width:100%;">
-                                    <option value="none" ${!state.chips[state.currentGw]?.wildcard && !state.chips[state.currentGw]?.benchBoost && !state.chips[state.currentGw]?.tripleCaptain ? 'selected' : ''}>None</option>
+                                    <option value="none" ${!state.chips[state.currentGw]?.wildcard && !state.chips[state.currentGw]?.freeHit && !state.chips[state.currentGw]?.benchBoost && !state.chips[state.currentGw]?.tripleCaptain ? 'selected' : ''}>None</option>
                                     <option value="wildcard" ${state.chips[state.currentGw]?.wildcard ? 'selected' : ''}>Wildcard</option>
+                                    <option value="freeHit" ${state.chips[state.currentGw]?.freeHit ? 'selected' : ''}>Free Hit</option>
                                     <option value="benchBoost" ${state.chips[state.currentGw]?.benchBoost ? 'selected' : ''}>Bench Boost</option>
                                     <option value="tripleCaptain" ${state.chips[state.currentGw]?.tripleCaptain ? 'selected' : ''}>Triple Captain</option>
                                 </select>
@@ -607,7 +608,7 @@ export function renderTransferPlanner(container, state, actions) {
             if (!d.chips) {
                 d.chips = {};
                 for (let gw = 1; gw <= 38; gw++) {
-                    d.chips[gw] = { wildcard: false, tripleCaptain: false, benchBoost: false };
+                    d.chips[gw] = { wildcard: false, tripleCaptain: false, benchBoost: false, freeHit: false };
                 }
             }
             previewCap = d.captain || state.captain;
@@ -1411,7 +1412,7 @@ ${squadListText}
             const chosen = e.target.value;
             const gw = state.currentGw;
             if (!state.chips[gw]) {
-                state.chips[gw] = { wildcard: false, tripleCaptain: false, benchBoost: false };
+                state.chips[gw] = { wildcard: false, tripleCaptain: false, benchBoost: false, freeHit: false };
             }
             Object.keys(state.chips[gw]).forEach(k => state.chips[gw][k] = false);
             if (chosen !== 'none') {

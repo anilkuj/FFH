@@ -538,7 +538,7 @@ export function renderOptimizer(container, state, actions) {
             
             const targetGw = state.benchBoostTargetGw || state.currentGw;
             if (isChecked) {
-                if (!state.chips[targetGw]) state.chips[targetGw] = { wildcard: false, tripleCaptain: false, benchBoost: false };
+                if (!state.chips[targetGw]) state.chips[targetGw] = { wildcard: false, tripleCaptain: false, benchBoost: false, freeHit: false };
                 state.chips[targetGw].benchBoost = true;
                 // Clear other gameweeks
                 for (let g = 1; g <= 38; g++) {
@@ -562,7 +562,7 @@ export function renderOptimizer(container, state, actions) {
             localStorage.setItem('fpl_hub_bench_boost_target_gw', gw.toString());
             
             if (state.planBenchBoost) {
-                if (!state.chips[gw]) state.chips[gw] = { wildcard: false, tripleCaptain: false, benchBoost: false };
+                if (!state.chips[gw]) state.chips[gw] = { wildcard: false, tripleCaptain: false, benchBoost: false, freeHit: false };
                 state.chips[gw].benchBoost = true;
                 // Clear other gameweeks
                 for (let g = 1; g <= 38; g++) {
@@ -901,7 +901,7 @@ export function renderOptimizer(container, state, actions) {
         // Sync Bench Boost state to state.chips
         const targetGw = state.benchBoostTargetGw || state.currentGw;
         if (state.planBenchBoost) {
-            if (!state.chips[targetGw]) state.chips[targetGw] = { wildcard: false, tripleCaptain: false, benchBoost: false };
+            if (!state.chips[targetGw]) state.chips[targetGw] = { wildcard: false, tripleCaptain: false, benchBoost: false, freeHit: false };
             state.chips[targetGw].benchBoost = true;
             for (let g = 1; g <= 38; g++) {
                 if (g !== targetGw && state.chips[g]) {

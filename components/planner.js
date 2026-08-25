@@ -164,20 +164,33 @@ export function renderPlanner(container, state, actions) {
     const gw5XP = getSquadXPForHorizon(5);
     const gw10XP = getSquadXPForHorizon(10);
 
-    // Deactivate Wildcard if we are in preseason (GW 1)
-    if (state.currentGw === 1 && state.chips[1]?.wildcard) {
-        state.chips[1].wildcard = false;
-        state.saveState();
+    // Deactivate Wildcard / Free Hit if we are in preseason (GW 1)
+    if (state.currentGw === 1) {
+        let changed = false;
+        if (state.chips[1]?.wildcard) {
+            state.chips[1].wildcard = false;
+            changed = true;
+        }
+        if (state.chips[1]?.freeHit) {
+            state.chips[1].freeHit = false;
+            changed = true;
+        }
+        if (changed) {
+            state.saveState();
+        }
     }
 
     const isPreseason = state.currentGw === 1;
-    const currentWeekChips = state.chips[state.currentGw] || { wildcard: false, tripleCaptain: false, benchBoost: false };
+    const currentWeekChips = state.chips[state.currentGw] || { wildcard: false, tripleCaptain: false, benchBoost: false, freeHit: false };
     const isBbActive = !!(currentWeekChips.benchBoost || (state.planBenchBoost && state.benchBoostTargetGw === state.currentGw));
     let chipsHtml = '';
     if (!isPreseason) {
         chipsHtml += `
             <button class="pitch-btn ${currentWeekChips.wildcard ? 'active-chip' : ''}" id="chipWildcardBtn" title="Play Wildcard (Unlimited Free Transfers)">
                 <i data-lucide="zap"></i> Wildcard
+            </button>
+            <button class="pitch-btn ${currentWeekChips.freeHit ? 'active-chip' : ''}" id="chipFreeHitBtn" title="Play Free Hit (Unlimited Free Transfers for 1 GW, resets after)">
+                <i data-lucide="repeat"></i> Free Hit
             </button>
         `;
     }
@@ -1803,6 +1816,11 @@ ${squadListText}
     const wildcardBtn = container.querySelector('#chipWildcardBtn');
     if (wildcardBtn) {
         wildcardBtn.addEventListener('click', () => toggleChip('wildcard'));
+    }
+
+    const freeHitBtn = container.querySelector('#chipFreeHitBtn');
+    if (freeHitBtn) {
+        freeHitBtn.addEventListener('click', () => toggleChip('freeHit'));
     }
 
     const tcBtn = container.querySelector('#chipTcBtn');
