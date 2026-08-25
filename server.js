@@ -219,17 +219,24 @@ const server = http.createServer(async (req, res) => {
         let success = false;
         let resolvedGw = gw;
         let teamName = null;
+        let entryExists = false;
 
         // Fetch team entry info to get team name
         try {
             const entryUrl = `https://fantasy.premierleague.com/api/entry/${teamId}/`;
             const entryRes = await fetch(entryUrl);
             if (entryRes.ok) {
+                entryExists = true;
                 const entryData = await entryRes.json();
                 teamName = entryData.name || null;
+            } else if (entryRes.status === 404) {
+                entryExists = false;
+            } else {
+                entryExists = true;
             }
         } catch (e) {
             console.error('Failed to fetch team entry info:', e);
+            entryExists = true; // fallback
         }
 
         // FPL API returns 404 for future gameweeks. Try to find the latest active picks by looping down.
@@ -253,7 +260,13 @@ const server = http.createServer(async (req, res) => {
             res.end(JSON.stringify({ success: true, data: data, resolvedGw: resolvedGw, teamName: teamName }));
         } else {
             res.writeHead(404, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ success: false, error: 'Could not retrieve picks for any gameweek. Check team ID.' }));
+            let errorMsg = 'Could not retrieve picks for any gameweek. Check team ID.';
+            if (entryExists) {
+                errorMsg = teamName
+                    ? `FPL locks all squads until the GW1 deadline. "${teamName}" (ID: ${teamId}) is active, but picks are locked until the season starts.`
+                    : `FPL locks all squads until the GW1 deadline. Team ID ${teamId} is active, but picks are locked until the season starts.`;
+            }
+            res.end(JSON.stringify({ success: false, error: errorMsg }));
         }
         return;
     }

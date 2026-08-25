@@ -1243,7 +1243,10 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
 
             try {
                 const res = await fetch(`/api/fpl-picks?teamId=${teamId}&gw=${state.currentGw}`);
-                if (!res.ok) throw new Error("Failed to fetch FPL picks");
+                if (!res.ok) {
+                    const errorData = await res.json().catch(() => ({}));
+                    throw new Error(errorData.error || "Failed to fetch FPL picks");
+                }
                 const responseData = await res.json();
                 if (responseData && responseData.success && responseData.data && responseData.data.picks) {
                     const picks = responseData.data.picks;
@@ -1287,7 +1290,7 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
                 }
             } catch (err) {
                 console.error(err);
-                actions.showToast("Failed to fetch FPL picks. Verify ID is active.", "error");
+                actions.showToast(err.message || "Failed to fetch FPL picks. Verify ID is active.", "error");
             } finally {
                 plannerImportBtn.innerText = "Import";
                 plannerImportBtn.disabled = false;

@@ -991,7 +991,10 @@ export function renderTransferPlanner(container, state, actions) {
 
         try {
             const res = await fetch(`/api/fpl-picks?teamId=${teamId}&gw=${state.currentGw}`);
-            if (!res.ok) throw new Error("Network response error");
+            if (!res.ok) {
+                const errorData = await res.json().catch(() => ({}));
+                throw new Error(errorData.error || "Failed to fetch FPL picks");
+            }
             const responseData = await res.json();
             if (responseData && responseData.success && responseData.data && responseData.data.picks) {
                 const picks = responseData.data.picks;
@@ -1036,7 +1039,7 @@ export function renderTransferPlanner(container, state, actions) {
             }
         } catch (err) {
             console.error(err);
-            actions.showToast("Failed to fetch FPL picks. Verify ID is active.", "error");
+            actions.showToast(err.message || "Failed to fetch FPL picks. Verify ID is active.", "error");
         } finally {
             tpImportBtn.innerText = "Import";
             tpImportBtn.disabled = false;
