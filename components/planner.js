@@ -469,9 +469,10 @@ function formatFdrOpponentText(pr) {
 
 function renderPitchFixtures(player, currentGw) {
     let html = '';
-    for (let gw = currentGw; gw < currentGw + 3; gw++) {
+    const startGw = Number(currentGw);
+    for (let gw = startGw; gw < startGw + 3; gw++) {
         if (gw > 38) break;
-        const pr = player.predictions.find(p => p.gw === gw);
+        const pr = player.predictions.find(p => p.gw == gw);
         if (pr) {
             const oppText = formatFdrOpponentText(pr);
             const fdrColor = getFdrColor(pr.diff);
@@ -516,7 +517,7 @@ function renderFdrFixtures(player, currentGw) {
     let html = '<div class="fdr-fixtures-container" style="display: flex; gap: 5px; align-items: center; flex-wrap: wrap; margin: 4px 0 2px 0;">';
     for (let gw = currentGwNum; gw < currentGwNum + 5; gw++) {
         if (gw > 38) break;
-        const pr = player.predictions.find(p => p.gw === gw);
+        const pr = player.predictions.find(p => p.gw == gw);
         if (pr) {
             const oppText = formatFdrOpponentText(pr);
             const ptsVal = pr.actualPts !== undefined && pr.actualPts !== null 
@@ -694,7 +695,7 @@ export function renderPlayerRow(squadSlots, position, currentGw, captain, vice, 
         const player = PLAYERS.find(p => p.id === slot.playerId);
         if (!player) return '';
 
-        const prediction = player.predictions.find(pr => pr.gw === currentGw) || { pts: 0, opp: "BYE", loc: "" };
+        const prediction = player.predictions.find(pr => pr.gw == currentGw) || { pts: 0, opp: "BYE", loc: "" };
         const teamObj = TEAMS.find(t => t.shortName === player.team) || { color: "#ffffff" };
 
         const livePointsMap = (state && state.livePoints && state.livePoints[currentGw]) || {};
@@ -822,7 +823,7 @@ export function renderBenchRow(squadSlots, currentGw, captain, vice, actions, is
 
         const player = PLAYERS.find(p => p.id === slot.playerId);
         if (!player) return '';
-        const prediction = player.predictions.find(pr => pr.gw === currentGw) || { pts: 0, opp: "BYE", loc: "" };
+        const prediction = player.predictions.find(pr => pr.gw == currentGw) || { pts: 0, opp: "BYE", loc: "" };
         const teamObj = TEAMS.find(t => t.shortName === player.team) || { color: "#ffffff" };
 
         const livePointsMap = (state && state.livePoints && state.livePoints[currentGw]) || {};
