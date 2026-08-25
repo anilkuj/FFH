@@ -83,6 +83,10 @@ export function renderPlanner(container, state, actions) {
     // Clone baseline slots and apply planned transfers to show correct week-by-week squad
     let currentSlots = JSON.parse(JSON.stringify(state.squadSlots));
     for (let gw = 2; gw <= state.currentGw; gw++) {
+        // Skip applying transfers if a Free Hit was played in an intermediate week
+        // (but apply them if we are viewing the Free Hit week itself!)
+        if (gw !== state.currentGw && state.chips[gw]?.freeHit) continue;
+
         const weeklyTransfers = state.transfers[gw] || [];
         weeklyTransfers.forEach(tx => {
             const slot = currentSlots.find(s => s.playerId === tx.out);

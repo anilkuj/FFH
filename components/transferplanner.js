@@ -563,6 +563,9 @@ export function renderTransferPlanner(container, state, actions) {
             // to a clone of the base squadSlots (which is the GW1 / base squad state).
             let slotsAtGw = JSON.parse(JSON.stringify(state.squadSlots));
             for (let gw = 1; gw < state.currentGw; gw++) {
+                // Skip applying transfers if a Free Hit was played in that week
+                if (state.chips && state.chips[gw]?.freeHit) continue;
+
                 const priorTx = (state.transfers && state.transfers[gw]) || [];
                 priorTx.forEach(tx => {
                     const slot = slotsAtGw.find(s => s.playerId === tx.out);
