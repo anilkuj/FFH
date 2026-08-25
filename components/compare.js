@@ -114,7 +114,7 @@ export function renderCompare(container, state, actions) {
                 <tr>
                     <td style="font-weight: 600; color: var(--text-muted);">Expected Points (GW${currentGw})</td>
                     ${players.map(p => {
-                        const predObj = ((p.predictions || []).find(pr => pr.gw === currentGw) || { pts: 0 });
+                        const predObj = ((p.predictions || []).find(pr => pr.gw == currentGw) || { pts: 0 });
                         const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(p) : 1.0;
                         const raw = predObj._rawPts !== undefined ? predObj._rawPts : predObj.pts;
                         const pred = raw * factor;
@@ -284,12 +284,12 @@ function generateAiComparisonReport(players, state) {
     const currentGw = (state && state.currentGw) ? state.currentGw : 1;
 
     const sortedByGwXp = [...players].sort((a, b) => {
-        const predAObj = ((a.predictions || []).find(pr => pr.gw === currentGw) || { pts: 0 });
+        const predAObj = ((a.predictions || []).find(pr => pr.gw == currentGw) || { pts: 0 });
         const factorA = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(a) : 1.0;
         const rawA = predAObj._rawPts !== undefined ? predAObj._rawPts : predAObj.pts;
         const predA = rawA * factorA;
 
-        const predBObj = ((b.predictions || []).find(pr => pr.gw === currentGw) || { pts: 0 });
+        const predBObj = ((b.predictions || []).find(pr => pr.gw == currentGw) || { pts: 0 });
         const factorB = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(b) : 1.0;
         const rawB = predBObj._rawPts !== undefined ? predBObj._rawPts : predBObj.pts;
         const predB = rawB * factorB;
@@ -303,7 +303,7 @@ function generateAiComparisonReport(players, state) {
 
     // Compute dynamic scores
     const scoredPlayers = players.map(p => {
-        const predObj = ((p.predictions || []).find(pr => pr.gw === currentGw) || { pts: 0 });
+        const predObj = ((p.predictions || []).find(pr => pr.gw == currentGw) || { pts: 0 });
         const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(p) : 1.0;
         const raw = predObj._rawPts !== undefined ? predObj._rawPts : predObj.pts;
         const gwXp = raw * factor;

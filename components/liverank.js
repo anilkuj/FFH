@@ -9,7 +9,7 @@ export function renderLiveRank(container, state, actions) {
 
     // Baseline points (sum of expected points for starting 11)
     let baselinePts = starters.reduce((sum, p) => {
-        const pred = p.predictions.find(pr => pr.gw === currentGw) || { pts: 0 };
+        const pred = p.predictions.find(pr => pr.gw == currentGw) || { pts: 0 };
         const mult = (state.captain === p.id) ? 2 : 1;
         return sum + (pred.pts * mult);
     }, 0);

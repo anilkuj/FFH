@@ -11,7 +11,7 @@ export function renderLeague(container, state, actions) {
 
     // Sum active expected points for user starters
     let userGwPts = userStarters.reduce((sum, p) => {
-        const pred = p.predictions.find(pr => pr.gw === currentGw) || { pts: 0 };
+        const pred = p.predictions.find(pr => pr.gw == currentGw) || { pts: 0 };
         // double or triple captain points
         const multiplier = (state.captain === p.id) ? (currentWeekChips.tripleCaptain ? 3 : 2) : 1;
         return sum + (pred.pts * multiplier);

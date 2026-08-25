@@ -130,7 +130,7 @@ async function syncBacktestTracking(playersList, fixturesData) {
         if (nextUnplayedGw !== null) {
             const predictionPlayers = playersList
                 .map(p => {
-                    const pred = p.predictions.find(pr => pr.gw === nextUnplayedGw);
+                    const pred = p.predictions.find(pr => pr.gw == nextUnplayedGw);
                     // pts here is intentionally raw/uncalibrated -- see lib/calibration.js's
                     // computeSuggestedCalibration contract; do not multiply by any
                     // calibration factor before sending.
@@ -590,7 +590,7 @@ async function parseAndWriteData(data, fixturesData) {
         const fixtures = fixturesSchedule[player.team] || [];
 
         for (let gw = 1; gw <= 38; gw++) {
-            const fixture = fixtures.find(f => f.gw === gw) || { opp: 'BYE', loc: 'H', diff: 3 };
+            const fixture = fixtures.find(f => f.gw == gw) || { opp: 'BYE', loc: 'H', diff: 3 };
 
             const { pts } = computeGwPrediction({
                 basePPG,
@@ -907,7 +907,7 @@ export function getPlayerRatings(player, currentGw = 1) {
         let fdrSum = 0;
         let count = 0;
         for (let gw = currentGw; gw < currentGw + 5; gw++) {
-            const pred = player.predictions.find(p => p.gw === gw);
+            const pred = player.predictions.find(p => p.gw == gw);
             if (pred && pred.opp !== 'BYE') {
                 fdrSum += pred.diff;
                 count++;

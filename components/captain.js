@@ -9,7 +9,7 @@ export function renderCaptain(container, state, actions) {
 
     // Get expected points for a player in a given gameweek
     const getGwPrediction = (player, gw) => {
-        const pred = player.predictions.find(pr => pr.gw === gw) || { pts: 0, opp: 'BYE', loc: '', diff: 3 };
+        const pred = player.predictions.find(pr => pr.gw == gw) || { pts: 0, opp: 'BYE', loc: '', diff: 3 };
         const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
         const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
         return {

@@ -711,7 +711,7 @@ class AppState {
             const p = PLAYERS.find(pl => pl.id === id);
             let pts = 0;
             if (p) {
-                const pred = p.predictions.find(pr => pr.gw === this.currentGw);
+                const pred = p.predictions.find(pr => pr.gw == this.currentGw);
                 if (pred) {
                     const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(p) : 1.0;
                     pts = pred.pts * factor;
@@ -914,7 +914,7 @@ class AppState {
             .map(id => {
                 const p = PLAYERS.find(pl => pl.id === id);
                 if (!p) return null;
-                const pred = p.predictions.find(pr => pr.gw === gw) || { pts: 0 };
+                const pred = p.predictions.find(pr => pr.gw == gw) || { pts: 0 };
                 const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(p) : 1.0;
                 const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
                 const pts = raw * factor;

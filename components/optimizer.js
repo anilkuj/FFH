@@ -119,7 +119,7 @@ function renderFdrFixtures(player, currentGw) {
     let html = '<div class="fdr-fixtures-container" style="display: flex; gap: 5px; align-items: center; flex-wrap: wrap; margin: 6px 0 2px 0;">';
     for (let gw = currentGwNum; gw < currentGwNum + 5; gw++) {
         if (gw > 38) break;
-        const pr = player.predictions.find(p => p.gw === gw);
+        const pr = player.predictions.find(p => p.gw == gw);
 
         if (pr) {
             const oppText = formatFdrOpponentText(pr);
@@ -1317,7 +1317,7 @@ function getExpectedPtsOverHorizon(player, currentGw, horizon, state = null) {
     // Every gameweek in the horizon counts equally -- a squad picked for an N-GW horizon should
     // be optimized for consistent strength across all N weeks, not skewed toward the earliest ones.
     for (let gw = currentGw; gw < currentGw + horizon; gw++) {
-        const pred = player.predictions.find(pr => pr.gw === gw);
+        const pred = player.predictions.find(pr => pr.gw == gw);
         if (pred) {
             const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
             sum += (raw * factor);
@@ -1406,7 +1406,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
         const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
         let sum = 0;
         for (let gw = state.currentGw; gw < state.currentGw + horizon; gw++) {
-            const pred = player.predictions.find(pr => pr.gw === gw);
+            const pred = player.predictions.find(pr => pr.gw == gw);
             if (pred) {
                 const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
                 sum += (raw * factor);
@@ -1485,7 +1485,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
         if (_scoreCache.has(key)) return _scoreCache.get(key);
         if (p.status === 'i' || p.status === 's' || p.status === 'u') { _scoreCache.set(key, 0); return 0; }
         const chance = (p.chanceOfPlaying !== undefined && p.chanceOfPlaying !== null) ? (p.chanceOfPlaying / 100) : 1.0;
-        const pred = p.predictions.find(pr => pr.gw === gw);
+        const pred = p.predictions.find(pr => pr.gw == gw);
         if (!pred) { _scoreCache.set(key, 0); return 0; }
         const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
         const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(p) : 1.0;
@@ -1563,7 +1563,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
         let sum = 0;
         let count = 0;
         for (let gw = state.currentGw; gw < state.currentGw + horizon; gw++) {
-            const pred = player.predictions.find(pr => pr.gw === gw);
+            const pred = player.predictions.find(pr => pr.gw == gw);
             if (pred && pred.opp !== 'BYE') {
                 sum += pred.diff;
                 count++;
@@ -1578,7 +1578,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
         let sumOdds = 0;
         let count = 0;
         for (let gw = state.currentGw; gw < state.currentGw + horizon; gw++) {
-            const pred = player.predictions.find(pr => pr.gw === gw);
+            const pred = player.predictions.find(pr => pr.gw == gw);
             if (pred && pred.opp !== 'BYE') {
                 let base = 30;
                 if (pred.diff === 2) base = 48;
@@ -1604,7 +1604,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
         let multiplier = 1.0;
         let count = 0;
         for (let gw = state.currentGw; gw < state.currentGw + horizon; gw++) {
-            const pred = player.predictions.find(pr => pr.gw === gw);
+            const pred = player.predictions.find(pr => pr.gw == gw);
             if (pred && pred.opp !== 'BYE') {
                 if (pred.diff === 2) multiplier += 0.25;
                 else if (pred.diff === 4) multiplier -= 0.15;
@@ -3386,8 +3386,8 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
                 .sort((a, b) => getSolverScore(b) - getSolverScore(a))[0];
             if (match) {
                 usedAdded.add(match.id);
-                const inPts1Gw = match.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0;
-                const outPts1Gw = outPlayer.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0;
+                const inPts1Gw = match.predictions.find(pr => pr.gw == state.currentGw)?.pts || 0;
+                const outPts1Gw = outPlayer.predictions.find(pr => pr.gw == state.currentGw)?.pts || 0;
                 upgrades.push({
                     out: outPlayer,
                     in: match,
@@ -3399,7 +3399,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
         // Any unmatched additions (e.g. empty slot filled) — show as additions
         for (const inPlayer of addedPlayers) {
             if (!usedAdded.has(inPlayer.id)) {
-                const inPts1Gw = inPlayer.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0;
+                const inPts1Gw = inPlayer.predictions.find(pr => pr.gw == state.currentGw)?.pts || 0;
                 upgrades.push({
                     out: null,
                     in: inPlayer,
@@ -4159,13 +4159,13 @@ function generateAIStrategistReport(reportContainer, state, actions, squadSlots,
     const bench = squadSlots.filter(s => !s.isStarting && s.playerId !== null).map(s => PLAYERS.find(p => p.id === s.playerId));
 
     const bestPlayer = [...starters].sort((a, b) => {
-        const predA = a.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0;
-        const predB = b.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0;
+        const predA = a.predictions.find(pr => pr.gw == state.currentGw)?.pts || 0;
+        const predB = b.predictions.find(pr => pr.gw == state.currentGw)?.pts || 0;
         return predB - predA;
     })[0];
     const secondBestPlayer = starters.filter(p => p !== bestPlayer).sort((a, b) => {
-        const predA = a.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0;
-        const predB = b.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0;
+        const predA = a.predictions.find(pr => pr.gw == state.currentGw)?.pts || 0;
+        const predB = b.predictions.find(pr => pr.gw == state.currentGw)?.pts || 0;
         return predB - predA;
     })[0] || bestPlayer;
 
@@ -4292,7 +4292,7 @@ Here is why each of your squad players is recommended by our optimization model:
         const duty = getPlayerSetPieceDuty(p);
         let blurb = '';
         if (p.price >= 11.0) {
-            blurb = `Elite premium asset and reliable captaincy choice. Has projected stats of ${p.predictions.find(pr=>pr.gw===state.currentGw)?.pts.toFixed(1)} expected points for the opening match.`;
+            blurb = `Elite premium asset and reliable captaincy choice. Has projected stats of ${p.predictions.find(pr=>pr.gw == state.currentGw)?.pts.toFixed(1)} expected points for the opening match.`;
         } else if (p.position === 'DEF' && p.price >= 6.0) {
             blurb = `Premium defensive asset with high clean sheet potential and offensive threat from set-pieces/crosses.`;
         } else if (p.price <= 5.5) {
@@ -4324,7 +4324,7 @@ Your strongest starting 11 based on mathematically projected points for Gameweek
 - **Forwards:** ${starters.filter(p=>p.position==='FWD').map(p=>p.name).join(', ')}
 
 #### 4. Captain & Vice-Captain Recommendations
-- 👑 **Captain:** **${bestPlayer ? bestPlayer.name : 'None'}** — Projecting the highest expected points for GW${state.currentGw} (${(bestPlayer ? (bestPlayer.predictions.find(pr=>pr.gw===state.currentGw)?.pts || 0) : 0).toFixed(1)} XP).
+- 👑 **Captain:** **${bestPlayer ? bestPlayer.name : 'None'}** — Projecting the highest expected points for GW${state.currentGw} (${(bestPlayer ? (bestPlayer.predictions.find(pr=>pr.gw == state.currentGw)?.pts || 0) : 0).toFixed(1)} XP).
 - 🪙 **Vice-Captain:** **${secondBestPlayer ? secondBestPlayer.name : 'None'}** — Next highest predicted value in starting 11, serving as a reliable backup captain.
 
 #### 5. Bench Ordering Logic

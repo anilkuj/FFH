@@ -91,7 +91,7 @@ export function renderStats(container, state, actions) {
             let sum = 0;
             for (let gw = currentGw; gw < currentGw + n; gw++) {
                 if (gw > 38) break;
-                const pred = p.predictions.find(predObj => predObj.gw === gw);
+                const pred = p.predictions.find(predObj => predObj.gw == gw);
                 if (pred) {
                     const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
                     sum += (raw * factor);

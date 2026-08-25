@@ -222196,7 +222196,7 @@ export function getPlayerRatings(player, currentGw = 1) {
         let fdrSum = 0;
         let count = 0;
         for (let gw = currentGw; gw < currentGw + 5; gw++) {
-            const pred = player.predictions.find(p => p.gw === gw);
+            const pred = player.predictions.find(p => p.gw == gw);
             if (pred && pred.opp !== 'BYE') {
                 fdrSum += pred.diff;
                 count++;

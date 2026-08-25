@@ -18,7 +18,7 @@ export function renderDifferentials(container, state, actions) {
         const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
         let sum = 0;
         for (let gw = state.currentGw; gw < state.currentGw + horizon; gw++) {
-            const pred = player.predictions.find(pr => pr.gw === gw);
+            const pred = player.predictions.find(pr => pr.gw == gw);
             if (pred) {
                 const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
                 sum += (raw * factor);
@@ -32,7 +32,7 @@ export function renderDifferentials(container, state, actions) {
         let sum = 0;
         let count = 0;
         for (let gw = state.currentGw; gw < state.currentGw + horizon; gw++) {
-            const pred = player.predictions.find(pr => pr.gw === gw);
+            const pred = player.predictions.find(pr => pr.gw == gw);
             if (pred && pred.opp !== 'BYE') {
                 sum += pred.diff;
                 count++;
@@ -46,7 +46,7 @@ export function renderDifferentials(container, state, actions) {
         let sumOdds = 0;
         let count = 0;
         for (let gw = state.currentGw; gw < state.currentGw + horizon; gw++) {
-            const pred = player.predictions.find(pr => pr.gw === gw);
+            const pred = player.predictions.find(pr => pr.gw == gw);
             if (pred && pred.opp !== 'BYE') {
                 let base = 30;
                 if (pred.diff === 2) base = 48;
@@ -71,7 +71,7 @@ export function renderDifferentials(container, state, actions) {
         let multiplier = 1.0;
         let count = 0;
         for (let gw = state.currentGw; gw < state.currentGw + horizon; gw++) {
-            const pred = player.predictions.find(pr => pr.gw === gw);
+            const pred = player.predictions.find(pr => pr.gw == gw);
             if (pred && pred.opp !== 'BYE') {
                 if (pred.diff === 2) multiplier += 0.25;
                 else if (pred.diff === 4) multiplier -= 0.15;

@@ -12,7 +12,7 @@ const OPPONENTS = ["ARS", "AVL", "BOU", "BRE", "BHA", "CHE", "COV", "CRY", "EVE"
 
 function getFixtureForGw(teamShort, gw) {
     const list = TICKER_DATA[teamShort] || [];
-    const existing = list.find(f => f.gw === gw);
+    const existing = list.find(f => f.gw == gw);
     if (existing) return existing;
 
     // Dynamically generate deterministic fixture for GW > 10
@@ -104,8 +104,8 @@ export function renderTicker(container, state, actions) {
                 return sortAsc ? valA.localeCompare(valB) : valB.localeCompare(valA);
             } else if (sortCol.startsWith('GW')) {
                 const gwNum = parseInt(sortCol.replace('GW', ''));
-                valA = a.fixtures.find(f => f.gw === gwNum)?.numeric || 0;
-                valB = b.fixtures.find(f => f.gw === gwNum)?.numeric || 0;
+                valA = a.fixtures.find(f => f.gw == gwNum)?.numeric || 0;
+                valB = b.fixtures.find(f => f.gw == gwNum)?.numeric || 0;
             } else {
                 // sort by average
                 valA = a.avg;
@@ -131,7 +131,7 @@ export function renderTicker(container, state, actions) {
                         </div>
                     </td>
                     ${gwIndices.map(gw => {
-                        const f = team.fixtures.find(fi => fi.gw === gw) || { opp: 'BYE', loc: 'H', val: 'BYE', diffClass: 'diff-3' };
+                        const f = team.fixtures.find(fi => fi.gw == gw) || { opp: 'BYE', loc: 'H', val: 'BYE', diffClass: 'diff-3' };
                         return `
                             <td>
                                 <div class="difficulty-cell ${f.diffClass}">

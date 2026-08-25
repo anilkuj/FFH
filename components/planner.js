@@ -125,7 +125,7 @@ export function renderPlanner(container, state, actions) {
     starters.forEach(id => {
         const player = PLAYERS.find(p => p.id === id);
         if (player) {
-            const pred = player.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 };
+            const pred = player.predictions.find(pr => pr.gw == state.currentGw) || { pts: 0 };
             const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
             let multiplier = 1;
             if (id === captain) {
@@ -151,7 +151,7 @@ export function renderPlanner(container, state, actions) {
         bench.forEach(id => {
             const player = PLAYERS.find(p => p.id === id);
             if (player) {
-                const pred = player.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 };
+                const pred = player.predictions.find(pr => pr.gw == state.currentGw) || { pts: 0 };
                 const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
                 const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
                 expectedPoints += (raw * factor);
@@ -180,7 +180,7 @@ export function renderPlanner(container, state, actions) {
             gwStarters.forEach(id => {
                 const player = PLAYERS.find(p => p.id === id);
                 if (player) {
-                    const pred = player.predictions.find(pr => pr.gw === gw) || { pts: 0 };
+                    const pred = player.predictions.find(pr => pr.gw == gw) || { pts: 0 };
                     const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
                     let multiplier = 1;
                     if (id === gwCaptain) {
@@ -195,7 +195,7 @@ export function renderPlanner(container, state, actions) {
                 gwBench.forEach(id => {
                     const player = PLAYERS.find(p => p.id === id);
                     if (player) {
-                        const pred = player.predictions.find(pr => pr.gw === gw) || { pts: 0 };
+                        const pred = player.predictions.find(pr => pr.gw == gw) || { pts: 0 };
                         const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
                         const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
                         gwTotal += (raw * factor);
@@ -258,7 +258,7 @@ export function renderPlanner(container, state, actions) {
     // Benchmark: 4.1 base XP/player average (45.1 base starters XP + ~5.5 captaincy bonus = 50.6 GW total) = 100 rating.
     // Distribution: Average squad (~36 total GW xP) → ~80 rating | Strong template (~41 total xP) → ~91 | Elite AI (~45+ total xP) → 100
     const captainPlayer = PLAYERS.find(p => p.id === captain);
-    const captainBonus = captainPlayer ? (captainPlayer.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0) * (state.chips[state.currentGw]?.tripleCaptain ? 2 : 1) : 0;
+    const captainBonus = captainPlayer ? (captainPlayer.predictions.find(pr => pr.gw == state.currentGw)?.pts || 0) * (state.chips[state.currentGw]?.tripleCaptain ? 2 : 1) : 0;
     const rawExpectedPoints = Math.max(0, expectedPoints - captainBonus);
     const averagePlayerXP = rawExpectedPoints / 11;
     const ratingScore = Math.min(100, Math.round((averagePlayerXP / 4.1) * 100));
@@ -450,7 +450,7 @@ function getNGwXp(player, currentGw, n) {
     const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
     let sum = 0;
     for (let gw = currentGw; gw < currentGw + n; gw++) {
-        const pred = player.predictions.find(p => p.gw === gw);
+        const pred = player.predictions.find(p => p.gw == gw);
         if (pred) {
             const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
             sum += (raw * factor);
@@ -1483,7 +1483,7 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
                 if (slot.playerId === null) return null;
                 const p = PLAYERS.find(pl => pl.id === slot.playerId);
                 if (!p) return null;
-                const pred = p.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 };
+                const pred = p.predictions.find(pr => pr.gw == state.currentGw) || { pts: 0 };
                 const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(p) : 1.0;
                 const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
                 const pts = raw * factor;
@@ -1545,11 +1545,11 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
                 const sPlayer = shouldStart[idx];
                 const bPlayer = shouldBench[idx];
                 
-                const sPred = sPlayer.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 };
+                const sPred = sPlayer.predictions.find(pr => pr.gw == state.currentGw) || { pts: 0 };
                 const sFactor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(sPlayer) : 1.0;
                 const sXP = (sPred._rawPts !== undefined ? sPred._rawPts : sPred.pts) * sFactor;
 
-                const bPred = bPlayer.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 };
+                const bPred = bPlayer.predictions.find(pr => pr.gw == state.currentGw) || { pts: 0 };
                 const bFactor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(bPlayer) : 1.0;
                 const bXP = (bPred._rawPts !== undefined ? bPred._rawPts : bPred.pts) * bFactor;
 
@@ -2003,7 +2003,7 @@ ${squadListText}
             const squadPlayers = squadIds.map(id => PLAYERS.find(p => p.id === id)).filter(p => p !== undefined);
 
             const getGwPrediction = (player, gw) => {
-                return player.predictions.find(pr => pr.gw === gw) || { pts: 0, opp: 'BYE', loc: '', diff: 3 };
+                return player.predictions.find(pr => pr.gw == gw) || { pts: 0, opp: 'BYE', loc: '', diff: 3 };
             };
 
             const getFdrBadge = (diff) => {
@@ -2115,7 +2115,7 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
     const player = PLAYERS.find(p => p.id === playerId);
     if (!player) return;
 
-    const prediction = player.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0, opp: "BYE", loc: "" };
+    const prediction = player.predictions.find(pr => pr.gw == state.currentGw) || { pts: 0, opp: "BYE", loc: "" };
     const teamObj = TEAMS.find(t => t.shortName === player.team);
 
     const lineup = state.getGwLineup(state.currentGw);
@@ -2145,8 +2145,8 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
         const diffB = Math.abs(b.price - player.price);
         if (diffA !== diffB) return diffA - diffB;
         
-        const ptsA = a.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0;
-        const ptsB = b.predictions.find(pr => pr.gw === state.currentGw)?.pts || 0;
+        const ptsA = a.predictions.find(pr => pr.gw == state.currentGw)?.pts || 0;
+        const ptsB = b.predictions.find(pr => pr.gw == state.currentGw)?.pts || 0;
         return ptsB - ptsA;
     }).slice(0, 3);
 
@@ -2284,7 +2284,7 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
                     </h4>
                     <div class="alternatives-scroll-container">
                         ${comparablePlayers.map(comp => {
-                            const compPrediction = comp.predictions.find(pr => pr.gw === state.currentGw) || { pts: 0 };
+                            const compPrediction = comp.predictions.find(pr => pr.gw == state.currentGw) || { pts: 0 };
                             
                             const newBank = bank + player.price - comp.price;
                             const budgetOk = newBank >= 0;

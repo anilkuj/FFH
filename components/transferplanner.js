@@ -53,7 +53,7 @@ export function renderTransferPlanner(container, state, actions) {
         let count = 0;
         for (let gw = state.currentGw; gw < state.currentGw + 5; gw++) {
             if (gw > 38) break;
-            const pred = player.predictions.find(pr => pr.gw === gw);
+            const pred = player.predictions.find(pr => pr.gw == gw);
             if (pred) {
                 sum += pred.diff;
                 count++;
@@ -68,7 +68,7 @@ export function renderTransferPlanner(container, state, actions) {
         let sum = 0;
         for (let gw = state.currentGw; gw < state.currentGw + h; gw++) {
             if (gw > 38) break;
-            const pred = player.predictions.find(pr => pr.gw === gw);
+            const pred = player.predictions.find(pr => pr.gw == gw);
             if (pred) {
                 const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
                 sum += (raw * factor);
@@ -98,7 +98,7 @@ export function renderTransferPlanner(container, state, actions) {
         let fixturesHtml = '';
         for (let gw = state.currentGw; gw < state.currentGw + 5; gw++) {
             if (gw > 38) break;
-            const pred = player.predictions.find(p => p.gw === gw);
+            const pred = player.predictions.find(p => p.gw == gw);
             if (pred) {
                 const color = getFdrColor(pred.diff);
                 const oppText = formatFdrOpponentText(pred);
