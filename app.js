@@ -183,6 +183,18 @@ class AppState {
         const savedBenchBoostTargetGw = localStorage.getItem('fpl_hub_bench_boost_target_gw');
         this.benchBoostTargetGw = savedBenchBoostTargetGw ? parseInt(savedBenchBoostTargetGw) : 1;
 
+        const savedPlanWildcard = localStorage.getItem('fpl_hub_plan_wildcard');
+        this.planWildcard = savedPlanWildcard ? (savedPlanWildcard === 'true') : false;
+
+        const savedWildcardTargetGw = localStorage.getItem('fpl_hub_wildcard_target_gw');
+        this.wildcardTargetGw = savedWildcardTargetGw ? parseInt(savedWildcardTargetGw) : 1;
+
+        const savedPlanFreeHit = localStorage.getItem('fpl_hub_plan_free_hit');
+        this.planFreeHit = savedPlanFreeHit ? (savedPlanFreeHit === 'true') : false;
+
+        const savedFreeHitTargetGw = localStorage.getItem('fpl_hub_free_hit_target_gw');
+        this.freeHitTargetGw = savedFreeHitTargetGw ? parseInt(savedFreeHitTargetGw) : 1;
+
         this.optimizerObjective = localStorage.getItem('fpl_hub_optimizer_objective') || 'xp';
 
         const savedProfile = localStorage.getItem('fpl_hub_user_profile');
@@ -347,6 +359,10 @@ class AppState {
         localStorage.setItem('fpl_hub_active_chips', JSON.stringify(this.chips));
         localStorage.setItem('fpl_hub_plan_bench_boost', (this.planBenchBoost || false).toString());
         localStorage.setItem('fpl_hub_bench_boost_target_gw', (this.benchBoostTargetGw || 1).toString());
+        localStorage.setItem('fpl_hub_plan_wildcard', (this.planWildcard || false).toString());
+        localStorage.setItem('fpl_hub_wildcard_target_gw', (this.wildcardTargetGw || 1).toString());
+        localStorage.setItem('fpl_hub_plan_free_hit', (this.planFreeHit || false).toString());
+        localStorage.setItem('fpl_hub_free_hit_target_gw', (this.freeHitTargetGw || 1).toString());
 
         // Save drafts state
         localStorage.setItem(this.getDraftsStorageKey(), JSON.stringify(this.drafts));
@@ -2286,6 +2302,10 @@ const actions = {
         let wasActive = state.chips[gw][chipName];
         if (chipName === 'benchBoost' && state.planBenchBoost && state.benchBoostTargetGw === gw) {
             wasActive = true;
+        } else if (chipName === 'wildcard' && state.planWildcard && state.wildcardTargetGw === gw) {
+            wasActive = true;
+        } else if (chipName === 'freeHit' && state.planFreeHit && state.freeHitTargetGw === gw) {
+            wasActive = true;
         }
         
         // Deactivate all chips for this gameweek first (FPL rules: 1 chip per week max)
@@ -2313,23 +2333,81 @@ const actions = {
                         state.chips[g].benchBoost = false;
                     }
                 }
+                // FPL rule: only one chip per GW, so turn off planned Wildcard or Free Hit if they are planned for this GW
+                if (state.planWildcard && state.wildcardTargetGw === gw) state.planWildcard = false;
+                if (state.planFreeHit && state.freeHitTargetGw === gw) state.planFreeHit = false;
+            }
+        } else if (chipName === 'wildcard') {
+            if (wasActive) {
+                state.chips[gw].wildcard = false;
+                state.planWildcard = false;
+                for (let g = 1; g <= 38; g++) {
+                    if (state.chips[g]) {
+                        state.chips[g].wildcard = false;
+                    }
+                }
+            } else {
+                state.chips[gw].wildcard = true;
+                state.planWildcard = true;
+                state.wildcardTargetGw = gw;
+                for (let g = 1; g <= 38; g++) {
+                    if (g !== gw && state.chips[g]) {
+                        state.chips[g].wildcard = false;
+                    }
+                }
+                // FPL rule: only one chip per GW, so turn off planned Bench Boost or Free Hit if they are planned for this GW
+                if (state.planBenchBoost && state.benchBoostTargetGw === gw) state.planBenchBoost = false;
+                if (state.planFreeHit && state.freeHitTargetGw === gw) state.planFreeHit = false;
+            }
+        } else if (chipName === 'freeHit') {
+            if (wasActive) {
+                state.chips[gw].freeHit = false;
+                state.planFreeHit = false;
+                for (let g = 1; g <= 38; g++) {
+                    if (state.chips[g]) {
+                        state.chips[g].freeHit = false;
+                    }
+                }
+            } else {
+                state.chips[gw].freeHit = true;
+                state.planFreeHit = true;
+                state.freeHitTargetGw = gw;
+                for (let g = 1; g <= 38; g++) {
+                    if (g !== gw && state.chips[g]) {
+                        state.chips[g].freeHit = false;
+                    }
+                }
+                // FPL rule: only one chip per GW, so turn off planned Bench Boost or Wildcard if they are planned for this GW
+                if (state.planBenchBoost && state.benchBoostTargetGw === gw) state.planBenchBoost = false;
+                if (state.planWildcard && state.wildcardTargetGw === gw) state.planWildcard = false;
             }
         } else {
             state.chips[gw][chipName] = !wasActive;
-            // FPL rule: only one chip per GW, so if they manual-activated TC/Wildcard/FreeHit, deactivate planned Bench Boost
-            if (state.chips[gw][chipName] && state.planBenchBoost && state.benchBoostTargetGw === gw) {
-                state.planBenchBoost = false;
-                state.chips[gw].benchBoost = false;
+            // FPL rule: only one chip per GW, so if they manual-activated TC, deactivate planned chips
+            if (state.chips[gw][chipName]) {
+                if (state.planBenchBoost && state.benchBoostTargetGw === gw) {
+                    state.planBenchBoost = false;
+                    state.chips[gw].benchBoost = false;
+                }
+                if (state.planWildcard && state.wildcardTargetGw === gw) {
+                    state.planWildcard = false;
+                    state.chips[gw].wildcard = false;
+                }
+                if (state.planFreeHit && state.freeHitTargetGw === gw) {
+                    state.planFreeHit = false;
+                    state.chips[gw].freeHit = false;
+                }
             }
         }
         
         state.saveState();
         actions.renderActiveView();
         
-        const isBbNowActive = chipName === 'benchBoost' ? 
-            (state.chips[gw].benchBoost || (state.planBenchBoost && state.benchBoostTargetGw === gw)) : 
-            state.chips[gw][chipName];
-        const statusText = isBbNowActive ? 'Activated' : 'Deactivated';
+        const isChipNowActive = (chipName === 'benchBoost' && (state.chips[gw].benchBoost || (state.planBenchBoost && state.benchBoostTargetGw === gw))) ||
+                               (chipName === 'wildcard' && (state.chips[gw].wildcard || (state.planWildcard && state.wildcardTargetGw === gw))) ||
+                               (chipName === 'freeHit' && (state.chips[gw].freeHit || (state.planFreeHit && state.freeHitTargetGw === gw))) ||
+                               (chipName === 'tripleCaptain' && state.chips[gw].tripleCaptain);
+        const statusText = isChipNowActive ? 'Activated' : 'Deactivated';
         const formattedName = chipName === 'tripleCaptain' ? 'Triple Captain' : chipName === 'benchBoost' ? 'Bench Boost' : chipName === 'freeHit' ? 'Free Hit' : 'Wildcard';
         actions.showToast(`${formattedName} chip ${statusText} for Gameweek ${gw}`, 'success');
     },

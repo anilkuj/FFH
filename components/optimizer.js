@@ -381,6 +381,38 @@ export function renderOptimizer(container, state, actions) {
                                 <span class="setting-help">Optimizes all 15 squad players for maximum points, easy FDR (&le;2), and Home fixtures in your target Gameweek.</span>
                             </div>
 
+                            <div class="setting-group" id="wildcardGroup">
+                                <label for="planWildcardCheckbox" style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12px; font-weight: 700; color: var(--text-main); line-height: 1.3;">
+                                    <input type="checkbox" id="planWildcardCheckbox" ${state.planWildcard ? 'checked' : ''} style="width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0;">
+                                    🃏 Plan Wildcard Chip
+                                </label>
+                                <div id="wildcardTargetGwRow" style="display: flex; align-items: center; gap: 8px; margin-top: 8px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 8px 12px; border-radius: 8px;">
+                                    <span style="font-size: 11px; font-weight: 700; color: var(--secondary);">Target GW:</span>
+                                    <select id="wildcardTargetGwSelect" class="settings-select" style="padding: 4px 10px; font-size: 11px; font-weight: 700; color: var(--primary); background: var(--bg-dark); border: 1px solid var(--primary-glow); width: auto; flex: 1; height: 28px;">
+                                        ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(gw => `
+                                            <option value="${gw}" ${(state.wildcardTargetGw || state.currentGw) === gw ? 'selected' : ''}>Gameweek ${gw}</option>
+                                        `).join('')}
+                                    </select>
+                                </div>
+                                <span class="setting-help">Builds a brand new squad from scratch (unlimited free transfers) optimized for long-term expected points.</span>
+                            </div>
+
+                            <div class="setting-group" id="freeHitGroup">
+                                <label for="planFreeHitCheckbox" style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12px; font-weight: 700; color: var(--text-main); line-height: 1.3;">
+                                    <input type="checkbox" id="planFreeHitCheckbox" ${state.planFreeHit ? 'checked' : ''} style="width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0;">
+                                    🚀 Plan Free Hit Chip
+                                </label>
+                                <div id="freeHitTargetGwRow" style="display: flex; align-items: center; gap: 8px; margin-top: 8px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 8px 12px; border-radius: 8px;">
+                                    <span style="font-size: 11px; font-weight: 700; color: var(--secondary);">Target GW:</span>
+                                    <select id="freeHitTargetGwSelect" class="settings-select" style="padding: 4px 10px; font-size: 11px; font-weight: 700; color: var(--primary); background: var(--bg-dark); border: 1px solid var(--primary-glow); width: auto; flex: 1; height: 28px;">
+                                        ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(gw => `
+                                            <option value="${gw}" ${(state.freeHitTargetGw || state.currentGw) === gw ? 'selected' : ''}>Gameweek ${gw}</option>
+                                        `).join('')}
+                                    </select>
+                                </div>
+                                <span class="setting-help">Builds a one-week-only squad (unlimited transfers) maximizing expected points for the target Gameweek only.</span>
+                            </div>
+
                             <div class="setting-group" id="prioritizeDefconGroup">
                                 <label for="prioritizeDefconCheckbox" style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12px; font-weight: 700; color: var(--text-main); line-height: 1.3;">
                                     <input type="checkbox" id="prioritizeDefconCheckbox" ${state.prioritizeDefcon ? 'checked' : ''} style="width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0;">
@@ -529,6 +561,10 @@ export function renderOptimizer(container, state, actions) {
     // Wire Plan Bench Boost listeners
     const planBbCheckbox = container.querySelector('#planBenchBoostCheckbox');
     const bbTargetSelect = container.querySelector('#benchBoostTargetGwSelect');
+    const planWcCheckbox = container.querySelector('#planWildcardCheckbox');
+    const wcTargetSelect = container.querySelector('#wildcardTargetGwSelect');
+    const planFhCheckbox = container.querySelector('#planFreeHitCheckbox');
+    const fhTargetSelect = container.querySelector('#freeHitTargetGwSelect');
 
     if (planBbCheckbox) {
         planBbCheckbox.addEventListener('change', (e) => {
@@ -545,6 +581,19 @@ export function renderOptimizer(container, state, actions) {
                     if (g !== targetGw && state.chips[g]) {
                         state.chips[g].benchBoost = false;
                     }
+                }
+                // Clear other chips for this gameweek
+                state.chips[targetGw].wildcard = false;
+                state.chips[targetGw].freeHit = false;
+                state.chips[targetGw].tripleCaptain = false;
+
+                if (state.planWildcard && state.wildcardTargetGw === targetGw) {
+                    state.planWildcard = false;
+                    if (planWcCheckbox) planWcCheckbox.checked = false;
+                }
+                if (state.planFreeHit && state.freeHitTargetGw === targetGw) {
+                    state.planFreeHit = false;
+                    if (planFhCheckbox) planFhCheckbox.checked = false;
                 }
             } else {
                 if (state.chips[targetGw]) {
@@ -569,6 +618,163 @@ export function renderOptimizer(container, state, actions) {
                     if (g !== gw && state.chips[g]) {
                         state.chips[g].benchBoost = false;
                     }
+                }
+                // Clear other chips for this gameweek
+                state.chips[gw].wildcard = false;
+                state.chips[gw].freeHit = false;
+                state.chips[gw].tripleCaptain = false;
+
+                if (state.planWildcard && state.wildcardTargetGw === gw) {
+                    state.planWildcard = false;
+                    if (planWcCheckbox) planWcCheckbox.checked = false;
+                }
+                if (state.planFreeHit && state.freeHitTargetGw === gw) {
+                    state.planFreeHit = false;
+                    if (planFhCheckbox) planFhCheckbox.checked = false;
+                }
+            }
+            state.saveState();
+        });
+    }
+
+    // Wire Plan Wildcard listeners
+    if (planWcCheckbox) {
+        planWcCheckbox.addEventListener('change', (e) => {
+            const isChecked = e.target.checked;
+            state.planWildcard = isChecked;
+            localStorage.setItem('fpl_hub_plan_wildcard', isChecked ? 'true' : 'false');
+            
+            const targetGw = state.wildcardTargetGw || state.currentGw;
+            if (isChecked) {
+                if (!state.chips[targetGw]) state.chips[targetGw] = { wildcard: false, tripleCaptain: false, benchBoost: false, freeHit: false };
+                state.chips[targetGw].wildcard = true;
+                // Clear other gameweeks
+                for (let g = 1; g <= 38; g++) {
+                    if (g !== targetGw && state.chips[g]) {
+                        state.chips[g].wildcard = false;
+                    }
+                }
+                // Clear other chips for this gameweek
+                state.chips[targetGw].benchBoost = false;
+                state.chips[targetGw].freeHit = false;
+                state.chips[targetGw].tripleCaptain = false;
+
+                if (state.planBenchBoost && state.benchBoostTargetGw === targetGw) {
+                    state.planBenchBoost = false;
+                    if (planBbCheckbox) planBbCheckbox.checked = false;
+                }
+                if (state.planFreeHit && state.freeHitTargetGw === targetGw) {
+                    state.planFreeHit = false;
+                    if (planFhCheckbox) planFhCheckbox.checked = false;
+                }
+            } else {
+                if (state.chips[targetGw]) {
+                    state.chips[targetGw].wildcard = false;
+                }
+            }
+            state.saveState();
+        });
+    }
+
+    if (wcTargetSelect) {
+        wcTargetSelect.addEventListener('change', (e) => {
+            const gw = parseInt(e.target.value);
+            state.wildcardTargetGw = gw;
+            localStorage.setItem('fpl_hub_wildcard_target_gw', gw.toString());
+            
+            if (state.planWildcard) {
+                if (!state.chips[gw]) state.chips[gw] = { wildcard: false, tripleCaptain: false, benchBoost: false, freeHit: false };
+                state.chips[gw].wildcard = true;
+                // Clear other gameweeks
+                for (let g = 1; g <= 38; g++) {
+                    if (g !== gw && state.chips[g]) {
+                        state.chips[g].wildcard = false;
+                    }
+                }
+                // Clear other chips for this gameweek
+                state.chips[gw].benchBoost = false;
+                state.chips[gw].freeHit = false;
+                state.chips[gw].tripleCaptain = false;
+
+                if (state.planBenchBoost && state.benchBoostTargetGw === gw) {
+                    state.planBenchBoost = false;
+                    if (planBbCheckbox) planBbCheckbox.checked = false;
+                }
+                if (state.planFreeHit && state.freeHitTargetGw === gw) {
+                    state.planFreeHit = false;
+                    if (planFhCheckbox) planFhCheckbox.checked = false;
+                }
+            }
+            state.saveState();
+        });
+    }
+
+    // Wire Plan Free Hit listeners
+    if (planFhCheckbox) {
+        planFhCheckbox.addEventListener('change', (e) => {
+            const isChecked = e.target.checked;
+            state.planFreeHit = isChecked;
+            localStorage.setItem('fpl_hub_plan_free_hit', isChecked ? 'true' : 'false');
+            
+            const targetGw = state.freeHitTargetGw || state.currentGw;
+            if (isChecked) {
+                if (!state.chips[targetGw]) state.chips[targetGw] = { wildcard: false, tripleCaptain: false, benchBoost: false, freeHit: false };
+                state.chips[targetGw].freeHit = true;
+                // Clear other gameweeks
+                for (let g = 1; g <= 38; g++) {
+                    if (g !== targetGw && state.chips[g]) {
+                        state.chips[g].freeHit = false;
+                    }
+                }
+                // Clear other chips for this gameweek
+                state.chips[targetGw].benchBoost = false;
+                state.chips[targetGw].wildcard = false;
+                state.chips[targetGw].tripleCaptain = false;
+
+                if (state.planBenchBoost && state.benchBoostTargetGw === targetGw) {
+                    state.planBenchBoost = false;
+                    if (planBbCheckbox) planBbCheckbox.checked = false;
+                }
+                if (state.planWildcard && state.wildcardTargetGw === targetGw) {
+                    state.planWildcard = false;
+                    if (planWcCheckbox) planWcCheckbox.checked = false;
+                }
+            } else {
+                if (state.chips[targetGw]) {
+                    state.chips[targetGw].freeHit = false;
+                }
+            }
+            state.saveState();
+        });
+    }
+
+    if (fhTargetSelect) {
+        fhTargetSelect.addEventListener('change', (e) => {
+            const gw = parseInt(e.target.value);
+            state.freeHitTargetGw = gw;
+            localStorage.setItem('fpl_hub_free_hit_target_gw', gw.toString());
+            
+            if (state.planFreeHit) {
+                if (!state.chips[gw]) state.chips[gw] = { wildcard: false, tripleCaptain: false, benchBoost: false, freeHit: false };
+                state.chips[gw].freeHit = true;
+                // Clear other gameweeks
+                for (let g = 1; g <= 38; g++) {
+                    if (g !== gw && state.chips[g]) {
+                        state.chips[g].freeHit = false;
+                    }
+                }
+                // Clear other chips for this gameweek
+                state.chips[gw].benchBoost = false;
+                state.chips[gw].wildcard = false;
+                state.chips[gw].tripleCaptain = false;
+
+                if (state.planBenchBoost && state.benchBoostTargetGw === gw) {
+                    state.planBenchBoost = false;
+                    if (planBbCheckbox) planBbCheckbox.checked = false;
+                }
+                if (state.planWildcard && state.wildcardTargetGw === gw) {
+                    state.planWildcard = false;
+                    if (planWcCheckbox) planWcCheckbox.checked = false;
                 }
             }
             state.saveState();
@@ -912,6 +1118,34 @@ export function renderOptimizer(container, state, actions) {
             if (state.chips[targetGw]) state.chips[targetGw].benchBoost = false;
         }
 
+        // Sync Wildcard state to state.chips
+        const wcTarget = state.wildcardTargetGw || state.currentGw;
+        if (state.planWildcard) {
+            if (!state.chips[wcTarget]) state.chips[wcTarget] = { wildcard: false, tripleCaptain: false, benchBoost: false, freeHit: false };
+            state.chips[wcTarget].wildcard = true;
+            for (let g = 1; g <= 38; g++) {
+                if (g !== wcTarget && state.chips[g]) {
+                    state.chips[g].wildcard = false;
+                }
+            }
+        } else {
+            if (state.chips[wcTarget]) state.chips[wcTarget].wildcard = false;
+        }
+
+        // Sync Free Hit state to state.chips
+        const fhTarget = state.freeHitTargetGw || state.currentGw;
+        if (state.planFreeHit) {
+            if (!state.chips[fhTarget]) state.chips[fhTarget] = { wildcard: false, tripleCaptain: false, benchBoost: false, freeHit: false };
+            state.chips[fhTarget].freeHit = true;
+            for (let g = 1; g <= 38; g++) {
+                if (g !== fhTarget && state.chips[g]) {
+                    state.chips[g].freeHit = false;
+                }
+            }
+        } else {
+            if (state.chips[fhTarget]) state.chips[fhTarget].freeHit = false;
+        }
+
         const prioritizeDefconCheckbox = container.querySelector('#prioritizeDefconCheckbox');
         if (prioritizeDefconCheckbox) state.prioritizeDefcon = prioritizeDefconCheckbox.checked;
 
@@ -974,6 +1208,14 @@ function renderLockOverlay(container, actions) {
 const ALL_FORMATIONS = ['3-5-2', '3-4-3', '4-4-2', '4-3-3', '4-5-1', '5-3-2', '5-4-1', '5-2-3'];
 
 async function performOptimization(resultsGrid, state, actions, horizon, mode) {
+    // Determine effective mode and horizon based on active chips
+    const currentGwChips = state.chips[state.currentGw] || {};
+    const hasActiveWildcard = !!(currentGwChips.wildcard || (state.planWildcard && state.wildcardTargetGw === state.currentGw));
+    const hasActiveFreeHit = !!(currentGwChips.freeHit || (state.planFreeHit && state.freeHitTargetGw === state.currentGw));
+
+    const effectiveMode = (hasActiveWildcard || hasActiveFreeHit) ? 'preseason' : mode;
+    const effectiveHorizon = hasActiveFreeHit ? 1 : horizon;
+
     // If 'optimum' formation: score each formation with top-starter expected points,
     // then temporarily set state.formation to the winner before running the real solver.
     if (state.formation === 'optimum') {
@@ -986,7 +1228,7 @@ async function performOptimization(resultsGrid, state, actions, horizon, mode) {
 
         for (const formation of ALL_FORMATIONS) {
             state.formation = formation;
-            const score = _scoreOptimizationForFormation(state, horizon, mode);
+            const score = _scoreOptimizationForFormation(state, effectiveHorizon, effectiveMode);
             if (score > bestScore) {
                 bestScore = score;
                 bestFormation = formation;
@@ -994,11 +1236,11 @@ async function performOptimization(resultsGrid, state, actions, horizon, mode) {
         }
 
         state.formation = originalFormation;
-        await _performOptimizationWithFormation(resultsGrid, state, actions, horizon, mode, bestFormation, true);
+        await _performOptimizationWithFormation(resultsGrid, state, actions, effectiveHorizon, effectiveMode, bestFormation, true);
         return;
     }
 
-    await _performOptimizationWithFormation(resultsGrid, state, actions, horizon, mode, state.formation, false);
+    await _performOptimizationWithFormation(resultsGrid, state, actions, effectiveHorizon, effectiveMode, state.formation, false);
 }
 
 /**
@@ -3345,15 +3587,44 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
         const applyAllBtn = resultsGrid.querySelector('#applyAllPreseasonBtn');
         if (applyAllBtn) {
             applyAllBtn.addEventListener('click', () => {
-                state.squadSlots = optimizedSquadSlots;
+                if (state.currentGw === 1) {
+                    state.squadSlots = optimizedSquadSlots;
+                } else {
+                    // For Wildcard/Free Hit in midseason, we clear the transfers of the current GW and
+                    // represent the squad transition as transfers in state.transfers[state.currentGw]
+                    state.transfers[state.currentGw] = [];
+                    
+                    const beforeSquadIds = activeSquadSlots.map(s => s.playerId).filter(id => id !== null);
+                    const afterSquadIds = optimizedSquadSlots.map(s => s.playerId).filter(id => id !== null);
+                    
+                    const toSell = beforeSquadIds.filter(id => !afterSquadIds.includes(id));
+                    const toBuy = afterSquadIds.filter(id => !beforeSquadIds.includes(id));
+                    
+                    const toSellByPos = { GKP: [], DEF: [], MID: [], FWD: [] };
+                    const toBuyByPos = { GKP: [], DEF: [], MID: [], FWD: [] };
+                    
+                    toSell.forEach(id => {
+                        const p = PLAYERS.find(pl => pl.id === id);
+                        if (p) toSellByPos[p.position].push(id);
+                    });
+                    toBuy.forEach(id => {
+                        const p = PLAYERS.find(pl => pl.id === id);
+                        if (p) toBuyByPos[p.position].push(id);
+                    });
+                    
+                    ['GKP', 'DEF', 'MID', 'FWD'].forEach(pos => {
+                        const sellList = toSellByPos[pos];
+                        const buyList = toBuyByPos[pos];
+                        for (let i = 0; i < sellList.length; i++) {
+                            state.transfers[state.currentGw].push({
+                                out: sellList[i],
+                                in: buyList[i]
+                            });
+                        }
+                    });
+                }
+                
                 state.optimizeCaptaincy();
-
-                // Deduct budget
-                const spent = optimizedSquadSlots.reduce((sum, slot) => {
-                    if (slot.playerId === null) return sum;
-                    const p = PLAYERS.find(pl => pl.id === slot.playerId);
-                    return sum + (p ? p.price : 0);
-                }, 0);
                 state.saveState();
                 
                 actions.showToast("All AI squad upgrades applied successfully!", "success");
