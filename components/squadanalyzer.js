@@ -1,5 +1,6 @@
 // components/squadanalyzer.js
 import { PLAYERS, TEAMS } from '../data.js';
+import { getShirtSVG } from './planner.js';
 
 export function showPlannerSquadAnalysisModal(container, state, actions) {
     const existing = document.getElementById('tpSquadAnalysisModal');
@@ -38,16 +39,23 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         }
     });
 
+    // Check if this gameweek has actual FPL scores (is active or completed)
+    const hasActualScores = starters.some(id => {
+        const p = PLAYERS.find(pl => pl.id === id);
+        if (!p) return false;
+        if (livePointsMap[p.id] !== undefined && livePointsMap[p.id] !== null) return true;
+        const pred = p.predictions.find(pr => pr.gw == gw);
+        return !!(pred && pred.actualPts !== undefined && pred.actualPts !== null);
+    });
+
     // Safety score calculation
     let safetyScore = 100;
-    let flaggedCount = 0;
     starters.forEach(id => {
         const p = PLAYERS.find(pl => pl.id === id);
         if (p) {
             if (p.status !== 'a' && p.status !== 'd') safetyScore -= 15;
             if (p.chanceOfPlaying < 100) safetyScore -= 10;
             if (p.displacementRisk) safetyScore -= 10;
-            if (p.status !== 'a') flaggedCount++;
         }
     });
     safetyScore = Math.max(25, Math.min(100, safetyScore));
@@ -83,24 +91,40 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
     const captPoints = captPlayer ? getPlayerGwPoints(captPlayer) * (state.chips[gw]?.tripleCaptain ? 3 : 2) : 0;
     const captLabel = captPlayer ? `${captPlayer.web_name} (${captPoints})` : 'None';
 
-    const getVerdict = (pts, isPlayed) => {
+    const getVerdict = (pts, isPlayed, isCumulative) => {
         if (!isPlayed) return { label: 'NO NEW INFO', class: 'neutral-pill' };
-        if (pts >= 100) return { label: 'VERY STRONG +', class: 'v-strong-pill' };
-        if (pts >= 60) return { label: 'STRONG +', class: 'strong-pill' };
-        if (pts >= 30) return { label: 'NEUTRAL', class: 'neutral-pill' };
-        if (pts >= 1) return { label: 'MIXED', class: 'mixed-pill' };
-        return { label: 'NEGATIVE -', class: 'negative-pill' };
+        if (isCumulative) {
+            if (pts >= 120) return { label: 'VERY STRONG +', class: 'v-strong-pill' };
+            if (pts >= 80) return { label: 'STRONG +', class: 'strong-pill' };
+            if (pts >= 40) return { label: 'NEUTRAL', class: 'neutral-pill' };
+            if (pts >= 10) return { label: 'MIXED', class: 'mixed-pill' };
+            return { label: 'NEGATIVE -', class: 'negative-pill' };
+        } else {
+            if (pts >= 10) return { label: 'VERY STRONG +', class: 'v-strong-pill' };
+            if (pts >= 6) return { label: 'STRONG +', class: 'strong-pill' };
+            if (pts >= 3) return { label: 'NEUTRAL', class: 'neutral-pill' };
+            if (pts >= 1) return { label: 'MIXED', class: 'mixed-pill' };
+            return { label: 'NEGATIVE -', class: 'negative-pill' };
+        }
     };
 
     const allSquadDetails = squad.map(id => {
         const p = PLAYERS.find(pl => pl.id === id);
         if (!p) return null;
-        const pts = p.points; // Season-long total points
+        
+        // Context-aware points: cumulative total if unplayed gameweek, weekly score if played.
+        const pts = hasActualScores ? getPlayerGwPoints(p) : p.points;
         const isStarting = starters.includes(id);
         const chance = (p.chanceOfPlaying !== undefined && p.chanceOfPlaying !== null) ? p.chanceOfPlaying : 100;
-        const displayPts = `${pts}`;
+        
+        let displayPts = `${pts}`;
+        if (id === captain && hasActualScores) {
+            const mult = state.chips[gw]?.tripleCaptain ? 3 : 2;
+            displayPts = `${pts} / ${pts * mult}C`;
+        }
+
         const hasPlayed = p.currentSeasonMins > 0 || pts > 0;
-        const verdict = getVerdict(pts, hasPlayed);
+        const verdict = getVerdict(pts, hasPlayed, !hasActualScores);
         const hasFlag = p.status !== 'a' || chance < 100 || p.displacementRisk !== null;
 
         return {
@@ -117,6 +141,17 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
     }).filter(Boolean);
 
     const startersObjects = starters.map(id => PLAYERS.find(p => p.id === id)).filter(Boolean);
+    const benchObjects = bench.map(id => PLAYERS.find(p => p.id === id)).filter(Boolean);
+
+    // Sort Substitutes: GKP first, then outfielders ordered 1-3
+    const gkSub = benchObjects.find(p => p.position === 'GKP');
+    const outfieldSubs = benchObjects.filter(p => p.position !== 'GKP');
+    const sortedBench = [];
+    if (gkSub) sortedBench.push({ player: gkSub, label: 'GKP' });
+    outfieldSubs.forEach((player, idx) => {
+        sortedBench.push({ player, label: `${idx + 1}. ${player.position}` });
+    });
+
     const underperformingPlayers = startersObjects
         .map(p => {
             const pts = getPlayerGwPoints(p);
@@ -211,7 +246,6 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         }
     }
 
-    const benchObjects = bench.map(id => PLAYERS.find(p => p.id === id)).filter(Boolean);
     const benchBusters = [];
     benchObjects.forEach(p => {
         const bPts = getPlayerGwPoints(p);
@@ -386,6 +420,533 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         originalRemove();
     };
 
+    // PDF Report Compilation & Print trigger
+    const triggerPdfDownload = () => {
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) {
+            actions.showToast("Please allow popups to save the PDF report.", "warning");
+            return;
+        }
+
+        // Starters rows for Pitch render
+        const rowGKPs = startersObjects.filter(p => p.position === 'GKP');
+        const rowDEFs = startersObjects.filter(p => p.position === 'DEF');
+        const rowMIDs = startersObjects.filter(p => p.position === 'MID');
+        const rowFWDs = startersObjects.filter(p => p.position === 'FWD');
+
+        const makePdfPitchPlayerHtml = (p, isBench = false, benchLabel = '') => {
+            const pts = getPlayerGwPoints(p);
+            const isCaptain = p.id === captain;
+            const displayPts = isCaptain ? `${pts * (state.chips[gw]?.tripleCaptain ? 3 : 2)}` : `${pts}`;
+            const teamObj = TEAMS.find(t => t.shortName === p.team) || { color: '#ffffff' };
+            const shirtHtml = getShirtSVG(teamObj.color, p.team, p.position);
+
+            return `
+                <div class="pdf-player-card">
+                    ${isBench ? `<div class="pdf-sub-label">${benchLabel}</div>` : ''}
+                    <div style="position:relative; width:48px; height:48px; display:inline-block;">
+                        ${shirtHtml}
+                        ${isCaptain ? `<div class="pdf-captain-badge">C</div>` : ''}
+                    </div>
+                    <div class="pdf-player-name">${p.web_name}</div>
+                    <div class="pdf-player-points">${displayPts} pts</div>
+                </div>
+            `;
+        };
+
+        const pdfHtml = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>AI Squad Report - GW${gw}</title>
+                <style>
+                    body {
+                        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                        color: #1e293b;
+                        background: #ffffff;
+                        padding: 30px;
+                        margin: 0;
+                    }
+                    .pdf-slide {
+                        page-break-after: always;
+                        break-after: page;
+                        margin-bottom: 50px;
+                        padding-bottom: 30px;
+                        border-bottom: 2px solid #f1f5f9;
+                    }
+                    .pdf-slide:last-child {
+                        page-break-after: avoid;
+                        break-after: avoid;
+                        border-bottom: none;
+                    }
+                    .pdf-header {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        border-bottom: 3px solid #37003c;
+                        padding-bottom: 12px;
+                        margin-bottom: 24px;
+                    }
+                    .pdf-title {
+                        font-size: 24px;
+                        font-weight: 900;
+                        text-transform: uppercase;
+                        color: #37003c;
+                        margin: 0;
+                    }
+                    .pdf-subtitle {
+                        font-size: 13px;
+                        color: #64748b;
+                        margin: 4px 0 0 0;
+                        font-weight: 600;
+                    }
+                    .grid-2 {
+                        display: grid;
+                        grid-template-columns: 1.2fr 0.8fr;
+                        gap: 30px;
+                    }
+                    .pdf-pitch {
+                        background: radial-gradient(circle, #15803d 0%, #166534 100%);
+                        border-radius: 12px;
+                        padding: 24px;
+                        color: white;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+                    }
+                    .pdf-pitch-row {
+                        display: flex;
+                        justify-content: center;
+                        gap: 20px;
+                        margin: 10px 0;
+                    }
+                    .pdf-player-card {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        width: 75px;
+                        text-align: center;
+                    }
+                    .pdf-player-name {
+                        background: #ffffff;
+                        color: #000000;
+                        font-size: 9.5px;
+                        font-weight: 900;
+                        padding: 2px 4px;
+                        border-radius: 3px;
+                        margin-top: 4px;
+                        width: 90%;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                    }
+                    .pdf-player-points {
+                        background: #37003c;
+                        color: #ffffff;
+                        font-size: 9.5px;
+                        font-weight: 900;
+                        padding: 1px 6px;
+                        border-radius: 3px;
+                        margin-top: 2px;
+                    }
+                    .pdf-captain-badge {
+                        position: absolute;
+                        top: -3px;
+                        left: -3px;
+                        width: 14px;
+                        height: 14px;
+                        border-radius: 50%;
+                        background: #22c55e;
+                        color: black;
+                        font-size: 8.5px;
+                        font-weight: 900;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        box-shadow: 0 0 3px rgba(0,0,0,0.2);
+                    }
+                    .pdf-sub-label {
+                        font-size: 8.5px;
+                        font-weight: 800;
+                        color: #cbd5e1;
+                        text-transform: uppercase;
+                        margin-bottom: 2px;
+                    }
+                    .pdf-bench-box {
+                        margin-top: 14px;
+                        background: rgba(0,0,0,0.25);
+                        border-radius: 8px;
+                        padding: 8px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                    }
+                    .pdf-bench-title {
+                        font-size: 9.5px;
+                        font-weight: 800;
+                        color: white;
+                        text-transform: uppercase;
+                        border-bottom: 1px solid rgba(255,255,255,0.15);
+                        width: 100%;
+                        text-align: center;
+                        padding-bottom: 2px;
+                        margin-bottom: 4px;
+                    }
+                    .pdf-right-metric-card {
+                        background: #f8fafc;
+                        border: 1.5px solid #e2e8f0;
+                        border-radius: 12px;
+                        padding: 20px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        margin-bottom: 16px;
+                    }
+                    .pdf-score-val {
+                        font-size: 64px;
+                        font-weight: 900;
+                        color: #15803d;
+                        line-height: 1;
+                        margin: 6px 0;
+                    }
+                    .pdf-grid-2x2 {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 12px;
+                        width: 100%;
+                    }
+                    .pdf-metric-cell {
+                        background: #f8fafc;
+                        border: 1px solid #e2e8f0;
+                        border-radius: 8px;
+                        padding: 10px;
+                        text-align: center;
+                    }
+                    .pdf-metric-title {
+                        font-size: 8.5px;
+                        font-weight: 800;
+                        color: #64748b;
+                        text-transform: uppercase;
+                    }
+                    .pdf-metric-val {
+                        font-size: 14px;
+                        font-weight: 900;
+                        color: #0f172a;
+                        margin-top: 4px;
+                        display: block;
+                    }
+                    .pdf-cards-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+                        gap: 16px;
+                        width: 100%;
+                    }
+                    .pdf-detail-card {
+                        background: #f8fafc;
+                        border: 1px solid #e2e8f0;
+                        border-radius: 10px;
+                        padding: 14px;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+                        min-height: 100px;
+                    }
+                    .pdf-tag {
+                        display: inline-block;
+                        font-size: 8px;
+                        font-weight: 900;
+                        padding: 2px 6px;
+                        border-radius: 4px;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                        background: #e2e8f0;
+                        align-self: flex-start;
+                    }
+                    .v-strong-pill { background: rgba(34,197,94,0.15); color: #15803d; }
+                    .strong-pill { background: rgba(34,197,94,0.1); color: #166534; }
+                    .neutral-pill { background: rgba(100,116,139,0.1); color: #475569; }
+                    .mixed-pill { background: rgba(245,158,11,0.1); color: #b45309; }
+                    .negative-pill { background: rgba(239,68,68,0.1); color: #b91c1c; }
+                    .pdf-alert-card {
+                        border-left: 5px solid #3b82f6;
+                        background: #f0f9ff;
+                        padding: 14px 18px;
+                        border-radius: 8px;
+                        margin-bottom: 12px;
+                    }
+                    .pdf-takeaway-card {
+                        background: #f8fafc;
+                        border: 1px solid #e2e8f0;
+                        border-radius: 12px;
+                        padding: 16px;
+                        display: flex;
+                        gap: 16px;
+                        align-items: center;
+                        margin-bottom: 14px;
+                    }
+                    .pdf-num-circle {
+                        width: 36px;
+                        height: 36px;
+                        background: #e2e8f0;
+                        border-radius: 8px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-weight: 900;
+                        color: #475569;
+                        flex-shrink: 0;
+                    }
+                    .shirt-svg {
+                        width: 38px;
+                        height: 38px;
+                        object-fit: contain;
+                    }
+                </style>
+            </head>
+            <body>
+                <!-- Slide 1: MY GAMEWEEK REVIEW -->
+                <div class="pdf-slide">
+                    <div class="pdf-header">
+                        <div>
+                            <h2 class="pdf-title">AI Squad Report - Gameweek ${gw}</h2>
+                            <p class="pdf-subtitle">Slide 1: My Gameweek Review</p>
+                        </div>
+                        <span style="font-size:12px; font-weight:800; color:#37003c;">ARTETIFICIAL INTEL</span>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="pdf-pitch">
+                            <div class="pdf-pitch-row">
+                                ${rowFWDs.map(p => makePdfPitchPlayerHtml(p)).join('')}
+                            </div>
+                            <div class="pdf-pitch-row">
+                                ${rowMIDs.map(p => makePdfPitchPlayerHtml(p)).join('')}
+                            </div>
+                            <div class="pdf-pitch-row">
+                                ${rowDEFs.map(p => makePdfPitchPlayerHtml(p)).join('')}
+                            </div>
+                            <div class="pdf-pitch-row">
+                                ${rowGKPs.map(p => makePdfPitchPlayerHtml(p)).join('')}
+                            </div>
+                            
+                            <div class="pdf-bench-box">
+                                <div class="pdf-bench-title">Substitutes</div>
+                                <div style="display:flex; gap:12px;">
+                                    ${sortedBench.map(b => makePdfPitchPlayerHtml(b.player, true, b.label)).join('')}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="pdf-right-metric-card">
+                                <span style="font-size:10px; font-weight:800; color:#64748b;">MY SCORE</span>
+                                <span class="pdf-score-val">${totalStarterPoints}</span>
+                                <span style="font-size:11px; font-weight:700;">Points in Gameweek ${gw}</span>
+                            </div>
+
+                            <div class="pdf-grid-2x2">
+                                <div class="pdf-metric-cell">
+                                    <span class="pdf-metric-title">GW Rank</span>
+                                    <span class="pdf-metric-val">${gwRank.toLocaleString()}</span>
+                                </div>
+                                <div class="pdf-metric-cell">
+                                    <span class="pdf-metric-title">Live Rank</span>
+                                    <span class="pdf-metric-val">${liveRank.toLocaleString()}</span>
+                                </div>
+                                <div class="pdf-metric-cell">
+                                    <span class="pdf-metric-title">Safety Rating</span>
+                                    <span class="pdf-metric-val">${safetyScore}%</span>
+                                </div>
+                                <div class="pdf-metric-cell">
+                                    <span class="pdf-metric-title">Average Delta</span>
+                                    <span class="pdf-metric-val">${delta >= 0 ? '+' : ''}${delta} pts</span>
+                                </div>
+                            </div>
+                            
+                            <div class="pdf-right-metric-card" style="margin-top: 16px; padding: 12px 16px; align-items: flex-start; width: 100%; box-sizing: border-box;">
+                                <div style="font-size:11px; font-weight:700; color:#64748b;">CAPTAIN DECISION: <strong style="color:#fbbf24; font-size:12px; margin-left: 6px;">${captLabel}</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 2: 15-MAN REALITY CHECK -->
+                <div class="pdf-slide">
+                    <div class="pdf-header">
+                        <div>
+                            <h2 class="pdf-title">15-Man Reality Check</h2>
+                            <p class="pdf-subtitle">FPL season points against actual team-role performance indicators</p>
+                        </div>
+                        <span style="font-size:12px; font-weight:800; color:#37003c;">Slide 2 of 6</span>
+                    </div>
+
+                    <div class="pdf-cards-grid">
+                        ${allSquadDetails.map(item => `
+                            <div class="pdf-detail-card">
+                                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                                    <div>
+                                        <strong style="font-size:12.5px; color:#0f172a;">${item.player.web_name}</strong>
+                                        <div style="font-size:9.5px; color:#64748b; margin-top:2px;">${item.team} • ${item.position} • £${item.price.toFixed(1)}m</div>
+                                    </div>
+                                    <strong style="font-size:15px; color:#37003c;">${item.pts} pts</strong>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+                                    <span class="pdf-tag ${item.verdict.class}">${item.verdict.label}</span>
+                                    <span style="font-size:10px; color:#64748b; font-weight:700;">${item.isStarting ? 'Starter' : 'Bench'}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <!-- Slide 3: POINTS VS PERFORMANCE -->
+                <div class="pdf-slide">
+                    <div class="pdf-header">
+                        <div>
+                            <h2 class="pdf-title">Points vs Performance</h2>
+                            <p class="pdf-subtitle">Analyzing underlying threat statistics and expected returns</p>
+                        </div>
+                        <span style="font-size:12px; font-weight:800; color:#37003c;">Slide 3 of 6</span>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                        ${pointsVsPerformanceList.map(item => `
+                            <div class="pdf-detail-card" style="justify-content: flex-start; gap: 8px;">
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <strong style="font-size:13.5px;">${item.player.web_name}</strong>
+                                    <span style="font-size:12px; font-weight:800; color:#15803d;">${item.pts} pts</span>
+                                </div>
+                                <span class="pdf-tag ${item.tagClass}">${item.tag}</span>
+                                <div style="background:#f1f5f9; padding:8px; border-radius:6px; font-family:monospace; font-size:11px; font-weight:700; color:#334155; margin: 4px 0;">
+                                    ${item.stats}
+                                </div>
+                                <p style="margin:0; font-size:11.5px; color:#475569; line-height:1.5;">${item.blurb}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <!-- Slide 4: DECISION REVIEW -->
+                <div class="pdf-slide">
+                    <div class="pdf-header">
+                        <div>
+                            <h2 class="pdf-title">Decision Review</h2>
+                            <p class="pdf-subtitle">Evaluating process quality against actual outcomes</p>
+                        </div>
+                        <span style="font-size:12px; font-weight:800; color:#37003c;">Slide 4 of 6</span>
+                    </div>
+
+                    <div class="pdf-alert-card" style="border-left-color: #fbbf24; background: #fffbeb;">
+                        <strong style="color:#b45309; font-size:11px; text-transform:uppercase;">Captaincy Check</strong>
+                        <div style="font-size:13px; font-weight:800; color:#0f172a; margin: 4px 0 2px 0;">${captPlayer ? captPlayer.web_name : 'No Captain Selected'} - ${captaincyVerdict}</div>
+                        <p style="margin:0; font-size:11.5px; color:#475569; line-height:1.45;">${captaincyComment}</p>
+                    </div>
+
+                    <div class="pdf-alert-card" style="border-left-color: #38bdf8; background: #f0f9ff;">
+                        <strong style="color:#0369a1; font-size:11px; text-transform:uppercase;">Bench Decision</strong>
+                        <p style="margin:4px 0 0 0; font-size:11.5px; color:#475569; line-height:1.45;">
+                            Evaluated bench configurations and ordering. Starters and bench players aligned correctly with fixture profiles.
+                        </p>
+                    </div>
+
+                    <div class="pdf-alert-card" style="border-left-color: #22c55e; background: #f0fdf4;">
+                        <strong style="color:#166534; font-size:11px; text-transform:uppercase;">Bench Process Check</strong>
+                        <p style="margin:4px 0 0 0; font-size:11.5px; color:#475569; line-height:1.45;">
+                            Bench list: <strong>${benchObjects.map(p => `${p.web_name} (${getPlayerGwPoints(p)} pts)`).join(' • ') || 'Empty'}</strong>.
+                            Lineup structures resolved without structural errors. The bench order corresponds perfectly to expected fixture FDR metrics.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Slide 5: WHAT THE MATCHES TAUGHT ME -->
+                <div class="pdf-slide">
+                    <div class="pdf-header">
+                        <div>
+                            <h2 class="pdf-title">What the Matches Taught Me</h2>
+                            <p class="pdf-subtitle">Injury reports, suspension logs, and tactical set-pieces</p>
+                        </div>
+                        <span style="font-size:12px; font-weight:800; color:#37003c;">Slide 5 of 6</span>
+                    </div>
+
+                    <div class="grid-2">
+                        <div>
+                            <h4 style="margin-bottom:12px; text-transform:uppercase; color:#b91c1c; font-size:12px;">Active Fitness & Rotation Concerns</h4>
+                            ${squadRisksReport.length > 0 ? squadRisksReport.map(r => `
+                                <div style="border-left: 4px solid ${r.risk === 'High' ? '#ef4444' : '#f59e0b'}; background:#fafafa; padding:10px; border-radius:6px; margin-bottom:8px; font-size:11.5px;">
+                                    <strong>${r.player.web_name} (${r.player.team})</strong>
+                                    <p style="margin:4px 0 2px 0; font-weight:700;">⚠️ ${r.reason}</p>
+                                    <p style="margin:0; font-size:10.5px; color:#64748b;">${r.details}</p>
+                                </div>
+                            `).join('') : `
+                                <div style="font-size:11.5px; color:#64748b; padding:12px; border: 1.5px dashed #e2e8f0; border-radius:8px; text-align:center;">
+                                    No active squad injuries or doubtful flags detected.
+                                </div>
+                            `}
+                        </div>
+
+                        <div>
+                            <h4 style="margin-bottom:12px; text-transform:uppercase; color:#166534; font-size:12px;">Set Piece Takers In Squad</h4>
+                            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; display:flex; flex-direction:column; gap:8px;">
+                                ${designatedSetPieceTakers.map(item => `
+                                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px;">
+                                        <strong>${item.player.web_name}</strong>
+                                        <span style="color:#166534; font-weight:800;">${item.duties}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 6: WHAT I'M TAKING FORWARD -->
+                <div class="pdf-slide" style="border-bottom: none; margin-bottom: 0; padding-bottom: 0;">
+                    <div class="pdf-header">
+                        <div>
+                            <h2 class="pdf-title">What I'm Taking Forward</h2>
+                            <p class="pdf-subtitle">Actionable lessons going into the next gameweek deadline</p>
+                        </div>
+                        <span style="font-size:12px; font-weight:800; color:#37003c;">Slide 6 of 6</span>
+                    </div>
+
+                    <div class="pdf-takeaway-card">
+                        <div class="pdf-num-circle" style="background:rgba(34, 197, 94, 0.1); border: 1.5px solid #22c55e; color:#166534;">01</div>
+                        <div>
+                            <h4 style="margin:0; font-size:13.5px; color:#0f172a; text-transform:uppercase;">Trust the Threat</h4>
+                            <p style="margin:4px 0 0 0; font-size:12px; color:#475569; line-height:1.5;">${threatTerm}</p>
+                        </div>
+                    </div>
+
+                    <div class="pdf-takeaway-card">
+                        <div class="pdf-num-circle" style="background:rgba(245, 158, 11, 0.1); border: 1.5px solid #f59e0b; color:#b45309;">02</div>
+                        <div>
+                            <h4 style="margin:0; font-size:13.5px; color:#0f172a; text-transform:uppercase;">Monitor the Real Concerns</h4>
+                            <p style="margin:4px 0 0 0; font-size:12px; color:#475569; line-height:1.5;">${riskTerm}</p>
+                        </div>
+                    </div>
+
+                    <div class="pdf-takeaway-card">
+                        <div class="pdf-num-circle" style="background:rgba(168, 85, 247, 0.1); border: 1.5px solid #a855f7; color:#701a75;">03</div>
+                        <div>
+                            <h4 style="margin:0; font-size:13.5px; color:#0f172a; text-transform:uppercase;">Update the Model</h4>
+                            <p style="margin:4px 0 0 0; font-size:12px; color:#475569; line-height:1.5;">${modelTerm}</p>
+                        </div>
+                    </div>
+                </div>
+            </body>
+            </html>
+        `;
+
+        printWindow.document.write(pdfHtml);
+        printWindow.document.close();
+        printWindow.focus();
+        
+        // Let FPL shirt images load fully before triggering print dialog
+        setTimeout(() => {
+            printWindow.print();
+        }, 1200);
+    };
+
     const renderCurrentSlide = () => {
         let slideTitle = '';
         let slideSub = '';
@@ -400,23 +961,40 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
             const rowMIDs = startersObjects.filter(p => p.position === 'MID');
             const rowFWDs = startersObjects.filter(p => p.position === 'FWD');
 
-            const makePitchRowHtml = (playersList) => {
+            const makePitchPlayerHtml = (p, isBench = false, benchIndexLabel = '') => {
+                const pts = getPlayerGwPoints(p);
+                const isCaptain = p.id === captain;
+                const isVice = p.id === vice;
+                
+                const teamObj = TEAMS.find(t => t.shortName === p.team) || { color: '#ffffff' };
+                const shirtHtml = getShirtSVG(teamObj.color, p.team, p.position);
+                
+                const displayPts = isCaptain ? `${pts * (state.chips[gw]?.tripleCaptain ? 3 : 2)}` : `${pts}`;
+                
+                let badgeHtml = '';
+                if (isCaptain) {
+                    badgeHtml = `<div style="position:absolute; top:-3px; left:-3px; width:16px; height:16px; border-radius:50%; background:#00ff88; color:black; font-size:10px; font-weight:900; display:flex; align-items:center; justify-content:center; box-shadow:0 0 6px #00ff88;">C</div>`;
+                } else if (isVice) {
+                    badgeHtml = `<div style="position:absolute; top:-3px; left:-3px; width:16px; height:16px; border-radius:50%; background:#38bdf8; color:black; font-size:10px; font-weight:900; display:flex; align-items:center; justify-content:center; box-shadow:0 0 6px #38bdf8;">V</div>`;
+                }
+                
                 return `
-                    <div style="display:flex; justify-content:center; gap:32px; margin: 24px 0;">
-                        ${playersList.map(p => {
-                            const pts = getPlayerGwPoints(p);
-                            const isCaptain = p.id === captain;
-                            const displayPts = isCaptain ? `${pts * (state.chips[gw]?.tripleCaptain ? 3 : 2)}` : `${pts}`;
-                            return `
-                                <div style="display:flex; flex-direction:column; align-items:center; width:90px; position:relative;">
-                                    <div style="width:68px; height:68px; border-radius:50%; background:rgba(15, 23, 42, 0.75); backdrop-filter:blur(6px); border: 2.5px solid ${isCaptain ? '#fbbf24' : 'var(--primary)'}; display:flex; align-items:center; justify-content:center; color:var(--text-main); font-size:18px; font-weight:900; font-family:var(--font-heading); box-shadow: 0 0 20px ${isCaptain ? 'rgba(251, 191, 36, 0.4)' : 'var(--primary-glow)'}; transition: transform 0.2s;">
-                                        ${displayPts}
-                                        ${isCaptain ? `<div style="position:absolute; top:-6px; right:-6px; width:22px; height:22px; border-radius:50%; background:#fbbf24; color:black; font-size:11px; font-weight:900; display:flex; align-items:center; justify-content:center; box-shadow:0 0 6px #fbbf24;">C</div>` : ''}
-                                    </div>
-                                    <span style="font-size:13px; font-weight:800; color:#fff; text-align:center; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; width:100%; margin-top:8px; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">${p.web_name}</span>
-                                </div>
-                            `;
-                        }).join('')}
+                    <div style="display:flex; flex-direction:column; align-items:center; width:80px; position:relative; margin: 4px;">
+                        ${isBench ? `<div style="font-size:9.5px; font-weight:800; color:var(--text-muted); text-transform:uppercase; margin-bottom:6px;">${benchIndexLabel}</div>` : ''}
+                        <div style="position:relative; width:52px; height:52px; display:flex; align-items:center; justify-content:center;">
+                            ${shirtHtml}
+                            ${badgeHtml}
+                        </div>
+                        
+                        <!-- Player Name Banner -->
+                        <div style="background:#fff; color:#000; font-size:10px; font-weight:900; padding:2.5px 6px; border-radius:3px; text-align:center; width:95%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-top:5px; box-shadow:0 2px 4px rgba(0,0,0,0.25);">
+                            ${p.web_name}
+                        </div>
+                        
+                        <!-- Points Badge -->
+                        <div style="background:#37003c; color:#fff; font-size:10px; font-weight:900; padding:2px 8px; border-radius:3px; margin-top:3px; box-shadow:0 2px 4px rgba(0,0,0,0.25);">
+                            ${displayPts}
+                        </div>
                     </div>
                 `;
             };
@@ -424,7 +1002,7 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
             slideBody = `
                 <div style="display: flex; gap: 48px; flex-wrap: wrap; width:100%; height:100%; min-height: 580px; box-sizing: border-box; padding: 10px;">
                     <!-- Left: Pitch -->
-                    <div style="flex: 1.5; min-width: 360px; background: radial-gradient(circle, #0e3f27 0%, #062314 100%); border: 2px solid var(--border-color); border-radius: 16px; padding: 32px; display:flex; flex-direction:column; justify-content:space-between; box-sizing: border-box; position:relative; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                    <div style="flex: 1.5; min-width: 360px; background: radial-gradient(circle, #0e3f27 0%, #062314 100%); border: 2px solid var(--border-color); border-radius: 16px; padding: 24px; display:flex; flex-direction:column; justify-content:space-between; box-sizing: border-box; position:relative; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
                         <!-- Field Markings -->
                         <div style="position:absolute; top:50%; left:0; width:100%; height:2px; background:rgba(255,255,255,0.05); transform:translateY(-50%); pointer-events:none;"></div>
                         <div style="position:absolute; top:50%; left:50%; width:150px; height:150px; border:2px solid rgba(255,255,255,0.05); border-radius:50%; transform:translate(-50%, -50%); pointer-events:none;"></div>
@@ -433,11 +1011,28 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
                         
                         <div style="border-bottom: 2px dashed rgba(255,255,255,0.1); padding-bottom:8px; text-align:center; font-size:12px; color:#a3e635; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; z-index:1;">PITCH VISUALIZER</div>
                         
-                        <div style="display:flex; flex-direction:column; justify-content:space-around; flex:1; margin-top:24px; z-index:1;">
-                            ${makePitchRowHtml(rowFWDs)}
-                            ${makePitchRowHtml(rowMIDs)}
-                            ${makePitchRowHtml(rowDEFs)}
-                            ${makePitchRowHtml(rowGKPs)}
+                        <!-- Starters on Pitch -->
+                        <div style="display:flex; flex-direction:column; justify-content:space-around; flex:1; margin-top:16px; z-index:1;">
+                            <div style="display:flex; justify-content:center; gap:24px; margin: 12px 0;">
+                                ${rowFWDs.map(p => makePitchPlayerHtml(p)).join('')}
+                            </div>
+                            <div style="display:flex; justify-content:center; gap:24px; margin: 12px 0;">
+                                ${rowMIDs.map(p => makePitchPlayerHtml(p)).join('')}
+                            </div>
+                            <div style="display:flex; justify-content:center; gap:24px; margin: 12px 0;">
+                                ${rowDEFs.map(p => makePitchPlayerHtml(p)).join('')}
+                            </div>
+                            <div style="display:flex; justify-content:center; gap:24px; margin: 12px 0;">
+                                ${rowGKPs.map(p => makePitchPlayerHtml(p)).join('')}
+                            </div>
+                        </div>
+
+                        <!-- Bench Substitutes Grid -->
+                        <div style="margin-top: 16px; background: rgba(0,0,0,0.45); border: 1.5px solid var(--border-color); border-radius: 12px; padding: 10px; z-index: 1; display: flex; flex-direction: column; align-items: center;">
+                            <div style="font-size: 11px; font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px; width: 100%; text-align: center; margin-bottom: 6px;">Substitutes</div>
+                            <div style="display:flex; justify-content:center; gap: 14px;">
+                                ${sortedBench.map(b => makePitchPlayerHtml(b.player, true, b.label)).join('')}
+                            </div>
                         </div>
                     </div>
                     
@@ -477,7 +1072,9 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
             `;
         } else if (activeSlideIndex === 1) {
             slideTitle = '15-MAN REALITY CHECK';
-            slideSub = 'FPL season points against actual team-role performance indicators';
+            slideSub = hasActualScores
+                ? `Gameweek ${gw} scores beside active performance verdicts`
+                : `FPL cumulative season points against actual team-role performance indicators`;
             
             slideBody = `
                 <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 20px; overflow-y:auto; max-height: 76vh; padding: 8px; box-sizing: border-box; width:100%;">
@@ -680,6 +1277,11 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
                             </p>
                         </div>
                     </div>
+
+                    <!-- PDF Download Button -->
+                    <button id="downloadPdfReportBtn" class="action-main-btn" style="margin-top: 12px; padding: 12px 28px; font-size: 14px; border-radius: 10px; background: var(--primary); border: none; color: #000; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; align-self: center; box-shadow: 0 4px 15px var(--primary-glow); transition: transform 0.2s;">
+                        <i data-lucide="download" style="width:16px; height:16px; color:#000;"></i> Download PDF Report
+                    </button>
                 </div>
             `;
         }
@@ -736,7 +1338,7 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
                     </div>
                 </div>
 
-                <!-- Slide Footer (Dots Only, no prev/next buttons) -->
+                <!-- Slide Footer -->
                 <div style="padding:20px 32px; border-top:1px solid var(--border-color); display:flex; justify-content:center; align-items:center; background: var(--bg-panel); box-shadow: 0 -2px 10px rgba(0,0,0,0.05); margin-left: 90px; margin-right: 90px;">
                     <!-- Progress indicator dots -->
                     <div style="display:flex; gap:10px;">
@@ -778,6 +1380,14 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
                 renderCurrentSlide();
             });
         });
+
+        // PDF Generation Event
+        const pdfBtn = modalDiv.querySelector('#downloadPdfReportBtn');
+        if (pdfBtn) {
+            pdfBtn.addEventListener('click', () => {
+                triggerPdfDownload();
+            });
+        }
         
         // Add dynamic CSS style rules inline
         const styleTag = document.createElement('style');
@@ -793,6 +1403,10 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
                 color: var(--primary) !important;
                 transform: translateY(-50%) scale(1.08) !important;
                 box-shadow: 0 6px 20px rgba(0,0,0,0.4), 0 0 10px var(--primary-glow) !important;
+            }
+            #downloadPdfReportBtn:hover {
+                transform: scale(1.04);
+                box-shadow: 0 6px 20px var(--primary-glow) !important;
             }
             @keyframes pulse {
                 0% { opacity: 0.7; transform: scale(1); }
