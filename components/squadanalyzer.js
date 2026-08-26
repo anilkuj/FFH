@@ -70,9 +70,9 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
 
     const getVerdict = (pts, isPlayed) => {
         if (!isPlayed) return { label: 'NO NEW INFO', class: 'neutral-pill' };
-        if (pts >= 10) return { label: 'VERY STRONG +', class: 'v-strong-pill' };
-        if (pts >= 6) return { label: 'STRONG +', class: 'strong-pill' };
-        if (pts >= 3) return { label: 'NEUTRAL', class: 'neutral-pill' };
+        if (pts >= 100) return { label: 'VERY STRONG +', class: 'v-strong-pill' };
+        if (pts >= 60) return { label: 'STRONG +', class: 'strong-pill' };
+        if (pts >= 30) return { label: 'NEUTRAL', class: 'neutral-pill' };
         if (pts >= 1) return { label: 'MIXED', class: 'mixed-pill' };
         return { label: 'NEGATIVE -', class: 'negative-pill' };
     };
@@ -80,17 +80,13 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
     const allSquadDetails = squad.map(id => {
         const p = PLAYERS.find(pl => pl.id === id);
         if (!p) return null;
-        const pts = getPlayerGwPoints(p);
+        const pts = p.points; // Use cumulative season points instead of weekly predicted/mock points
         const isStarting = starters.includes(id);
         const isCapt = id === captain;
         const isVice = id === vice;
         const chance = (p.chanceOfPlaying !== undefined && p.chanceOfPlaying !== null) ? p.chanceOfPlaying : 100;
         
         let displayPts = `${pts}`;
-        if (isCapt) {
-            const mult = state.chips[gw]?.tripleCaptain ? 3 : 2;
-            displayPts = `${pts} / ${pts * mult}C`;
-        }
 
         const hasPlayed = p.currentSeasonMins > 0 || pts > 0;
         const verdict = getVerdict(pts, hasPlayed);
@@ -449,7 +445,7 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
                                         <span style="font-size:11.5px; font-weight:800; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${item.player.name}">${item.player.web_name}</span>
                                         <span style="font-size:9.5px; color:var(--text-muted); margin-top:1px;">${item.team} • ${item.position} • £${item.price.toFixed(1)}m</span>
                                     </div>
-                                    <strong style="font-size:14px; font-family:var(--font-heading); color:${item.isStarting ? 'var(--primary)' : 'var(--text-muted)'};">${item.pts}</strong>
+                                    <strong style="font-size:14px; font-family:var(--font-heading); color:${item.isStarting ? 'var(--primary)' : 'var(--text-muted)'};">${item.pts} pts</strong>
                                 </div>
                                 <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; flex-wrap:wrap; gap:4px;">
                                     <span class="${item.verdict.class}" style="font-size:8px; font-weight:800; padding:1.5px 5px; border-radius:3px;">${item.verdict.label}</span>
