@@ -422,21 +422,19 @@ async function parseAndWriteData(data, fixturesData) {
         const xG = parseFloat(el.expected_goals) || 0.0;
         const xA = parseFloat(el.expected_assists) || 0.0;
         const currentMins = el.minutes || 0;
-        const histWeight = 1800; // Prior weight of 20 games (1800 minutes) to stabilize early season metrics
+        const histWeight = 0; // Set to 0 to only use cumulative current 2026/27 season data
 
         // 1. Expected Goals per 90 (xG90)
         const histXG90 = (existingPlayer && existingPlayer.xG90 !== undefined) ? existingPlayer.xG90 : 0.0;
         const currentXG90 = el.expected_goals_per_90 !== undefined 
             ? (parseFloat(el.expected_goals_per_90) || 0.0)
             : (currentMins > 0 ? (parseFloat(el.expected_goals) / currentMins) * 90 : 0.0);
-        const xG90 = (histXG90 * histWeight + currentXG90 * currentMins) / (histWeight + currentMins);
-
+        
         // 2. Expected Assists per 90 (xA90)
         const histXA90 = (existingPlayer && existingPlayer.xA90 !== undefined) ? existingPlayer.xA90 : 0.0;
         const currentXA90 = el.expected_assists_per_90 !== undefined 
             ? (parseFloat(el.expected_assists_per_90) || 0.0)
             : (currentMins > 0 ? (parseFloat(el.expected_assists) / currentMins) * 90 : 0.0);
-        const xA90 = (histXA90 * histWeight + currentXA90 * currentMins) / (histWeight + currentMins);
 
         // 3. Goalkeeper Saves per 90 (saves90)
         const baseSaves90 = 3.0;
@@ -444,7 +442,6 @@ async function parseAndWriteData(data, fixturesData) {
         const currentSaves90 = el.saves_per_90 !== undefined 
             ? (parseFloat(el.saves_per_90) || 0.0)
             : (currentMins > 0 ? (parseInt(el.saves) / currentMins) * 90 : baseSaves90);
-        const saves90 = (histSaves90 * histWeight + currentSaves90 * currentMins) / (histWeight + currentMins);
 
         // 4. Goals Conceded per 90 (goalsConceded90)
         const baseGc90 = 1.37;
@@ -452,14 +449,19 @@ async function parseAndWriteData(data, fixturesData) {
         const currentGc90 = el.goals_conceded_per_90 !== undefined 
             ? (parseFloat(el.goals_conceded_per_90) || 0.0)
             : (currentMins > 0 ? (parseInt(el.goals_conceded) / currentMins) * 90 : baseGc90);
-        const goalsConceded90 = (histGc90 * histWeight + currentGc90 * currentMins) / (histWeight + currentMins);
 
         // 5. Defensive Contribution per 90 (dcPer90)
         const BASE_DC90 = { GKP: 0, DEF: 7.76, MID: 8.38, FWD: 4.50 };
         const baseDc90 = BASE_DC90[position] || 0;
         const histDcPer90 = (existingPlayer && existingPlayer.dcPer90 !== undefined) ? existingPlayer.dcPer90 : baseDc90;
         const rawDcPer90 = parseFloat(el.defensive_contribution_per_90) || 0;
-        const dcPer90 = (histDcPer90 * histWeight + rawDcPer90 * currentMins) / (histWeight + currentMins);
+
+        const totalMins = histWeight + currentMins;
+        const xG90 = totalMins > 0 ? (histXG90 * histWeight + currentXG90 * currentMins) / totalMins : 0.0;
+        const xA90 = totalMins > 0 ? (histXA90 * histWeight + currentXA90 * currentMins) / totalMins : 0.0;
+        const saves90 = totalMins > 0 ? (histSaves90 * histWeight + currentSaves90 * currentMins) / totalMins : 0.0;
+        const goalsConceded90 = totalMins > 0 ? (histGc90 * histWeight + currentGc90 * currentMins) / totalMins : 0.0;
+        const dcPer90 = totalMins > 0 ? (histDcPer90 * histWeight + rawDcPer90 * currentMins) / totalMins : 0.0;
 
         let appearances = starts;
         if (minutes > starts * 90) {
