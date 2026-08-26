@@ -4027,7 +4027,7 @@ ${E.map(Y=>{const gt=Y.chanceOfPlaying!==void 0?Y.chanceOfPlaying:100;return`- $
                     </div>
 
                     <div style="display: flex; flex-direction: column; gap: 6px;">
-                        <label style="font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Classic League Code</label>
+                        <label style="font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Classic League ID</label>
                         <input type="text" id="leagueCodeInput" value="${s||"314"}" placeholder="e.g. 314" style="
                             padding: 12px 16px;
                             border-radius: 8px;
@@ -4306,7 +4306,7 @@ ${E.map(Y=>{const gt=Y.chanceOfPlaying!==void 0?Y.chanceOfPlaying:100;return`- $
                                 font-family: var(--font-header);
                             ">${S}</h1>
                             <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; color: #c084fc; text-transform: uppercase; letter-spacing: 1px;">
-                                <span>LEAGUE CODE: ${s}</span>
+                                <span>LEAGUE ID: ${s}</span>
                                 <span style="opacity: 0.5;">•</span>
                                 <span>${e.length} MANAGERS</span>
                             </div>
@@ -4328,7 +4328,7 @@ ${E.map(Y=>{const gt=Y.chanceOfPlaying!==void 0?Y.chanceOfPlaying:100;return`- $
                         transition: all 0.2s ease;
                     ">
                         <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i>
-                        <span>Change League Code</span>
+                        <span>Change League ID</span>
                     </button>
                 </div>
 
