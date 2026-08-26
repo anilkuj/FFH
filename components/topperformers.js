@@ -1,4 +1,4 @@
-import { PLAYERS } from '../data.js';
+import { PLAYERS, TEAMS } from '../data.js';
 
 export function renderTopPerformers(container, state, actions) {
     if (state.tier === 'starter') {
@@ -97,10 +97,9 @@ export function renderTopPerformers(container, state, actions) {
 
         let rowsHtml = '';
         topRankings.forEach((p, idx) => {
-            const code = p.code || 3;
-            const shirtUrl = p.position === 'GKP'
-                ? `https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_${code}_1-110.webp`
-                : `https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_${code}-110.webp`;
+            const teamInfo = TEAMS.find(t => t.shortName === p.team);
+            const teamCode = teamInfo ? teamInfo.code : 3;
+            const logoUrl = `https://fantasy.premierleague.com/dist/img/badges/badge_${teamCode}_80.png`;
 
             const rank = idx + 1;
             let rankBg = isLight ? '#f1f5f9' : 'rgba(255, 255, 255, 0.05)';
@@ -146,8 +145,8 @@ export function renderTopPerformers(container, state, actions) {
                             background: ${rankBg};
                             color: ${rankColor};
                         ">${rank}</span>
-                        <div style="width: 28px; height: 32px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-                            <img src="${shirtUrl}" style="width: 28px; height: auto;" onerror="this.onerror=null; this.src='https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_3-110.webp';">
+                        <div style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                            <img src="${logoUrl}" style="width: 26px; height: 26px; object-fit: contain;" onerror="this.onerror=null; this.src='https://fantasy.premierleague.com/dist/img/badges/badge_3_80.png';">
                         </div>
                         <div style="display: flex; flex-direction: column;">
                             <span style="font-weight: 700; color: var(--text-main);">${p.web_name}</span>
