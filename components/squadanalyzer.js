@@ -152,7 +152,11 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         sortedBench.push({ player, label: `${idx + 1}. ${player.position}` });
     });
 
-    const underperformingPlayers = startersObjects
+    // Split starters into Attackers (MID, FWD) and Defenders/GKPs for slide 3 points vs performance review
+    const attackersStarters = startersObjects.filter(p => p.position === 'MID' || p.position === 'FWD');
+    const defendersStarters = startersObjects.filter(p => p.position === 'DEF' || p.position === 'GKP');
+
+    const underperformingAttackers = attackersStarters
         .map(p => {
             const pts = getPlayerGwPoints(p);
             const xgi = p.xGI || 0;
@@ -164,7 +168,7 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         .sort((a, b) => b.score - a.score)
         .slice(0, 2);
 
-    const overperformingPlayers = startersObjects
+    const overperformingAttackers = attackersStarters
         .map(p => {
             const pts = getPlayerGwPoints(p);
             const xgi = p.xGI || 0;
@@ -177,8 +181,10 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         .slice(0, 2);
 
     const pointsVsPerformanceList = [];
-    underperformingPlayers.forEach(entry => {
-        if (entry.xgi > 0.15) {
+
+    // Add up to 2 attacker cards (underperforming / overperforming on xGI)
+    underperformingAttackers.forEach(entry => {
+        if (entry.xgi > 0.15 && pointsVsPerformanceList.length < 2) {
             pointsVsPerformanceList.push({
                 player: entry.player,
                 pts: entry.pts,
@@ -190,8 +196,8 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         }
     });
 
-    overperformingPlayers.forEach(entry => {
-        if (entry.pts >= 6) {
+    overperformingAttackers.forEach(entry => {
+        if (entry.pts >= 6 && pointsVsPerformanceList.length < 2) {
             pointsVsPerformanceList.push({
                 player: entry.player,
                 pts: entry.pts,
@@ -203,28 +209,64 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         }
     });
 
-    startersObjects.forEach(p => {
-        if (pointsVsPerformanceList.length < 4 && !pointsVsPerformanceList.some(item => item.player.id === p.id)) {
+    // Make sure we have at least 2 attacker slots filled
+    attackersStarters.forEach(p => {
+        if (pointsVsPerformanceList.length < 2 && !pointsVsPerformanceList.some(item => item.player.id === p.id)) {
             const pts = getPlayerGwPoints(p);
-            if (p.position === 'DEF') {
-                pointsVsPerformanceList.push({
-                    player: p,
-                    pts: pts,
-                    tag: p.dcPer90 > 4 ? 'DEFENSIVE ROCK / STEADY MINS' : 'FIXED LINEUP ROLE',
-                    tagClass: 'neutral-pill',
-                    stats: `dcPer90: ${p.dcPer90.toFixed(2)} | Goals Conceded: ${p.goalsConceded} | ICT: ${p.ictIndex.toFixed(1)}`,
-                    blurb: `${p.web_name} played in defense registering a Defcon defensive contribution rate of ${p.dcPer90.toFixed(2)} per 90. He provides a steady defensive base for the squad constraints.`
-                });
-            } else {
-                pointsVsPerformanceList.push({
-                    player: p,
-                    pts: pts,
-                    tag: 'STABLE CORE',
-                    tagClass: 'neutral-pill',
-                    stats: `xGI: ${p.xGI.toFixed(2)} | ICT: ${p.ictIndex.toFixed(1)}`,
-                    blurb: `${p.web_name} played regular minutes with standard underlying output. Solid asset to keep in your starting XI.`
-                });
-            }
+            pointsVsPerformanceList.push({
+                player: p,
+                pts: pts,
+                tag: 'STABLE ATTACKING CORE',
+                tagClass: 'neutral-pill',
+                stats: `xGI: ${p.xGI.toFixed(2)} | ICT: ${p.ictIndex.toFixed(1)}`,
+                blurb: `${p.web_name} played regular minutes with standard underlying output. Solid attacking asset to keep in your starting XI.`
+            });
+        }
+    });
+
+    // Now add 2 defender cards focusing on clean sheets and Defcon (defensive baseline metrics)
+    const sortedDefenders = defendersStarters.map(p => {
+        const pts = getPlayerGwPoints(p);
+        const dc = p.dcPer90 || 0;
+        return { player: p, pts, dc };
+    }).sort((a, b) => b.pts - a.pts); // Sort high scoring defenders first
+
+    sortedDefenders.slice(0, 2).forEach(entry => {
+        const p = entry.player;
+        const pts = entry.pts;
+        const dc = entry.dc;
+        if (pts >= 6) {
+            pointsVsPerformanceList.push({
+                player: p,
+                pts: pts,
+                tag: 'SOLID DEFENSIVE RETURN',
+                tagClass: 'strong-pill',
+                stats: `Defcon: ${dc.toFixed(2)}/90 | Clean Sheets: ${p.cleanSheets || 0} | ICT: ${p.ictIndex.toFixed(1)}`,
+                blurb: `${p.web_name} secured a strong ${pts}-point defensive return. For defenders, clean sheets and defensive contributions (Defcon: ${dc.toFixed(2)}/90) are their primary points route. Attacking returns are a welcome bonus.`
+            });
+        } else {
+            pointsVsPerformanceList.push({
+                player: p,
+                pts: pts,
+                tag: 'DEFENSIVE SOLIDITY BASE',
+                tagClass: 'neutral-pill',
+                stats: `Defcon: ${dc.toFixed(2)}/90 | Clean Sheets: ${p.cleanSheets || 0} | ICT: ${p.ictIndex.toFixed(1)}`,
+                blurb: `${p.web_name} played in defense providing a baseline defensive contribution rate of ${dc.toFixed(2)} per 90. He provides a steady defensive base for clean sheet potential in upcoming fixtures.`
+            });
+        }
+    });
+
+    // If we still need to fill to 4 cards, fill from remaining defenders
+    sortedDefenders.forEach(entry => {
+        if (pointsVsPerformanceList.length < 4 && !pointsVsPerformanceList.some(item => item.player.id === entry.player.id)) {
+            pointsVsPerformanceList.push({
+                player: entry.player,
+                pts: entry.pts,
+                tag: 'DEFENSIVE ROLE',
+                tagClass: 'neutral-pill',
+                stats: `Defcon: ${entry.dc.toFixed(2)}/90 | ICT: ${entry.player.ictIndex.toFixed(1)}`,
+                blurb: `${entry.player.web_name} played in defense registering a Defcon contribution rate of ${entry.dc.toFixed(2)} per 90.`
+            });
         }
     });
 
