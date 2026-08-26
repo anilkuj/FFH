@@ -118,9 +118,13 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         if (!p) return null;
 
         const gwPts = getPlayerGwPoints(p);
-        const seasonPts = p.points; // cumulative FPL season points
-        // Count GWs played so far this season (predictions with a recorded actualPts)
-        const matchCount = (p.predictions || []).filter(pr => pr.actualPts !== null).length;
+
+        // Sum actualPts from played GWs this season to get correct current-season total
+        // (p.points is last season's total, not this season's)
+        const playedPredictions = (p.predictions || []).filter(pr => pr.actualPts !== null);
+        const seasonPts = playedPredictions.reduce((sum, pr) => sum + (pr.actualPts || 0), 0);
+        const matchCount = playedPredictions.length;
+
         const isStarting = starters.includes(id);
         const chance = (p.chanceOfPlaying !== undefined && p.chanceOfPlaying !== null) ? p.chanceOfPlaying : 100;
 
