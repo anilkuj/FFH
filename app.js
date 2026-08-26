@@ -20,6 +20,7 @@ import { renderLiveRank } from './components/liverank.js';
 import { renderReveals } from './components/reveals.js';
 import { renderTransferPlanner } from './components/transferplanner.js';
 import { renderSolioProjections } from './components/solioprojections.js';
+import { renderTopPerformers } from './components/topperformers.js';
 
 if (typeof window !== 'undefined') {
     window.PLAYERS = PLAYERS;
@@ -1441,6 +1442,9 @@ const actions = {
                 break;
             case 'solio':
                 renderSolioProjections(container, state, actions);
+                break;
+            case 'topperformers':
+                renderTopPerformers(container, state, actions);
                 break;
         }
     },
