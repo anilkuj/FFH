@@ -38,7 +38,7 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         }
     });
 
-    // Safety score calculation: based on starting likelihood of the starting XI
+    // Safety score calculation
     let safetyScore = 100;
     let flaggedCount = 0;
     starters.forEach(id => {
@@ -60,6 +60,7 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         if (pts <= 80) return 1700000 - ((pts - 50) * 53000);
         return Math.max(12, Math.round(110000 / Math.pow(pts - 78, 1.4)));
     };
+
     // Retrieve actual gameweek rank and overall rank if FPL entry history is available
     let gwRank = null;
     let liveRank = null;
@@ -94,14 +95,10 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
     const allSquadDetails = squad.map(id => {
         const p = PLAYERS.find(pl => pl.id === id);
         if (!p) return null;
-        const pts = p.points; // Use cumulative season points instead of weekly predicted/mock points
+        const pts = p.points; // Season-long total points
         const isStarting = starters.includes(id);
-        const isCapt = id === captain;
-        const isVice = id === vice;
         const chance = (p.chanceOfPlaying !== undefined && p.chanceOfPlaying !== null) ? p.chanceOfPlaying : 100;
-        
-        let displayPts = `${pts}`;
-
+        const displayPts = `${pts}`;
         const hasPlayed = p.currentSeasonMins > 0 || pts > 0;
         const verdict = getVerdict(pts, hasPlayed);
         const hasFlag = p.status !== 'a' || chance < 100 || p.displacementRisk !== null;
@@ -233,12 +230,12 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
     if (benchBusters.length > 0) {
         benchBusters.forEach(b => {
             benchVerdictHtml += `
-                <div style="background: rgba(245, 158, 11, 0.05); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 8px; padding: 12px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                        <span style="font-size:10px; font-weight:700; color:#f59e0b; text-transform:uppercase; background:rgba(245, 158, 11, 0.15); padding:2px 6px; border-radius:4px;">BENCH BUSTER</span>
-                        <strong style="color:var(--text-main); font-size:12px;">${b.player.web_name} (${b.points} pts)</strong>
+                <div style="background: rgba(245, 158, 11, 0.05); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 8px; padding: 16px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                        <span style="font-size:10px; font-weight:700; color:#f59e0b; text-transform:uppercase; background:rgba(245, 158, 11, 0.15); padding:2.5px 6px; border-radius:4px;">BENCH BUSTER</span>
+                        <strong style="color:var(--text-main); font-size:13px;">${b.player.web_name} (${b.points} pts)</strong>
                     </div>
-                    <p style="margin:0; font-size:11px; color:var(--text-muted);">
+                    <p style="margin:0; font-size:11.5px; color:var(--text-muted); line-height:1.4;">
                         Benched player outscored starting ${b.player.position}(s): <strong>${b.betterThan}</strong>. Benching him was defensible before kickoff, but his high 2026-27 underlying xGI/Defcon data implies he warrants starter consideration.
                     </p>
                 </div>
@@ -246,12 +243,12 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         });
     } else {
         benchVerdictHtml = `
-            <div style="background: rgba(34, 197, 94, 0.05); border: 1px solid rgba(34, 197, 94, 0.2); border-radius: 8px; padding: 12px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                    <span style="font-size:10px; font-weight:700; color:#22c55e; text-transform:uppercase; background:rgba(34, 197, 94, 0.15); padding:2px 6px; border-radius:4px;">PERFECT LINEUP</span>
-                    <strong style="color:var(--text-main); font-size:12px;">No Bench Points Wasted</strong>
+            <div style="background: rgba(34, 197, 94, 0.05); border: 1px solid rgba(34, 197, 94, 0.2); border-radius: 8px; padding: 16px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                    <span style="font-size:10px; font-weight:700; color:#22c55e; text-transform:uppercase; background:rgba(34, 197, 94, 0.15); padding:2.5px 6px; border-radius:4px;">PERFECT LINEUP</span>
+                    <strong style="color:var(--text-main); font-size:13px;">No Bench Points Wasted</strong>
                 </div>
-                <p style="margin:0; font-size:11px; color:var(--text-muted);">
+                <p style="margin:0; font-size:11.5px; color:var(--text-muted); line-height:1.4;">
                     All high-scoring options were correctly placed in your starting XI. Bench rotation and ordering functioned flawlessly this week.
                 </p>
             </div>
@@ -350,8 +347,8 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
     modalDiv.style.cssText = `
         position: fixed;
         top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(8px);
+        background: rgba(0, 0, 0, 0.65);
+        backdrop-filter: blur(12px);
         z-index: 9999;
         display: flex;
         align-items: center;
@@ -378,17 +375,18 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
 
             const makePitchRowHtml = (playersList) => {
                 return `
-                    <div style="display:flex; justify-content:center; gap:16px; margin: 8px 0;">
+                    <div style="display:flex; justify-content:center; gap:24px; margin: 16px 0;">
                         ${playersList.map(p => {
                             const pts = getPlayerGwPoints(p);
                             const isCaptain = p.id === captain;
-                            const displayPts = isCaptain ? `${pts * (state.chips[gw]?.tripleCaptain ? 3 : 2)}C` : `${pts}`;
+                            const displayPts = isCaptain ? `${pts * (state.chips[gw]?.tripleCaptain ? 3 : 2)}` : `${pts}`;
                             return `
-                                <div style="display:flex; flex-direction:column; align-items:center; width:65px;">
-                                    <div style="width:34px; height:34px; border-radius:50%; background:var(--bg-panel); border: 2px solid ${isCaptain ? '#fbbf24' : 'var(--primary)'}; display:flex; align-items:center; justify-content:center; color:var(--text-main); font-size:12px; font-weight:800; font-family:var(--font-heading);">
+                                <div style="display:flex; flex-direction:column; align-items:center; width:80px; position:relative;">
+                                    <div style="width:54px; height:54px; border-radius:50%; background:rgba(15, 23, 42, 0.7); backdrop-filter:blur(6px); border: 2.5px solid ${isCaptain ? '#fbbf24' : 'var(--primary)'}; display:flex; align-items:center; justify-content:center; color:var(--text-main); font-size:15px; font-weight:900; font-family:var(--font-heading); box-shadow: 0 0 16px ${isCaptain ? 'rgba(251, 191, 36, 0.35)' : 'var(--primary-glow)'}; transition: transform 0.2s;">
                                         ${displayPts}
+                                        ${isCaptain ? `<div style="position:absolute; top:-6px; right:-6px; width:18px; height:18px; border-radius:50%; background:#fbbf24; color:black; font-size:10px; font-weight:900; display:flex; align-items:center; justify-content:center; box-shadow:0 0 6px #fbbf24;">C</div>` : ''}
                                     </div>
-                                    <span style="font-size:9.5px; font-weight:700; color:var(--text-main); text-align:center; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; width:100%; margin-top:2px;">${p.web_name}</span>
+                                    <span style="font-size:11.5px; font-weight:700; color:#fff; text-align:center; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; width:100%; margin-top:6px; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">${p.web_name}</span>
                                 </div>
                             `;
                         }).join('')}
@@ -397,12 +395,18 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
             };
 
             slideBody = `
-                <div style="display: flex; gap: 24px; flex-wrap: wrap; width:100%; height:100%; min-height: 400px; box-sizing: border-box;">
+                <div style="display: flex; gap: 40px; flex-wrap: wrap; width:100%; height:100%; min-height: 520px; box-sizing: border-box; padding: 10px;">
                     <!-- Left: Pitch -->
-                    <div style="flex: 1.2; min-width: 280px; background: radial-gradient(circle, rgba(16,185,129,0.08) 0%, rgba(13,148,136,0.03) 100%); border: 1.5px dashed var(--border-color); border-radius: 12px; padding: 16px; display:flex; flex-direction:column; justify-content:space-between; box-sizing: border-box;">
-                        <div style="border-bottom: 1.5px dashed var(--border-color); padding-bottom:4px; text-align:center; font-size:10px; color:var(--text-muted); font-weight:700; letter-spacing:1px; text-transform:uppercase;">Pitch Visualizer</div>
+                    <div style="flex: 1.3; min-width: 320px; background: radial-gradient(circle, #0e3f27 0%, #062314 100%); border: 2px solid var(--border-color); border-radius: 16px; padding: 24px; display:flex; flex-direction:column; justify-content:space-between; box-sizing: border-box; position:relative; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                        <!-- Field Markings -->
+                        <div style="position:absolute; top:50%; left:0; width:100%; height:2px; background:rgba(255,255,255,0.05); transform:translateY(-50%); pointer-events:none;"></div>
+                        <div style="position:absolute; top:50%; left:50%; width:120px; height:120px; border:2px solid rgba(255,255,255,0.05); border-radius:50%; transform:translate(-50%, -50%); pointer-events:none;"></div>
+                        <div style="position:absolute; top:0; left:50%; width:200px; height:70px; border:2px solid rgba(255,255,255,0.05); border-top:none; transform:translateX(-50%); pointer-events:none;"></div>
+                        <div style="position:absolute; bottom:0; left:50%; width:200px; height:70px; border:2px solid rgba(255,255,255,0.05); border-bottom:none; transform:translateX(-50%); pointer-events:none;"></div>
                         
-                        <div style="display:flex; flex-direction:column; justify-content:space-around; flex:1; margin-top:10px;">
+                        <div style="border-bottom: 2px dashed rgba(255,255,255,0.1); padding-bottom:8px; text-align:center; font-size:11px; color:#a3e635; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; z-index:1;">PITCH VISUALIZER</div>
+                        
+                        <div style="display:flex; flex-direction:column; justify-content:space-around; flex:1; margin-top:20px; z-index:1;">
                             ${makePitchRowHtml(rowFWDs)}
                             ${makePitchRowHtml(rowMIDs)}
                             ${makePitchRowHtml(rowDEFs)}
@@ -411,61 +415,61 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
                     </div>
                     
                     <!-- Right: Rank Details -->
-                    <div style="flex: 0.9; min-width: 220px; display:flex; flex-direction:column; gap:12px; justify-content:center; box-sizing: border-box;">
-                        <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius:12px; padding: 16px; display:flex; flex-direction:column; align-items:center;">
-                            <span style="font-size:10px; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">MY SCORE</span>
-                            <span style="font-size:42px; font-weight:900; font-family:var(--font-heading); color:var(--primary); line-height:1.1; margin-top:4px;">${totalStarterPoints}</span>
-                            <span style="font-size:11px; font-weight:700; color:var(--text-main); margin-top:2px;">Points in GW${gw}</span>
+                    <div style="flex: 0.9; min-width: 260px; display:flex; flex-direction:column; gap:20px; justify-content:center; box-sizing: border-box;">
+                        <div style="background: linear-gradient(135deg, var(--bg-panel), rgba(0, 255, 136, 0.02)); border: 2px solid var(--primary); border-radius:16px; padding: 24px; display:flex; flex-direction:column; align-items:center; box-shadow: 0 0 24px var(--primary-glow); transition: transform 0.2s;">
+                            <span style="font-size:11px; font-weight:900; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px;">MY SCORE</span>
+                            <span style="font-size:84px; font-weight:900; font-family:var(--font-heading); color:var(--primary); line-height:1.0; margin-top:8px; text-shadow: 0 0 25px var(--primary-glow);">${totalStarterPoints}</span>
+                            <span style="font-size:13px; font-weight:800; color:var(--text-main); margin-top:6px;">Points in GW${gw}</span>
                         </div>
                         
-                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                            <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius:10px; padding: 10px 8px; display:flex; flex-direction:column; align-items:center;">
-                                <span style="font-size:8px; font-weight:800; color:var(--text-muted); text-transform:uppercase;">GW RANK</span>
-                                <span style="font-size:13px; font-weight:800; color:var(--text-main); margin-top:3px;">${gwRank.toLocaleString()}</span>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+                            <div style="background: var(--bg-panel); border: 1.5px solid var(--border-color); border-radius:12px; padding: 14px 10px; display:flex; flex-direction:column; align-items:center; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                                <span style="font-size:9px; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">GW RANK</span>
+                                <span style="font-size:16px; font-weight:900; color:var(--text-main); margin-top:6px;">${gwRank.toLocaleString()}</span>
                             </div>
-                            <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius:10px; padding: 10px 8px; display:flex; flex-direction:column; align-items:center;">
-                                <span style="font-size:8px; font-weight:800; color:var(--text-muted); text-transform:uppercase;">LIVE RANK</span>
-                                <span style="font-size:13px; font-weight:800; color:var(--text-main); margin-top:3px;">${liveRank.toLocaleString()}</span>
+                            <div style="background: var(--bg-panel); border: 1.5px solid var(--border-color); border-radius:12px; padding: 14px 10px; display:flex; flex-direction:column; align-items:center; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                                <span style="font-size:9px; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">LIVE RANK</span>
+                                <span style="font-size:16px; font-weight:900; color:var(--text-main); margin-top:6px;">${liveRank.toLocaleString()}</span>
                             </div>
-                            <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius:10px; padding: 10px 8px; display:flex; flex-direction:column; align-items:center;">
-                                <span style="font-size:8px; font-weight:800; color:var(--text-muted); text-transform:uppercase;">SAFETY RATING</span>
-                                <span style="font-size:13px; font-weight:800; color:#38bdf8; margin-top:3px;">${safetyScore}%</span>
+                            <div style="background: var(--bg-panel); border: 1.5px solid var(--border-color); border-radius:12px; padding: 14px 10px; display:flex; flex-direction:column; align-items:center; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                                <span style="font-size:9px; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">SAFETY RATING</span>
+                                <span style="font-size:16px; font-weight:900; color:#38bdf8; margin-top:6px;">${safetyScore}%</span>
                             </div>
-                            <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius:10px; padding: 10px 8px; display:flex; flex-direction:column; align-items:center;">
-                                <span style="font-size:8px; font-weight:800; color:var(--text-muted); text-transform:uppercase;">AVERAGE DELTA</span>
-                                <span style="font-size:13px; font-weight:800; color:${delta >= 0 ? 'var(--primary)' : '#ef4444'}; margin-top:3px;">${delta >= 0 ? '+' : ''}${delta} pts</span>
+                            <div style="background: var(--bg-panel); border: 1.5px solid var(--border-color); border-radius:12px; padding: 14px 10px; display:flex; flex-direction:column; align-items:center; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                                <span style="font-size:9px; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">AVERAGE DELTA</span>
+                                <span style="font-size:16px; font-weight:900; color:${delta >= 0 ? 'var(--primary)' : '#ef4444'}; margin-top:6px;">${delta >= 0 ? '+' : ''}${delta} pts</span>
                             </div>
                         </div>
                         
-                        <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius:10px; padding: 10px 14px; display:flex; justify-content:space-between; align-items:center; font-size:11px;">
+                        <div style="background: var(--bg-panel); border: 1.5px solid var(--border-color); border-radius:12px; padding: 12px 18px; display:flex; justify-content:space-between; align-items:center; font-size:12px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
                             <span style="font-weight:700; color:var(--text-muted);">CAPTAIN CHOICE:</span>
-                            <span style="font-weight:800; color:#fbbf24;">${captLabel}</span>
+                            <span style="font-weight:900; color:#fbbf24; text-shadow:0 0 8px rgba(251,191,36,0.2);">${captLabel}</span>
                         </div>
                     </div>
                 </div>
             `;
         } else if (activeSlideIndex === 1) {
             slideTitle = '15-MAN REALITY CHECK';
-            slideSub = 'FPL points against actual team-role performance indicators';
+            slideSub = 'FPL season points against actual team-role performance indicators';
             
             slideBody = `
-                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; overflow-y:auto; max-height: 72vh; padding-right:6px; box-sizing: border-box; width:100%;">
+                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 16px; overflow-y:auto; max-height: 72vh; padding: 4px 8px 4px 4px; box-sizing: border-box; width:100%;">
                     ${allSquadDetails.map(item => {
-                        const alertIcon = item.hasFlag ? `<span title="Injury or starting risk detected!" style="color:#f59e0b; margin-right:4px; font-size:12px;">⚠️</span>` : '';
+                        const alertIcon = item.hasFlag ? `<span title="Injury or starting risk detected!" style="color:#f59e0b; margin-right:6px; font-size:13px; animation: pulse 2s infinite;">⚠️</span>` : '';
                         return `
-                            <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display:flex; flex-direction:column; justify-content:space-between; min-height: 84px; box-sizing: border-box;">
+                            <div class="squad-reality-card" style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; display:flex; flex-direction:column; justify-content:space-between; min-height: 98px; box-sizing: border-box; transition: all 0.2s; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
                                 <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                                    <div style="display:flex; flex-direction:column; overflow:hidden; margin-right:6px;">
-                                        <span style="font-size:11.5px; font-weight:800; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${item.player.name}">${item.player.web_name}</span>
-                                        <span style="font-size:9.5px; color:var(--text-muted); margin-top:1px;">${item.team} • ${item.position} • £${item.price.toFixed(1)}m</span>
+                                    <div style="display:flex; flex-direction:column; overflow:hidden; margin-right:8px;">
+                                        <span style="font-size:13px; font-weight:900; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${item.player.name}">${item.player.web_name}</span>
+                                        <span style="font-size:10px; color:var(--text-muted); margin-top:3px; font-weight:600;">${item.team} • ${item.position} • £${item.price.toFixed(1)}m</span>
                                     </div>
-                                    <strong style="font-size:14px; font-family:var(--font-heading); color:${item.isStarting ? 'var(--primary)' : 'var(--text-muted)'};">${item.pts} pts</strong>
+                                    <strong style="font-size:18px; font-family:var(--font-heading); color:${item.isStarting ? 'var(--primary)' : 'var(--text-muted)'}; white-space:nowrap;">${item.pts} <span style="font-size:10px; font-weight:700; color:var(--text-muted);">pts</span></strong>
                                 </div>
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; flex-wrap:wrap; gap:4px;">
-                                    <span class="${item.verdict.class}" style="font-size:8px; font-weight:800; padding:1.5px 5px; border-radius:3px;">${item.verdict.label}</span>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; flex-wrap:wrap; gap:4px;">
+                                    <span class="${item.verdict.class}" style="font-size:8.5px; font-weight:900; padding:3px 8px; border-radius:4px; letter-spacing:0.5px;">${item.verdict.label}</span>
                                     <div style="display:flex; align-items:center;">
                                         ${alertIcon}
-                                        <span style="font-size:9.5px; color:var(--text-muted); font-weight:700;">${item.isStarting ? 'Starter' : 'Bench'}</span>
+                                        <span style="font-size:10.5px; color:var(--text-muted); font-weight:800;">${item.isStarting ? 'Starter' : 'Bench'}</span>
                                     </div>
                                 </div>
                             </div>
@@ -478,25 +482,25 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
             slideSub = 'Analyzing underlying metrics for players where outcomes differed from expectations';
 
             slideBody = `
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; width:100%; box-sizing: border-box; overflow-y:auto; max-height:72vh;">
+                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap:20px; width:100%; box-sizing: border-box; overflow-y:auto; max-height:72vh; padding-right:8px;">
                     ${pointsVsPerformanceList.map(item => {
                         return `
-                            <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; display:flex; flex-direction:column; justify-content:space-between; gap:10px; box-sizing: border-box;">
+                            <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; display:flex; flex-direction:column; justify-content:space-between; gap:12px; box-sizing: border-box; box-shadow: 0 4px 15px rgba(0,0,0,0.15);">
                                 <div>
-                                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:4px;">
+                                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
                                         <div>
-                                            <strong style="font-size:14px; color:var(--text-main); font-family:var(--font-heading);">${item.player.web_name}</strong>
-                                            <span style="font-size:9.5px; color:var(--text-muted); margin-left:4px;">(${item.player.team}, £${item.player.price.toFixed(1)}m)</span>
+                                            <strong style="font-size:15px; color:var(--text-main); font-family:var(--font-heading);">${item.player.web_name}</strong>
+                                            <span style="font-size:10.5px; color:var(--text-muted); margin-left:6px; font-weight:600;">(${item.player.team}, £${item.player.price.toFixed(1)}m)</span>
                                         </div>
-                                        <span style="font-size:13px; font-weight:800; color:var(--primary);">${item.pts} pts</span>
+                                        <span style="font-size:15px; font-weight:900; color:var(--primary); font-family:var(--font-heading);">${item.pts} pts</span>
                                     </div>
-                                    <span class="${item.tagClass}" style="font-size:8.5px; font-weight:800; padding:2px 6px; border-radius:4px; display:inline-block; margin-bottom:8px;">${item.tag}</span>
+                                    <span class="${item.tagClass}" style="font-size:9px; font-weight:900; padding:3px 8px; border-radius:4px; display:inline-block; margin-bottom:10px; letter-spacing:0.5px;">${item.tag}</span>
                                     
-                                    <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:6px; padding:6px 10px; font-size:10.5px; font-family:var(--font-mono); color:var(--text-main); margin-bottom:8px;">
+                                    <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px; padding:8px 12px; font-size:11.5px; font-family:var(--font-mono); color:var(--primary); text-shadow:0 0 6px var(--primary-glow); margin-bottom:10px; font-weight:700;">
                                         ${item.stats}
                                     </div>
                                 </div>
-                                <p style="margin:0; font-size:11px; color:var(--text-muted); line-height:1.45;">
+                                <p style="margin:0; font-size:12px; color:var(--text-muted); line-height:1.5;">
                                     ${item.blurb}
                                 </p>
                             </div>
@@ -509,26 +513,29 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
             slideSub = 'A validation of manager logic versus actual variance and outcomes';
 
             slideBody = `
-                <div style="display:flex; flex-direction:column; gap:14px; width:100%; box-sizing: border-box;">
-                    <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px;">
-                        <span style="font-size:9px; font-weight:800; color:#fbbf24; background:rgba(253,191,36,0.1); padding:2px 6px; border-radius:4px; display:inline-block; margin-bottom:6px;">CAPTAINCY CHECK</span>
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                            <strong style="font-size:13.5px; color:var(--text-main); font-family:var(--font-heading);">${captPlayer ? captPlayer.web_name : 'No Captain Selected'}</strong>
-                            <span style="font-size:11.5px; font-weight:800; color:#fbbf24;">${captaincyVerdict}</span>
+                <div style="display:flex; flex-direction:column; gap:20px; width:100%; box-sizing: border-box;">
+                    <!-- Captaincy decision -->
+                    <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-left: 6px solid #fbbf24; border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                        <span style="font-size:9.5px; font-weight:900; color:#fbbf24; background:rgba(253,191,36,0.15); padding:3px 8px; border-radius:4px; display:inline-block; margin-bottom:10px; letter-spacing:0.5px;">CAPTAINCY CHECK</span>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <strong style="font-size:16px; color:var(--text-main); font-family:var(--font-heading);">${captPlayer ? captPlayer.web_name : 'No Captain Selected'}</strong>
+                            <span style="font-size:13px; font-weight:900; color:#fbbf24; text-shadow:0 0 8px rgba(251,191,36,0.3);">${captaincyVerdict}</span>
                         </div>
-                        <p style="margin:0; font-size:11px; color:var(--text-muted); line-height:1.45;">
+                        <p style="margin:0; font-size:12.5px; color:var(--text-muted); line-height:1.5;">
                             ${captaincyComment}
                         </p>
                     </div>
 
-                    <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; display:flex; flex-direction:column; gap:8px;">
-                        <span style="font-size:9px; font-weight:800; color:#38bdf8; background:rgba(56,189,248,0.1); padding:2px 6px; border-radius:4px; display:inline-block; align-self:flex-start;">BENCH DECISION</span>
+                    <!-- Bench decision -->
+                    <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-left: 6px solid #38bdf8; border-radius: 12px; padding: 20px; display:flex; flex-direction:column; gap:10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                        <span style="font-size:9.5px; font-weight:900; color:#38bdf8; background:rgba(56,189,248,0.15); padding:3px 8px; border-radius:4px; display:inline-block; align-self:flex-start; letter-spacing:0.5px;">BENCH DECISION</span>
                         ${benchVerdictHtml}
                     </div>
 
-                    <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px;">
-                        <span style="font-size:9px; font-weight:800; color:var(--text-muted); background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:4px; display:inline-block; margin-bottom:8px;">BENCH PROCESS CHECK</span>
-                        <div style="font-size:11px; color:var(--text-muted); line-height:1.45;">
+                    <!-- Process check -->
+                    <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-left: 6px solid var(--primary); border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                        <span style="font-size:9.5px; font-weight:900; color:var(--primary); background:rgba(0, 255, 136, 0.08); padding:3px 8px; border-radius:4px; display:inline-block; margin-bottom:10px; letter-spacing:0.5px;">BENCH PROCESS CHECK</span>
+                        <div style="font-size:12.5px; color:var(--text-muted); line-height:1.5;">
                             Bench list: <strong>${benchObjects.map(p => `${p.web_name} (${getPlayerGwPoints(p)} pts)`).join(' • ') || 'Empty'}</strong>.
                             Nothing on the bench indicates irrational structural selections. The lineup ordering aligns with predictive FDR fixtures and 2026-27 performance indicators.
                         </div>
@@ -545,19 +552,19 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
                     const borderCol = r.risk === 'High' ? '#ef4444' : (r.risk === 'Medium' ? '#f59e0b' : '#38bdf8');
                     const bgCol = r.risk === 'High' ? 'rgba(239,68,68,0.05)' : (r.risk === 'Medium' ? 'rgba(245,158,11,0.05)' : 'rgba(56,189,248,0.05)');
                     return `
-                        <div style="background:${bgCol}; border-left:4px solid ${borderCol}; border-radius:6px; padding:10px; display:flex; flex-direction:column; gap:3px; font-size:11px; box-sizing: border-box;">
+                        <div style="background:${bgCol}; border-left:5px solid ${borderCol}; border-radius:8px; padding:14px; display:flex; flex-direction:column; gap:4px; font-size:12px; box-sizing: border-box; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
                             <div style="display:flex; justify-content:space-between; align-items:center;">
-                                <strong style="font-size:12px; color:var(--text-main);">${r.player.web_name} <span style="font-size:8.5px; font-weight:700; color:var(--text-muted); padding:1px 4px; background:rgba(0,0,0,0.15); border-radius:3px;">${r.player.team} - ${r.player.position}</span></strong>
-                                <span style="font-size:8.5px; font-weight:800; text-transform:uppercase; color:${borderCol}; border:1px solid ${borderCol}33; padding:1px 6px; border-radius:10px;">${r.risk} Risk</span>
+                                <strong style="font-size:13.5px; color:var(--text-main);">${r.player.web_name} <span style="font-size:9px; font-weight:700; color:var(--text-muted); padding:2px 6px; background:var(--bg-card); border-radius:4px; border:1px solid var(--border-color);">${r.player.team} - ${r.player.position}</span></strong>
+                                <span style="font-size:9px; font-weight:900; text-transform:uppercase; color:${borderCol}; border:1px solid ${borderCol}44; padding:2px 8px; border-radius:12px; background:var(--bg-card);">${r.risk} Risk</span>
                             </div>
-                            <p style="margin:2px 0 0 0; color:var(--text-main); font-weight:600;">⚠️ ${r.reason}</p>
-                            <p style="margin:0; color:var(--text-muted); font-size:9.5px; font-style:italic;">ℹ️ ${r.details}</p>
+                            <p style="margin:4px 0 0 0; color:var(--text-main); font-weight:700;">⚠️ ${r.reason}</p>
+                            <p style="margin:0; color:var(--text-muted); font-size:10.5px; font-style:italic;">ℹ️ ${r.details}</p>
                         </div>
                     `;
                 }).join('');
             } else {
                 riskCardsHtml = `
-                    <div style="text-align:center; padding:12px; color:var(--text-muted); font-size:11px;">
+                    <div style="text-align:center; padding:24px; color:var(--text-muted); font-size:12px; background:rgba(34, 197, 94, 0.02); border:1.5px dashed var(--border-color); border-radius:8px;">
                         No squad injuries, doubtful flags, or positional displacement risks detected! All 15 players are fully fit and expected to start.
                     </div>
                 `;
@@ -566,13 +573,13 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
             let setPieceTakersHtml = '';
             if (designatedSetPieceTakers.length > 0) {
                 setPieceTakersHtml = `
-                    <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; box-sizing: border-box; display:flex; flex-direction:column; gap:6px;">
-                        <h4 style="margin:0; font-size:11.5px; font-weight:800; color:var(--text-main); text-transform:uppercase; letter-spacing:0.5px;">Designated Takers In Squad</h4>
-                        <div style="display:flex; flex-direction:column; gap:5px;">
+                    <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; box-sizing: border-box; display:flex; flex-direction:column; gap:8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                        <h4 style="margin:0; font-size:12px; font-weight:900; color:var(--text-main); text-transform:uppercase; letter-spacing:0.5px; border-bottom:1.5px solid var(--border-color); padding-bottom:6px;">Designated Takers In Squad</h4>
+                        <div style="display:flex; flex-direction:column; gap:8px;">
                             ${designatedSetPieceTakers.map(item => `
-                                <div style="display:flex; justify-content:space-between; align-items:center; font-size:10.5px;">
-                                    <span style="color:var(--text-main); font-weight:700;">${item.player.web_name} (${item.player.team})</span>
-                                    <span style="color:var(--primary); font-weight:800;">${item.duties}</span>
+                                <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px;">
+                                    <span style="color:var(--text-main); font-weight:800;">${item.player.web_name} (${item.player.team})</span>
+                                    <span style="color:var(--primary); font-weight:900; text-shadow:0 0 4px var(--primary-glow);">${item.duties}</span>
                                 </div>
                             `).join('')}
                         </div>
@@ -581,22 +588,22 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
             }
 
             slideBody = `
-                <div style="display:grid; grid-template-columns: 1.1fr 0.9fr; gap:16px; width:100%; box-sizing: border-box; height:100%; max-height:72vh;">
+                <div style="display:grid; grid-template-columns: 1.2fr 0.8fr; gap:24px; width:100%; box-sizing: border-box; height:100%; max-height:72vh;">
                     <!-- Left: Injury & Minutes Risks -->
-                    <div style="display:flex; flex-direction:column; gap:10px; box-sizing: border-box;">
-                        <h4 style="margin:0; font-size:12px; font-weight:800; color:#ef4444; text-transform:uppercase; letter-spacing:0.5px;">Squad Minutes & Fitness Warnings</h4>
-                        <div style="display:flex; flex-direction:column; gap:8px; overflow-y:auto; max-height: 65vh; padding-right:4px;">
+                    <div style="display:flex; flex-direction:column; gap:12px; box-sizing: border-box;">
+                        <h4 style="margin:0; font-size:12px; font-weight:900; color:#ef4444; text-transform:uppercase; letter-spacing:1px;">Squad Minutes & Fitness Warnings</h4>
+                        <div style="display:flex; flex-direction:column; gap:10px; overflow-y:auto; max-height: 65vh; padding-right:8px;">
                             ${riskCardsHtml}
                         </div>
                     </div>
 
                     <!-- Right: Tactical Role & Set Piece hierarchy -->
-                    <div style="display:flex; flex-direction:column; gap:12px; box-sizing: border-box;">
-                        <h4 style="margin:0; font-size:12px; font-weight:800; color:#22c55e; text-transform:uppercase; letter-spacing:0.5px;">Tactical Discoveries</h4>
+                    <div style="display:flex; flex-direction:column; gap:16px; box-sizing: border-box;">
+                        <h4 style="margin:0; font-size:12px; font-weight:900; color:#22c55e; text-transform:uppercase; letter-spacing:1px;">Tactical Discoveries</h4>
                         ${setPieceTakersHtml}
                         
-                        <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; font-size:11px; color:var(--text-muted); line-height:1.45;">
-                            <strong style="color:var(--text-main); display:block; margin-bottom:4px; font-size:11.5px;">⚡ DEFC CON/xGI SIGNAL</strong>
+                        <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; font-size:12px; color:var(--text-muted); line-height:1.55; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                            <strong style="color:var(--text-main); display:block; margin-bottom:6px; font-size:12.5px; font-family:var(--font-heading);">⚡ DEFCON / xGI MATRIX</strong>
                             Evaluated defense statistics using 2026-27 indicators. Starting defenders register clean sheet opportunities backed by team FDR ratings. Target transfers based on fixtures.
                         </div>
                     </div>
@@ -607,41 +614,41 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
             slideSub = `The three pieces of FPL GW${gw} tactical information that matter most next`;
 
             slideBody = `
-                <div style="display:flex; flex-direction:column; gap:16px; width:100%; box-sizing: border-box;">
+                <div style="display:flex; flex-direction:column; gap:20px; width:100%; box-sizing: border-box;">
                     <!-- Takeaway 1 -->
-                    <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; display:flex; gap:16px; align-items:center;">
-                        <div style="width:36px; height:36px; background:rgba(34, 197, 94, 0.1); border:1.5px solid #22c55e; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#22c55e; font-weight:900; font-family:var(--font-heading); flex-shrink:0;">
+                    <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; display:flex; gap:20px; align-items:center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.2s;">
+                        <div style="width:46px; height:46px; background:rgba(34, 197, 94, 0.1); border:2px solid #22c55e; border-radius:10px; display:flex; align-items:center; justify-content:center; color:#22c55e; font-size:18px; font-weight:900; font-family:var(--font-heading); flex-shrink:0; box-shadow: 0 0 10px rgba(34, 197, 94, 0.25);">
                             01
                         </div>
-                        <div style="display:flex; flex-direction:column; gap:2px;">
-                            <h4 style="margin:0; font-size:12.5px; font-weight:800; color:var(--text-main); font-family:var(--font-heading); text-transform:uppercase;">TRUST THE THREAT</h4>
-                            <p style="margin:0; font-size:11.5px; color:var(--text-muted); line-height:1.45;">
+                        <div style="display:flex; flex-direction:column; gap:4px;">
+                            <h4 style="margin:0; font-size:14px; font-weight:900; color:var(--text-main); font-family:var(--font-heading); text-transform:uppercase; letter-spacing:0.5px;">TRUST THE THREAT</h4>
+                            <p style="margin:0; font-size:12.5px; color:var(--text-muted); line-height:1.5;">
                                 ${threatTerm}
                             </p>
                         </div>
                     </div>
 
                     <!-- Takeaway 2 -->
-                    <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; display:flex; gap:16px; align-items:center;">
-                        <div style="width:36px; height:36px; background:rgba(245, 158, 11, 0.1); border:1.5px solid #f59e0b; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#f59e0b; font-weight:900; font-family:var(--font-heading); flex-shrink:0;">
+                    <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; display:flex; gap:20px; align-items:center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.2s;">
+                        <div style="width:46px; height:46px; background:rgba(245, 158, 11, 0.1); border:2px solid #f59e0b; border-radius:10px; display:flex; align-items:center; justify-content:center; color:#f59e0b; font-size:18px; font-weight:900; font-family:var(--font-heading); flex-shrink:0; box-shadow: 0 0 10px rgba(245, 158, 11, 0.25);">
                             02
                         </div>
-                        <div style="display:flex; flex-direction:column; gap:2px;">
-                            <h4 style="margin:0; font-size:12.5px; font-weight:800; color:var(--text-main); font-family:var(--font-heading); text-transform:uppercase;">MONITOR THE REAL CONCERNS</h4>
-                            <p style="margin:0; font-size:11.5px; color:var(--text-muted); line-height:1.45;">
+                        <div style="display:flex; flex-direction:column; gap:4px;">
+                            <h4 style="margin:0; font-size:14px; font-weight:900; color:var(--text-main); font-family:var(--font-heading); text-transform:uppercase; letter-spacing:0.5px;">MONITOR THE REAL CONCERNS</h4>
+                            <p style="margin:0; font-size:12.5px; color:var(--text-muted); line-height:1.5;">
                                 ${riskTerm}
                             </p>
                         </div>
                     </div>
 
                     <!-- Takeaway 3 -->
-                    <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; display:flex; gap:16px; align-items:center;">
-                        <div style="width:36px; height:36px; background:rgba(168, 85, 247, 0.1); border:1.5px solid #a855f7; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#a855f7; font-weight:900; font-family:var(--font-heading); flex-shrink:0;">
+                    <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; display:flex; gap:20px; align-items:center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.2s;">
+                        <div style="width:46px; height:46px; background:rgba(168, 85, 247, 0.1); border:2px solid #a855f7; border-radius:10px; display:flex; align-items:center; justify-content:center; color:#a855f7; font-size:18px; font-weight:900; font-family:var(--font-heading); flex-shrink:0; box-shadow: 0 0 10px rgba(168, 85, 247, 0.25);">
                             03
                         </div>
-                        <div style="display:flex; flex-direction:column; gap:2px;">
-                            <h4 style="margin:0; font-size:12.5px; font-weight:800; color:var(--text-main); font-family:var(--font-heading); text-transform:uppercase;">UPDATE THE MODEL</h4>
-                            <p style="margin:0; font-size:11.5px; color:var(--text-muted); line-height:1.45;">
+                        <div style="display:flex; flex-direction:column; gap:4px;">
+                            <h4 style="margin:0; font-size:14px; font-weight:900; color:var(--text-main); font-family:var(--font-heading); text-transform:uppercase; letter-spacing:0.5px;">UPDATE THE MODEL</h4>
+                            <p style="margin:0; font-size:12.5px; color:var(--text-muted); line-height:1.5;">
                                 ${modelTerm}
                             </p>
                         </div>
@@ -653,37 +660,37 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         modalDiv.innerHTML = `
             <div class="opt-settings-card" style="width: 100vw; height: 100vh; max-width: 100vw; max-height: 100vh; display: flex; flex-direction: column; background: var(--bg-card); border: none; border-radius: 0; box-shadow: none; overflow: hidden; font-family: var(--font-body);">
                 <!-- Slide Header -->
-                <div class="opt-card-header" style="border-bottom: 1px solid var(--border-color); padding: 18px 22px; display: flex; justify-content: space-between; align-items: center; background: var(--bg-panel);">
-                    <div style="display:flex; align-items:center; gap:12px;">
-                        <div style="width:40px; height:40px; background:rgba(0, 255, 136, 0.08); border-radius:50%; display:flex; align-items:center; justify-content:center; border:1px solid var(--primary-glow);">
-                            <i data-lucide="brain" style="width:20px; height:20px; color:var(--primary);"></i>
+                <div class="opt-card-header" style="border-bottom: 1px solid var(--border-color); padding: 20px 32px; display: flex; justify-content: space-between; align-items: center; background: var(--bg-panel); box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <div style="display:flex; align-items:center; gap:16px;">
+                        <div style="width:46px; height:46px; background:rgba(0, 255, 136, 0.08); border-radius:50%; display:flex; align-items:center; justify-content:center; border:1px solid var(--primary-glow); box-shadow:0 0 12px var(--primary-glow);">
+                            <i data-lucide="brain" style="width:24px; height:24px; color:var(--primary);"></i>
                         </div>
                         <div>
-                            <div style="display:flex; align-items:center; gap:8px;">
-                                <h3 style="margin:0; font-size:16px; font-weight:900; font-family:var(--font-heading); color:var(--text-main); letter-spacing:0.5px; text-transform:uppercase;">ARTETIFICIAL SQUAD REPORT</h3>
-                                <span style="font-size:10px; font-weight:800; background:rgba(0, 255, 136, 0.12); color:var(--primary); padding:2px 8px; border-radius:12px; border:1px solid var(--primary-glow);">Artetificial Intel</span>
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <h3 style="margin:0; font-size:18px; font-weight:900; font-family:var(--font-heading); color:var(--text-main); letter-spacing:0.75px; text-transform:uppercase;">ARTETIFICIAL SQUAD REPORT</h3>
+                                <span style="font-size:10px; font-weight:900; background:rgba(0, 255, 136, 0.12); color:var(--primary); padding:3px 10px; border-radius:12px; border:1px solid var(--primary-glow); letter-spacing:0.5px;">Artetificial Intel</span>
                             </div>
-                            <p style="margin:2px 0 0 0; font-size:10.5px; color:var(--text-muted); font-weight:500;">Dynamic 2026-27 Season Squad Analyzer Report</p>
+                            <p style="margin:4px 0 0 0; font-size:11.5px; color:var(--text-muted); font-weight:600; letter-spacing:0.25px;">Dynamic 2026-27 Season Tactical Performance Recap</p>
                         </div>
                     </div>
                     
                     <!-- Slide indicator -->
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <span style="font-size:11px; font-weight:800; background:var(--bg-panel); border:1px solid var(--border-color); color:var(--text-main); padding:3px 10px; border-radius:20px;">
+                    <div style="display:flex; align-items:center; gap:14px;">
+                        <span style="font-size:12px; font-weight:900; background:var(--bg-panel); border:1.5px solid var(--border-color); color:var(--text-main); padding:4px 14px; border-radius:20px; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
                             ${activeSlideIndex + 1} of 6
                         </span>
-                        <button id="closeTpSquadAnalysisModalBtn" style="background:transparent; border:none; color:var(--text-muted); cursor:pointer; font-size:24px; font-weight:300; line-height:1; padding:0; display:flex; align-items:center; justify-content:center; width:28px; height:28px; transition:color 0.2s;">&times;</button>
+                        <button id="closeTpSquadAnalysisModalBtn" style="background:transparent; border:none; color:var(--text-muted); cursor:pointer; font-size:28px; font-weight:300; line-height:1; padding:0; display:flex; align-items:center; justify-content:center; width:32px; height:32px; transition:color 0.2s;">&times;</button>
                     </div>
                 </div>
 
                 <!-- Slide Body (Title & Content) -->
-                <div style="flex:1; overflow-y:auto; padding:22px; display:flex; flex-direction:column; gap:16px; box-sizing:border-box;">
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start; border-left: 3px solid var(--primary); padding-left:12px;">
+                <div style="flex:1; overflow-y:auto; padding:32px 40px; display:flex; flex-direction:column; gap:24px; box-sizing:border-box;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; border-left: 4px solid var(--primary); padding-left:16px;">
                         <div>
-                            <h2 style="margin:0; font-size:18px; font-weight:900; font-family:var(--font-heading); color:var(--text-main); letter-spacing:0.5px;">${slideTitle}</h2>
-                            <p style="margin:3px 0 0 0; font-size:11px; color:var(--text-muted); font-weight:600;">${slideSub}</p>
+                            <h2 style="margin:0; font-size:24px; font-weight:900; font-family:var(--font-heading); color:var(--text-main); letter-spacing:0.75px;">${slideTitle}</h2>
+                            <p style="margin:4px 0 0 0; font-size:12.5px; color:var(--text-muted); font-weight:700;">${slideSub}</p>
                         </div>
-                        <span style="font-size:10px; font-weight:800; background:rgba(168, 85, 247, 0.15); border:1px solid rgba(168, 85, 247, 0.35); color:#c084fc; padding:2.5px 8px; border-radius:6px; font-family:var(--font-mono);">GW${gw} • ${activeSlideIndex + 1}/6</span>
+                        <span style="font-size:11px; font-weight:900; background:rgba(168, 85, 247, 0.15); border:1.5px solid rgba(168, 85, 247, 0.35); color:#c084fc; padding:4px 12px; border-radius:8px; font-family:var(--font-mono); letter-spacing:0.5px;">GW${gw} • Slide ${activeSlideIndex + 1}</span>
                     </div>
 
                     <div style="flex:1; display:flex; align-items:center; width:100%; box-sizing: border-box;">
@@ -692,20 +699,20 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
                 </div>
 
                 <!-- Slide Footer (Navigation) -->
-                <div style="padding:16px 22px; border-top:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; background: var(--bg-panel);">
-                    <button class="action-main-btn" id="prevSlideBtn" style="margin:0; padding:6px 14px; font-size:11.5px; border-radius:6px; background:var(--bg-card); border:1px solid var(--border-color); color:var(--text-main); font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; transition:background 0.2s;" ${activeSlideIndex === 0 ? 'disabled style="opacity:0.3; cursor:not-allowed;"' : ''}>
-                        <i data-lucide="chevron-left" style="width:14px; height:14px;"></i> Prev
+                <div style="padding:20px 32px; border-top:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; background: var(--bg-panel); box-shadow: 0 -2px 10px rgba(0,0,0,0.05);">
+                    <button class="action-main-btn" id="prevSlideBtn" style="margin:0; padding:8px 18px; font-size:12.5px; border-radius:8px; background:var(--bg-card); border:1.5px solid var(--border-color); color:var(--text-main); font-weight:800; cursor:pointer; display:flex; align-items:center; gap:8px; transition:background 0.2s; box-shadow:0 2px 5px rgba(0,0,0,0.1);" ${activeSlideIndex === 0 ? 'disabled style="opacity:0.3; cursor:not-allowed;"' : ''}>
+                        <i data-lucide="chevron-left" style="width:16px; height:16px;"></i> Prev
                     </button>
                     
                     <!-- Progress indicator dots -->
-                    <div style="display:flex; gap:6px;">
+                    <div style="display:flex; gap:8px;">
                         ${[0, 1, 2, 3, 4, 5].map(idx => `
-                            <div style="width:6px; height:6px; border-radius:50%; background:${idx === activeSlideIndex ? 'var(--primary)' : 'var(--border-color)'}; transition:background 0.2s;"></div>
+                            <div style="width:8px; height:8px; border-radius:50%; background:${idx === activeSlideIndex ? 'var(--primary)' : 'var(--border-color)'}; box-shadow:${idx === activeSlideIndex ? '0 0 6px var(--primary)' : 'none'}; transition:background 0.2s;"></div>
                         `).join('')}
                     </div>
 
-                    <button class="action-main-btn" id="nextSlideBtn" style="margin:0; padding:6px 14px; font-size:11.5px; border-radius:6px; background:${activeSlideIndex === 5 ? 'var(--primary)' : 'var(--primary-glow)'}; border:1px solid ${activeSlideIndex === 5 ? 'var(--primary)' : 'var(--primary-glow)'}; color:${activeSlideIndex === 5 ? 'var(--bg-panel)' : 'var(--primary)'}; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; transition:background 0.2s;">
-                        ${activeSlideIndex === 5 ? 'Done' : 'Next <i data-lucide="chevron-right" style="width:14px; height:14px; color:var(--primary);"></i>'}
+                    <button class="action-main-btn" id="nextSlideBtn" style="margin:0; padding:8px 18px; font-size:12.5px; border-radius:8px; background:${activeSlideIndex === 5 ? 'var(--primary)' : 'var(--primary-glow)'}; border:1.5px solid ${activeSlideIndex === 5 ? 'var(--primary)' : 'var(--primary-glow)'}; color:${activeSlideIndex === 5 ? 'var(--bg-panel)' : 'var(--primary)'}; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:8px; transition:background 0.2s; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
+                        ${activeSlideIndex === 5 ? 'Done' : 'Next <i data-lucide="chevron-right" style="width:16px; height:16px;"></i>'}
                     </button>
                 </div>
             </div>
@@ -732,6 +739,22 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
                 }
             });
         }
+        
+        // Add dynamic hover CSS style rules inline
+        const styleTag = document.createElement('style');
+        styleTag.innerHTML = `
+            .squad-reality-card:hover {
+                transform: translateY(-4px);
+                border-color: var(--primary) !important;
+                box-shadow: 0 10px 24px rgba(0,0,0,0.2), 0 0 12px var(--primary-glow) !important;
+            }
+            @keyframes pulse {
+                0% { opacity: 0.7; transform: scale(1); }
+                50% { opacity: 1; transform: scale(1.1); }
+                100% { opacity: 0.7; transform: scale(1); }
+            }
+        `;
+        modalDiv.appendChild(styleTag);
         
         lucide.createIcons();
     };
