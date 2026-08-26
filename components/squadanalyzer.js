@@ -54,7 +54,6 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
 
     // Dynamic GW Rank estimation based on total starter points
     const pointsToRank = (pts) => {
-        // Simple realistic curve: 0 pts -> ~10m, 50 pts -> ~3.7m, 90+ pts -> <5k
         if (pts <= 0) return 9800000;
         if (pts <= 20) return 8000000 - (pts * 150000);
         if (pts <= 50) return 5000000 - ((pts - 20) * 110000);
@@ -65,12 +64,10 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
     const liveRank = gwRank; 
     const delta = totalStarterPoints - 46; // Compared to an average of 46 pts
 
-    // Capturing captain name and double-counted points
     const captPlayer = PLAYERS.find(p => p.id === captain);
     const captPoints = captPlayer ? getPlayerGwPoints(captPlayer) * (state.chips[gw]?.tripleCaptain ? 3 : 2) : 0;
     const captLabel = captPlayer ? `${captPlayer.web_name} (${captPoints})` : 'None';
 
-    // 15-Man Reality Check Data
     const getVerdict = (pts, isPlayed) => {
         if (!isPlayed) return { label: 'NO NEW INFO', class: 'neutral-pill' };
         if (pts >= 10) return { label: 'VERY STRONG +', class: 'v-strong-pill' };
@@ -80,7 +77,6 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         return { label: 'NEGATIVE -', class: 'negative-pill' };
     };
 
-    // Gather squad players with detail cards
     const allSquadDetails = squad.map(id => {
         const p = PLAYERS.find(pl => pl.id === id);
         if (!p) return null;
@@ -96,11 +92,8 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
             displayPts = `${pts} / ${pts * mult}C`;
         }
 
-        // Determine if player has played or is unplayed (backup goalie/flagged bench)
         const hasPlayed = p.currentSeasonMins > 0 || pts > 0;
         const verdict = getVerdict(pts, hasPlayed);
-
-        // Check if player has flags
         const hasFlag = p.status !== 'a' || chance < 100 || p.displacementRisk !== null;
 
         return {
@@ -116,8 +109,6 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         };
     }).filter(Boolean);
 
-    // Slide 3: Points vs Performance (Underlying Stats analysis)
-    // Find players in starting lineup with discrepancies
     const startersObjects = starters.map(id => PLAYERS.find(p => p.id === id)).filter(Boolean);
     const underperformingPlayers = startersObjects
         .map(p => {
@@ -125,7 +116,6 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
             const xgi = p.xGI || 0;
             const xg = p.xG || 0;
             const xa = p.xA || 0;
-            // High xGI but low points
             const score = xgi * 5 - pts;
             return { player: p, pts, xgi, xg, xa, score };
         })
@@ -138,14 +128,12 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
             const xgi = p.xGI || 0;
             const xg = p.xG || 0;
             const xa = p.xA || 0;
-            // Low xGI but high points
             const score = pts - (xgi * 5);
             return { player: p, pts, xgi, xg, xa, score };
         })
         .sort((a, b) => b.score - a.score)
         .slice(0, 2);
 
-    // Let's combine them into a list of 4 players
     const pointsVsPerformanceList = [];
     underperformingPlayers.forEach(entry => {
         if (entry.xgi > 0.15) {
@@ -173,7 +161,6 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         }
     });
 
-    // Backfill to always have 4 entries if needed
     startersObjects.forEach(p => {
         if (pointsVsPerformanceList.length < 4 && !pointsVsPerformanceList.some(item => item.player.id === p.id)) {
             const pts = getPlayerGwPoints(p);
@@ -181,7 +168,7 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
                 pointsVsPerformanceList.push({
                     player: p,
                     pts: pts,
-                    tag: p.dcPer90 > 4 ? 'DEFENSIVE ROCK / STEADY MINS' : 'FIXED LINUPE ROLE',
+                    tag: p.dcPer90 > 4 ? 'DEFENSIVE ROCK / STEADY MINS' : 'FIXED LINEUP ROLE',
                     tagClass: 'neutral-pill',
                     stats: `dcPer90: ${p.dcPer90.toFixed(2)} | Goals Conceded: ${p.goalsConceded} | ICT: ${p.ictIndex.toFixed(1)}`,
                     blurb: `${p.web_name} played in defense registering a Defcon defensive contribution rate of ${p.dcPer90.toFixed(2)} per 90. He provides a steady defensive base for the squad constraints.`
@@ -199,7 +186,6 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         }
     });
 
-    // Slide 4: Decision Review
     let captaincyVerdict = 'GOOD PROCESS / GOOD OUTCOME';
     let captaincyComment = 'The captaincy decision delivered solid returns and maximized your squad coefficient.';
     if (captPlayer) {
@@ -218,12 +204,10 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         }
     }
 
-    // Bench decisions
     const benchObjects = bench.map(id => PLAYERS.find(p => p.id === id)).filter(Boolean);
     const benchBusters = [];
     benchObjects.forEach(p => {
         const bPts = getPlayerGwPoints(p);
-        // Find if they outscored any starter in their position
         const positionStarters = startersObjects.filter(s => s.position === p.position);
         const outscoredStarters = positionStarters.filter(s => getPlayerGwPoints(s) < bPts);
         if (outscoredStarters.length > 0 && bPts >= 5) {
@@ -264,7 +248,6 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         `;
     }
 
-    // Slide 5: What the Matches Taught Me (Incorporating original Check Risks logic)
     const computeDetailedLocalRisk = (p) => {
         if (p.position === 'GKP' && p.price <= 4.0) {
             const primaryGKPs = PLAYERS.filter(other =>
@@ -327,7 +310,6 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         return null;
     }).filter(Boolean);
 
-    // Designate some interesting set-piece takers to display
     const designatedSetPieceTakers = squad.map(id => {
         const p = PLAYERS.find(pl => pl.id === id);
         if (!p) return null;
@@ -344,7 +326,6 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         return null;
     }).filter(Boolean);
 
-    // Slide 6: What I'm Taking Forward
     const keyThreatPlayer = startersObjects.sort((a, b) => (b.xGI || 0) - (a.xGI || 0))[0];
     const threatTerm = keyThreatPlayer ? `${keyThreatPlayer.web_name} generated the highest underlying expected threat (${keyThreatPlayer.xGI.toFixed(2)} xGI). Keep him starting.` : 'Trust your starting forwards and midfielders with high historical threat.';
     
@@ -354,14 +335,13 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
     const keySetPiecePlayer = designatedSetPieceTakers[0];
     const modelTerm = keySetPiecePlayer ? `Leverage set-piece takers: ${keySetPiecePlayer.player.web_name} is on ${keySetPiecePlayer.duties}. Value their high xGI floor.` : 'Value players with solid Defcon (defensive contributions) metrics like clean-sheet potential on favorable fixtures.';
 
-    // HTML Modal Shell
     const modalDiv = document.createElement('div');
     modalDiv.id = 'tpSquadAnalysisModal';
     modalDiv.style.cssText = `
         position: fixed;
         top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(10, 6, 25, 0.88);
-        backdrop-filter: blur(12px);
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
         z-index: 9999;
         display: flex;
         align-items: center;
@@ -381,7 +361,6 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
             slideTitle = 'MY GAMEWEEK REVIEW';
             slideSub = `Gameweek ${gw} lineup return and metrics recap`;
             
-            // Miniature pitch markup for starters
             const rowGKPs = startersObjects.filter(p => p.position === 'GKP');
             const rowDEFs = startersObjects.filter(p => p.position === 'DEF');
             const rowMIDs = startersObjects.filter(p => p.position === 'MID');
@@ -396,7 +375,7 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
                             const displayPts = isCaptain ? `${pts * (state.chips[gw]?.tripleCaptain ? 3 : 2)}C` : `${pts}`;
                             return `
                                 <div style="display:flex; flex-direction:column; align-items:center; width:65px;">
-                                    <div style="width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,0.06); border: 2px solid ${isCaptain ? '#fbbf24' : 'var(--primary)'}; display:flex; align-items:center; justify-content:center; color:white; font-size:12px; font-weight:800; font-family:var(--font-heading);">
+                                    <div style="width:34px; height:34px; border-radius:50%; background:var(--bg-panel); border: 2px solid ${isCaptain ? '#fbbf24' : 'var(--primary)'}; display:flex; align-items:center; justify-content:center; color:var(--text-main); font-size:12px; font-weight:800; font-family:var(--font-heading);">
                                         ${displayPts}
                                     </div>
                                     <span style="font-size:9.5px; font-weight:700; color:var(--text-main); text-align:center; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; width:100%; margin-top:2px;">${p.web_name}</span>
@@ -410,8 +389,8 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
             slideBody = `
                 <div style="display: flex; gap: 24px; flex-wrap: wrap; width:100%; height:100%; min-height: 400px; box-sizing: border-box;">
                     <!-- Left: Pitch -->
-                    <div style="flex: 1.2; min-width: 280px; background: radial-gradient(circle, rgba(16,185,129,0.08) 0%, rgba(13,148,136,0.03) 100%); border: 1.5px dashed rgba(255,255,255,0.1); border-radius: 12px; padding: 16px; display:flex; flex-direction:column; justify-content:space-between; box-sizing: border-box;">
-                        <div style="border-bottom: 1.5px dashed rgba(255,255,255,0.08); padding-bottom:4px; text-align:center; font-size:10px; color:var(--text-muted); font-weight:700; letter-spacing:1px; text-transform:uppercase;">Pitch Visualizer</div>
+                    <div style="flex: 1.2; min-width: 280px; background: radial-gradient(circle, rgba(16,185,129,0.08) 0%, rgba(13,148,136,0.03) 100%); border: 1.5px dashed var(--border-color); border-radius: 12px; padding: 16px; display:flex; flex-direction:column; justify-content:space-between; box-sizing: border-box;">
+                        <div style="border-bottom: 1.5px dashed var(--border-color); padding-bottom:4px; text-align:center; font-size:10px; color:var(--text-muted); font-weight:700; letter-spacing:1px; text-transform:uppercase;">Pitch Visualizer</div>
                         
                         <div style="display:flex; flex-direction:column; justify-content:space-around; flex:1; margin-top:10px;">
                             ${makePitchRowHtml(rowFWDs)}
@@ -423,32 +402,32 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
                     
                     <!-- Right: Rank Details -->
                     <div style="flex: 0.9; min-width: 220px; display:flex; flex-direction:column; gap:12px; justify-content:center; box-sizing: border-box;">
-                        <div style="background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius:12px; padding: 16px; display:flex; flex-direction:column; align-items:center;">
+                        <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius:12px; padding: 16px; display:flex; flex-direction:column; align-items:center;">
                             <span style="font-size:10px; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">MY SCORE</span>
-                            <span style="font-size:42px; font-weight:900; font-family:var(--font-heading); color:#00ff88; line-height:1.1; margin-top:4px;">${totalStarterPoints}</span>
+                            <span style="font-size:42px; font-weight:900; font-family:var(--font-heading); color:var(--primary); line-height:1.1; margin-top:4px;">${totalStarterPoints}</span>
                             <span style="font-size:11px; font-weight:700; color:var(--text-main); margin-top:2px;">Points in GW${gw}</span>
                         </div>
                         
                         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                            <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius:10px; padding: 10px 8px; display:flex; flex-direction:column; align-items:center;">
+                            <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius:10px; padding: 10px 8px; display:flex; flex-direction:column; align-items:center;">
                                 <span style="font-size:8px; font-weight:800; color:var(--text-muted); text-transform:uppercase;">GW RANK</span>
                                 <span style="font-size:13px; font-weight:800; color:var(--text-main); margin-top:3px;">${gwRank.toLocaleString()}</span>
                             </div>
-                            <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius:10px; padding: 10px 8px; display:flex; flex-direction:column; align-items:center;">
+                            <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius:10px; padding: 10px 8px; display:flex; flex-direction:column; align-items:center;">
                                 <span style="font-size:8px; font-weight:800; color:var(--text-muted); text-transform:uppercase;">LIVE RANK</span>
                                 <span style="font-size:13px; font-weight:800; color:var(--text-main); margin-top:3px;">${liveRank.toLocaleString()}</span>
                             </div>
-                            <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius:10px; padding: 10px 8px; display:flex; flex-direction:column; align-items:center;">
+                            <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius:10px; padding: 10px 8px; display:flex; flex-direction:column; align-items:center;">
                                 <span style="font-size:8px; font-weight:800; color:var(--text-muted); text-transform:uppercase;">SAFETY RATING</span>
                                 <span style="font-size:13px; font-weight:800; color:#38bdf8; margin-top:3px;">${safetyScore}%</span>
                             </div>
-                            <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius:10px; padding: 10px 8px; display:flex; flex-direction:column; align-items:center;">
+                            <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius:10px; padding: 10px 8px; display:flex; flex-direction:column; align-items:center;">
                                 <span style="font-size:8px; font-weight:800; color:var(--text-muted); text-transform:uppercase;">AVERAGE DELTA</span>
-                                <span style="font-size:13px; font-weight:800; color:${delta >= 0 ? '#00ff88' : '#ef4444'}; margin-top:3px;">${delta >= 0 ? '+' : ''}${delta} pts</span>
+                                <span style="font-size:13px; font-weight:800; color:${delta >= 0 ? 'var(--primary)' : '#ef4444'}; margin-top:3px;">${delta >= 0 ? '+' : ''}${delta} pts</span>
                             </div>
                         </div>
                         
-                        <div style="background: rgba(255,255,255,0.015); border: 1px solid var(--border-color); border-radius:10px; padding: 10px 14px; display:flex; justify-content:space-between; align-items:center; font-size:11px;">
+                        <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius:10px; padding: 10px 14px; display:flex; justify-content:space-between; align-items:center; font-size:11px;">
                             <span style="font-weight:700; color:var(--text-muted);">CAPTAIN CHOICE:</span>
                             <span style="font-weight:800; color:#fbbf24;">${captLabel}</span>
                         </div>
@@ -464,7 +443,7 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
                     ${allSquadDetails.map(item => {
                         const alertIcon = item.hasFlag ? `<span title="Injury or starting risk detected!" style="color:#f59e0b; margin-right:4px; font-size:12px;">⚠️</span>` : '';
                         return `
-                            <div style="background: rgba(255,255,255,0.015); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display:flex; flex-direction:column; justify-content:space-between; min-height: 84px; box-sizing: border-box;">
+                            <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display:flex; flex-direction:column; justify-content:space-between; min-height: 84px; box-sizing: border-box;">
                                 <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                                     <div style="display:flex; flex-direction:column; overflow:hidden; margin-right:6px;">
                                         <span style="font-size:11.5px; font-weight:800; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${item.player.name}">${item.player.web_name}</span>
@@ -492,7 +471,7 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; width:100%; box-sizing: border-box; overflow-y:auto; max-height:480px;">
                     ${pointsVsPerformanceList.map(item => {
                         return `
-                            <div style="background: rgba(255,255,255,0.015); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; display:flex; flex-direction:column; justify-content:space-between; gap:10px; box-sizing: border-box;">
+                            <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; display:flex; flex-direction:column; justify-content:space-between; gap:10px; box-sizing: border-box;">
                                 <div>
                                     <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:4px;">
                                         <div>
@@ -503,7 +482,7 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
                                     </div>
                                     <span class="${item.tagClass}" style="font-size:8.5px; font-weight:800; padding:2px 6px; border-radius:4px; display:inline-block; margin-bottom:8px;">${item.tag}</span>
                                     
-                                    <div style="background:rgba(0,0,0,0.15); border-radius:6px; padding:6px 10px; font-size:10.5px; font-family:var(--font-mono); color:var(--text-main); margin-bottom:8px;">
+                                    <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:6px; padding:6px 10px; font-size:10.5px; font-family:var(--font-mono); color:var(--text-main); margin-bottom:8px;">
                                         ${item.stats}
                                     </div>
                                 </div>
@@ -521,8 +500,7 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
 
             slideBody = `
                 <div style="display:flex; flex-direction:column; gap:14px; width:100%; box-sizing: border-box;">
-                    <!-- Captaincy decision -->
-                    <div style="background: rgba(255,255,255,0.015); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px;">
+                    <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px;">
                         <span style="font-size:9px; font-weight:800; color:#fbbf24; background:rgba(253,191,36,0.1); padding:2px 6px; border-radius:4px; display:inline-block; margin-bottom:6px;">CAPTAINCY CHECK</span>
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
                             <strong style="font-size:13.5px; color:var(--text-main); font-family:var(--font-heading);">${captPlayer ? captPlayer.web_name : 'No Captain Selected'}</strong>
@@ -533,14 +511,12 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
                         </p>
                     </div>
 
-                    <!-- Bench decision -->
-                    <div style="background: rgba(255,255,255,0.015); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; display:flex; flex-direction:column; gap:8px;">
+                    <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; display:flex; flex-direction:column; gap:8px;">
                         <span style="font-size:9px; font-weight:800; color:#38bdf8; background:rgba(56,189,248,0.1); padding:2px 6px; border-radius:4px; display:inline-block; align-self:flex-start;">BENCH DECISION</span>
                         ${benchVerdictHtml}
                     </div>
 
-                    <!-- Process check -->
-                    <div style="background: rgba(255,255,255,0.015); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px;">
+                    <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px;">
                         <span style="font-size:9px; font-weight:800; color:var(--text-muted); background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:4px; display:inline-block; margin-bottom:8px;">BENCH PROCESS CHECK</span>
                         <div style="font-size:11px; color:var(--text-muted); line-height:1.45;">
                             Bench list: <strong>${benchObjects.map(p => `${p.web_name} (${getPlayerGwPoints(p)} pts)`).join(' • ') || 'Empty'}</strong>.
@@ -580,7 +556,7 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
             let setPieceTakersHtml = '';
             if (designatedSetPieceTakers.length > 0) {
                 setPieceTakersHtml = `
-                    <div style="background: rgba(255,255,255,0.015); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; box-sizing: border-box; display:flex; flex-direction:column; gap:6px;">
+                    <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; box-sizing: border-box; display:flex; flex-direction:column; gap:6px;">
                         <h4 style="margin:0; font-size:11.5px; font-weight:800; color:var(--text-main); text-transform:uppercase; letter-spacing:0.5px;">Designated Takers In Squad</h4>
                         <div style="display:flex; flex-direction:column; gap:5px;">
                             ${designatedSetPieceTakers.map(item => `
@@ -609,7 +585,7 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
                         <h4 style="margin:0; font-size:12px; font-weight:800; color:#22c55e; text-transform:uppercase; letter-spacing:0.5px;">Tactical Discoveries</h4>
                         ${setPieceTakersHtml}
                         
-                        <div style="background: rgba(255,255,255,0.015); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; font-size:11px; color:var(--text-muted); line-height:1.45;">
+                        <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; font-size:11px; color:var(--text-muted); line-height:1.45;">
                             <strong style="color:var(--text-main); display:block; margin-bottom:4px; font-size:11.5px;">⚡ DEFC CON/xGI SIGNAL</strong>
                             Evaluated defense statistics using 2026-27 indicators. Starting defenders register clean sheet opportunities backed by team FDR ratings. Target transfers based on fixtures.
                         </div>
@@ -623,7 +599,7 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
             slideBody = `
                 <div style="display:flex; flex-direction:column; gap:16px; width:100%; box-sizing: border-box;">
                     <!-- Takeaway 1 -->
-                    <div style="background: rgba(255,255,255,0.015); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; display:flex; gap:16px; align-items:center;">
+                    <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; display:flex; gap:16px; align-items:center;">
                         <div style="width:36px; height:36px; background:rgba(34, 197, 94, 0.1); border:1.5px solid #22c55e; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#22c55e; font-weight:900; font-family:var(--font-heading); flex-shrink:0;">
                             01
                         </div>
@@ -636,7 +612,7 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
                     </div>
 
                     <!-- Takeaway 2 -->
-                    <div style="background: rgba(255,255,255,0.015); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; display:flex; gap:16px; align-items:center;">
+                    <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; display:flex; gap:16px; align-items:center;">
                         <div style="width:36px; height:36px; background:rgba(245, 158, 11, 0.1); border:1.5px solid #f59e0b; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#f59e0b; font-weight:900; font-family:var(--font-heading); flex-shrink:0;">
                             02
                         </div>
@@ -649,7 +625,7 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
                     </div>
 
                     <!-- Takeaway 3 -->
-                    <div style="background: rgba(255,255,255,0.015); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; display:flex; gap:16px; align-items:center;">
+                    <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; display:flex; gap:16px; align-items:center;">
                         <div style="width:36px; height:36px; background:rgba(168, 85, 247, 0.1); border:1.5px solid #a855f7; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#a855f7; font-weight:900; font-family:var(--font-heading); flex-shrink:0;">
                             03
                         </div>
@@ -665,17 +641,17 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         }
 
         modalDiv.innerHTML = `
-            <div class="opt-settings-card" style="width: 100%; max-width: 680px; max-height: 90vh; display: flex; flex-direction: column; background: #0a0619; border: 1px solid rgba(0, 255, 136, 0.15); border-radius: 20px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); overflow: hidden; font-family: var(--font-body);">
+            <div class="opt-settings-card" style="width: 100%; max-width: 680px; max-height: 90vh; display: flex; flex-direction: column; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; box-shadow: var(--shadow-lg); overflow: hidden; font-family: var(--font-body);">
                 <!-- Slide Header -->
-                <div class="opt-card-header" style="border-bottom: 1px solid rgba(255,255,255,0.05); padding: 18px 22px; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.25);">
+                <div class="opt-card-header" style="border-bottom: 1px solid var(--border-color); padding: 18px 22px; display: flex; justify-content: space-between; align-items: center; background: var(--bg-panel);">
                     <div style="display:flex; align-items:center; gap:12px;">
-                        <div style="width:40px; height:40px; background:rgba(0, 255, 136, 0.08); border-radius:50%; display:flex; align-items:center; justify-content:center; border:1px solid rgba(0, 255, 136, 0.2);">
-                            <i data-lucide="brain" style="width:20px; height:20px; color:#00ff88;"></i>
+                        <div style="width:40px; height:40px; background:rgba(0, 255, 136, 0.08); border-radius:50%; display:flex; align-items:center; justify-content:center; border:1px solid var(--primary-glow);">
+                            <i data-lucide="brain" style="width:20px; height:20px; color:var(--primary);"></i>
                         </div>
                         <div>
                             <div style="display:flex; align-items:center; gap:8px;">
-                                <h3 style="margin:0; font-size:16px; font-weight:900; font-family:var(--font-heading); color:white; letter-spacing:0.5px; text-transform:uppercase;">FPL DPS</h3>
-                                <span style="font-size:10px; font-weight:800; background:rgba(0, 255, 136, 0.12); color:#00ff88; padding:2px 8px; border-radius:12px; border:1px solid rgba(0, 255, 136, 0.3);">Artetificial Intel</span>
+                                <h3 style="margin:0; font-size:16px; font-weight:900; font-family:var(--font-heading); color:var(--text-main); letter-spacing:0.5px; text-transform:uppercase;">FPL DPS</h3>
+                                <span style="font-size:10px; font-weight:800; background:rgba(0, 255, 136, 0.12); color:var(--primary); padding:2px 8px; border-radius:12px; border:1px solid var(--primary-glow);">Artetificial Intel</span>
                             </div>
                             <p style="margin:2px 0 0 0; font-size:10.5px; color:var(--text-muted); font-weight:500;">Dynamic 2026-27 Season Squad Analyzer Report</p>
                         </div>
@@ -683,7 +659,7 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
                     
                     <!-- Slide indicator -->
                     <div style="display:flex; align-items:center; gap:10px;">
-                        <span style="font-size:11px; font-weight:800; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:var(--text-main); padding:3px 10px; border-radius:20px;">
+                        <span style="font-size:11px; font-weight:800; background:var(--bg-panel); border:1px solid var(--border-color); color:var(--text-main); padding:3px 10px; border-radius:20px;">
                             ${activeSlideIndex + 1} of 6
                         </span>
                         <button id="closeTpSquadAnalysisModalBtn" style="background:transparent; border:none; color:var(--text-muted); cursor:pointer; font-size:24px; font-weight:300; line-height:1; padding:0; display:flex; align-items:center; justify-content:center; width:28px; height:28px; transition:color 0.2s;">&times;</button>
@@ -692,9 +668,9 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
 
                 <!-- Slide Body (Title & Content) -->
                 <div style="flex:1; overflow-y:auto; padding:22px; display:flex; flex-direction:column; gap:16px; box-sizing:border-box;">
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start; border-left: 3px solid #00ff88; padding-left:12px;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; border-left: 3px solid var(--primary); padding-left:12px;">
                         <div>
-                            <h2 style="margin:0; font-size:18px; font-weight:900; font-family:var(--font-heading); color:white; letter-spacing:0.5px;">${slideTitle}</h2>
+                            <h2 style="margin:0; font-size:18px; font-weight:900; font-family:var(--font-heading); color:var(--text-main); letter-spacing:0.5px;">${slideTitle}</h2>
                             <p style="margin:3px 0 0 0; font-size:11px; color:var(--text-muted); font-weight:600;">${slideSub}</p>
                         </div>
                         <span style="font-size:10px; font-weight:800; background:rgba(168, 85, 247, 0.15); border:1px solid rgba(168, 85, 247, 0.35); color:#c084fc; padding:2.5px 8px; border-radius:6px; font-family:var(--font-mono);">GW${gw} • ${activeSlideIndex + 1}/6</span>
@@ -706,29 +682,25 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
                 </div>
 
                 <!-- Slide Footer (Navigation) -->
-                <div style="padding:16px 22px; border-top:1px solid rgba(255,255,255,0.05); display:flex; justify-content:space-between; align-items:center; background: rgba(0,0,0,0.25);">
-                    <button class="action-main-btn" id="prevSlideBtn" style="margin:0; padding:6px 14px; font-size:11.5px; border-radius:6px; background:rgba(255,255,255,0.03); border:1px solid var(--border-color); color:var(--text-main); font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; transition:background 0.2s;" ${activeSlideIndex === 0 ? 'disabled style="opacity:0.3; cursor:not-allowed;"' : ''}>
+                <div style="padding:16px 22px; border-top:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; background: var(--bg-panel);">
+                    <button class="action-main-btn" id="prevSlideBtn" style="margin:0; padding:6px 14px; font-size:11.5px; border-radius:6px; background:var(--bg-card); border:1px solid var(--border-color); color:var(--text-main); font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; transition:background 0.2s;" ${activeSlideIndex === 0 ? 'disabled style="opacity:0.3; cursor:not-allowed;"' : ''}>
                         <i data-lucide="chevron-left" style="width:14px; height:14px;"></i> Prev
                     </button>
                     
                     <!-- Progress indicator dots -->
                     <div style="display:flex; gap:6px;">
                         ${[0, 1, 2, 3, 4, 5].map(idx => `
-                            <div style="width:6px; height:6px; border-radius:50%; background:${idx === activeSlideIndex ? '#00ff88' : 'rgba(255,255,255,0.15)'}; transition:background 0.2s;"></div>
+                            <div style="width:6px; height:6px; border-radius:50%; background:${idx === activeSlideIndex ? 'var(--primary)' : 'var(--border-color)'}; transition:background 0.2s;"></div>
                         `).join('')}
                     </div>
 
-                    <button class="action-main-btn" id="nextSlideBtn" style="margin:0; padding:6px 14px; font-size:11.5px; border-radius:6px; background:${activeSlideIndex === 5 ? 'var(--primary)' : 'rgba(0, 255, 136, 0.1)'}; border:1px solid ${activeSlideIndex === 5 ? 'var(--primary-glow)' : 'rgba(0, 255, 136, 0.3)'}; color:${activeSlideIndex === 5 ? 'black' : '#00ff88'}; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; transition:background 0.2s;">
-                        ${activeSlideIndex === 5 ? 'Done' : 'Next <i data-lucide="chevron-right" style="width:14px; height:14px; color:#00ff88;"></i>'}
+                    <button class="action-main-btn" id="nextSlideBtn" style="margin:0; padding:6px 14px; font-size:11.5px; border-radius:6px; background:${activeSlideIndex === 5 ? 'var(--primary)' : 'var(--primary-glow)'}; border:1px solid ${activeSlideIndex === 5 ? 'var(--primary)' : 'var(--primary-glow)'}; color:${activeSlideIndex === 5 ? 'var(--bg-panel)' : 'var(--primary)'}; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; transition:background 0.2s;">
+                        ${activeSlideIndex === 5 ? 'Done' : 'Next <i data-lucide="chevron-right" style="width:14px; height:14px; color:var(--primary);"></i>'}
                     </button>
                 </div>
             </div>
         `;
 
-        // Re-inject Lucide icons inside the modal
-        lucide.createIcons();
-
-        // Rebind click events
         modalDiv.querySelector('#closeTpSquadAnalysisModalBtn').addEventListener('click', () => modalDiv.remove());
         
         const prevBtn = modalDiv.querySelector('#prevSlideBtn');
@@ -750,6 +722,8 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
                 }
             });
         }
+        
+        lucide.createIcons();
     };
 
     renderCurrentSlide();

@@ -362,8 +362,8 @@ export function renderPlanner(container, state, actions) {
 
                     <!-- Lock / Unlock Button & Check Risks -->
 
-                    <button class="pitch-btn" id="plannerAnalyzeSquadBtn" title="Analyze Squad Performance & Risks" style="height: 32px; padding: 0 10px; display: flex; align-items: center; gap: 6px; border-radius: 6px; background: rgba(0, 255, 136, 0.08); border: 1px solid rgba(0, 255, 136, 0.25); color: #00ff88; cursor: pointer; font-size: 12px; font-weight: 600; margin-left: auto; flex-shrink: 0; white-space: nowrap;">
-                        <i data-lucide="sparkles" style="width: 14px; height: 14px; color: #00ff88;"></i>
+                    <button class="pitch-btn" id="plannerAnalyzeSquadBtn" title="Analyze Squad Performance & Risks" style="height: 32px; padding: 0 10px; display: flex; align-items: center; gap: 6px; border-radius: 6px; background: rgba(0, 255, 136, 0.08); border: 1px solid var(--primary-glow); color: var(--primary); cursor: pointer; font-size: 12px; font-weight: 600; margin-left: auto; flex-shrink: 0; white-space: nowrap;">
+                        <i data-lucide="sparkles" style="width: 14px; height: 14px; color: var(--primary);"></i>
                         <span>Analyze Squad</span>
                     </button>
 
