@@ -358,8 +358,6 @@ export function renderPlanner(container, state, actions) {
                     <button class="pitch-btn" id="importDraftsBtn" title="Import Drafts from File" style="height: 32px; width: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); cursor: pointer;"><i data-lucide="upload" style="width: 14px; height: 14px;"></i></button>
                     <button class="pitch-btn" id="copySquadClipboardBtn" title="Copy Current Squad to Clipboard" style="height: 32px; width: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); cursor: pointer;"><i data-lucide="clipboard" style="width: 14px; height: 14px;"></i></button>
                     <input type="file" id="importDraftsInput" accept=".json" style="display: none;" />
-                    
-                    ${renderSetPieceLegend()}
 
                     <!-- Lock / Unlock Button & Check Risks -->
 
