@@ -500,13 +500,9 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         originalRemove();
     };
 
-    // PDF Report Compilation & Print trigger
+    // PDF Report Compilation & Download via Blob URL (no popup needed)
     const triggerPdfDownload = () => {
-        const printWindow = window.open('', '_blank');
-        if (!printWindow) {
-            actions.showToast("Please allow popups to save the PDF report.", "warning");
-            return;
-        }
+        actions.showToast('⏳ Generating PDF report...', 'info');
 
         // Starters rows for Pitch render
         const rowGKPs = startersObjects.filter(p => p.position === 'GKP');
@@ -867,12 +863,19 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
                                 <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                                     <div>
                                         <strong style="font-size:12.5px; color:#0f172a;">${item.player.web_name}</strong>
-                                        <div style="font-size:9.5px; color:#64748b; margin-top:2px;">${item.team} • ${item.position} • £${item.price.toFixed(1)}m</div>
+                                        <div style="font-size:9.5px; color:#64748b; margin-top:2px;">${item.team} &bull; ${item.position} &bull; &pound;${item.price.toFixed(1)}m</div>
                                     </div>
-                                    <strong style="font-size:15px; color:#37003c;">${item.pts} pts</strong>
+                                    <div style="text-align:right;">
+                                        <strong style="font-size:15px; color:#37003c; display:block;">${item.gwPts} pts</strong>
+                                        <span style="font-size:9px; color:#64748b;">GW${gw}</span>
+                                    </div>
                                 </div>
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
-                                    <span class="pdf-tag ${item.verdict.class}">${item.verdict.label}</span>
+                                <div style="margin-top:8px; padding:6px 8px; background:#f1f5f9; border-radius:6px; display:flex; justify-content:space-between;">
+                                    <span style="font-size:9.5px; color:#475569; font-weight:700;">Season: <strong style="color:#0f172a;">${item.seasonPts} pts</strong></span>
+                                    <span style="font-size:9.5px; color:#64748b;">${item.matchCount} match${item.matchCount !== 1 ? 'es' : ''}</span>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
+                                    <span class="pdf-tag ${item.gwVerdict.class}">${item.gwVerdict.label}</span>
                                     <span style="font-size:10px; color:#64748b; font-weight:700;">${item.isStarting ? 'Starter' : 'Bench'}</span>
                                 </div>
                             </div>
@@ -1017,14 +1020,16 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
             </html>
         `;
 
-        printWindow.document.write(pdfHtml);
-        printWindow.document.close();
-        printWindow.focus();
-        
-        // Let FPL shirt images load fully before triggering print dialog
-        setTimeout(() => {
-            printWindow.print();
-        }, 1200);
+        const blob = new Blob([pdfHtml], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `AI_Squad_Report_GW${gw}.html`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 2000);
+        actions.showToast('✅ Report downloaded! Open the .html file and press Ctrl+P → Save as PDF.', 'success');
     };
 
     const renderCurrentSlide = () => {
