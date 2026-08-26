@@ -77,11 +77,22 @@ export function renderTopPerformers(container, state, actions) {
         `;
     });
 
+    // Custom value resolver to align with FPLDoctor metric formulas
+    const getVal = (p) => {
+        if (activeCat === 'xgi') {
+            return (p.xG90 || 0) + (p.xA90 || 0);
+        }
+        if (activeCat === 'defcon') {
+            return (p.dcPer90 || 0) * 2;
+        }
+        return p[statKey] || 0;
+    };
+
     let columnsHtml = '';
     columnsList.forEach(pos => {
         const topRankings = activePlayers
-            .filter(p => p.position === pos && p[statKey] !== undefined && p[statKey] !== null)
-            .sort((a, b) => (b[statKey] || 0) - (a[statKey] || 0))
+            .filter(p => p.position === pos && getVal(p) > 0)
+            .sort((a, b) => getVal(b) - getVal(a))
             .slice(0, 10);
 
         let rowsHtml = '';
@@ -109,7 +120,7 @@ export function renderTopPerformers(container, state, actions) {
                 rankColor = '#ffffff';
             }
 
-            const val = p[statKey] || 0;
+            const val = getVal(p);
             const valFormatted = val.toFixed(2);
 
             rowsHtml += `
