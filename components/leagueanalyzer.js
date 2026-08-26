@@ -413,19 +413,49 @@ export function renderLeagueAnalyzer(container, state, actions) {
                     transfersHtml = `${totalTransfers}`;
                 }
 
+                const adviceList = getTacticalAdvice(entry, history);
+
                 rowsHtml += `
-                    <tr style="
+                    <tr class="manager-main-row" style="
                         border-bottom: 1px solid var(--border-color);
                         transition: background-color 0.2s ease;
-                    ">
+                        cursor: pointer;
+                    " onmouseenter="this.style.backgroundColor='${isLight ? 'rgba(0,0,0,0.02)' : 'rgba(255,255,255,0.03)'}';" onmouseleave="this.style.backgroundColor='transparent';" onclick="const details = this.nextElementSibling; details.style.display = details.style.display === 'none' ? 'table-row' : 'none';">
                         <td style="padding: 12px; font-weight: 800; color: var(--text-main); font-family: monospace;">${entry.rank}</td>
-                        <td style="padding: 12px; font-weight: 700; color: var(--text-main);">${entry.entry_name}</td>
+                        <td style="padding: 12px; font-weight: 700; color: var(--text-main);">
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <span>${entry.entry_name}</span>
+                                <i data-lucide="chevron-down" style="width: 13px; height: 13px; color: var(--text-muted);"></i>
+                            </div>
+                        </td>
                         <td style="padding: 12px; color: var(--text-muted);">${entry.player_name}</td>
                         <td style="padding: 12px; font-weight: 700; color: var(--text-main); text-align: center;">${entry.event_total}</td>
                         <td style="padding: 12px; font-weight: 800; color: #8b5cf6; text-align: center;">${entry.total}</td>
                         <td style="padding: 12px; text-align: center; color: var(--text-muted); font-size: 12px;">${transfersHtml}</td>
                         <td style="padding: 12px; text-align: center; color: #ef4444; font-weight: 700; font-size: 12px;">${hitsHtml}</td>
                         <td style="padding: 12px; text-align: center; color: #3b82f6; font-weight: 700; font-size: 12px;">${benchHtml}</td>
+                    </tr>
+                    <tr class="manager-details-row" style="display: none; background: ${isLight ? 'rgba(0,0,0,0.01)' : 'rgba(255,255,255,0.015)'}; border-bottom: 1px solid var(--border-color);">
+                        <td colspan="8" style="padding: 16px;">
+                            <div style="display: flex; flex-direction: column; gap: 16px;">
+                                <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+                                    <!-- Left Side: Chips Status -->
+                                    <div style="flex: 1; min-width: 250px; display: flex; flex-direction: column; gap: 8px;">
+                                        <h4 style="margin: 0; font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Active Chip Status</h4>
+                                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                            ${renderChipStatus(history)}
+                                        </div>
+                                    </div>
+                                    <!-- Right Side: AI Tactical Recommendations -->
+                                    <div style="flex: 1.8; min-width: 300px; display: flex; flex-direction: column; gap: 8px;">
+                                        <h4 style="margin: 0; font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Squad Performance Insights</h4>
+                                        <ul style="margin: 0; padding-left: 16px; font-size: 12.5px; color: var(--text-main); line-height: 1.6; display: flex; flex-direction: column; gap: 6px;">
+                                            ${adviceList.map(a => `<li>${a.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</li>`).join('')}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
                     </tr>
                 `;
             });
@@ -798,4 +828,105 @@ export function renderLeagueAnalyzer(container, state, actions) {
 
     // Initial render
     render();
+}
+
+function getTacticalAdvice(entry, history) {
+    const advice = [];
+    if (!history) {
+        return ["🔍 Loading manager history data to run recommendation engines... Click this row again in a few seconds."];
+    }
+
+    const weeks = history.current || [];
+    if (weeks.length === 0) {
+        return ["No gameweeks registered yet for this season."];
+    }
+
+    const latestGw = weeks[weeks.length - 1];
+    
+    // 1. Chip analysis
+    const playedChips = (history.chips || []).map(c => c.name);
+    const chipLabels = {
+        wildcard: 'Wildcard',
+        freehit: 'Free Hit',
+        bboost: 'Bench Boost',
+        '3xc': 'Triple Captain'
+    };
+    
+    const remaining = ['wildcard', 'freehit', 'bboost', '3xc'].filter(c => !playedChips.includes(c));
+    if (remaining.length > 0) {
+        advice.push(`💡 **Chips Ready**: You still have ${remaining.map(c => chipLabels[c] || c).join(', ')} available. Plan their activation around double or blank gameweeks.`);
+    }
+
+    // 2. Transfer Hit warning
+    const totalHits = weeks.reduce((sum, w) => sum + (w.event_transfers_cost || 0), 0);
+    const avgHits = totalHits / weeks.length;
+    if (avgHits > 2) {
+        advice.push(`⚠️ **Hit Heavy**: Averaging ${avgHits.toFixed(1)} points lost to transfer hits per week. Consider banking transfers to save points.`);
+    }
+
+    // 3. Bench points warning
+    const totalBench = weeks.reduce((sum, w) => sum + (w.points_on_bench || 0), 0);
+    const lastBench = latestGw.points_on_bench || 0;
+    if (lastBench >= 10) {
+        advice.push(`🛋️ **Bench Headaches**: Left ${lastBench} points on the bench last week. Review your starting 11 order or fixture difficulty next time.`);
+    } else if (totalBench / weeks.length > 6) {
+        advice.push(`🛋️ **Deep Bench**: Leaving an average of ${(totalBench / weeks.length).toFixed(1)} points benched weekly. You might have too much money tied up in bench players.`);
+    }
+
+    // 4. Team Value warning
+    const teamValue = (latestGw.value || 1000) / 10;
+    if (teamValue < 100.5 && weeks.length > 5) {
+        advice.push(`📈 **Budget Watch**: Team value is low at £${teamValue.toFixed(1)}m. Target players on the rise to build purchasing power for premium assets.`);
+    } else if (teamValue >= 103.0) {
+        advice.push(`💎 **Elite Buying Power**: Excellent team value at £${teamValue.toFixed(1)}m. Use this financial edge to easily afford premium doubleups (e.g. Haaland & Salah).`);
+    }
+
+    // 5. Recent Form assessment
+    if (weeks.length >= 3) {
+        const last3 = weeks.slice(-3);
+        const avg3 = last3.reduce((sum, w) => sum + w.points, 0) / 3;
+        if (avg3 > 65) {
+            advice.push(`🔥 **Hot Form**: Averaging ${avg3.toFixed(1)} points over the last 3 weeks. Keep riding this squad's momentum.`);
+        } else if (avg3 < 45) {
+            advice.push(`📉 **Cold Spell**: Averaging only ${avg3.toFixed(1)} points recently. Consider a mini-wildcard or target fixture swings to kickstart your recovery.`);
+        }
+    }
+
+    if (advice.length === 0) {
+        advice.push(`🎯 **Steady Ship**: Roster is well-balanced with efficient benching and transfer choices. Continue monitoring weekly player form.`);
+    }
+
+    return advice;
+}
+
+function renderChipStatus(history) {
+    if (!history) return '<span style="font-size: 12px; color: var(--text-muted);">Data loading...</span>';
+    const played = (history.chips || []).map(c => c.name);
+    const chipsList = [
+        { key: 'wildcard', label: 'Wildcard' },
+        { key: 'freehit', label: 'Free Hit' },
+        { key: 'bboost', label: 'Bench Boost' },
+        { key: '3xc', label: 'Triple Captain' }
+    ];
+
+    return chipsList.map(c => {
+        const isPlayed = played.includes(c.key);
+        return `
+            <span style="
+                padding: 4px 10px;
+                border-radius: 20px;
+                font-size: 11px;
+                font-weight: 700;
+                border: 1px solid ${isPlayed ? 'rgba(239, 68, 68, 0.2)' : 'rgba(16, 185, 129, 0.2)'};
+                background: ${isPlayed ? 'rgba(239, 68, 68, 0.06)' : 'rgba(16, 185, 129, 0.06)'};
+                color: ${isPlayed ? '#ef4444' : '#10b981'};
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+            ">
+                <span style="width: 6px; height: 6px; border-radius: 50%; background-color: ${isPlayed ? '#ef4444' : '#10b981'};"></span>
+                ${c.label} ${isPlayed ? 'Used' : 'Avail.'}
+            </span>
+        `;
+    }).join('');
 }
