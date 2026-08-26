@@ -3831,7 +3831,7 @@ ${E.map(W=>{const it=W.chanceOfPlaying!==void 0?W.chanceOfPlaying:100;return`- $
                 <i data-lucide="${D.icon}" style="width: 14px; height: 14px; ${j?`color: ${D.color}`:""}"></i>
                 <span>${D.title.split(" ")[0]}</span>
             </button>
-        `});const o=D=>s==="xgi"?(D.xG90||0)+(D.xA90||0):s==="defcon"?D.dcPer90||0:D[i]||0;let c="";P.forEach(D=>{const j=w.filter(St=>St.position===D&&o(St)>0).sort((St,Nt)=>o(Nt)-o(St)).slice(0,10);let Et="";j.forEach((St,Nt)=>{const bt=Kt.find(Ut=>Ut.shortName===St.team),U=`https://fantasy.premierleague.com/dist/img/badges/badge_${bt?bt.code:3}_80.png`,u=Nt+1;let v=a?"#f1f5f9":"rgba(255, 255, 255, 0.05)",O="var(--text-muted)";u===1?(v="linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",O="#ffffff"):u===2?(v=a?"linear-gradient(135deg, #94a3b8 0%, #475569 100%)":"linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%)",O="#ffffff"):u===3&&(v=a?"linear-gradient(135deg, #d97706 0%, #92400e 100%)":"linear-gradient(135deg, #b45309 0%, #78350f 100%)",O="#ffffff");const _=o(St).toFixed(2);Et+=`
+        `});const o=D=>s==="xgi"?(D.xG90||0)+(D.xA90||0):s==="defcon"?D.dcPer90||0:D[i]||0;let c="";P.forEach(D=>{const j=w.filter(St=>St.position===D&&o(St)>0).sort((St,Nt)=>o(Nt)-o(St)).slice(0,10);let Et="";j.forEach((St,Nt)=>{const bt=Kt.find(Ut=>Ut.shortName===St.team),U=`https://resources.premierleague.com/premierleague/badges/t${bt?bt.code:3}.png`,u=Nt+1;let v=a?"#f1f5f9":"rgba(255, 255, 255, 0.05)",O="var(--text-muted)";u===1?(v="linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",O="#ffffff"):u===2?(v=a?"linear-gradient(135deg, #94a3b8 0%, #475569 100%)":"linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%)",O="#ffffff"):u===3&&(v=a?"linear-gradient(135deg, #d97706 0%, #92400e 100%)":"linear-gradient(135deg, #b45309 0%, #78350f 100%)",O="#ffffff");const _=o(St).toFixed(2);Et+=`
                 <div class="top-perf-row" style="
                     display: flex;
                     align-items: center;
@@ -3855,7 +3855,7 @@ ${E.map(W=>{const it=W.chanceOfPlaying!==void 0?W.chanceOfPlaying:100;return`- $
                             color: ${O};
                         ">${u}</span>
                         <div style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-                            <img src="${U}" style="width: 26px; height: 26px; object-fit: contain;" onerror="this.onerror=null; this.src='https://fantasy.premierleague.com/dist/img/badges/badge_3_80.png';">
+                            <img src="${U}" style="width: 26px; height: 26px; object-fit: contain;" onerror="this.onerror=null; this.src='https://resources.premierleague.com/premierleague/badges/t3.png';">
                         </div>
                         <div style="display: flex; flex-direction: column;">
                             <span style="font-weight: 700; color: var(--text-main);">${St.web_name}</span>

@@ -99,7 +99,7 @@ export function renderTopPerformers(container, state, actions) {
         topRankings.forEach((p, idx) => {
             const teamInfo = TEAMS.find(t => t.shortName === p.team);
             const teamCode = teamInfo ? teamInfo.code : 3;
-            const logoUrl = `https://fantasy.premierleague.com/dist/img/badges/badge_${teamCode}_80.png`;
+            const logoUrl = `https://resources.premierleague.com/premierleague/badges/t${teamCode}.png`;
 
             const rank = idx + 1;
             let rankBg = isLight ? '#f1f5f9' : 'rgba(255, 255, 255, 0.05)';
@@ -146,7 +146,7 @@ export function renderTopPerformers(container, state, actions) {
                             color: ${rankColor};
                         ">${rank}</span>
                         <div style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-                            <img src="${logoUrl}" style="width: 26px; height: 26px; object-fit: contain;" onerror="this.onerror=null; this.src='https://fantasy.premierleague.com/dist/img/badges/badge_3_80.png';">
+                            <img src="${logoUrl}" style="width: 26px; height: 26px; object-fit: contain;" onerror="this.onerror=null; this.src='https://resources.premierleague.com/premierleague/badges/t3.png';">
                         </div>
                         <div style="display: flex; flex-direction: column;">
                             <span style="font-weight: 700; color: var(--text-main);">${p.web_name}</span>
