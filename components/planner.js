@@ -1,5 +1,6 @@
 import { PLAYERS, TEAMS, getPlayerRatings } from '../data.js';
 import { renderSetPieceBadges, renderSetPieceLegend, getPlayerSetPieceDuty } from './optimizer.js';
+import { showPlannerSquadAnalysisModal } from './squadanalyzer.js';
 
 
 
@@ -361,9 +362,9 @@ export function renderPlanner(container, state, actions) {
 
                     <!-- Lock / Unlock Button & Check Risks -->
 
-                    <button class="pitch-btn" id="plannerCheckSquadRisksBtn" title="Check Squad Starter Risks" style="height: 32px; padding: 0 10px; display: flex; align-items: center; gap: 6px; border-radius: 6px; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.35); color: #f59e0b; cursor: pointer; font-size: 12px; font-weight: 600; margin-left: auto; flex-shrink: 0; white-space: nowrap;">
-                        <i data-lucide="shield-alert" style="width: 14px; height: 14px;"></i>
-                        <span>Check Risks</span>
+                    <button class="pitch-btn" id="plannerAnalyzeSquadBtn" title="Analyze Squad Performance & Risks" style="height: 32px; padding: 0 10px; display: flex; align-items: center; gap: 6px; border-radius: 6px; background: rgba(0, 255, 136, 0.08); border: 1px solid rgba(0, 255, 136, 0.25); color: #00ff88; cursor: pointer; font-size: 12px; font-weight: 600; margin-left: auto; flex-shrink: 0; white-space: nowrap;">
+                        <i data-lucide="sparkles" style="width: 14px; height: 14px; color: #00ff88;"></i>
+                        <span>Analyze Squad</span>
                     </button>
 
                     <button class="pitch-btn" id="toggleLockBtn" title="${state.isSquadUnlocked ? 'Lock Squad' : 'Unlock Squad to Remove Players'}" style="height: 32px; padding: 0 10px; display: flex; align-items: center; gap: 6px; border-radius: 6px; background: ${state.isSquadUnlocked ? 'rgba(239, 68, 68, 0.15)' : 'rgba(255, 255, 255, 0.02)'}; border: 1px solid ${state.isSquadUnlocked ? 'rgba(239, 68, 68, 0.4)' : 'var(--border-color)'}; color: ${state.isSquadUnlocked ? '#ef4444' : 'var(--text-main)'}; cursor: pointer; font-size: 12px; font-weight: 600; margin-left: 8px; flex-shrink: 0;">
@@ -1463,225 +1464,7 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
         });
     }
 
-    const showPlannerRiskReportModal = (squadPlayers) => {
-        const existing = document.getElementById('tpRiskModal');
-        if (existing) existing.remove();
 
-        const riskyPlayers = squadPlayers.filter(p => (state.squadRisks && state.squadRisks[p.name]) || (state.squadDataConfidence && state.squadDataConfidence[p.name]));
-
-        // Calculate dynamic starting XI vs bench rotation advice
-        const currentSlotsCopy = JSON.parse(JSON.stringify(state.squadSlots));
-        
-        const squadPlayersForOpt = currentSlotsCopy
-            .map(slot => {
-                if (slot.playerId === null) return null;
-                const p = PLAYERS.find(pl => pl.id === slot.playerId);
-                if (!p) return null;
-                const pred = p.predictions.find(pr => pr.gw == state.currentGw) || { pts: 0 };
-                const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(p) : 1.0;
-                const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
-                const pts = raw * factor;
-                return { slot, player: p, pts };
-            })
-            .filter(Boolean);
-
-        const gkps = squadPlayersForOpt.filter(p => p.player.position === 'GKP').sort((a, b) => b.pts - a.pts);
-        const defs = squadPlayersForOpt.filter(p => p.player.position === 'DEF').sort((a, b) => b.pts - a.pts);
-        const mids = squadPlayersForOpt.filter(p => p.player.position === 'MID').sort((a, b) => b.pts - a.pts);
-        const fwds = squadPlayersForOpt.filter(p => p.player.position === 'FWD').sort((a, b) => b.pts - a.pts);
-
-        const validFormations = [
-            [3, 4, 3], [3, 5, 2], [4, 4, 2], [4, 5, 1], [4, 3, 3], [5, 3, 2], [5, 4, 1], [5, 2, 3]
-        ];
-
-        let bestScore = -1;
-        let bestStarters = [];
-        let bestFormStr = '4-4-2';
-
-        for (const [reqDef, reqMid, reqFwd] of validFormations) {
-            const chosenGkp = gkps.slice(0, 1);
-            const chosenDef = defs.slice(0, reqDef);
-            const chosenMid = mids.slice(0, reqMid);
-            const chosenFwd = fwds.slice(0, reqFwd);
-
-            const currentStarters = [...chosenGkp, ...chosenDef, ...chosenMid, ...chosenFwd];
-            if (currentStarters.length !== 11) continue;
-
-            let score = currentStarters.reduce((sum, p) => sum + p.pts, 0);
-            const maxPts = Math.max(...currentStarters.map(p => p.pts), 0);
-            score += maxPts;
-
-            if (score > bestScore) {
-                bestScore = score;
-                bestStarters = currentStarters.map(p => p.player.id);
-                bestFormStr = `${reqDef}-${reqMid}-${reqFwd}`;
-            }
-        }
-
-        const currentStartersIds = state.squadSlots.filter(s => s.isStarting && s.playerId !== null).map(s => s.playerId);
-        const currentBenchIds = state.squadSlots.filter(s => !s.isStarting && s.playerId !== null).map(s => s.playerId);
-
-        const shouldStart = currentBenchIds.filter(id => bestStarters.includes(id)).map(id => PLAYERS.find(p => p.id === id)).filter(Boolean);
-        const shouldBench = currentStartersIds.filter(id => !bestStarters.includes(id)).map(id => PLAYERS.find(p => p.id === id)).filter(Boolean);
-
-        let rotationAdviceHtml = '';
-        if (shouldStart.length > 0 && shouldBench.length > 0) {
-            rotationAdviceHtml += `
-                <div style="background: rgba(0, 255, 136, 0.04); border: 1px solid rgba(0, 255, 136, 0.2); border-radius: 12px; padding: 14px; margin-bottom: 16px; font-size: 11.5px; display: flex; flex-direction: column; gap: 10px;">
-                    <h4 style="margin: 0; font-family: var(--font-heading); color: var(--primary); font-size: 13px; font-weight: 800; display: flex; align-items: center; gap: 6px;">
-                        <i data-lucide="sparkles" style="width: 14px; height: 14px; color: var(--primary);"></i>
-                        AI Lineup Optimization Tips (GW${state.currentGw})
-                    </h4>
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
-            `;
-
-            for (let idx = 0; idx < Math.min(shouldStart.length, shouldBench.length); idx++) {
-                const sPlayer = shouldStart[idx];
-                const bPlayer = shouldBench[idx];
-                
-                const sPred = sPlayer.predictions.find(pr => pr.gw == state.currentGw) || { pts: 0 };
-                const sFactor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(sPlayer) : 1.0;
-                const sXP = (sPred._rawPts !== undefined ? sPred._rawPts : sPred.pts) * sFactor;
-
-                const bPred = bPlayer.predictions.find(pr => pr.gw == state.currentGw) || { pts: 0 };
-                const bFactor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(bPlayer) : 1.0;
-                const bXP = (bPred._rawPts !== undefined ? bPred._rawPts : bPred.pts) * bFactor;
-
-                const diff = sXP - bXP;
-                const diffText = diff > 0 ? `+${diff.toFixed(1)} XP` : '0.0 XP';
-
-                const bRisk = state.squadRisks && state.squadRisks[bPlayer.name];
-                const riskLabel = bRisk ? ` (${bRisk.risk} starting risk)` : '';
-
-                rotationAdviceHtml += `
-                    <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.015); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; gap: 10px; flex-wrap: wrap;">
-                        <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-                            <span style="color: var(--primary); font-weight: 600;">Start</span>
-                            <span style="color: var(--text-main); font-weight: 700;">${sPlayer.name}</span>
-                            <span style="color: var(--text-muted); font-size: 10.5px;">(${sXP.toFixed(1)} XP)</span>
-                            <span style="color: var(--text-muted);">⇆ Bench</span>
-                            <span style="color: var(--text-muted); font-weight: 700;">${bPlayer.name}</span>
-                            <span style="color: var(--text-muted); font-size: 10.5px;">(${bXP.toFixed(1)} XP)${riskLabel}</span>
-                        </div>
-                        <span style="color: var(--primary); font-weight: 800; font-family: var(--font-heading); font-size: 12px;">${diffText}</span>
-                    </div>
-                `;
-            }
-
-            rotationAdviceHtml += `
-                    </div>
-                    <div style="text-align: right; margin-top: 4px;">
-                        <button class="action-main-btn" id="applyAutoRotateBtn" style="margin: 0; padding: 6px 14px; font-size: 11px; background: var(--primary); border: none; color: black; font-weight: 700; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
-                            <i data-lucide="rotate-cw" style="width: 12px; height: 12px; color: black;"></i>
-                            Apply Rotations
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-
-        const modalDiv = document.createElement('div');
-        modalDiv.id = 'tpRiskModal';
-        modalDiv.style.cssText = `
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(8px);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            box-sizing: border-box;
-        `;
-
-        const cardHtml = riskyPlayers.length === 0 ? `
-            <div style="text-align:center; padding:30px; color:var(--text-muted);">
-                <i data-lucide="check-circle" style="width:48px; height:48px; color:var(--primary); margin-bottom:12px;"></i>
-                <h4 style="margin:0; font-size:14px; font-weight:800; color:var(--text-main);">No Starter Risks Detected!</h4>
-                <p style="font-size:11px; margin:6px 0 0 0;">All 15 players in your squad are currently expected to start or are fully fit.</p>
-            </div>
-        ` : riskyPlayers.map(p => {
-            const r = state.squadRisks[p.name];
-            const confidence = state.squadDataConfidence && state.squadDataConfidence[p.name];
-            const borderCol = r ? (r.risk === 'High' ? '#ef4444' : (r.risk === 'Medium' ? '#f59e0b' : '#38bdf8')) : '#94a3b8';
-            const bgCol = r ? (r.risk === 'High' ? 'rgba(239, 68, 68, 0.05)' : (r.risk === 'Medium' ? 'rgba(245, 158, 11, 0.05)' : 'rgba(56, 189, 248, 0.05)')) : 'rgba(148, 163, 184, 0.05)';
-            return `
-                <div style="background:${bgCol}; border-left:4px solid ${borderCol}; border-radius:6px; padding:12px; display:flex; flex-direction:column; gap:4px; font-size:11.5px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <strong style="font-size:13px; color:var(--text-main); font-family:var(--font-heading);">${p.name} <span style="font-size:10px; font-weight:700; color:var(--text-muted); padding:2px 6px; background:rgba(0,0,0,0.15); border-radius:4px;">${p.team} - ${p.position}</span></strong>
-                        <span style="display:flex; align-items:center; gap:6px;">
-                            ${confidence ? `<span title="${confidence.reason}" style="font-size:10px; font-weight:800; text-transform:uppercase; color:#94a3b8; background:rgba(148,163,184,0.12); padding:2px 8px; border-radius:12px; border:1px solid rgba(148,163,184,0.33);">${confidence.label}</span>` : ''}
-                            ${r ? `<span style="font-size:10px; font-weight:800; text-transform:uppercase; color:${borderCol}; background:${borderCol}1a; padding:2px 8px; border-radius:12px; border:1px solid ${borderCol}33;">${r.risk} Risk</span>` : ''}
-                        </span>
-                    </div>
-                    ${r ? `<p style="margin:4px 0 0 0; color:var(--text-main); font-weight:600;">⚠️ ${r.reason}</p>` : ''}
-                    ${r && r.details ? `<p style="margin:2px 0 0 0; color:var(--text-muted); font-size:10.5px; font-style:italic;">ℹ️ ${r.details}</p>` : ''}
-                </div>
-            `;
-        }).join('<hr style="border:0; border-top:1px solid var(--border-color); margin:12px 0;">');
-
-        modalDiv.innerHTML = `
-            <div class="opt-settings-card" style="width: 100%; max-width: 580px; max-height: 80vh; display: flex; flex-direction: column; background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 16px; box-shadow: var(--shadow-lg); overflow: hidden;">
-                <div class="opt-card-header" style="border-bottom: 1px solid var(--border-color); padding: 16px; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.1);">
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <div style="width:36px; height:36px; background:rgba(245,158,11,0.15); border-radius:50%; display:flex; align-items:center; justify-content:center; border:1px solid rgba(245,158,11,0.3);">
-                            <i data-lucide="shield-alert" style="width:18px; height:18px; color:#f59e0b;"></i>
-                        </div>
-                        <div>
-                            <h3 style="margin:0; font-size:15px; font-weight:800; font-family:var(--font-heading); color:var(--text-main);">AI Squad Starting Risk Analysis</h3>
-                            <p style="margin:2px 0 0 0; font-size:10.5px; color:var(--text-muted);">Real-time monitoring of manager tactics, press conferences, and injury news.</p>
-                        </div>
-                    </div>
-                    <button id="closeTpRiskModalBtn" style="background:transparent; border:none; color:var(--text-muted); cursor:pointer; font-size:20px; font-weight:300;">&times;</button>
-                </div>
-
-                <div style="flex:1; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:12px; box-sizing:border-box;">
-                    ${rotationAdviceHtml}
-                    ${cardHtml}
-                </div>
-
-                <div style="padding:16px; border-top:1px solid var(--border-color); display:flex; justify-content:flex-end; background:rgba(0,0,0,0.1);">
-                    <button class="action-main-btn" id="closeTpRiskModalOkBtn" style="margin:0; padding:8px 24px; font-size:12px;">Close Report</button>
-                </div>
-            </div>
-        `;
-
-        document.body.appendChild(modalDiv);
-        lucide.createIcons();
-
-        const close = () => {
-            modalDiv.remove();
-        };
-
-        modalDiv.querySelector('#closeTpRiskModalBtn').addEventListener('click', close);
-        modalDiv.querySelector('#closeTpRiskModalOkBtn').addEventListener('click', close);
-
-        const applyBtn = modalDiv.querySelector('#applyAutoRotateBtn');
-        if (applyBtn) {
-            applyBtn.addEventListener('click', () => {
-                // Apply optimal starting lineup directly to state.squadSlots
-                bestStarters.forEach(id => {
-                    const slot = state.squadSlots.find(s => s.playerId === id);
-                    if (slot) slot.isStarting = true;
-                });
-                const allPlayerIds = [...currentStartersIds, ...currentBenchIds];
-                const benchIds = allPlayerIds.filter(id => !bestStarters.includes(id));
-                benchIds.forEach(id => {
-                    const slot = state.squadSlots.find(s => s.playerId === id);
-                    if (slot) slot.isStarting = false;
-                });
-
-                state.formation = bestFormStr;
-
-                state.optimizeCaptaincy();
-                state.saveState();
-                modalDiv.remove();
-                actions.renderActiveView();
-                actions.showToast('Squad auto-rotated to maximize points!', 'success');
-            });
-        }
-    };
 
     const computeLocalRiskEntry = (p) => {
         // Backup goalkeeper risk
@@ -1861,30 +1644,30 @@ ${squadListText}
             }
         });
 
-        showPlannerRiskReportModal(squadPlayers);
+        showPlannerSquadAnalysisModal(container, state, actions);
         actions.renderActiveView();
     };
 
-    const plannerCheckSquadRisksBtn = container.querySelector('#plannerCheckSquadRisksBtn');
-    if (plannerCheckSquadRisksBtn) {
-        plannerCheckSquadRisksBtn.addEventListener('click', async () => {
+    const plannerAnalyzeSquadBtn = container.querySelector('#plannerAnalyzeSquadBtn');
+    if (plannerAnalyzeSquadBtn) {
+        plannerAnalyzeSquadBtn.addEventListener('click', async () => {
             if (!state.squadSlots || state.squadSlots.every(s => s.playerId === null)) {
                 actions.showToast("Please add players to your squad first.", "warning");
                 return;
             }
 
-            plannerCheckSquadRisksBtn.innerHTML = `<i data-lucide="loader" class="animate-spin" style="width:14px; height:14px;"></i> Scanning...`;
-            plannerCheckSquadRisksBtn.disabled = true;
+            plannerAnalyzeSquadBtn.innerHTML = `<i data-lucide="loader" class="animate-spin" style="width:14px; height:14px;"></i> Analyzing...`;
+            plannerAnalyzeSquadBtn.disabled = true;
 
             try {
                 await runPlannerSquadRiskCheck(state.squadSlots);
-                actions.showToast("Squad risk scan completed!", "success");
+                actions.showToast("Squad analysis completed!", "success");
             } catch (err) {
                 console.error(err);
-                actions.showToast("Notice: Fallback scan completed.", "info");
+                actions.showToast("Notice: Local analysis completed.", "info");
             } finally {
-                plannerCheckSquadRisksBtn.innerHTML = `<i data-lucide="shield-alert" style="width: 14px; height: 14px;"></i> Check Risks`;
-                plannerCheckSquadRisksBtn.disabled = false;
+                plannerAnalyzeSquadBtn.innerHTML = `<i data-lucide="sparkles" style="width: 14px; height: 14px; color: #00ff88;"></i> Analyze Squad`;
+                plannerAnalyzeSquadBtn.disabled = false;
                 lucide.createIcons();
             }
         });
