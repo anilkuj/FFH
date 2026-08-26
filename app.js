@@ -224,6 +224,7 @@ class AppState {
         this.weeklyLineups = safeJsonParse(savedWeeklyLineups, {});
 
         this.livePoints = {};
+        this.liveStats = {};
         this.loadUserDrafts();
         this.loadCloudDrafts();
         this.checkUrlSync();
@@ -1004,6 +1005,10 @@ class AppState {
                 const data = await res.json();
                 if (data && data.success && data.points) {
                     this.livePoints[gw] = data.points;
+                    // Also store detailed per-player stat breakdowns for squad analyzer
+                    if (data.stats) {
+                        this.liveStats[gw] = data.stats;
+                    }
                     return data.points;
                 }
             }

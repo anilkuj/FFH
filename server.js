@@ -221,13 +221,31 @@ const server = http.createServer(async (req, res) => {
             if (fplRes.ok) {
                 const data = await fplRes.json();
                 const pointsMap = {};
+                const statsMap = {};
                 if (data && Array.isArray(data.elements)) {
                     data.elements.forEach(el => {
                         pointsMap[el.id] = el.stats.total_points;
+                        // Store detailed breakdown for squad analyzer
+                        statsMap[el.id] = {
+                            minutes: el.stats.minutes || 0,
+                            goals_scored: el.stats.goals_scored || 0,
+                            assists: el.stats.assists || 0,
+                            clean_sheets: el.stats.clean_sheets || 0,
+                            goals_conceded: el.stats.goals_conceded || 0,
+                            own_goals: el.stats.own_goals || 0,
+                            penalties_saved: el.stats.penalties_saved || 0,
+                            penalties_missed: el.stats.penalties_missed || 0,
+                            yellow_cards: el.stats.yellow_cards || 0,
+                            red_cards: el.stats.red_cards || 0,
+                            saves: el.stats.saves || 0,
+                            bonus: el.stats.bonus || 0,
+                            bps: el.stats.bps || 0,
+                            total_points: el.stats.total_points || 0
+                        };
                     });
                 }
                 res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ success: true, gw: parseInt(gw), points: pointsMap }));
+                res.end(JSON.stringify({ success: true, gw: parseInt(gw), points: pointsMap, stats: statsMap }));
             } else {
                 throw new Error(`FPL API returned status: ${fplRes.status}`);
             }

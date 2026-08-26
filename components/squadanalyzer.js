@@ -16,6 +16,7 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
 
     // Load live points or fall back to predictions actualPts/predictions pts
     const livePointsMap = (state && state.livePoints && state.livePoints[gw]) || {};
+    const liveStatsMap = (state && state.liveStats && state.liveStats[gw]) || {};
     const getPlayerGwPoints = (player) => {
         const livePts = livePointsMap[player.id];
         if (livePts !== undefined && livePts !== null) return livePts;
@@ -23,6 +24,10 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         if (pred && pred.actualPts !== undefined && pred.actualPts !== null) return pred.actualPts;
         if (pred && pred.pts !== undefined) return Math.round(pred.pts);
         return 0;
+    };
+    // Returns GW-specific detailed stats if available (goals, assists, clean_sheets, bonus, etc.)
+    const getPlayerGwStats = (player) => {
+        return liveStatsMap[player.id] || null;
     };
 
     // Calculate total starting XI points (double counting captain)
@@ -228,21 +233,29 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
     const sortedDefenders = defendersStarters.map(p => {
         const pts = getPlayerGwPoints(p);
         const dc = p.dcPer90 || 0;
-        return { player: p, pts, dc };
+        // Prefer GW-specific clean sheet from liveStats; fall back to heuristic from points
+        const gwStats = getPlayerGwStats(p);
+        const gwCleanSheet = gwStats ? (gwStats.clean_sheets || 0) : (
+            // Heuristic: DEF/GKP with >= 6 pts likely kept a clean sheet if xGA suggests defensive game
+            (pts >= 6 && (p.position === 'DEF' || p.position === 'GKP')) ? 1 : 0
+        );
+        return { player: p, pts, dc, gwCleanSheet };
     }).sort((a, b) => b.pts - a.pts); // Sort high scoring defenders first
 
     sortedDefenders.slice(0, 2).forEach(entry => {
         const p = entry.player;
         const pts = entry.pts;
         const dc = entry.dc;
+        const gwCs = entry.gwCleanSheet;
+        const csText = gwCs > 0 ? 'kept a clean sheet ✅' : 'no clean sheet this GW';
         if (pts >= 6) {
             pointsVsPerformanceList.push({
                 player: p,
                 pts: pts,
-                tag: 'SOLID DEFENSIVE RETURN',
+                tag: gwCs > 0 ? 'CLEAN SHEET + DEFENSIVE RETURN' : 'SOLID DEFENSIVE RETURN',
                 tagClass: 'strong-pill',
-                stats: `Defcon: ${dc.toFixed(2)}/90 | Clean Sheets: ${p.cleanSheets || 0} | ICT: ${p.ictIndex.toFixed(1)}`,
-                blurb: `${p.web_name} secured a strong ${pts}-point defensive return. For defenders, clean sheets and defensive contributions (Defcon: ${dc.toFixed(2)}/90) are their primary points route. Attacking returns are a welcome bonus.`
+                stats: `Defcon: ${dc.toFixed(2)}/90 | CS: ${p.cleanSheets || 0} this season | ICT: ${p.ictIndex.toFixed(1)}`,
+                blurb: `${p.web_name} secured ${pts} pts and ${csText}. For defenders, clean sheets and defensive contributions (Defcon: ${dc.toFixed(2)}/90) are the primary points route — goals and assists are a welcome bonus.`
             });
         } else {
             pointsVsPerformanceList.push({
@@ -250,8 +263,8 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
                 pts: pts,
                 tag: 'DEFENSIVE SOLIDITY BASE',
                 tagClass: 'neutral-pill',
-                stats: `Defcon: ${dc.toFixed(2)}/90 | Clean Sheets: ${p.cleanSheets || 0} | ICT: ${p.ictIndex.toFixed(1)}`,
-                blurb: `${p.web_name} played in defense providing a baseline defensive contribution rate of ${dc.toFixed(2)} per 90. He provides a steady defensive base for clean sheet potential in upcoming fixtures.`
+                stats: `Defcon: ${dc.toFixed(2)}/90 | CS: ${p.cleanSheets || 0} this season | ICT: ${p.ictIndex.toFixed(1)}`,
+                blurb: `${p.web_name} played in defense with a baseline defensive contribution rate of ${dc.toFixed(2)} per 90. He provides a steady defensive base for clean sheet potential in upcoming fixtures.`
             });
         }
     });
@@ -1115,24 +1128,79 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         } else if (activeSlideIndex === 1) {
             slideTitle = '15-MAN REALITY CHECK';
             slideSub = hasActualScores
-                ? `Gameweek ${gw} scores beside active performance verdicts`
+                ? `Gameweek ${gw} scores with points breakdown`
                 : `FPL cumulative season points against actual team-role performance indicators`;
+
+            // Helper: build a compact breakdown string from live stats
+            const buildBreakdownBadges = (player, position) => {
+                const gwStats = getPlayerGwStats(player);
+                if (!gwStats) return '';
+                const parts = [];
+
+                const mins = gwStats.minutes || 0;
+                if (mins >= 60) parts.push({ label: `${mins}min`, pts: mins >= 60 ? 2 : 1, color: '#64748b' });
+                else if (mins > 0) parts.push({ label: `${mins}min`, pts: 1, color: '#64748b' });
+
+                const goals = gwStats.goals_scored || 0;
+                if (goals > 0) {
+                    const gPts = position === 'GKP' || position === 'DEF' ? 6 : position === 'MID' ? 5 : 4;
+                    parts.push({ label: `${goals} Goal${goals > 1 ? 's' : ''}`, pts: goals * gPts, color: '#22c55e' });
+                }
+
+                const assists = gwStats.assists || 0;
+                if (assists > 0) parts.push({ label: `${assists} Assist${assists > 1 ? 's' : ''}`, pts: assists * 3, color: '#38bdf8' });
+
+                const cs = gwStats.clean_sheets || 0;
+                if (cs > 0) {
+                    const csPts = position === 'GKP' || position === 'DEF' ? 4 : position === 'MID' ? 1 : 0;
+                    if (csPts > 0) parts.push({ label: 'Clean Sheet', pts: csPts, color: '#a78bfa' });
+                }
+
+                const saves = gwStats.saves || 0;
+                if (saves >= 3) parts.push({ label: `${saves} Saves`, pts: Math.floor(saves / 3), color: '#fb923c' });
+
+                const bonus = gwStats.bonus || 0;
+                if (bonus > 0) parts.push({ label: `Bonus ${bonus}`, pts: bonus, color: '#fbbf24' });
+
+                const yc = gwStats.yellow_cards || 0;
+                if (yc > 0) parts.push({ label: 'Yellow', pts: -1, color: '#eab308' });
+
+                const rc = gwStats.red_cards || 0;
+                if (rc > 0) parts.push({ label: 'Red', pts: -3, color: '#ef4444' });
+
+                const og = gwStats.own_goals || 0;
+                if (og > 0) parts.push({ label: 'OG', pts: og * -2, color: '#ef4444' });
+
+                const pm = gwStats.penalties_missed || 0;
+                if (pm > 0) parts.push({ label: 'Pen Miss', pts: pm * -2, color: '#ef4444' });
+
+                const ps = gwStats.penalties_saved || 0;
+                if (ps > 0) parts.push({ label: 'Pen Save', pts: ps * 5, color: '#22c55e' });
+
+                if (parts.length === 0) return '';
+
+                return `<div style="display:flex; flex-wrap:wrap; gap:5px; margin-top:10px;">
+                    ${parts.map(p => `<span style="font-size:9px; font-weight:800; padding:3px 7px; border-radius:4px; background:${p.color}22; color:${p.color}; border:1px solid ${p.color}44; white-space:nowrap;">${p.label} <span style="opacity:0.7;">${p.pts >= 0 ? '+' : ''}${p.pts}</span></span>`).join('')}
+                </div>`;
+            };
             
             slideBody = `
                 <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 20px; overflow-y:auto; max-height: 76vh; padding: 8px; box-sizing: border-box; width:100%;">
                     ${allSquadDetails.map(item => {
                         const alertIcon = item.hasFlag ? `<span title="Injury or starting risk detected!" style="color:#f59e0b; margin-right:6px; font-size:14px; animation: pulse 2s infinite;">⚠️</span>` : '';
+                        const breakdownHtml = hasActualScores ? buildBreakdownBadges(item.player, item.position) : '';
                         return `
-                            <div class="squad-reality-card" style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; display:flex; flex-direction:column; justify-content:space-between; min-height: 125px; box-sizing: border-box; transition: all 0.2s; cursor: pointer; box-shadow: 0 6px 16px rgba(0,0,0,0.12);">
+                            <div class="squad-reality-card" style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 14px; padding: 18px; display:flex; flex-direction:column; justify-content:space-between; min-height: 130px; box-sizing: border-box; transition: all 0.2s; cursor: pointer; box-shadow: 0 6px 16px rgba(0,0,0,0.12);">
                                 <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                                     <div style="display:flex; flex-direction:column; overflow:hidden; margin-right:8px;">
                                         <span style="font-size:15px; font-weight:900; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${item.player.name}">${item.player.web_name}</span>
-                                        <span style="font-size:11px; color:var(--text-muted); margin-top:4px; font-weight:600;">${item.team} • ${item.position} • £${item.price.toFixed(1)}m</span>
+                                        <span style="font-size:11px; color:var(--text-muted); margin-top:3px; font-weight:600;">${item.team} • ${item.position} • £${item.price.toFixed(1)}m</span>
                                     </div>
                                     <strong style="font-size:24px; font-family:var(--font-heading); color:${item.isStarting ? 'var(--primary)' : 'var(--text-muted)'}; white-space:nowrap; line-height: 1;">${item.pts} <span style="font-size:11px; font-weight:700; color:var(--text-muted);">pts</span></strong>
                                 </div>
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; flex-wrap:wrap; gap:4px;">
-                                    <span class="${item.verdict.class}" style="font-size:9.5px; font-weight:900; padding:4px 10px; border-radius:5px; letter-spacing:0.5px;">${item.verdict.label}</span>
+                                ${breakdownHtml}
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; flex-wrap:wrap; gap:4px;">
+                                    ${!hasActualScores ? `<span class="${item.verdict.class}" style="font-size:9.5px; font-weight:900; padding:4px 10px; border-radius:5px; letter-spacing:0.5px;">${item.verdict.label}</span>` : '<span></span>'}
                                     <div style="display:flex; align-items:center;">
                                         ${alertIcon}
                                         <span style="font-size:12px; color:var(--text-muted); font-weight:800;">${item.isStarting ? 'Starter' : 'Bench'}</span>
