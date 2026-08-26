@@ -1659,6 +1659,22 @@ ${squadListText}
             plannerAnalyzeSquadBtn.innerHTML = `<i data-lucide="loader" class="animate-spin" style="width:14px; height:14px;"></i> Analyzing...`;
             plannerAnalyzeSquadBtn.disabled = true;
 
+            // Fetch true FPL entry history to display exact gameweek & live ranks
+            const teamId = localStorage.getItem('fpl_hub_last_imported_team_id');
+            if (teamId) {
+                try {
+                    const historyRes = await fetch(`/api/fpl-entry-history?entryId=${teamId}`);
+                    if (historyRes.ok) {
+                        const historyData = await historyRes.json();
+                        if (historyData.success && historyData.data) {
+                            state.fplEntryHistory = historyData.data;
+                        }
+                    }
+                } catch (err) {
+                    console.error("Failed to fetch FPL entry history:", err);
+                }
+            }
+
             try {
                 await runPlannerSquadRiskCheck(state.squadSlots);
                 actions.showToast("Squad analysis completed!", "success");
@@ -1666,7 +1682,7 @@ ${squadListText}
                 console.error(err);
                 actions.showToast("Notice: Local analysis completed.", "info");
             } finally {
-                plannerAnalyzeSquadBtn.innerHTML = `<i data-lucide="sparkles" style="width: 14px; height: 14px; color: #00ff88;"></i> Analyze Squad`;
+                plannerAnalyzeSquadBtn.innerHTML = `<i data-lucide="sparkles" style="width: 14px; height: 14px; color: var(--primary);"></i> Analyze Squad`;
                 plannerAnalyzeSquadBtn.disabled = false;
                 lucide.createIcons();
             }

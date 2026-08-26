@@ -60,8 +60,22 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         if (pts <= 80) return 1700000 - ((pts - 50) * 53000);
         return Math.max(12, Math.round(110000 / Math.pow(pts - 78, 1.4)));
     };
-    const gwRank = pointsToRank(totalStarterPoints);
-    const liveRank = gwRank; 
+    // Retrieve actual gameweek rank and overall rank if FPL entry history is available
+    let gwRank = null;
+    let liveRank = null;
+    if (state.fplEntryHistory && state.fplEntryHistory.current) {
+        const gwHistory = state.fplEntryHistory.current.find(h => h.event == gw);
+        if (gwHistory) {
+            gwRank = gwHistory.rank;
+            liveRank = gwHistory.overall_rank;
+        }
+    }
+    if (!gwRank) {
+        gwRank = pointsToRank(totalStarterPoints);
+    }
+    if (!liveRank) {
+        liveRank = gwRank;
+    }
     const delta = totalStarterPoints - 46; // Compared to an average of 46 pts
 
     const captPlayer = PLAYERS.find(p => p.id === captain);
@@ -646,7 +660,7 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
                         </div>
                         <div>
                             <div style="display:flex; align-items:center; gap:8px;">
-                                <h3 style="margin:0; font-size:16px; font-weight:900; font-family:var(--font-heading); color:var(--text-main); letter-spacing:0.5px; text-transform:uppercase;">FPL DPS</h3>
+                                <h3 style="margin:0; font-size:16px; font-weight:900; font-family:var(--font-heading); color:var(--text-main); letter-spacing:0.5px; text-transform:uppercase;">ARTETIFICIAL SQUAD REPORT</h3>
                                 <span style="font-size:10px; font-weight:800; background:rgba(0, 255, 136, 0.12); color:var(--primary); padding:2px 8px; border-radius:12px; border:1px solid var(--primary-glow);">Artetificial Intel</span>
                             </div>
                             <p style="margin:2px 0 0 0; font-size:10.5px; color:var(--text-muted); font-weight:500;">Dynamic 2026-27 Season Squad Analyzer Report</p>
