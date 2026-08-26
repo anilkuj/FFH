@@ -305,6 +305,58 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
+    // API Route: Fetch classic league standings
+    if (pathname === '/api/fpl-league') {
+        const leagueId = reqUrl.searchParams.get('leagueId');
+        if (!leagueId) {
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Missing leagueId parameter' }));
+            return;
+        }
+        try {
+            const url = `https://fantasy.premierleague.com/api/leagues-classic/${leagueId}/standings/`;
+            const response = await fetch(url);
+            if (response.ok) {
+                const data = await response.json();
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: true, data }));
+            } else {
+                res.writeHead(response.status, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: false, error: `FPL API returned status ${response.status}` }));
+            }
+        } catch (err) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, error: err.message }));
+        }
+        return;
+    }
+
+    // API Route: Fetch entry (manager team) history
+    if (pathname === '/api/fpl-entry-history') {
+        const entryId = reqUrl.searchParams.get('entryId');
+        if (!entryId) {
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Missing entryId parameter' }));
+            return;
+        }
+        try {
+            const url = `https://fantasy.premierleague.com/api/entry/${entryId}/history/`;
+            const response = await fetch(url);
+            if (response.ok) {
+                const data = await response.json();
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: true, data }));
+            } else {
+                res.writeHead(response.status, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: false, error: `FPL API returned status ${response.status}` }));
+            }
+        } catch (err) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, error: err.message }));
+        }
+        return;
+    }
+
     // API Route: Save Cloud Drafts (Google Account & Email)
     if (req.method === 'POST' && pathname === '/api/sync-drafts') {
         let body = '';

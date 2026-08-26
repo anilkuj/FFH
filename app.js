@@ -21,6 +21,7 @@ import { renderReveals } from './components/reveals.js';
 import { renderTransferPlanner } from './components/transferplanner.js';
 import { renderSolioProjections } from './components/solioprojections.js';
 import { renderTopPerformers } from './components/topperformers.js';
+import { renderLeagueAnalyzer } from './components/leagueanalyzer.js';
 
 if (typeof window !== 'undefined') {
     window.PLAYERS = PLAYERS;
@@ -1445,6 +1446,9 @@ const actions = {
                 break;
             case 'topperformers':
                 renderTopPerformers(container, state, actions);
+                break;
+            case 'leagueanalyzer':
+                renderLeagueAnalyzer(container, state, actions);
                 break;
         }
     },
