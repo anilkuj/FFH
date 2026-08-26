@@ -320,14 +320,14 @@ export function renderPlanner(container, state, actions) {
                         </button>
                         ${chipsHtml}
                         <select id="formationSelect" class="formation-select" style="margin-left: 12px;">
-                            <option value="4-3-3" ${state.formation === '4-3-3' ? 'selected' : ''}>4-3-3</option>
-                            <option value="4-4-2" ${state.formation === '4-4-2' ? 'selected' : ''}>4-4-2</option>
-                            <option value="3-5-2" ${state.formation === '3-5-2' ? 'selected' : ''}>3-5-2</option>
-                            <option value="3-4-3" ${state.formation === '3-4-3' ? 'selected' : ''}>3-4-3</option>
-                            <option value="4-5-1" ${state.formation === '4-5-1' ? 'selected' : ''}>4-5-1</option>
-                            <option value="5-3-2" ${state.formation === '5-3-2' ? 'selected' : ''}>5-3-2</option>
-                            <option value="5-4-1" ${state.formation === '5-4-1' ? 'selected' : ''}>5-4-1</option>
-                            <option value="5-2-3" ${state.formation === '5-2-3' ? 'selected' : ''}>5-2-3</option>
+                            <option value="4-3-3" ${formation === '4-3-3' ? 'selected' : ''}>4-3-3</option>
+                            <option value="4-4-2" ${formation === '4-4-2' ? 'selected' : ''}>4-4-2</option>
+                            <option value="3-5-2" ${formation === '3-5-2' ? 'selected' : ''}>3-5-2</option>
+                            <option value="3-4-3" ${formation === '3-4-3' ? 'selected' : ''}>3-4-3</option>
+                            <option value="4-5-1" ${formation === '4-5-1' ? 'selected' : ''}>4-5-1</option>
+                            <option value="5-3-2" ${formation === '5-3-2' ? 'selected' : ''}>5-3-2</option>
+                            <option value="5-4-1" ${formation === '5-4-1' ? 'selected' : ''}>5-4-1</option>
+                            <option value="5-2-3" ${formation === '5-2-3' ? 'selected' : ''}>5-2-3</option>
                         </select>
                         <button class="pitch-btn" id="autoRotateBtn" title="Auto-Optimize Lineup & Captaincy" style="background: rgba(0, 255, 136, 0.1); border: 1px solid var(--primary-glow); color: var(--primary); margin-left: 8px;">
                             <i data-lucide="sparkles" style="width: 14px; height: 14px; margin-right: 4px;"></i> Auto Pick
