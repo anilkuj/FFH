@@ -6,6 +6,7 @@ export function renderTopPerformers(container, state, actions) {
         return;
     }
 
+    const isLight = document.documentElement.classList.contains('light-theme');
     const activeCat = container.dataset.activeCat || 'xa';
 
     let statKey = 'xA90';
@@ -45,13 +46,23 @@ export function renderTopPerformers(container, state, actions) {
     let tabsHtml = '';
     categoriesInfo.forEach(info => {
         const isSel = info.key === activeCat;
+        let tabBg = 'rgba(255, 255, 255, 0.02)';
+        let tabBorder = 'var(--border-color)';
+        if (isLight) {
+            tabBg = isSel ? 'var(--primary-glow)' : '#ffffff';
+            tabBorder = isSel ? 'var(--primary)' : '#e5e7eb';
+        } else {
+            tabBg = isSel ? 'var(--primary-glow)' : 'rgba(255, 255, 255, 0.02)';
+            tabBorder = isSel ? 'var(--primary)' : 'var(--border-color)';
+        }
+
         tabsHtml += `
             <button class="top-perf-tab-btn ${isSel ? 'active' : ''}" data-cat="${info.key}" style="
                 padding: 10px 20px;
                 border-radius: 8px;
-                background: ${isSel ? 'var(--primary-glow)' : 'rgba(255, 255, 255, 0.02)'};
-                border: 1px solid ${isSel ? 'var(--primary)' : 'var(--border-color)'};
-                color: ${isSel ? '#ffffff' : 'var(--text-muted)'};
+                background: ${tabBg};
+                border: 1px solid ${tabBorder};
+                color: ${isSel ? (isLight ? 'var(--primary)' : '#ffffff') : 'var(--text-muted)'};
                 font-weight: 700;
                 font-size: 13px;
                 cursor: pointer;
@@ -81,16 +92,20 @@ export function renderTopPerformers(container, state, actions) {
                 : `https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_${code}-110.webp`;
 
             const rank = idx + 1;
-            let rankBg = 'rgba(255, 255, 255, 0.05)';
+            let rankBg = isLight ? '#f1f5f9' : 'rgba(255, 255, 255, 0.05)';
             let rankColor = 'var(--text-muted)';
             if (rank === 1) {
                 rankBg = 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)';
                 rankColor = '#ffffff';
             } else if (rank === 2) {
-                rankBg = 'linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%)';
+                rankBg = isLight 
+                    ? 'linear-gradient(135deg, #94a3b8 0%, #475569 100%)'
+                    : 'linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%)';
                 rankColor = '#ffffff';
             } else if (rank === 3) {
-                rankBg = 'linear-gradient(135deg, #b45309 0%, #78350f 100%)';
+                rankBg = isLight
+                    ? 'linear-gradient(135deg, #d97706 0%, #92400e 100%)'
+                    : 'linear-gradient(135deg, #b45309 0%, #78350f 100%)';
                 rankColor = '#ffffff';
             }
 
@@ -103,8 +118,8 @@ export function renderTopPerformers(container, state, actions) {
                     align-items: center;
                     justify-content: space-between;
                     padding: 8px 12px;
-                    background: rgba(255, 255, 255, 0.01);
-                    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+                    background: ${idx % 2 === 0 ? 'transparent' : (isLight ? 'rgba(0, 0, 0, 0.015)' : 'rgba(255, 255, 255, 0.01)')};
+                    border-bottom: 1px solid ${isLight ? 'rgba(0, 0, 0, 0.04)' : 'rgba(255, 255, 255, 0.03)'};
                     font-size: 13px;
                 ">
                     <div style="display: flex; align-items: center; gap: 10px;">
@@ -133,7 +148,6 @@ export function renderTopPerformers(container, state, actions) {
             `;
         });
 
-        // Fallback for empty listings
         if (rowsHtml === '') {
             rowsHtml = `
                 <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;">
@@ -146,13 +160,14 @@ export function renderTopPerformers(container, state, actions) {
             <div class="top-perf-col" style="
                 flex: 1;
                 min-width: 280px;
-                background: rgba(30, 41, 59, 0.4);
+                background: ${isLight ? '#ffffff' : 'rgba(30, 41, 59, 0.4)'};
                 border: 1px solid var(--border-color);
                 border-radius: 12px;
                 overflow: hidden;
+                box-shadow: ${isLight ? '0 4px 6px -1px rgba(0,0,0,0.05)' : 'none'};
             ">
                 <div style="
-                    background: rgba(255, 255, 255, 0.02);
+                    background: ${isLight ? '#f8fafc' : 'rgba(255, 255, 255, 0.02)'};
                     padding: 10px;
                     text-align: center;
                     border-bottom: 1px solid var(--border-color);
@@ -169,6 +184,15 @@ export function renderTopPerformers(container, state, actions) {
         `;
     });
 
+    const bannerBg = isLight 
+        ? 'linear-gradient(135deg, #f3e8ff 0%, #fae8ff 50%, #fce7f3 100%)'
+        : 'linear-gradient(135deg, #1e1b4b 0%, #311042 50%, #4c0519 100%)';
+    const bannerBorder = isLight ? '1px solid #e9d5ff' : '1px solid rgba(255, 255, 255, 0.05)';
+    const titleColor = isLight ? '#4c1d95' : '#ffffff';
+    const subLabelColor = isLight ? '#0284c7' : '#38bdf8';
+    const iconContainerBg = isLight ? '#ffffff' : 'rgba(255, 255, 255, 0.06)';
+    const iconContainerBorder = isLight ? '1px solid #e9d5ff' : '1px solid rgba(255, 255, 255, 0.1)';
+
     container.innerHTML = `
         <div class="top-performers-view" style="
             display: flex;
@@ -182,24 +206,24 @@ export function renderTopPerformers(container, state, actions) {
         ">
             <!-- Header Banner -->
             <div class="top-perf-header" style="
-                background: linear-gradient(135deg, #1e1b4b 0%, #311042 50%, #4c0519 100%);
+                background: ${bannerBg};
                 border-radius: 16px;
                 padding: 24px;
                 display: flex;
                 align-items: center;
                 gap: 16px;
-                border: 1px solid rgba(255, 255, 255, 0.05);
-                box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+                border: ${bannerBorder};
+                box-shadow: ${isLight ? '0 10px 15px -3px rgba(0,0,0,0.03)' : '0 10px 30px -10px rgba(0,0,0,0.5)'};
             ">
                 <div style="
                     width: 56px;
                     height: 56px;
                     border-radius: 12px;
-                    background: rgba(255, 255, 255, 0.06);
+                    background: ${iconContainerBg};
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border: ${iconContainerBorder};
                 ">
                     <i data-lucide="${iconName}" style="width: 28px; height: 28px; color: ${badgeColor};"></i>
                 </div>
@@ -209,11 +233,11 @@ export function renderTopPerformers(container, state, actions) {
                         font-size: 26px;
                         font-weight: 900;
                         letter-spacing: 1px;
-                        color: #ffffff;
+                        color: ${titleColor};
                         font-family: var(--font-header);
-                        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+                        text-shadow: ${isLight ? 'none' : '0 2px 4px rgba(0,0,0,0.3)'};
                     ">${statTitle}</h1>
-                    <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px;">
+                    <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; color: ${subLabelColor}; text-transform: uppercase; letter-spacing: 1px;">
                         <span>BY POSITION</span>
                         <span style="opacity: 0.5;">•</span>
                         <span>UPDATED DAILY</span>
