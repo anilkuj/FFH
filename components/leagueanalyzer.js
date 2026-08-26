@@ -1,8 +1,8 @@
 export function renderLeagueAnalyzer(container, state, actions) {
     const isLight = document.documentElement.classList.contains('light-theme');
 
-    // Retrieve active league code from state or container dataset (default to 314)
-    let leagueId = container.dataset.leagueId || '';
+    // Retrieve active league ID from container dataset, localStorage, or default empty
+    let leagueId = container.dataset.leagueId || localStorage.getItem('fpl_hub_last_analyzed_league_id') || '';
     let leagueData = null;
     let entriesHistory = {}; // Key: entryId, Value: history data
     let isLoading = false;
@@ -30,6 +30,9 @@ export function renderLeagueAnalyzer(container, state, actions) {
             entriesHistory,
             selectedEntries
         });
+        if (leagueId) {
+            localStorage.setItem('fpl_hub_last_analyzed_league_id', leagueId);
+        }
     }
 
     async function loadLeague() {
