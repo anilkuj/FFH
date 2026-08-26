@@ -843,7 +843,7 @@ ${i.length>0?i.map(x=>`- **${x.name}** (${x.team}, £${x.price.toFixed(1)}m) —
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 20px;
+        padding: 0;
         box-sizing: border-box;
     `;let wt=0;const Et=()=>{let U="",v="",V="";if(wt===0){U="MY GAMEWEEK REVIEW",v=`Gameweek ${s} lineup return and metrics recap`;const H=At.filter(j=>j.position==="GKP"),B=At.filter(j=>j.position==="DEF"),R=At.filter(j=>j.position==="MID"),tt=At.filter(j=>j.position==="FWD"),pt=j=>`
                     <div style="display:flex; justify-content:center; gap:16px; margin: 8px 0;">
@@ -904,7 +904,7 @@ ${i.length>0?i.map(x=>`- **${x.name}** (${x.team}, £${x.price.toFixed(1)}m) —
                     </div>
                 </div>
             `}else if(wt===1)U="15-MAN REALITY CHECK",v="FPL points against actual team-role performance indicators",V=`
-                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; overflow-y:auto; max-height: 480px; padding-right:6px; box-sizing: border-box; width:100%;">
+                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; overflow-y:auto; max-height: 72vh; padding-right:6px; box-sizing: border-box; width:100%;">
                     ${ot.map(H=>{const B=H.hasFlag?'<span title="Injury or starting risk detected!" style="color:#f59e0b; margin-right:4px; font-size:12px;">⚠️</span>':"";return`
                             <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display:flex; flex-direction:column; justify-content:space-between; min-height: 84px; box-sizing: border-box;">
                                 <div style="display:flex; justify-content:space-between; align-items:flex-start;">
@@ -925,7 +925,7 @@ ${i.length>0?i.map(x=>`- **${x.name}** (${x.team}, £${x.price.toFixed(1)}m) —
                         `}).join("")}
                 </div>
             `;else if(wt===2)U="POINTS VS PERFORMANCE",v="Analyzing underlying metrics for players where outcomes differed from expectations",V=`
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; width:100%; box-sizing: border-box; overflow-y:auto; max-height:480px;">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; width:100%; box-sizing: border-box; overflow-y:auto; max-height:72vh;">
                     ${k.map(H=>`
                             <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; display:flex; flex-direction:column; justify-content:space-between; gap:10px; box-sizing: border-box;">
                                 <div>
@@ -1000,11 +1000,11 @@ ${i.length>0?i.map(x=>`- **${x.name}** (${x.team}, £${x.price.toFixed(1)}m) —
                         </div>
                     </div>
                 `),V=`
-                <div style="display:grid; grid-template-columns: 1.1fr 0.9fr; gap:16px; width:100%; box-sizing: border-box; height:100%; max-height:480px;">
+                <div style="display:grid; grid-template-columns: 1.1fr 0.9fr; gap:16px; width:100%; box-sizing: border-box; height:100%; max-height:72vh;">
                     <!-- Left: Injury & Minutes Risks -->
                     <div style="display:flex; flex-direction:column; gap:10px; box-sizing: border-box;">
                         <h4 style="margin:0; font-size:12px; font-weight:800; color:#ef4444; text-transform:uppercase; letter-spacing:0.5px;">Squad Minutes & Fitness Warnings</h4>
-                        <div style="display:flex; flex-direction:column; gap:8px; overflow-y:auto; max-height: 420px; padding-right:4px;">
+                        <div style="display:flex; flex-direction:column; gap:8px; overflow-y:auto; max-height: 65vh; padding-right:4px;">
                             ${H}
                         </div>
                     </div>
@@ -1062,7 +1062,7 @@ ${i.length>0?i.map(x=>`- **${x.name}** (${x.team}, £${x.price.toFixed(1)}m) —
                     </div>
                 </div>
             `);ct.innerHTML=`
-            <div class="opt-settings-card" style="width: 100%; max-width: 680px; max-height: 90vh; display: flex; flex-direction: column; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; box-shadow: var(--shadow-lg); overflow: hidden; font-family: var(--font-body);">
+            <div class="opt-settings-card" style="width: 100vw; height: 100vh; max-width: 100vw; max-height: 100vh; display: flex; flex-direction: column; background: var(--bg-card); border: none; border-radius: 0; box-shadow: none; overflow: hidden; font-family: var(--font-body);">
                 <!-- Slide Header -->
                 <div class="opt-card-header" style="border-bottom: 1px solid var(--border-color); padding: 18px 22px; display: flex; justify-content: space-between; align-items: center; background: var(--bg-panel);">
                     <div style="display:flex; align-items:center; gap:12px;">

@@ -346,7 +346,7 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 20px;
+        padding: 0;
         box-sizing: border-box;
     `;
 
@@ -439,7 +439,7 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
             slideSub = 'FPL points against actual team-role performance indicators';
             
             slideBody = `
-                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; overflow-y:auto; max-height: 480px; padding-right:6px; box-sizing: border-box; width:100%;">
+                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; overflow-y:auto; max-height: 72vh; padding-right:6px; box-sizing: border-box; width:100%;">
                     ${allSquadDetails.map(item => {
                         const alertIcon = item.hasFlag ? `<span title="Injury or starting risk detected!" style="color:#f59e0b; margin-right:4px; font-size:12px;">⚠️</span>` : '';
                         return `
@@ -468,7 +468,7 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
             slideSub = 'Analyzing underlying metrics for players where outcomes differed from expectations';
 
             slideBody = `
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; width:100%; box-sizing: border-box; overflow-y:auto; max-height:480px;">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; width:100%; box-sizing: border-box; overflow-y:auto; max-height:72vh;">
                     ${pointsVsPerformanceList.map(item => {
                         return `
                             <div style="background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; display:flex; flex-direction:column; justify-content:space-between; gap:10px; box-sizing: border-box;">
@@ -571,11 +571,11 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
             }
 
             slideBody = `
-                <div style="display:grid; grid-template-columns: 1.1fr 0.9fr; gap:16px; width:100%; box-sizing: border-box; height:100%; max-height:480px;">
+                <div style="display:grid; grid-template-columns: 1.1fr 0.9fr; gap:16px; width:100%; box-sizing: border-box; height:100%; max-height:72vh;">
                     <!-- Left: Injury & Minutes Risks -->
                     <div style="display:flex; flex-direction:column; gap:10px; box-sizing: border-box;">
                         <h4 style="margin:0; font-size:12px; font-weight:800; color:#ef4444; text-transform:uppercase; letter-spacing:0.5px;">Squad Minutes & Fitness Warnings</h4>
-                        <div style="display:flex; flex-direction:column; gap:8px; overflow-y:auto; max-height: 420px; padding-right:4px;">
+                        <div style="display:flex; flex-direction:column; gap:8px; overflow-y:auto; max-height: 65vh; padding-right:4px;">
                             ${riskCardsHtml}
                         </div>
                     </div>
@@ -641,7 +641,7 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         }
 
         modalDiv.innerHTML = `
-            <div class="opt-settings-card" style="width: 100%; max-width: 680px; max-height: 90vh; display: flex; flex-direction: column; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; box-shadow: var(--shadow-lg); overflow: hidden; font-family: var(--font-body);">
+            <div class="opt-settings-card" style="width: 100vw; height: 100vh; max-width: 100vw; max-height: 100vh; display: flex; flex-direction: column; background: var(--bg-card); border: none; border-radius: 0; box-shadow: none; overflow: hidden; font-family: var(--font-body);">
                 <!-- Slide Header -->
                 <div class="opt-card-header" style="border-bottom: 1px solid var(--border-color); padding: 18px 22px; display: flex; justify-content: space-between; align-items: center; background: var(--bg-panel);">
                     <div style="display:flex; align-items:center; gap:12px;">
