@@ -31,8 +31,8 @@ export function renderTopPerformers(container, state, actions) {
         badgeColor = '#ef4444';
     }
 
-    // Filter players with a minimum minutes threshold (MPPG >= 30) to avoid sample size anomalies
-    const activePlayers = PLAYERS.filter(p => p.MPPG >= 30);
+    // Filter players with a minimum of 60 minutes played in the current season to align with the FPLDoctor image thresholds
+    const activePlayers = PLAYERS.filter(p => (p.currentSeasonMins || 0) >= 60);
     const columnsList = activeCat === 'defcon' ? ['DEF', 'MID'] : ['DEF', 'MID', 'FWD'];
 
     // Categories tabs
@@ -83,7 +83,7 @@ export function renderTopPerformers(container, state, actions) {
             return (p.xG90 || 0) + (p.xA90 || 0);
         }
         if (activeCat === 'defcon') {
-            return (p.dcPer90 || 0) * 2;
+            return p.dcPer90 || 0;
         }
         return p[statKey] || 0;
     };
