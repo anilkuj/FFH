@@ -2412,14 +2412,11 @@ function getEditDistance(a, b) {
 // Opens the Add Player popup modal
 function openAddPlayerModal(container, state, actions, slotIndex, position) {
     const squadInfo = state.getSquadForGw(state.currentGw);
-    const { bank } = squadInfo;
+    const { bank, squad: allSquadIds } = squadInfo;
 
     const slot = state.squadSlots[slotIndex];
     const prevPlayer = (slot && slot.prevPlayerId) ? PLAYERS.find(p => p.id === slot.prevPlayerId) : null;
 
-    // Find buyable players
-    const allSquadIds = state.squadSlots.map(s => s.playerId).filter(id => id !== null);
-    
     // Count players per team in current squad to enforce FPL team limit (max 3 per team)
     const teamCounts = {};
     allSquadIds.forEach(id => {

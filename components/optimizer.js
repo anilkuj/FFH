@@ -3646,15 +3646,16 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
                     const outIdStr = btn.getAttribute('data-out-id');
                     const outId = outIdStr !== 'null' ? parseInt(outIdStr) : null;
 
-                    state.squadSlots[slotIdx].playerId = inId;
-                    state.optimizeCaptaincy();
-                    state.saveState();
-
-                    const pIn = PLAYERS.find(p => p.id === inId);
-                    const pOut = outId !== null ? PLAYERS.find(p => p.id === outId) : null;
+                    const success = actions.addPlayer(state.currentGw, slotIdx, inId);
+                    if (!success) {
+                        isExecuting = false;
+                        if (runBtnEl) runBtnEl.disabled = false;
+                        if (reRunBtnEl) reRunBtnEl.disabled = false;
+                        btn.disabled = false;
+                        return;
+                    }
 
                     actions.syncTopBar();
-                    actions.showToast(`Applied swap: ${pIn.name} in for ${pOut ? pOut.name : 'empty slot'}`, 'success');
 
                     showOptimizerLoadingCard(resultsGrid);
                     await performOptimization(resultsGrid, state, actions, horizon, mode);
