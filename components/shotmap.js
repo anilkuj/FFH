@@ -5,7 +5,7 @@ export function renderShotMap(container, state, actions) {
     const isLight = document.documentElement.classList.contains("light-theme");
 
     // Always read LIVE from dataset — never cache as const (stale closure bug)
-    const getDate       = () => container.dataset.smDate       || new Date().toISOString().slice(0,10);
+    const getDate       = () => container.dataset.smDate       || "";
     const getMatchId    = () => container.dataset.smMatchId    || "";
     const getTeamName   = () => container.dataset.smTeamName   || "";
     const getTeamFilter = () => container.dataset.smTeamFilter || "all";
@@ -33,7 +33,22 @@ export function renderShotMap(container, state, actions) {
         const ms = container.querySelector("#sm-match-select");
         const currentDate = getDate();
         const currentTeam = getTeamName();
-        if (ms) loadMatchesForControls(currentTeam, currentDate, ms);
+        
+        // Initial load based on whichever filter is active (Team OR Date)
+        if (ms) {
+            if (currentTeam) {
+                loadMatchesByTeam(currentTeam, ms);
+            } else if (currentDate) {
+                loadMatchesByDate(currentDate, ms);
+            } else {
+                // Default to initial date
+                const today = new Date().toISOString().slice(0,10);
+                container.dataset.smDate = today;
+                const dp = container.querySelector("#sm-date-picker");
+                if (dp) dp.value = today;
+                loadMatchesByDate(today, ms);
+            }
+        }
     }
 
     // Refresh only the shot content area — called every time match/filter changes
@@ -66,7 +81,7 @@ export function renderShotMap(container, state, actions) {
 
     function renderEmptyPrompt() {
         const a = container.querySelector("#sm-shot-area");
-        if (a) a.innerHTML = "<div style='padding:60px;text-align:center;color:" + textMuted + ";'><p style=\"font-size:14px;font-weight:600;color:" + textMain + ";\">Select a match to view the shot map</p><p style='font-size:12px;'>Filter by team name or match date to pick a Premier League match above</p></div>";
+        if (a) a.innerHTML = "<div style='padding:60px;text-align:center;color:" + textMuted + ";'><p style=\"font-size:14px;font-weight:600;color:" + textMain + ";\">Select a match to view the shot map</p><p style='font-size:12px;'>Select either a Team OR a Date to pick a Premier League match above</p></div>";
     }
 
     function renderChrome() {
@@ -79,7 +94,7 @@ export function renderShotMap(container, state, actions) {
             f.charAt(0).toUpperCase()+f.slice(1) + "</button>"
         ).join("");
 
-        const teamOptions = "<option value=''>- All Teams (Filter by Date) -</option>" +
+        const teamOptions = "<option value=''>-- Select Team --</option>" +
             EPL_TEAMS.map(t => "<option value='" + t + "'" + (currentTeam === t ? " selected" : "") + ">" + t + "</option>").join("");
 
         container.innerHTML =
@@ -91,17 +106,19 @@ export function renderShotMap(container, state, actions) {
             "<p style='margin:0;font-size:12px;color:" + textMuted + ";'>EPL shot-level xG data &bull; Powered by PitchAPI</p></div></div>" +
             "<div style='display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;align-items:flex-end;'>" +
             
-            "<!-- FILTER BY TEAM NAME (BEFORE DATE) -->" +
-            "<div><label style='display:block;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:" + textMuted + ";margin-bottom:6px;'>Filter by Team</label>" +
+            "<!-- FILTER BY TEAM NAME (MUTUALLY EXCLUSIVE) -->" +
+            "<div><label style='display:block;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:" + textMuted + ";margin-bottom:6px;'>Option A: Filter by Team</label>" +
             "<select id='sm-team-picker' style='background:" + cardBg + ";border:1px solid " + border + ";border-radius:8px;padding:8px 12px;font-size:13px;color:" + textMain + ";cursor:pointer;outline:none;height:38px;'>" + teamOptions + "</select></div>" +
 
-            "<!-- MATCH DATE -->" +
-            "<div><label style='display:block;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:" + textMuted + ";margin-bottom:6px;'>Match Date</label>" +
+            "<div style='padding-bottom:10px;font-weight:700;font-size:11px;color:" + textMuted + ";'>OR</div>" +
+
+            "<!-- MATCH DATE (MUTUALLY EXCLUSIVE) -->" +
+            "<div><label style='display:block;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:" + textMuted + ";margin-bottom:6px;'>Option B: Filter by Date</label>" +
             "<input type='date' id='sm-date-picker' value='" + currentDate + "' max='" + today + "' style='background:" + cardBg + ";border:1px solid " + border + ";border-radius:8px;padding:8px 12px;font-size:13px;color:" + textMain + ";cursor:pointer;outline:none;height:38px;'></div>" +
             
             "<!-- MATCH SELECTOR -->" +
             "<div style='flex:1;min-width:240px;'><label style='display:block;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:" + textMuted + ";margin-bottom:6px;'>Match</label>" +
-            "<select id='sm-match-select' style='width:100%;background:" + cardBg + ";border:1px solid " + border + ";border-radius:8px;padding:8px 12px;font-size:13px;color:" + textMain + ";cursor:pointer;outline:none;height:38px;'><option value=''>- Select team or date to load matches -</option></select></div>" +
+            "<select id='sm-match-select' style='width:100%;background:" + cardBg + ";border:1px solid " + border + ";border-radius:8px;padding:8px 12px;font-size:13px;color:" + textMain + ";cursor:pointer;outline:none;height:38px;'><option value=''>- Pick a Team OR Date to load matches -</option></select></div>" +
             
             "<!-- SHOW SHOT TYPE -->" +
             "<div><label style='display:block;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:" + textMuted + ";margin-bottom:6px;'>Show</label><div style='display:flex;gap:4px;'>" + filterBtns + "</div></div></div>" +
@@ -117,21 +134,37 @@ export function renderShotMap(container, state, actions) {
         const dp = container.querySelector("#sm-date-picker");
         const ms = container.querySelector("#sm-match-select");
 
-        // Team Picker Event Listener
+        // Team Picker Event Listener (Clears Date Picker)
         tp.addEventListener("change", () => {
-            container.dataset.smTeamName = tp.value;
-            container.dataset.smMatchId = "";
-            container.dataset.smMatchObj = "";
-            loadMatchesForControls(tp.value, dp.value, ms);
+            const teamVal = tp.value;
+            if (teamVal) {
+                // Clear Date filter when filtering by Team
+                dp.value = "";
+                container.dataset.smDate = "";
+                container.dataset.smTeamName = teamVal;
+                container.dataset.smMatchId = "";
+                container.dataset.smMatchObj = "";
+                loadMatchesByTeam(teamVal, ms);
+            } else {
+                container.dataset.smTeamName = "";
+            }
             renderEmptyPrompt();
         });
 
-        // Date Picker Event Listener
+        // Date Picker Event Listener (Clears Team Picker)
         dp.addEventListener("change", () => {
-            container.dataset.smDate = dp.value;
-            container.dataset.smMatchId = "";
-            container.dataset.smMatchObj = "";
-            loadMatchesForControls(tp.value, dp.value, ms);
+            const dateVal = dp.value;
+            if (dateVal) {
+                // Clear Team filter when filtering by Date
+                tp.value = "";
+                container.dataset.smTeamName = "";
+                container.dataset.smDate = dateVal;
+                container.dataset.smMatchId = "";
+                container.dataset.smMatchObj = "";
+                loadMatchesByDate(dateVal, ms);
+            } else {
+                container.dataset.smDate = "";
+            }
             renderEmptyPrompt();
         });
 
@@ -140,10 +173,6 @@ export function renderShotMap(container, state, actions) {
             const opt = ms.options[ms.selectedIndex];
             container.dataset.smMatchId = ms.value;
             container.dataset.smMatchObj = opt.dataset.matchObj || "";
-            if (opt.dataset.matchDate) {
-                dp.value = opt.dataset.matchDate;
-                container.dataset.smDate = opt.dataset.matchDate;
-            }
             refreshShots();
         });
 
@@ -156,50 +185,39 @@ export function renderShotMap(container, state, actions) {
         });
     }
 
-    async function loadMatchesForControls(teamName, date, selectEl) {
-        selectEl.innerHTML = "<option value=''>Loading matches...</option>";
-        
-        let targetDates = [];
-        if (date) {
-            targetDates = [date];
-        } else {
-            targetDates = ["2026-08-26", "2026-08-25", "2026-08-24", "2026-08-23", "2026-08-22", "2026-08-17", "2026-08-16", "2026-08-15"];
-        }
+    // Filter Mode A: Load matches strictly by selected TEAM NAME
+    async function loadMatchesByTeam(teamName, selectEl) {
+        selectEl.innerHTML = "<option value=''>Loading " + teamName + " matches...</option>";
+        const targetDates = ["2026-08-26", "2026-08-25", "2026-08-24", "2026-08-23", "2026-08-22", "2026-08-17", "2026-08-16", "2026-08-15"];
 
         try {
-            let allMatches = [];
+            let matches = [];
             for (const d of targetDates) {
                 const res = await fetch("/api/pitchapi/date/" + d + "?league=epl").catch(() => null);
                 if (res && res.ok) {
                     const json = await res.json();
                     const mList = json.matches || [];
                     mList.forEach(m => {
-                        m._matchDate = d;
-                        allMatches.push(m);
+                        const queryName = teamName.toLowerCase();
+                        if ((m.home_team && m.home_team.name.toLowerCase().includes(queryName)) ||
+                            (m.away_team && m.away_team.name.toLowerCase().includes(queryName))) {
+                            m._matchDate = d;
+                            matches.push(m);
+                        }
                     });
                 }
-                if (date && !teamName) break;
             }
 
-            // Apply Team Filter if selected
-            if (teamName) {
-                const queryName = teamName.toLowerCase();
-                allMatches = allMatches.filter(m => 
-                    (m.home_team && m.home_team.name.toLowerCase().includes(queryName)) ||
-                    (m.away_team && m.away_team.name.toLowerCase().includes(queryName))
-                );
-            }
-
-            if (allMatches.length === 0) {
-                selectEl.innerHTML = "<option value=''>No EPL matches found for " + (teamName || date) + "</option>";
+            if (matches.length === 0) {
+                selectEl.innerHTML = "<option value=''>No EPL matches found for " + teamName + "</option>";
                 renderEmptyPrompt();
                 return;
             }
 
-            selectEl.innerHTML = "<option value=''>- Select a match -</option>" +
-                allMatches.map(m => {
+            selectEl.innerHTML = "<option value=''>- Select a " + teamName + " match -</option>" +
+                matches.map(m => {
                     const score = (m.status==="finished"||m.status==="inprogress") ? " " + m.score_home + "-" + m.score_away : "";
-                    const dateLabel = m._matchDate ? " [" + m._matchDate + "]" : "";
+                    const dateLabel = m._matchDate ? " (" + m._matchDate + ")" : "";
                     const label = m.home_team.name + " vs " + m.away_team.name + score + dateLabel;
                     const safeObj = JSON.stringify(m).replace(/"/g,"&quot;");
                     return "<option value='" + m.id + "' data-match-date='" + (m._matchDate || '') + "' data-match-obj=\"" + safeObj + "\">" + label + "</option>";
@@ -208,7 +226,34 @@ export function renderShotMap(container, state, actions) {
             if (container.dataset.smMatchId) selectEl.value = container.dataset.smMatchId;
         } catch(e) {
             selectEl.innerHTML = "<option value=''>Failed to load matches</option>";
-            console.error("loadMatchesForControls:", e);
+            console.error("loadMatchesByTeam:", e);
+        }
+    }
+
+    // Filter Mode B: Load matches strictly by selected DATE
+    async function loadMatchesByDate(date, selectEl) {
+        selectEl.innerHTML = "<option value=''>Loading matches for " + date + "...</option>";
+        try {
+            const res = await fetch("/api/pitchapi/date/" + date + "?league=epl");
+            if (!res.ok) throw new Error("HTTP " + res.status);
+            const json = await res.json();
+            const matches = json.matches || [];
+            if (matches.length === 0) {
+                selectEl.innerHTML = "<option value=''>No EPL matches on " + date + "</option>";
+                renderEmptyPrompt(); return;
+            }
+            selectEl.innerHTML = "<option value=''>- Select a match on " + date + " -</option>" +
+                matches.map(m => {
+                    const score = (m.status==="finished"||m.status==="inprogress") ? " " + m.score_home + "-" + m.score_away : "";
+                    const time  = m.time_utc ? new Date(m.time_utc).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}) : "";
+                    const label = m.home_team.name + " vs " + m.away_team.name + score + " (" + time + ")";
+                    const safeObj = JSON.stringify(m).replace(/"/g,"&quot;");
+                    return "<option value='" + m.id + "' data-match-obj=\"" + safeObj + "\">" + label + "</option>";
+                }).join("");
+            if (container.dataset.smMatchId) selectEl.value = container.dataset.smMatchId;
+        } catch(e) {
+            selectEl.innerHTML = "<option value=''>Failed to load matches</option>";
+            console.error("loadMatchesByDate:", e);
         }
     }
 
