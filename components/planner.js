@@ -1992,13 +1992,12 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
     const lastSeasonAvgMins = typeof player.MPPG === 'number' ? player.MPPG.toFixed(0) : '0';
     const lastSeasonPts = typeof player.points === 'number' ? player.points : 0;
     const lastSeasonXG = (player.xG || 0).toFixed(1);
-    const lastSeasonXA = (player.xA || 0).toFixed(1);
-    const lastSeasonXG90 = (player.xG90 || 0).toFixed(2);
-    const lastSeasonXA90 = (player.xA90 || 0).toFixed(2);
     const lastSeasonIct = (player.ictIndex || 0).toFixed(1);
 
-    // Current Season (2026/27) Actual Stats
+    // Current Season (2026/27) Actual / Expected Stats
     const playedPredictions = (player.predictions || []).filter(pr => pr.gw < state.currentGw && pr.actualPts !== null && pr.actualPts !== undefined);
+    const hasPlayedMatches = playedPredictions.length > 0;
+
     const currentSeasonTotalPts = playedPredictions.reduce((sum, pr) => {
         let val = pr.actualPts;
         if (state && state.livePoints && state.livePoints[pr.gw] && state.livePoints[pr.gw][player.id] !== undefined) {
@@ -2007,15 +2006,27 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
         return sum + (val || 0);
     }, 0);
     const currentSeasonPlayedGws = playedPredictions.length;
-    const currentSeasonStarts = playedPredictions.filter(pr => (pr.actualPts || 0) > 0).length;
+    const currentSeasonStarts = hasPlayedMatches 
+        ? playedPredictions.filter(pr => (pr.actualPts || 0) > 0).length
+        : lastSeasonStarts;
     
     let currentSeasonTotalMins = playedPredictions.reduce((sum, pr) => sum + (pr.mins !== undefined ? pr.mins : ((pr.actualPts || 0) > 0 ? 75 : 0)), 0);
-    const currentSeasonAvgMins = currentSeasonPlayedGws > 0 ? Math.round(currentSeasonTotalMins / currentSeasonPlayedGws) : 0;
+    const currentSeasonAvgMins = hasPlayedMatches 
+        ? Math.round(currentSeasonTotalMins / currentSeasonPlayedGws) 
+        : lastSeasonAvgMins;
     
-    const currentSeasonXG = playedPredictions.reduce((sum, pr) => sum + (pr.xG || 0), 0);
-    const currentSeasonXA = playedPredictions.reduce((sum, pr) => sum + (pr.xA || 0), 0);
-    const currentSeasonXG90 = currentSeasonTotalMins > 0 ? (currentSeasonXG / (currentSeasonTotalMins / 90)) : 0;
-    const currentSeasonXA90 = currentSeasonTotalMins > 0 ? (currentSeasonXA / (currentSeasonTotalMins / 90)) : 0;
+    const currentSeasonXG = hasPlayedMatches 
+        ? playedPredictions.reduce((sum, pr) => sum + (pr.xG || 0), 0)
+        : (player.xG || 0);
+    const currentSeasonXA = hasPlayedMatches 
+        ? playedPredictions.reduce((sum, pr) => sum + (pr.xA || 0), 0)
+        : (player.xA || 0);
+    const currentSeasonXG90 = (hasPlayedMatches && currentSeasonTotalMins > 0) 
+        ? (currentSeasonXG / (currentSeasonTotalMins / 90)) 
+        : (player.xG90 || 0);
+    const currentSeasonXA90 = (hasPlayedMatches && currentSeasonTotalMins > 0) 
+        ? (currentSeasonXA / (currentSeasonTotalMins / 90)) 
+        : (player.xA90 || 0);
     const currentFormPts = getLast5GamesActualPts(player, state.currentGw, state);
 
     const modalContent = `
@@ -2116,12 +2127,12 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
                             <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Current Pts</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
-                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${currentSeasonStarts} / ${currentSeasonPlayedGws}</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Starts / Played</span>
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${hasPlayedMatches ? `${currentSeasonStarts} / ${currentSeasonPlayedGws}` : currentSeasonStarts}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">${hasPlayedMatches ? 'Starts / Played' : 'Exp Starts'}</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
                             <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${currentSeasonAvgMins}m</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Avg Minutes</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">${hasPlayedMatches ? 'Avg Minutes' : 'Exp Avg Mins'}</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
                             <span class="detail-stat-val" style="font-size: 13px; font-weight: 700; color: #22c55e;">${currentFormPts} pts</span>
@@ -2137,11 +2148,11 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
                         </div>
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
                             <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${currentSeasonXG.toFixed(1)}</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Current xG</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">${hasPlayedMatches ? 'Current xG' : 'Proj xG'}</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
                             <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${currentSeasonXA.toFixed(1)}</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Current xA</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">${hasPlayedMatches ? 'Current xA' : 'Proj xA'}</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
                             <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${currentSeasonXG90.toFixed(2)}</span>
