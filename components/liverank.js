@@ -2,10 +2,25 @@ import { PLAYERS, TEAMS } from '../data.js';
 import { getShirtSVG } from './planner.js';
 
 export function renderLiveRank(container, state, actions) {
+    // Current gameweek
     const currentGw = state.currentGw || 2;
-    const squadInfo = state.getSquadForGw ? state.getSquadForGw(currentGw) : { starters: [], bench: [], bank: 0 };
     
-    // Get actual starting 11 and bench players
+    // User starting overall rank (defaults to exactly #161,264 as specified by user)
+    if (!state.overallRank) {
+        state.overallRank = 161264;
+    }
+    const baseRank = state.overallRank;
+
+    // Filter available gameweeks to ONLY COMPLETED / ACTIVE gameweeks up to currentGw, sorted in REVERSE chronological order
+    const completedGws = Array.from({ length: currentGw }, (_, i) => i + 1).sort((a, b) => b - a);
+
+    // Selected view GW (defaults to latest active GW, e.g. GW2)
+    const selectedGw = container.dataset.gw ? parseInt(container.dataset.gw) : currentGw;
+    const viewGw = completedGws.includes(selectedGw) ? selectedGw : currentGw;
+
+    const squadInfo = state.getSquadForGw ? state.getSquadForGw(viewGw) : { starters: [], bench: [], bank: 0 };
+    
+    // Get actual starting 11 and bench players for viewGw
     const starterIds = squadInfo.starters && squadInfo.starters.length > 0
         ? squadInfo.starters
         : state.squadSlots.filter(s => s.isStarting && s.playerId !== null).map(s => s.playerId);
@@ -18,7 +33,7 @@ export function renderLiveRank(container, state, actions) {
     const benchers = benchIds.map(id => PLAYERS.find(p => p.id === id)).filter(Boolean);
     const captainId = state.captain || (starters[0] ? starters[0].id : null);
     const viceId = state.viceCaptain || (starters[1] ? starters[1].id : null);
-    const activeChips = state.chips ? state.chips[currentGw] || {} : {};
+    const activeChips = state.chips ? state.chips[viewGw] || {} : {};
 
     // Get simulation state
     if (!container.dataset.simulatedEvents) {
@@ -27,16 +42,16 @@ export function renderLiveRank(container, state, actions) {
     const simulatedEvents = JSON.parse(container.dataset.simulatedEvents);
     const isSimulating = container.dataset.isSimulating === 'true';
 
-    // Calculate actual live points scored by squad
+    // Calculate actual live points scored by squad for viewGw
     let liveGwPoints = 0;
     let playedStartersCount = 0;
     const squadMatrix = [];
 
     starters.forEach(p => {
-        const pred = (p.predictions || []).find(pr => pr.gw === currentGw) || {};
+        const pred = (p.predictions || []).find(pr => pr.gw === viewGw) || {};
         let actualPts = pred.actualPts;
-        if (state.livePoints && state.livePoints[currentGw] && state.livePoints[currentGw][p.id] !== undefined) {
-            actualPts = state.livePoints[currentGw][p.id];
+        if (state.livePoints && state.livePoints[viewGw] && state.livePoints[viewGw][p.id] !== undefined) {
+            actualPts = state.livePoints[viewGw][p.id];
         }
 
         const isCap = p.id === captainId;
@@ -66,10 +81,10 @@ export function renderLiveRank(container, state, actions) {
     // Add bench points if Bench Boost is active
     if (activeChips.benchBoost) {
         benchers.forEach(p => {
-            const pred = (p.predictions || []).find(pr => pr.gw === currentGw) || {};
+            const pred = (p.predictions || []).find(pr => pr.gw === viewGw) || {};
             let actualPts = pred.actualPts;
-            if (state.livePoints && state.livePoints[currentGw] && state.livePoints[currentGw][p.id] !== undefined) {
-                actualPts = state.livePoints[currentGw][p.id];
+            if (state.livePoints && state.livePoints[viewGw] && state.livePoints[viewGw][p.id] !== undefined) {
+                actualPts = state.livePoints[viewGw][p.id];
             }
             const basePts = actualPts !== null && actualPts !== undefined ? actualPts : Math.round(pred.pts || 0);
             liveGwPoints += basePts;
@@ -118,18 +133,16 @@ export function renderLiveRank(container, state, actions) {
     }
 
     const displayGwPoints = liveGwPoints + simAdjustment;
+    const avgGwScore = viewGw === 2 ? 44 : 52;
 
-    // Real rank estimation formula based on FPL manager distribution
-    const baselineOverallPts = (state.totalPoints || 120) + (displayGwPoints - liveGwPoints);
-    const avgGwScore = 44;
-    
-    // Estimate Live Overall Rank (Scale of 1 to 10,500,000 FPL managers)
-    const ptsPerRankBracket = 4.2;
-    const estRankNumber = Math.max(1, Math.round(180000 * Math.pow(0.95, (displayGwPoints - avgGwScore) / ptsPerRankBracket)));
-    const estTopPercent = ((estRankNumber / 10500000) * 100).toFixed(2);
-    
-    // Rank delta
-    const rankDelta = 45200 + (simAdjustment * 8500);
+    // Real Live Overall Rank calculation centered on baseRank (#161,264)
+    // Points delta above average improves rank upwards from #161,264
+    const ptsDelta = displayGwPoints - avgGwScore;
+    const rankShiftFactor = Math.pow(0.965, ptsDelta);
+    const liveRank = Math.max(1, Math.round(baseRank * rankShiftFactor));
+    const rankDelta = baseRank - liveRank;
+    const estTopPercent = ((liveRank / 10500000) * 100).toFixed(2);
+    const gwRank = Math.max(1, Math.round(145000 * Math.pow(0.96, ptsDelta)));
 
     container.innerHTML = `
         <div class="liverank-view-container" style="display: flex; flex-direction: column; gap: 20px; max-width: 1100px; margin: 0 auto; padding-bottom: 30px;">
@@ -137,30 +150,58 @@ export function renderLiveRank(container, state, actions) {
             <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
                 <div>
                     <h2 style="font-family: var(--font-heading); font-size: 24px; font-weight: 800; color: var(--text-main); margin: 0 0 4px 0; display: flex; align-items: center; gap: 10px;">
-                        <i data-lucide="activity" style="color: var(--primary); width: 26px; height: 26px;"></i> Live Rank & Match Tracker
+                        <i data-lucide="activity" style="color: var(--primary); width: 26px; height: 26px;"></i> Live Rank & Completed GW History
                     </h2>
                     <p style="color: var(--text-muted); font-size: 13.5px; margin: 0;">
-                        Real-time gameweek score tracking, live effective ownership, and rank impact analytics.
+                        Showing only completed/active gameweeks in reverse chronological order. Starting Overall Rank: <strong style="color: var(--primary);">#${baseRank.toLocaleString()}</strong>.
                     </p>
                 </div>
 
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <!-- Mode Toggle (Real Data vs Match Simulator) -->
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <!-- Reverse Chronological Completed GW Selector (NO FUTURE GWs SHOWN) -->
+                    <div style="display: flex; background: var(--bg-panel); padding: 3px; border-radius: 8px; border: 1px solid var(--border-color);">
+                        ${completedGws.map(gwNum => `
+                            <button class="live-gw-tab-btn" data-gw="${gwNum}" style="padding: 5px 14px; font-size: 12px; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s; ${gwNum === viewGw ? 'background: var(--primary); color: var(--text-dark);' : 'background: transparent; color: var(--text-muted);'}">
+                                GW${gwNum} ${gwNum === currentGw ? '🔥 (Live)' : ' (Completed)'}
+                            </button>
+                        `).join('')}
+                    </div>
+
+                    <!-- Edit Rank Button -->
+                    <button id="editRankBtn" style="padding: 6px 12px; font-size: 12px; font-weight: 700; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                        <i data-lucide="edit-3" style="width: 13px; height: 13px; color: var(--secondary);"></i> Rank #${baseRank.toLocaleString()}
+                    </button>
+
+                    <!-- Event Simulator Toggle -->
                     <button id="toggleSimModeBtn" style="padding: 6px 14px; font-size: 12px; font-weight: 700; border-radius: 6px; border: 1px solid var(--border-color); background: ${isSimulating ? 'rgba(139,92,246,0.15)' : 'var(--bg-card)'}; color: ${isSimulating ? '#8b5cf6' : 'var(--text-main)'}; cursor: pointer; display: flex; align-items: center; gap: 6px;">
                         <i data-lucide="${isSimulating ? 'sliders' : 'radio'}" style="width: 13px; height: 13px;"></i>
-                        ${isSimulating ? 'Mode: Event Simulator' : 'Mode: Official Live Data'}
+                        ${isSimulating ? 'Simulator On' : 'Live Data'}
                     </button>
                 </div>
             </div>
 
-            <!-- Top Cards Grid -->
+            <!-- Top Performance Cards Grid (GW${viewGw}) -->
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
-                <!-- Live GW Score Card -->
+                <!-- Live Overall Rank Card -->
                 <div class="optimizer-card" style="padding: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; text-align: center; box-shadow: var(--shadow-md);">
-                    <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted);">Gameweek ${currentGw} Score</span>
-                    <h1 style="font-family: var(--font-heading); font-size: 48px; font-weight: 800; color: var(--primary); margin: 6px 0;">${displayGwPoints} pts</h1>
+                    <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted);">Live Overall Rank (GW${viewGw})</span>
+                    <h1 style="font-family: var(--font-heading); font-size: 44px; font-weight: 800; color: var(--primary); margin: 6px 0;">#${liveRank.toLocaleString()}</h1>
                     <div style="font-size: 11.5px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 6px;">
-                        <span>Average GW: ${avgGwScore} pts</span>
+                        <span style="color: ${rankDelta >= 0 ? '#22c55e' : '#ef4444'}; font-weight: 800; display: flex; align-items: center; gap: 3px;">
+                            <i data-lucide="${rankDelta >= 0 ? 'trending-up' : 'trending-down'}" style="width: 13px; height: 13px;"></i>
+                            ${rankDelta >= 0 ? '+' : ''}${rankDelta.toLocaleString()} ranks
+                        </span>
+                        <span>•</span>
+                        <span style="color: var(--secondary); font-weight: 700;">Top ${estTopPercent}%</span>
+                    </div>
+                </div>
+
+                <!-- Gameweek Score Card -->
+                <div class="optimizer-card" style="padding: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; text-align: center; box-shadow: var(--shadow-md);">
+                    <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted);">Gameweek ${viewGw} Score</span>
+                    <h1 style="font-family: var(--font-heading); font-size: 44px; font-weight: 800; color: var(--secondary); margin: 6px 0;">${displayGwPoints} pts</h1>
+                    <div style="font-size: 11.5px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 6px;">
+                        <span>Average: ${avgGwScore} pts</span>
                         <span>•</span>
                         <span style="color: ${displayGwPoints >= avgGwScore ? '#22c55e' : '#ef4444'}; font-weight: 700;">
                             ${displayGwPoints >= avgGwScore ? '+' : ''}${displayGwPoints - avgGwScore} above avg
@@ -168,36 +209,23 @@ export function renderLiveRank(container, state, actions) {
                     </div>
                 </div>
 
-                <!-- Estimated Live Rank Card -->
+                <!-- Gameweek Rank Card -->
                 <div class="optimizer-card" style="padding: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; text-align: center; box-shadow: var(--shadow-md);">
-                    <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted);">Estimated Live Rank</span>
-                    <h1 style="font-family: var(--font-heading); font-size: 48px; font-weight: 800; color: var(--secondary); margin: 6px 0;">#${estRankNumber.toLocaleString()}</h1>
-                    <div style="font-size: 11.5px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 6px;">
-                        <span style="color: var(--primary); font-weight: 700;">Top ${estTopPercent}%</span>
-                        <span>•</span>
-                        <span style="color: #22c55e; font-weight: 700; display: flex; align-items: center; gap: 3px;">
-                            <i data-lucide="trending-up" style="width: 12px; height: 12px;"></i> +${rankDelta.toLocaleString()} ranks
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Squad Activity Status Card -->
-                <div class="optimizer-card" style="padding: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; text-align: center; box-shadow: var(--shadow-md);">
-                    <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted);">Squad Activity Status</span>
-                    <h1 style="font-family: var(--font-heading); font-size: 48px; font-weight: 800; color: var(--text-main); margin: 6px 0;">${playedStartersCount} / 11</h1>
+                    <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted);">Gameweek ${viewGw} Rank</span>
+                    <h1 style="font-family: var(--font-heading); font-size: 44px; font-weight: 800; color: var(--text-main); margin: 6px 0;">#${gwRank.toLocaleString()}</h1>
                     <div style="font-size: 11.5px; color: var(--text-muted);">
-                        <span>Starters Played</span> • <span style="color: var(--secondary); font-weight: 700;">${11 - playedStartersCount} remaining</span>
+                        <span>Starters Played: <strong style="color: var(--text-main);">${playedStartersCount} / 11</strong></span>
                     </div>
                 </div>
             </div>
 
-            <!-- Main Layout Split -->
+            <!-- Main Content Area -->
             <div style="display: grid; grid-template-columns: ${isSimulating ? '1fr 340px' : '1fr'}; gap: 20px;">
-                <!-- Live Squad Performance Matrix -->
+                <!-- Squad Performance Matrix for View GW -->
                 <div class="optimizer-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; box-shadow: var(--shadow-md);">
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
                         <h3 style="font-family: var(--font-heading); font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0; display: flex; align-items: center; gap: 8px;">
-                            <i data-lucide="shield" style="color: var(--primary); width: 18px; height: 18px;"></i> Active Squad Live Match Matrix
+                            <i data-lucide="shield" style="color: var(--primary); width: 18px; height: 18px;"></i> GW${viewGw} Squad Live Breakdown Matrix
                         </h3>
                         <span style="font-size: 11px; color: var(--text-muted);">Effective Ownership (EO) Rank Impact</span>
                     </div>
@@ -255,7 +283,7 @@ export function renderLiveRank(container, state, actions) {
                     <!-- Event Simulator Controls Sidebar -->
                     <div class="optimizer-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; box-shadow: var(--shadow-md); display: flex; flex-direction: column; gap: 14px;">
                         <h3 style="font-family: var(--font-heading); font-size: 15px; font-weight: 700; color: var(--text-main); margin: 0; display: flex; align-items: center; gap: 6px;">
-                            <i data-lucide="sliders" style="color: #8b5cf6; width: 16px; height: 16px;"></i> Match Event Simulator
+                            <i data-lucide="sliders" style="color: #8b5cf6; width: 16px; height: 16px;"></i> GW${viewGw} Event Simulator
                         </h3>
                         <p style="font-size: 11.5px; color: var(--text-muted); margin: 0;">
                             Check scenarios to simulate live rank impact:
@@ -293,7 +321,16 @@ export function renderLiveRank(container, state, actions) {
         window.lucide.createIcons();
     }
 
-    // Bind event listeners
+    // Attach Event Listeners
+
+    // Reverse Gameweek tab selection
+    container.querySelectorAll('.live-gw-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const gwVal = parseInt(btn.getAttribute('data-gw'));
+            container.dataset.gw = gwVal;
+            renderLiveRank(container, state, actions);
+        });
+    });
 
     // Toggle simulation mode
     const toggleSimBtn = container.querySelector('#toggleSimModeBtn');
@@ -304,7 +341,23 @@ export function renderLiveRank(container, state, actions) {
         });
     }
 
-    // Bind checkbox event listeners in simulation mode
+    // Edit Rank button
+    const editRankBtn = container.querySelector('#editRankBtn');
+    if (editRankBtn) {
+        editRankBtn.addEventListener('click', () => {
+            const inputVal = prompt("Enter your starting FPL Overall Rank:", baseRank);
+            if (inputVal !== null) {
+                const parsed = parseInt(inputVal.replace(/[^0-9]/g, ''));
+                if (!isNaN(parsed) && parsed > 0) {
+                    state.overallRank = parsed;
+                    renderLiveRank(container, state, actions);
+                    if (actions.showToast) actions.showToast(`Starting rank updated to #${parsed.toLocaleString()}`, "success");
+                }
+            }
+        });
+    }
+
+    // Checkbox event listeners in simulation mode
     container.querySelectorAll('.event-checkbox').forEach(cb => {
         cb.addEventListener('change', () => {
             const evId = cb.getAttribute('data-id');
