@@ -749,7 +749,7 @@ class AppState {
             const p = PLAYERS.find(pl => pl.id === id);
             return sum + (p ? p.price : 0);
         }, 0);
-        let bank = 100.0 - sumCost;
+        let bank = Math.max(0.0, Math.round((100.0 - sumCost) * 10) / 10);
 
         // Trace and apply transfers sequentially up to targetGw
         // Keep track of free transfers
@@ -774,6 +774,9 @@ class AppState {
                     }
                 });
             }
+
+            // Ensure bank value does not drop below 0 due to market price increases of held squad players
+            bank = Math.max(0.0, Math.round(bank * 10) / 10);
 
             // Adjust free transfers for next week (starts at 1, max 5)
             // Wildcard/Free Hit gives unlimited free transfers for that week
@@ -1478,8 +1481,9 @@ const actions = {
             return sum + (p ? p.price : 0);
         }, 0);
 
-        const formattedSquadValue = `£${(totalVal + squadInfo.bank).toFixed(1)}m`;
-        const formattedBankValue = `£${squadInfo.bank.toFixed(1)}m`;
+        const safeBank = Math.max(0, squadInfo.bank);
+        const formattedSquadValue = `£${(totalVal + safeBank).toFixed(1)}m`;
+        const formattedBankValue = `£${safeBank.toFixed(1)}m`;
         const formattedTransfers = (state.currentGw === 1 || state.chips[state.currentGw]?.wildcard || state.chips[state.currentGw]?.freeHit) ? 'Unlimited' : squadInfo.freeTransfers;
 
         document.getElementById('squadValueDisplay').innerText = formattedSquadValue;
