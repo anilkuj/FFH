@@ -1,11 +1,13 @@
-﻿// Shot Map Component - powered by PitchAPI (EPL only)
+// Shot Map Component - powered by PitchAPI (EPL only)
 // Pitch: 105m x 68m. x=105 = attacking goal. Posts: y=30.34 & y=37.66.
 
 export function renderShotMap(container, state, actions) {
     const isLight = document.documentElement.classList.contains("light-theme");
-    const selectedDate = container.dataset.smDate || new Date().toISOString().slice(0,10);
-    const selectedMatchId = container.dataset.smMatchId || "";
-    const teamFilter = container.dataset.smTeamFilter || "all";
+
+    // Always read LIVE from dataset — never cache as const (stale closure bug)
+    const getDate       = () => container.dataset.smDate       || new Date().toISOString().slice(0,10);
+    const getMatchId    = () => container.dataset.smMatchId    || "";
+    const getTeamFilter = () => container.dataset.smTeamFilter || "all";
 
     const cardBg   = isLight ? "#ffffff" : "#1e293b";
     const border   = isLight ? "#e2e8f0" : "rgba(255,255,255,0.08)";
@@ -17,24 +19,31 @@ export function renderShotMap(container, state, actions) {
     const HOME_COLOR = "#3b82f6";
     const AWAY_COLOR = "#f97316";
 
-    async function render() {
+    // Mount chrome once on first load
+    function mountChrome() {
         renderChrome();
-        if (selectedMatchId) {
-            showShotLoading();
-            try {
-                const [sRes, lRes] = await Promise.all([
-                    fetch("/api/pitchapi/shots/" + selectedMatchId),
-                    fetch("/api/pitchapi/lineups/" + selectedMatchId)
-                ]);
-                const sJson = sRes.ok ? await sRes.json() : null;
-                const lJson = lRes.ok ? await lRes.json() : null;
-                let mObj = null;
-                try { mObj = JSON.parse(container.dataset.smMatchObj || "null"); } catch(e){}
-                renderShotContent(sJson, lJson, mObj);
-            } catch(e) { showInlineError("Failed to load: " + e.message); }
-        } else {
-            renderEmptyPrompt();
-        }
+        // Load matches for the initial date
+        const ms = container.querySelector("#sm-match-select");
+        const currentDate = getDate();
+        if (currentDate && ms) loadMatches(currentDate, ms);
+    }
+
+    // Refresh only the shot content area — called every time match/filter changes
+    async function refreshShots() {
+        const matchId = getMatchId();
+        if (!matchId) { renderEmptyPrompt(); return; }
+        showShotLoading();
+        try {
+            const [sRes, lRes] = await Promise.all([
+                fetch("/api/pitchapi/shots/" + matchId),
+                fetch("/api/pitchapi/lineups/" + matchId)
+            ]);
+            const sJson = sRes.ok ? await sRes.json() : null;
+            const lJson = lRes.ok ? await lRes.json() : null;
+            let mObj = null;
+            try { mObj = JSON.parse(container.dataset.smMatchObj || "null"); } catch(e){}
+            renderShotContent(sJson, lJson, mObj);
+        } catch(e) { showInlineError("Failed to load: " + e.message); }
     }
 
     function showShotLoading() {
@@ -54,8 +63,10 @@ export function renderShotMap(container, state, actions) {
 
     function renderChrome() {
         const today = new Date().toISOString().slice(0,10);
+        const currentDate   = getDate();
+        const currentFilter = getTeamFilter();
         const filterBtns = ["all","home","away"].map(f =>
-            "<button data-smfilter='" + f + "' style='padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid " + border + ";background:" + (teamFilter===f?"rgba(59,130,246,0.15)":cardBg) + ";color:" + (teamFilter===f?"#3b82f6":textMuted) + ";'>" +
+            "<button data-smfilter='" + f + "' style='padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid " + border + ";background:" + (currentFilter===f?"rgba(59,130,246,0.15)":cardBg) + ";color:" + (currentFilter===f?"#3b82f6":textMuted) + ";'>" +
             f.charAt(0).toUpperCase()+f.slice(1) + "</button>"
         ).join("");
 
@@ -68,7 +79,7 @@ export function renderShotMap(container, state, actions) {
             "<p style='margin:0;font-size:12px;color:" + textMuted + ";'>EPL shot-level xG data &bull; Powered by PitchAPI</p></div></div>" +
             "<div style='display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;align-items:flex-end;'>" +
             "<div><label style='display:block;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:" + textMuted + ";margin-bottom:6px;'>Match Date</label>" +
-            "<input type='date' id='sm-date-picker' value='" + selectedDate + "' max='" + today + "' style='background:" + cardBg + ";border:1px solid " + border + ";border-radius:8px;padding:8px 12px;font-size:13px;color:" + textMain + ";cursor:pointer;outline:none;height:38px;'></div>" +
+            "<input type='date' id='sm-date-picker' value='" + currentDate + "' max='" + today + "' style='background:" + cardBg + ";border:1px solid " + border + ";border-radius:8px;padding:8px 12px;font-size:13px;color:" + textMain + ";cursor:pointer;outline:none;height:38px;'></div>" +
             "<div style='flex:1;min-width:240px;'><label style='display:block;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:" + textMuted + ";margin-bottom:6px;'>Match</label>" +
             "<select id='sm-match-select' style='width:100%;background:" + cardBg + ";border:1px solid " + border + ";border-radius:8px;padding:8px 12px;font-size:13px;color:" + textMain + ";cursor:pointer;outline:none;height:38px;'><option value=''>- Pick a date to load matches -</option></select></div>" +
             "<div><label style='display:block;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:" + textMuted + ";margin-bottom:6px;'>Show</label><div style='display:flex;gap:4px;'>" + filterBtns + "</div></div></div>" +
@@ -81,23 +92,23 @@ export function renderShotMap(container, state, actions) {
 
         const dp = container.querySelector("#sm-date-picker");
         const ms = container.querySelector("#sm-match-select");
-        if (selectedDate) loadMatches(selectedDate, ms);
         dp.addEventListener("change", () => {
             container.dataset.smDate = dp.value;
             container.dataset.smMatchId = "";
             container.dataset.smMatchObj = "";
             loadMatches(dp.value, ms);
+            renderEmptyPrompt();
         });
         ms.addEventListener("change", () => {
             const opt = ms.options[ms.selectedIndex];
             container.dataset.smMatchId = ms.value;
             container.dataset.smMatchObj = opt.dataset.matchObj || "";
-            if (ms.value) { showShotLoading(); render(); } else renderEmptyPrompt();
+            refreshShots();
         });
         container.querySelectorAll("[data-smfilter]").forEach(btn => {
             btn.addEventListener("click", () => {
                 container.dataset.smTeamFilter = btn.dataset.smfilter;
-                if (selectedMatchId) render(); else renderEmptyPrompt();
+                refreshShots();
             });
         });
     }
@@ -148,7 +159,7 @@ export function renderShotMap(container, state, actions) {
             if (!awayId && sides.length > 1) awayId = sides[1].team_id;
             (side.shots||[]).forEach(s => allShots.push(Object.assign({},s,{team_id:side.team_id})));
         });
-        const filter = container.dataset.smTeamFilter || "all";
+        const filter = getTeamFilter();
         let filtered = filter==="home" ? allShots.filter(s=>s.team_id===homeId)
                       : filter==="away" ? allShots.filter(s=>s.team_id===awayId)
                       : allShots;
@@ -355,5 +366,5 @@ export function renderShotMap(container, state, actions) {
         });
     }
 
-    render();
+    mountChrome();
 }
