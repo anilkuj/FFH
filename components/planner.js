@@ -2059,55 +2059,57 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
                     <h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; gap: 6px; margin: 0 0 10px 0;">
                         <i data-lucide="bar-chart-3" style="width: 14px; height: 14px;"></i> OPTA Match Stats
                     </h4>
-                    <div class="player-detail-stats-grid" style="margin: 0; padding: 0; grid-template-columns: repeat(3, 1fr); gap: 8px;">
-                        <div class="detail-stat-box" style="padding: 8px;">
-                            <span class="detail-stat-val" style="font-size: 13px;">£${player.price.toFixed(1)}m</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px;">Price</span>
+                    <div class="player-detail-stats-grid" style="margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
+                        <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">£${player.price.toFixed(1)}m</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Price</span>
                         </div>
-                        <div class="detail-stat-box" style="padding: 8px;">
-                            <span class="detail-stat-val" style="font-size: 13px;">${player.ownership.toFixed(1)}%</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px;">Ownership</span>
+                        <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${player.ownership.toFixed(1)}%</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Ownership</span>
                         </div>
-                        <div class="detail-stat-box" style="padding: 8px;">
-                            <span class="detail-stat-val" style="font-size: 13px;">${player.points}</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px;">Total Points</span>
+                        <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${player.points}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Total Pts</span>
                         </div>
-                        <div class="detail-stat-box" style="padding: 8px;">
-                            <span class="detail-stat-val" style="font-size: 13px;">${starts}</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px;">Starts</span>
+                        <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${starts}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Starts</span>
                         </div>
-                        <div class="detail-stat-box" style="padding: 8px;">
-                            <span class="detail-stat-val" style="font-size: 13px;">${avgMins}m</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px;">Avg Minutes</span>
+                        <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${avgMins}m</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Avg Mins</span>
                         </div>
-                        <div class="detail-stat-box" style="padding: 8px;">
-                            <span class="detail-stat-val" style="font-size: 13px;">${prediction.pts.toFixed(1)}</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px;">GW${state.currentGw} Exp Pts</span>
+                        <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700; color: #3b82f6;">${prediction.pts.toFixed(1)}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Next xP</span>
                         </div>
-                        <div class="detail-stat-box" style="padding: 8px;">
-                            <span class="detail-stat-val" style="font-size: 13px;">${get5GwXp(player, state.currentGw).toFixed(1)}</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px;">5-GW Exp Pts</span>
+                        <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700; color: #8b5cf6;">${get5GwXp(player, state.currentGw).toFixed(1)}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">5-GW xP</span>
                         </div>
-                        <div class="detail-stat-box" style="padding: 8px;">
-                            <span class="detail-stat-val" style="font-size: 13px;">${player.xG.toFixed(1)}</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px;">Expected Goals</span>
+                        <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${player.xG.toFixed(1)}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">xG</span>
                         </div>
-                        <div class="detail-stat-box" style="padding: 8px;">
-                            <span class="detail-stat-val" style="font-size: 13px;">${player.xA.toFixed(1)}</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px;">Expected Assists</span>
+                        <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${player.xA.toFixed(1)}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">xA</span>
                         </div>
-                        <div class="detail-stat-box" style="padding: 8px;">
-                            <span class="detail-stat-val" style="font-size: 13px;">${player.ictIndex.toFixed(1)}</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px;">ICT Index</span>
+                        <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${player.ictIndex.toFixed(1)}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">ICT Index</span>
                         </div>
-                        <div class="detail-stat-box" style="padding: 8px;">
-                            <span class="detail-stat-val" style="font-size: 13px;">${player.xG90.toFixed(2)}</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px;">xG per 90</span>
+                        <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${player.xG90.toFixed(2)}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">xG90</span>
                         </div>
-                        <div class="detail-stat-box" style="padding: 8px;">
-                            <span class="detail-stat-val" style="font-size: 13px;">${player.xA90.toFixed(2)}</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px;">xA per 90</span>
-                                       <!-- Suitable Replacement Candidates (Compact Table Format with Over-Budget Highlighting) -->
+                        <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${player.xA90.toFixed(2)}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">xA90</span>
+                        </div>
+                    </div>
+                </div>
                 <div style="border-top: 1px solid var(--border-color); padding-top: 12px; display: flex; flex-direction: column; gap: 8px;">
                     <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;">
                         <h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--secondary); display: flex; align-items: center; gap: 6px; margin: 0;">
