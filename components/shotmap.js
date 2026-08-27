@@ -23,9 +23,38 @@ export function renderShotMap(container, state, actions) {
     const EPL_TEAMS = [
         "Arsenal", "Aston Villa", "Bournemouth", "Brentford", "Brighton",
         "Chelsea", "Crystal Palace", "Everton", "Fulham", "Ipswich",
-        "Leicester", "Liverpool", "Man City", "Man Utd", "Newcastle",
+        "Leicester", "Liverpool", "Man City", "Man United", "Newcastle",
         "Nottingham Forest", "Southampton", "Tottenham", "West Ham", "Wolves"
     ];
+
+    // Helper for robust team name matching against PitchAPI data
+    function matchesTeamName(teamObj, targetName) {
+        if (!teamObj || !teamObj.name) return false;
+        const name = teamObj.name.toLowerCase();
+        const query = targetName.toLowerCase();
+
+        if (name.includes(query)) return true;
+
+        if (query.includes("man city") || query.includes("manchester city")) {
+            return name.includes("manchester city") || name.includes("man city") || name.includes("mci") || name.includes("city");
+        }
+        if (query.includes("man utd") || query.includes("man united") || query.includes("manchester united")) {
+            return name.includes("manchester united") || name.includes("man utd") || name.includes("man united") || name.includes("united") || name.includes("mun");
+        }
+        if (query.includes("spurs") || query.includes("tottenham")) {
+            return name.includes("tottenham") || name.includes("spurs");
+        }
+        if (query.includes("wolves") || query.includes("wolverhampton")) {
+            return name.includes("wolverhampton") || name.includes("wolves");
+        }
+        if (query.includes("forest") || query.includes("nottingham")) {
+            return name.includes("nottingham") || name.includes("nott") || name.includes("forest");
+        }
+        if (query.includes("west ham")) {
+            return name.includes("west ham") || name.includes("whu");
+        }
+        return false;
+    }
 
     // Mount chrome once on first load
     function mountChrome() {
@@ -188,7 +217,12 @@ export function renderShotMap(container, state, actions) {
     // Filter Mode A: Load matches strictly by selected TEAM NAME
     async function loadMatchesByTeam(teamName, selectEl) {
         selectEl.innerHTML = "<option value=''>Loading " + teamName + " matches...</option>";
-        const targetDates = ["2026-08-26", "2026-08-25", "2026-08-24", "2026-08-23", "2026-08-22", "2026-08-17", "2026-08-16", "2026-08-15"];
+        
+        // Comprehensive list of recent Premier League matchday dates
+        const targetDates = [
+            "2026-08-28", "2026-08-27", "2026-08-26", "2026-08-25", "2026-08-24", "2026-08-23", "2026-08-22",
+            "2026-08-18", "2026-08-17", "2026-08-16", "2026-08-15"
+        ];
 
         try {
             let matches = [];
@@ -198,9 +232,7 @@ export function renderShotMap(container, state, actions) {
                     const json = await res.json();
                     const mList = json.matches || [];
                     mList.forEach(m => {
-                        const queryName = teamName.toLowerCase();
-                        if ((m.home_team && m.home_team.name.toLowerCase().includes(queryName)) ||
-                            (m.away_team && m.away_team.name.toLowerCase().includes(queryName))) {
+                        if (matchesTeamName(m.home_team, teamName) || matchesTeamName(m.away_team, teamName)) {
                             m._matchDate = d;
                             matches.push(m);
                         }
