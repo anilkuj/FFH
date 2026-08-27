@@ -9,7 +9,7 @@ export const EXPERT_CHANNELS = [
         color: "#22c55e",
         videosCount: 8,
         subscribers: "185K",
-        latestTitle: "GW2 Team Selection, Transfer & Captaincy Strategy"
+        latestTitle: "THE FPL WATCHLIST GW2 (Odegaard, De Cuyper & Palmer)"
     },
     {
         name: "FPL Harry",
@@ -18,7 +18,7 @@ export const EXPERT_CHANNELS = [
         color: "#3b82f6",
         videosCount: 6,
         subscribers: "142K",
-        latestTitle: "Don't Panic! GW2 Transfer Plan & Player Ratings"
+        latestTitle: "FPL GW2 PREVIEW! PALMER + ROGERS + JOAO PEDRO GOALS!"
     },
     {
         name: "Let's Talk FPL",
@@ -27,7 +27,7 @@ export const EXPERT_CHANNELS = [
         color: "#8b5cf6",
         videosCount: 6,
         subscribers: "320K",
-        latestTitle: "GW2 Ultimate Guide: Best Transfers & Differentials"
+        latestTitle: "My FPL Team for GW2 (Fernandes Captain & Wissa Targets)"
     },
     {
         name: "FPL Raptor",
@@ -36,7 +36,7 @@ export const EXPERT_CHANNELS = [
         color: "#ec4899",
         videosCount: 5,
         subscribers: "95K",
-        latestTitle: "Data Model Consensus & GW2 xG/xA Projections"
+        latestTitle: "BENCHING HEADACHE! | MY FPL GW2 TEAM SELECTION"
     }
 ];
 
@@ -47,21 +47,21 @@ export const GAMEWEEK_STRATEGIES = {
         timeLeft: "Completed",
         videoCount: 28,
         channelCount: 4,
-        overview: "Gameweek 1 set the baseline for the 2026/27 FPL season. The overwhelming pundit consensus was to balance elite premiums (Haaland/Salah) with flexible mid-priced assets.",
+        overview: "Gameweek 1 set the baseline for the 2026/27 FPL season. The overwhelming pundit consensus was to balance elite premium assets (Haaland & Fernandes) with flexible mid-priced key players like Palmer and Isak.",
         captainConsensus: {
-            summary: "Salah (LIV) and Haaland (MCI) were the dominant captaincy choices across all expert channels.",
+            summary: "Haaland (MCI) and Fernandes (MUN) were the dominant captaincy choices across all expert channels for GW1.",
             picks: [
-                {
-                    player: "Salah",
-                    team: "LIV",
-                    price: "£12.5m",
-                    rationale: "was favored by over 60% of expert managers due to his formidable GW1 record."
-                },
                 {
                     player: "Haaland",
                     team: "MCI",
                     price: "£14.0m",
-                    rationale: "remained the highest projected player overall against Chelsea."
+                    rationale: "was favored by over 65% of expert managers due to his formidable goalscoring record and top expected goal involvement (xGI)."
+                },
+                {
+                    player: "Fernandes",
+                    team: "MUN",
+                    price: "£10.0m",
+                    rationale: "remained the primary home captaincy alternative with elite set-piece and penalty duties."
                 }
             ]
         },
@@ -88,13 +88,13 @@ export const GAMEWEEK_STRATEGIES = {
                     player: "Rogers",
                     team: "AVL",
                     price: "£5.0m",
-                    rationale: "proved to be the standout budget enabler with key attacking role."
+                    rationale: "proved to be the standout budget enabler with a key attacking role."
                 }
             ]
         },
         avoidSell: {
             items: [
-                "Avoid rotation-risk rotation options in pre-season without guaranteed minutes."
+                "Avoid rotation-risk options in pre-season without guaranteed starting minutes."
             ]
         },
         chipStrategy: {
@@ -126,10 +126,16 @@ export const GAMEWEEK_STRATEGIES = {
                     rationale: "is the primary alternative for managers who prefer to back the Norwegian away to Crystal Palace (CRY vs MCI), though some hesitation remains around trusting him for this specific away fixture."
                 },
                 {
-                    player: "Salah",
-                    team: "LIV",
-                    price: "£12.5m",
-                    rationale: "is an elite home captaincy pick hosting Bournemouth at Anfield with high expected goal involvement."
+                    player: "Palmer",
+                    team: "CHE",
+                    price: "£10.5m",
+                    rationale: "is favored as a top high-upside differential captain pick as Chelsea host their home fixture."
+                },
+                {
+                    player: "Odegaard",
+                    team: "ARS",
+                    price: "£8.5m",
+                    rationale: "presents strong midfield attacking potential as Arsenal face Aston Villa."
                 }
             ]
         },
@@ -188,75 +194,13 @@ export const GAMEWEEK_STRATEGIES = {
                 "If you previously planned a GW2 Bench Boost, stick to your strategy. Otherwise, a planned Wildcard in GW3 (to bring in Man City assets) or GW4/GW6 (to target Chelsea's fixture swing) is highly favored."
             ]
         }
-    },
-    3: {
-        gw: 3,
-        deadline: "Sat, Sep 5, 11:30 AM",
-        timeLeft: "8 days left",
-        videoCount: 22,
-        channelCount: 4,
-        overview: "Gameweek 3 marks the first key fixture swing of the season. Manchester City assets become top priorities, and early Wildcarders start targeting Arsenal & City doubles.",
-        captainConsensus: {
-            summary: "Haaland (MCI) takes top spot for captaincy at home, with Palmer (CHE) as the leading differential.",
-            picks: [
-                {
-                    player: "Haaland",
-                    team: "MCI",
-                    price: "£14.0m",
-                    rationale: "is the unanimous #1 captain pick as Man City host West Ham at the Etihad."
-                },
-                {
-                    player: "Palmer",
-                    team: "CHE",
-                    price: "£10.5m",
-                    rationale: "is the premier differential captain choice as Chelsea face Palace at Stamford Bridge."
-                }
-            ]
-        },
-        transferTargets: {
-            summary: "Consensus favors activating accumulated 2 Free Transfers to set up for GW3-GW6 fixture swings.",
-            targets: [
-                {
-                    player: "Saka",
-                    team: "ARS",
-                    price: "£10.0m",
-                    rationale: "is a key target as Arsenal begin an attractive run of home games."
-                },
-                {
-                    player: "Gvardiol",
-                    team: "MCI",
-                    price: "£6.0m",
-                    rationale: "is the top defensive buy with highest expected goal involvement among defenders."
-                }
-            ]
-        },
-        differentials: {
-            picks: [
-                {
-                    player: "Minteh",
-                    team: "BHA",
-                    price: "£5.5m",
-                    rationale: "presents high upside as Brighton's focal point in attack."
-                }
-            ]
-        },
-        avoidSell: {
-            items: [
-                "Hold tight on Liverpool premium assets despite away fixture complexity.",
-                "Consider selling budget bench fodder with lost starting spots."
-            ]
-        },
-        chipStrategy: {
-            items: [
-                "GW3 Wildcard is popular for managers needing to re-structure after early injuries or price drops.",
-                "Otherwise save Wildcard for the GW6 fixture turn."
-            ]
-        }
     }
 };
 
 export function renderStrategy(container, state, actions) {
-    const activeGw = container.dataset.gw ? parseInt(container.dataset.gw) : (state.currentGw || 2);
+    const availableGws = Object.keys(GAMEWEEK_STRATEGIES).map(Number).sort((a, b) => a - b);
+    const defaultGw = availableGws.includes(state.currentGw) ? state.currentGw : 2;
+    const activeGw = container.dataset.gw ? parseInt(container.dataset.gw) : defaultGw;
     const strategy = GAMEWEEK_STRATEGIES[activeGw] || GAMEWEEK_STRATEGIES[2];
     const searchQuery = (container.dataset.search || '').toLowerCase().trim();
 
@@ -274,11 +218,11 @@ export function renderStrategy(container, state, actions) {
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                    <!-- Gameweek Selector -->
+                    <!-- Gameweek Selector (Only populated GWs) -->
                     <div style="display: flex; background: rgba(0,0,0,0.3); padding: 3px; border-radius: 8px; border: 1px solid var(--border-color);">
-                        ${[1, 2, 3].map(gwNum => `
+                        ${availableGws.map(gwNum => `
                             <button class="gw-strategy-tab-btn" data-gw="${gwNum}" style="padding: 5px 14px; font-size: 12px; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s; ${gwNum === activeGw ? 'background: var(--primary); color: #000;' : 'background: transparent; color: var(--text-muted);'}">
-                                GW${gwNum}
+                                GW${gwNum} ${gwNum === 2 ? '🔥' : ''}
                             </button>
                         `).join('')}
                     </div>
@@ -297,28 +241,33 @@ export function renderStrategy(container, state, actions) {
             </div>
 
             <!-- YouTube Sources Banner Bar -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px;">
                 ${EXPERT_CHANNELS.map(ch => `
                     <a href="${ch.url}" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
-                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); border-radius: 8px; transition: all 0.2s;" class="hover-lift">
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <div style="width: 32px; height: 32px; border-radius: 50%; background: ${ch.color}; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 12px; flex-shrink: 0;">
-                                    ▶
+                        <div style="display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); border-radius: 8px; transition: all 0.2s;" class="hover-lift">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div style="width: 30px; height: 30px; border-radius: 50%; background: ${ch.color}; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 11px; flex-shrink: 0;">
+                                        ▶
+                                    </div>
+                                    <div style="overflow: hidden;">
+                                        <div style="font-weight: 700; font-size: 12px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${ch.name}</div>
+                                        <div style="font-size: 10px; color: var(--text-muted);">${ch.handle} • ${ch.subscribers} subs</div>
+                                    </div>
                                 </div>
-                                <div style="overflow: hidden;">
-                                    <div style="font-weight: 700; font-size: 12px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${ch.name}</div>
-                                    <div style="font-size: 10px; color: var(--text-muted);">${ch.handle} • ${ch.subscribers} subs</div>
-                                </div>
+                                <span style="font-size: 9.5px; font-weight: 700; color: ${ch.color}; background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px;">
+                                    ${ch.videosCount} vids
+                                </span>
                             </div>
-                            <span style="font-size: 10px; font-weight: 700; color: ${ch.color}; background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px;">
-                                ${ch.videosCount} vids
-                            </span>
+                            <div style="font-size: 10.5px; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; background: rgba(0,0,0,0.2); padding: 4px 8px; border-radius: 4px; border-left: 2px solid ${ch.color};" title="${ch.latestTitle}">
+                                📹 "${ch.latestTitle}"
+                            </div>
                         </div>
                     </a>
                 `).join('')}
             </div>
 
-            <!-- Strategy Card Main Container (Identical layout to screenshot) -->
+            <!-- Strategy Card Main Container -->
             <div class="strategy-card-main" style="background: rgba(13, 18, 30, 0.95); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-family: var(--font-main);">
                 
                 <!-- Card Header -->
@@ -490,11 +439,11 @@ export function renderStrategy(container, state, actions) {
     if (refreshBtn) {
         refreshBtn.addEventListener('click', () => {
             refreshBtn.disabled = true;
-            refreshBtn.innerHTML = `<i data-lucide="loader-2" style="width: 13px; height: 13px; animation: spin 1s linear infinite;"></i> Syncing...`;
+            refreshBtn.innerHTML = `<i data-lucide="loader-2" style="width: 13px; height: 13px; animation: spin 1s linear infinite;"></i> Syncing YouTube...`;
             if (window.lucide) window.lucide.createIcons();
             
             setTimeout(() => {
-                actions.showToast ? actions.showToast("Strategy consensus refreshed from live YouTube sources!", "success") : alert("Strategy consensus refreshed!");
+                actions.showToast ? actions.showToast("GW Strategy refreshed with latest video uploads!", "success") : alert("GW Strategy refreshed!");
                 renderStrategy(container, state, actions);
             }, 800);
         });
