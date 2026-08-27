@@ -23,6 +23,7 @@ import { renderSolioProjections } from './components/solioprojections.js';
 import { renderTopPerformers } from './components/topperformers.js';
 import { renderLeagueAnalyzer } from './components/leagueanalyzer.js';
 import { renderShotMap } from './components/shotmap.js';
+import { renderStrategy } from './components/strategy.js';
 
 if (typeof window !== 'undefined') {
     window.PLAYERS = PLAYERS;
@@ -1446,6 +1447,9 @@ const actions = {
                 break;
             case 'reveals':
                 renderReveals(container, state, actions);
+                break;
+            case 'strategy':
+                renderStrategy(container, state, actions);
                 break;
             case 'solio':
                 renderSolioProjections(container, state, actions);
