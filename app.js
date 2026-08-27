@@ -220,6 +220,10 @@ class AppState {
             }
         }
 
+        // Custom Free Transfers override per Gameweek: { gwNum: number }
+        const savedCustomFt = localStorage.getItem('fpl_hub_custom_ft');
+        this.customFreeTransfers = safeJsonParse(savedCustomFt, {});
+
         // Planned transfers: { gwNum: [ { out: id, in: id } ] }
         const savedTransfers = localStorage.getItem('fpl_hub_transfers');
         this.transfers = safeJsonParse(savedTransfers, null) || {
@@ -372,6 +376,7 @@ class AppState {
         localStorage.setItem('fpl_hub_prioritize_defcon', (this.prioritizeDefcon || false).toString());
         localStorage.setItem('fpl_hub_prioritize_spot_kicks', (this.prioritizeSpotKicks || false).toString());
         localStorage.setItem('fpl_hub_optimizer_objective', this.optimizerObjective || 'xp');
+        localStorage.setItem('fpl_hub_custom_ft', JSON.stringify(this.customFreeTransfers || {}));
         localStorage.setItem('fpl_hub_active_chips', JSON.stringify(this.chips));
         localStorage.setItem('fpl_hub_plan_bench_boost', (this.planBenchBoost || false).toString());
         localStorage.setItem('fpl_hub_bench_boost_target_gw', (this.benchBoostTargetGw || 1).toString());
@@ -798,6 +803,11 @@ class AppState {
                     freeTransfers = Math.max(0, freeTransfers - txCount);
                 }
             }
+        }
+
+        // Apply custom free transfers override if user has set it for targetGw
+        if (this.customFreeTransfers && this.customFreeTransfers[targetGw] !== undefined) {
+            freeTransfers = this.customFreeTransfers[targetGw];
         }
 
         return {
@@ -1488,7 +1498,28 @@ const actions = {
 
         document.getElementById('squadValueDisplay').innerText = formattedSquadValue;
         document.getElementById('bankValueDisplay').innerText = formattedBankValue;
-        document.getElementById('freeTransfersDisplay').innerText = formattedTransfers;
+        const ftEl = document.getElementById('freeTransfersDisplay');
+        if (ftEl) {
+            ftEl.innerText = formattedTransfers;
+            if (!ftEl.dataset.hasFtListener) {
+                ftEl.dataset.hasFtListener = "true";
+                ftEl.style.cursor = "pointer";
+                ftEl.title = "Click to set your available Free Transfers balance";
+                ftEl.addEventListener('click', () => {
+                    const input = prompt(`Set available Free Transfers for Gameweek ${state.currentGw} (1 to 5):`, squadInfo.freeTransfers);
+                    if (input !== null) {
+                        const val = parseInt(input.trim(), 10);
+                        if (!isNaN(val) && val >= 0 && val <= 5) {
+                            if (!state.customFreeTransfers) state.customFreeTransfers = {};
+                            state.customFreeTransfers[state.currentGw] = val;
+                            state.saveState();
+                            actions.syncTopBar();
+                            actions.showToast(`Set GW${state.currentGw} Free Transfers to ${val} FT!`, 'success');
+                        }
+                    }
+                });
+            }
+        }
 
         // Hide or show top header GW selector pill for Live Rank tab (isolated)
         const gwSelectorPill = document.querySelector('.gw-selector-pill');
