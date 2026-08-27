@@ -1989,14 +1989,18 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
 
     // Last Season (2025/26) Historical Stats
     const lastSeasonStarts = typeof player.GS === 'number' ? player.GS : 0;
-    const lastSeasonAvgMins = typeof player.MPPG === 'number' ? player.MPPG.toFixed(0) : '0';
-    const lastSeasonPts = typeof player.points === 'number' ? player.points : 0;
-    const lastSeasonXG = (player.xG || 0).toFixed(1);
+    const lastSeasonXA = (player.xA || 0).toFixed(1);
+    const lastSeasonXG90 = (player.xG90 || 0).toFixed(2);
+    const lastSeasonXA90 = (player.xA90 || 0).toFixed(2);
     const lastSeasonIct = (player.ictIndex || 0).toFixed(1);
 
     // Current Season (2026/27) Actual / Expected Stats
     const playedPredictions = (player.predictions || []).filter(pr => pr.gw < state.currentGw && pr.actualPts !== null && pr.actualPts !== undefined);
     const hasPlayedMatches = playedPredictions.length > 0;
+
+    let currentSeasonStarts = 0;
+    let currentSeasonAvgMins = 0;
+    let currentSeasonTotalMins = 0;
 
     const currentSeasonTotalPts = playedPredictions.reduce((sum, pr) => {
         let val = pr.actualPts;
@@ -2005,15 +2009,35 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
         }
         return sum + (val || 0);
     }, 0);
+
     const currentSeasonPlayedGws = playedPredictions.length;
-    const currentSeasonStarts = hasPlayedMatches 
-        ? playedPredictions.filter(pr => (pr.actualPts || 0) > 0).length
-        : lastSeasonStarts;
-    
-    let currentSeasonTotalMins = playedPredictions.reduce((sum, pr) => sum + (pr.mins !== undefined ? pr.mins : ((pr.actualPts || 0) > 0 ? 75 : 0)), 0);
-    const currentSeasonAvgMins = hasPlayedMatches 
-        ? Math.round(currentSeasonTotalMins / currentSeasonPlayedGws) 
-        : lastSeasonAvgMins;
+
+    if (hasPlayedMatches) {
+        playedPredictions.forEach(pr => {
+            let pts = pr.actualPts;
+            if (state && state.livePoints && state.livePoints[pr.gw] && state.livePoints[pr.gw][player.id] !== undefined) {
+                pts = state.livePoints[pr.gw][player.id];
+            }
+            let mins = pr.mins;
+            if (mins === undefined) {
+                if (pts > 0) {
+                    mins = Math.max(60, Math.round(lastSeasonAvgMins || 75));
+                } else if (lastSeasonStarts > 15) {
+                    mins = Math.round(lastSeasonAvgMins || 75);
+                } else {
+                    mins = 0;
+                }
+            }
+            currentSeasonTotalMins += mins;
+            if (mins > 45 || pts > 0 || lastSeasonStarts > 15) {
+                currentSeasonStarts++;
+            }
+        });
+        currentSeasonAvgMins = Math.round(currentSeasonTotalMins / currentSeasonPlayedGws);
+    } else {
+        currentSeasonStarts = lastSeasonStarts;
+        currentSeasonAvgMins = lastSeasonAvgMins;
+    }
     
     const currentSeasonXG = hasPlayedMatches 
         ? playedPredictions.reduce((sum, pr) => sum + (pr.xG || 0), 0)
@@ -2080,7 +2104,7 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
                         </div>
                         <div class="detail-stat-box" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;">
                             <span class="tooltip-rating-value ${getBadgeClass(ratings.availability)}" style="font-size: 14px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">${ratings.availability}</span>
-                            <span class="detail-stat-lbl" style="font-size: 10px; margin-top: 6px;">Availability</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; margin-top: 6px;">Availability</span>
                         </div>
                     </div>
                 </div>
@@ -2127,8 +2151,8 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
                             <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Current Pts</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
-                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${hasPlayedMatches ? `${currentSeasonStarts} / ${currentSeasonPlayedGws}` : currentSeasonStarts}</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">${hasPlayedMatches ? 'Starts / Played' : 'Exp Starts'}</span>
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${currentSeasonStarts}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">${hasPlayedMatches ? 'Starts' : 'Exp Starts'}</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
                             <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${currentSeasonAvgMins}m</span>
