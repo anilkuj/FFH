@@ -1985,7 +1985,7 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
         const xpA = get5GwXp(a, state.currentGw);
         const xpB = get5GwXp(b, state.currentGw);
         return xpB - xpA;
-    }).slice(0, 12);
+    });
 
     // Last Season (2025/26) Historical Stats
     const lastSeasonStarts = typeof player.GS === 'number' ? player.GS : 0;
@@ -2227,6 +2227,22 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
                             </tbody>
                         </table>
                     </div>
+
+                    <!-- Pagination Bar -->
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 11px; padding: 6px 10px; background: rgba(0,0,0,0.18); border-radius: 6px; border: 1px solid var(--border-color);">
+                        <div id="replacementPaginationInfo" style="color: var(--text-muted); font-weight: 600; font-size: 10.5px;">
+                            Showing 1-30 of ${replacementCandidates.length} ${player.position} Candidates
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <button id="replacementPrevPageBtn" style="padding: 3px 8px; font-size: 10px; font-weight: 700; border: 1px solid var(--border-color); border-radius: 4px; background: var(--surface-light); color: var(--text-main); cursor: pointer;" disabled>
+                                ← Prev
+                            </button>
+                            <span id="replacementPageLabel" style="font-weight: 700; color: var(--primary); font-size: 10.5px;">Page 1 of ${Math.max(1, Math.ceil(replacementCandidates.length / 30))}</span>
+                            <button id="replacementNextPageBtn" style="padding: 3px 8px; font-size: 10px; font-weight: 700; border: 1px solid var(--border-color); border-radius: 4px; background: var(--surface-light); color: var(--text-main); cursor: pointer;">
+                                Next →
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2321,6 +2337,8 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
 
         let sortCol = 'xp5';
         let sortAsc = false;
+        let currentPage = 1;
+        const pageSize = 30;
 
         const renderCandidateRows = () => {
             candidateRowsData.sort((a, b) => {
@@ -2338,80 +2356,138 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
                 return sortAsc ? valA - valB : valB - valA;
             });
 
+            const totalItems = candidateRowsData.length;
+            const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+            if (currentPage > totalPages) currentPage = totalPages;
+            if (currentPage < 1) currentPage = 1;
+
+            const startIdx = (currentPage - 1) * pageSize;
+            const endIdx = Math.min(startIdx + pageSize, totalItems);
+            const pageItems = candidateRowsData.slice(startIdx, endIdx);
+
             const tbody = document.querySelector('#replacementTbody');
-            if (!tbody) return;
+            if (tbody) {
+                tbody.innerHTML = pageItems.map((item, idx) => {
+                    const actualRank = startIdx + idx + 1;
+                    const { comp, nextXp, fiveXp, last5Pts, fdrData, newBank, budgetOk, allOk, disabledReason } = item;
+                    const rowStyle = !budgetOk 
+                        ? 'background: rgba(239, 68, 68, 0.09); border-left: 3px solid #ef4444;' 
+                        : ((startIdx + idx) % 2 === 0 ? 'background: rgba(255,255,255,0.015);' : 'background: transparent;');
 
-            tbody.innerHTML = candidateRowsData.map((item, idx) => {
-                const { comp, nextXp, fiveXp, last5Pts, fdrData, newBank, budgetOk, allOk, disabledReason } = item;
-                const rowStyle = !budgetOk 
-                    ? 'background: rgba(239, 68, 68, 0.09); border-left: 3px solid #ef4444;' 
-                    : (idx % 2 === 0 ? 'background: rgba(255,255,255,0.015);' : 'background: transparent;');
+                    return `
+                        <tr style="${rowStyle} border-bottom: 1px solid var(--border-color); transition: background 0.15s;">
+                            <td style="padding: 6px 4px; text-align: center; font-weight: 800; color: var(--text-muted); font-size: 10px;">${actualRank}</td>
+                            <td style="padding: 6px 5px;">
+                                <div style="font-weight: 700; color: var(--text-main); font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100px;" title="${comp.name}">
+                                    ${actions.getWebName ? actions.getWebName(comp.name) : comp.name}
+                                </div>
+                                <div style="font-size: 9px; color: var(--text-muted); margin-top: 1px; display: flex; align-items: center; gap: 3px;">
+                                    <span style="font-weight: 700; padding: 0 3px; background: rgba(0,0,0,0.15); border-radius: 3px; color: var(--text-main);">${comp.team}</span>
+                                    <span>${comp.position}</span>
+                                </div>
+                            </td>
+                            <td style="padding: 6px 5px; white-space: nowrap;">
+                                <span style="font-weight: 800; color: ${!budgetOk ? '#ef4444' : 'var(--primary)'}; font-size: 11.5px;">£${comp.price.toFixed(1)}m</span>
+                                ${!budgetOk ? `<span style="display: block; font-size: 7.5px; font-weight: 700; color: #ef4444; text-transform: uppercase;">+£${Math.abs(newBank).toFixed(1)}m</span>` : ''}
+                            </td>
+                            <td style="padding: 6px 4px; text-align: center; font-weight: 800; color: #8b5cf6; font-size: 12px; background: rgba(139,92,246,0.05);">
+                                ${fiveXp.toFixed(1)}
+                            </td>
+                            <td style="padding: 6px 4px; text-align: center; font-weight: 700; color: #3b82f6; font-size: 11px;">
+                                ${nextXp.toFixed(1)}
+                            </td>
+                            <td style="padding: 6px 4px; text-align: center; font-weight: 700; color: #22c55e; font-size: 11px;">
+                                ${last5Pts} pts
+                            </td>
+                            <td style="padding: 6px 4px;">
+                                <div style="display: flex; align-items: center; gap: 1.5px;">
+                                    ${fdrData.fixtures.map(f => {
+                                        const st = getFdrColorStyles(f.diff);
+                                        return `
+                                            <div style="padding: 1.5px 3px; border-radius: 3px; background: ${st.bg}; color: ${st.text}; font-size: 8px; font-weight: 700; text-align: center; line-height: 1.1; min-width: 23px;" title="GW${f.gw}: ${f.opp} (${f.loc}) - FDR ${f.diff}">
+                                                <div>${f.opp}</div>
+                                                <div style="font-size: 6.5px; opacity: 0.85;">${f.loc}</div>
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            </td>
+                            <td style="padding: 6px 5px; text-align: right; white-space: nowrap;">
+                                <button class="action-main-btn btn-secondary-action direct-comp-swap-btn" 
+                                        data-comp-id="${comp.id}" 
+                                        style="font-size: 9.5px; padding: 3px 6px; height: 22px; margin: 0;" 
+                                        ${!allOk ? 'disabled' : ''}
+                                        title="${disabledReason || 'Swap into team'}">
+                                    ${!budgetOk ? 'Over Budget' : (disabledReason || 'Swap')}
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
 
-                return `
-                    <tr style="${rowStyle} border-bottom: 1px solid var(--border-color); transition: background 0.15s;">
-                        <td style="padding: 6px 4px; text-align: center; font-weight: 800; color: var(--text-muted); font-size: 10px;">${idx + 1}</td>
-                        <td style="padding: 6px 5px;">
-                            <div style="font-weight: 700; color: var(--text-main); font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100px;" title="${comp.name}">
-                                ${actions.getWebName ? actions.getWebName(comp.name) : comp.name}
-                            </div>
-                            <div style="font-size: 9px; color: var(--text-muted); margin-top: 1px; display: flex; align-items: center; gap: 3px;">
-                                <span style="font-weight: 700; padding: 0 3px; background: rgba(0,0,0,0.15); border-radius: 3px; color: var(--text-main);">${comp.team}</span>
-                                <span>${comp.position}</span>
-                            </div>
-                        </td>
-                        <td style="padding: 6px 5px; white-space: nowrap;">
-                            <span style="font-weight: 800; color: ${!budgetOk ? '#ef4444' : 'var(--primary)'}; font-size: 11.5px;">£${comp.price.toFixed(1)}m</span>
-                            ${!budgetOk ? `<span style="display: block; font-size: 7.5px; font-weight: 700; color: #ef4444; text-transform: uppercase;">+£${Math.abs(newBank).toFixed(1)}m</span>` : ''}
-                        </td>
-                        <td style="padding: 6px 4px; text-align: center; font-weight: 800; color: #8b5cf6; font-size: 12px; background: rgba(139,92,246,0.05);">
-                            ${fiveXp.toFixed(1)}
-                        </td>
-                        <td style="padding: 6px 4px; text-align: center; font-weight: 700; color: #3b82f6; font-size: 11px;">
-                            ${nextXp.toFixed(1)}
-                        </td>
-                        <td style="padding: 6px 4px; text-align: center; font-weight: 700; color: #22c55e; font-size: 11px;">
-                            ${last5Pts} pts
-                        </td>
-                        <td style="padding: 6px 4px;">
-                            <div style="display: flex; align-items: center; gap: 1.5px;">
-                                ${fdrData.fixtures.map(f => {
-                                    const st = getFdrColorStyles(f.diff);
-                                    return `
-                                        <div style="padding: 1.5px 3px; border-radius: 3px; background: ${st.bg}; color: ${st.text}; font-size: 8px; font-weight: 700; text-align: center; line-height: 1.1; min-width: 23px;" title="GW${f.gw}: ${f.opp} (${f.loc}) - FDR ${f.diff}">
-                                            <div>${f.opp}</div>
-                                            <div style="font-size: 6.5px; opacity: 0.85;">${f.loc}</div>
-                                        </div>
-                                    `;
-                                }).join('')}
-                            </div>
-                        </td>
-                        <td style="padding: 6px 5px; text-align: right; white-space: nowrap;">
-                            <button class="action-main-btn btn-secondary-action direct-comp-swap-btn" 
-                                    data-comp-id="${comp.id}" 
-                                    style="font-size: 9.5px; padding: 3px 6px; height: 22px; margin: 0;" 
-                                    ${!allOk ? 'disabled' : ''}
-                                    title="${disabledReason || 'Swap into team'}">
-                                ${!budgetOk ? 'Over Budget' : (disabledReason || 'Swap')}
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-
-            // Wire direct comparison swap buttons
-            tbody.querySelectorAll('.direct-comp-swap-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const compId = parseInt(btn.getAttribute('data-comp-id'));
-                    const ok = actions.addTransfer ? actions.addTransfer(state.currentGw, playerId, compId) : false;
-                    if (ok) {
-                        actions.hideModal();
-                    } else if (triggerSwapCallback) {
-                        actions.hideModal();
-                        triggerSwapCallback({ id: playerId, compId });
-                    }
+                // Wire direct comparison swap buttons
+                tbody.querySelectorAll('.direct-comp-swap-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const compId = parseInt(btn.getAttribute('data-comp-id'));
+                        const ok = actions.addTransfer ? actions.addTransfer(state.currentGw, playerId, compId) : false;
+                        if (ok) {
+                            actions.hideModal();
+                        } else if (triggerSwapCallback) {
+                            actions.hideModal();
+                            triggerSwapCallback({ id: playerId, compId });
+                        }
+                    });
                 });
-            });
+            }
+
+            // Update Pagination UI Elements
+            const infoEl = document.getElementById('replacementPaginationInfo');
+            const prevBtn = document.getElementById('replacementPrevPageBtn');
+            const nextBtn = document.getElementById('replacementNextPageBtn');
+            const pageLbl = document.getElementById('replacementPageLabel');
+
+            if (infoEl) {
+                infoEl.textContent = totalItems > 0 
+                    ? `Showing ${startIdx + 1}-${endIdx} of ${totalItems} ${player.position} Candidates`
+                    : `No candidates found`;
+            }
+            if (pageLbl) {
+                pageLbl.textContent = `Page ${currentPage} of ${totalPages}`;
+            }
+            if (prevBtn) {
+                prevBtn.disabled = currentPage <= 1;
+                prevBtn.style.opacity = currentPage <= 1 ? '0.5' : '1';
+                prevBtn.style.cursor = currentPage <= 1 ? 'not-allowed' : 'pointer';
+            }
+            if (nextBtn) {
+                nextBtn.disabled = currentPage >= totalPages;
+                nextBtn.style.opacity = currentPage >= totalPages ? '0.5' : '1';
+                nextBtn.style.cursor = currentPage >= totalPages ? 'not-allowed' : 'pointer';
+            }
         };
+
+        // Wire Pagination buttons
+        const prevBtn = document.getElementById('replacementPrevPageBtn');
+        const nextBtn = document.getElementById('replacementNextPageBtn');
+
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderCandidateRows();
+                }
+            });
+        }
+
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                const totalPages = Math.ceil(candidateRowsData.length / pageSize);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderCandidateRows();
+                }
+            });
+        }
 
         // Wire column header sorting
         const ths = document.querySelectorAll('.replacement-table-wrapper th[data-sort]');
@@ -2424,6 +2500,7 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
                     sortCol = col;
                     sortAsc = (col === 'fdr' || col === 'price' || col === 'name');
                 }
+                currentPage = 1; // Reset to page 1 on sort change
 
                 ths.forEach(otherTh => {
                     const c = otherTh.getAttribute('data-sort');
