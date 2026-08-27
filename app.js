@@ -22,6 +22,7 @@ import { renderTransferPlanner } from './components/transferplanner.js';
 import { renderSolioProjections } from './components/solioprojections.js';
 import { renderTopPerformers } from './components/topperformers.js';
 import { renderLeagueAnalyzer } from './components/leagueanalyzer.js';
+import { renderShotMap } from './components/shotmap.js';
 
 if (typeof window !== 'undefined') {
     window.PLAYERS = PLAYERS;
@@ -1454,6 +1455,9 @@ const actions = {
                 break;
             case 'leagueanalyzer':
                 renderLeagueAnalyzer(container, state, actions);
+                break;
+            case 'shotmap':
+                renderShotMap(container, state, actions);
                 break;
         }
     },

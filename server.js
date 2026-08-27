@@ -40,6 +40,13 @@ let cloudDraftsStore = {};
 let solioCache = null;
 let solioCacheTime = 0;
 
+// PitchAPI configuration (server-side only — key never sent to client)
+const PITCH_API_KEY = process.env.PITCH_API_KEY || 'pk_test_NW7KmLoMu-n9ADDC9O435Utj1sSln0G4zjgI22ctZLg';
+const PITCH_API_BASE = 'https://api.pitchapi.dev/v1';
+const PITCH_EPL_LEAGUE_ID = 'l_4WFCIZ';
+const PITCH_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+const pitchApiCache = new Map(); // key → { data, time }
+
 // Load existing store from disk if present
 if (fs.existsSync(STORAGE_FILE)) {
     try {
@@ -167,6 +174,80 @@ const server = http.createServer(async (req, res) => {
     if (pathname === '/health' || pathname === '/api/health') {
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ status: 'ok', uptime: process.uptime(), timestamp: Date.now() }));
+        return;
+    }
+
+    // PitchAPI helper: fetch with in-memory cache
+    async function fetchPitchApi(path) {
+        const cacheKey = path;
+        const cached = pitchApiCache.get(cacheKey);
+        if (cached && (Date.now() - cached.time < PITCH_CACHE_TTL)) {
+            return cached.data;
+        }
+        const response = await fetch(`${PITCH_API_BASE}${path}`, {
+            headers: { 'X-API-KEY': PITCH_API_KEY }
+        });
+        if (!response.ok) {
+            const errText = await response.text();
+            throw new Error(`PitchAPI ${response.status}: ${errText}`);
+        }
+        const data = await response.json();
+        pitchApiCache.set(cacheKey, { data, time: Date.now() });
+        return data;
+    }
+
+    // API Route: PitchAPI — matches for a date (optionally filtered to EPL)
+    const dateMatch = pathname.match(/^\/api\/pitchapi\/date\/(\d{4}-\d{2}-\d{2})$/);
+    if (dateMatch) {
+        const date = dateMatch[1];
+        const leagueFilter = reqUrl.searchParams.get('league'); // optional ?league=epl
+        try {
+            const data = await fetchPitchApi(`/date/${date}`);
+            let matches = (data.data && data.data.matches) ? data.data.matches : [];
+            if (leagueFilter === 'epl') {
+                matches = matches.filter(m => m.league && m.league.id === PITCH_EPL_LEAGUE_ID);
+            }
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: true, matches, date }));
+        } catch (e) {
+            console.error('PitchAPI date error:', e.message);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, error: e.message }));
+        }
+        return;
+    }
+
+    // API Route: PitchAPI — shots for a match
+    const shotsMatch = pathname.match(/^\/api\/pitchapi\/shots\/([a-zA-Z0-9_]+)$/);
+    if (shotsMatch) {
+        const matchId = shotsMatch[1];
+        try {
+            const data = await fetchPitchApi(`/matches/${matchId}/shots`);
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: true, data: data.data }));
+        } catch (e) {
+            console.error('PitchAPI shots error:', e.message);
+            const status = e.message.includes('404') ? 404 : 500;
+            res.writeHead(status, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, error: e.message }));
+        }
+        return;
+    }
+
+    // API Route: PitchAPI — lineups for a match
+    const lineupsMatch = pathname.match(/^\/api\/pitchapi\/lineups\/([a-zA-Z0-9_]+)$/);
+    if (lineupsMatch) {
+        const matchId = lineupsMatch[1];
+        try {
+            const data = await fetchPitchApi(`/matches/${matchId}/lineups`);
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: true, data: data.data }));
+        } catch (e) {
+            console.error('PitchAPI lineups error:', e.message);
+            const status = e.message.includes('404') ? 404 : 500;
+            res.writeHead(status, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, error: e.message }));
+        }
         return;
     }
 
