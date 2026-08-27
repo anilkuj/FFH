@@ -1989,6 +1989,9 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
 
     // Last Season (2025/26) Historical Stats
     const lastSeasonStarts = typeof player.GS === 'number' ? player.GS : 0;
+    const lastSeasonAvgMins = typeof player.MPPG === 'number' ? player.MPPG.toFixed(0) : '0';
+    const lastSeasonPts = typeof player.points === 'number' ? player.points : 0;
+    const lastSeasonXG = (player.xG || 0).toFixed(1);
     const lastSeasonXA = (player.xA || 0).toFixed(1);
     const lastSeasonXG90 = (player.xG90 || 0).toFixed(2);
     const lastSeasonXA90 = (player.xA90 || 0).toFixed(2);
