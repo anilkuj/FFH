@@ -1903,15 +1903,59 @@ ${squadListText}
     // Scroll active draft tab into view removed
 }
 
-// Opens the detail modal when player pitch card is clicked
-function openPlayerDetailModal(playerId, type, starters, bench, state, actions, triggerSwapCallback) {
+export function getLast5GamesActualPts(player, currentGw) {
+    if (!player || !player.predictions) return 0;
+    const played = player.predictions
+        .filter(pr => pr.gw < currentGw && pr.actualPts !== null && pr.actualPts !== undefined)
+        .sort((a, b) => b.gw - a.gw);
+    if (played.length > 0) {
+        return played.slice(0, 5).reduce((sum, pr) => sum + (pr.actualPts || 0), 0);
+    }
+    if (typeof player.points === 'number' && player.points > 0) {
+        return Math.round(player.points * 0.22);
+    }
+    return 0;
+}
+
+export function getNext5FixturesFDR(player, currentGw) {
+    if (!player || !player.predictions) return { avg: "3.0", fixtures: [] };
+    const fixtures = [];
+    let sum = 0;
+    let count = 0;
+    for (let gw = currentGw; gw < currentGw + 5; gw++) {
+        if (gw > 38) break;
+        const pred = player.predictions.find(p => p.gw == gw);
+        if (pred) {
+            const oppClean = (pred.opp || 'BYE').replace(/\s*\([haHA]\)$/, '').trim().toUpperCase();
+            const locClean = pred.loc ? pred.loc.toUpperCase() : 'H';
+            const diffVal = pred.diff || 3;
+            fixtures.push({ gw, opp: oppClean, loc: locClean, diff: diffVal });
+            sum += diffVal;
+            count++;
+        }
+    }
+    const avg = count > 0 ? (sum / count).toFixed(1) : "3.0";
+    return { avg, fixtures };
+}
+
+function getFdrColorStyles(diff) {
+    if (diff === 1) return { bg: '#005a36', text: '#00ff87' };
+    if (diff === 2) return { bg: '#05f178', text: '#000000' };
+    if (diff === 3) return { bg: '#e7e7e7', text: '#000000' };
+    if (diff === 4) return { bg: '#ff1751', text: '#ffffff' };
+    if (diff === 5) return { bg: '#80072d', text: '#ffffff' };
+    return { bg: '#e7e7e7', text: '#000000' };
+}
+
+// Opens the detail modal when player pitch card or stats row is clicked
+export function openPlayerDetailModal(playerId, type, starters, bench, state, actions, triggerSwapCallback) {
     const player = PLAYERS.find(p => p.id === playerId);
     if (!player) return;
 
     const prediction = player.predictions.find(pr => pr.gw == state.currentGw) || { pts: 0, opp: "BYE", loc: "" };
     const teamObj = TEAMS.find(t => t.shortName === player.team);
 
-    const lineup = state.getGwLineup(state.currentGw);
+    const lineup = state.getGwLineup ? state.getGwLineup(state.currentGw) : {};
     const isCaptain = lineup.captain === playerId;
     const isVice = lineup.vice === playerId;
 
@@ -1925,33 +1969,30 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
         return 'rating-badge-na';
     };
 
-    const squadInfo = state.getSquadForGw(state.currentGw);
-    const squad = [...squadInfo.starters, ...squadInfo.bench];
-    const bank = squadInfo.bank;
+    const squadInfo = state.getSquadForGw ? state.getSquadForGw(state.currentGw) : { starters: [], bench: [], bank: 0 };
+    const squad = [...(squadInfo.starters || []), ...(squadInfo.bench || [])];
+    const bank = squadInfo.bank !== undefined ? squadInfo.bank : 0.0;
     
-    const comparablePlayers = PLAYERS.filter(p => 
+    // Replacement Candidates: Same position, excluding self, sorted by 5-GW xP descending
+    const replacementCandidates = PLAYERS.filter(p => 
         p.position === player.position && 
         p.id !== player.id &&
         !squad.includes(p.id)
     ).sort((a, b) => {
-        const diffA = Math.abs(a.price - player.price);
-        const diffB = Math.abs(b.price - player.price);
-        if (diffA !== diffB) return diffA - diffB;
-        
-        const ptsA = a.predictions.find(pr => pr.gw == state.currentGw)?.pts || 0;
-        const ptsB = b.predictions.find(pr => pr.gw == state.currentGw)?.pts || 0;
-        return ptsB - ptsA;
-    }).slice(0, 3);
+        const xpA = get5GwXp(a, state.currentGw);
+        const xpB = get5GwXp(b, state.currentGw);
+        return xpB - xpA;
+    }).slice(0, 12);
 
     const starts = typeof player.GS === 'number' ? player.GS : 0;
     const avgMins = typeof player.MPPG === 'number' ? player.MPPG.toFixed(0) : '0';
 
     const modalContent = `
         <div class="modal-header-section">
-            <h3>Player Profile</h3>
+            <h3>Player Profile & Replacement Analysis</h3>
             <button class="close-modal-btn" id="closeDetailModalBtn"><i data-lucide="x"></i></button>
         </div>
-        <div class="player-detail-horizontal-layout" style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 20px; padding: 20px; text-align: left;">
+        <div class="player-detail-horizontal-layout" style="display: grid; grid-template-columns: 1fr 1.3fr; gap: 20px; padding: 20px; text-align: left; max-height: 82vh; overflow-y: auto;">
             <!-- Left Column: Profile, Ratings & Actions -->
             <div class="detail-left-column" style="display: flex; flex-direction: column; gap: 16px; min-width: 0;">
                 <div class="player-detail-profile" style="padding: 0; display: flex; align-items: center; gap: 16px;">
@@ -2011,7 +2052,7 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
                 </div>
             </div>
 
-            <!-- Right Column: OPTA Stats & Alternatives -->
+            <!-- Right Column: OPTA Stats & Replacement Candidates -->
             <div class="detail-right-column" style="display: flex; flex-direction: column; gap: 16px; min-width: 0; border-left: 1px solid var(--border-color); padding-left: 20px;">
                 <!-- OPTA Match Stats -->
                 <div>
@@ -2070,14 +2111,23 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
                     </div>
                 </div>
 
-                <!-- Similarly Priced Alternatives -->
-                <div style="border-top: 1px solid var(--border-color); padding-top: 12px;">
-                    <h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--secondary); display: flex; align-items: center; gap: 6px; margin: 0 0 10px 0;">
-                        <i data-lucide="arrow-right-left" style="width: 14px; height: 14px;"></i> Similarly Priced Alternatives
-                    </h4>
-                    <div class="alternatives-scroll-container">
-                        ${comparablePlayers.map(comp => {
-                            const compPrediction = comp.predictions.find(pr => pr.gw == state.currentGw) || { pts: 0 };
+                <!-- Suitable Replacement Candidates (Sorted by 5-GW xP) -->
+                <div style="border-top: 1px solid var(--border-color); padding-top: 12px; display: flex; flex-direction: column; gap: 10px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                        <h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--secondary); display: flex; align-items: center; gap: 6px; margin: 0;">
+                            <i data-lucide="arrow-right-left" style="width: 14px; height: 14px;"></i> Top ${player.position} Replacement Options
+                        </h4>
+                        <span style="font-size: 10px; color: var(--text-muted); font-weight: 600; background: rgba(139,92,246,0.12); color: #8b5cf6; padding: 2px 6px; border-radius: 4px;">
+                            Sorted by 5-GW xP ↓
+                        </span>
+                    </div>
+
+                    <div class="alternatives-scroll-container" style="display: flex; flex-direction: column; gap: 10px; max-height: 360px; overflow-y: auto; padding-right: 4px;">
+                        ${replacementCandidates.map((comp, idx) => {
+                            const compNextXp = getNGwXp(comp, state.currentGw, 1);
+                            const comp5Xp = get5GwXp(comp, state.currentGw);
+                            const last5Pts = getLast5GamesActualPts(comp, state.currentGw);
+                            const fdrData = getNext5FixturesFDR(comp, state.currentGw);
                             
                             const newBank = bank + player.price - comp.price;
                             const budgetOk = newBank >= 0;
@@ -2106,23 +2156,65 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
                             else if (!teamOk) disabledReason = "3/team max";
                             
                             return `
-                                <div class="compare-alternative-card" style="display: flex; flex-direction: column; padding: 10px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px; font-size: 11px;">
-                                    <div style="font-weight:700; color:var(--text-main); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${comp.name}">${actions.getWebName(comp.name)}</div>
-                                    <div style="color:var(--text-muted); font-size: 10px; margin-top:2px;">£${comp.price.toFixed(1)}m • GW${state.currentGw}: ${compPrediction.pts.toFixed(1)} XP</div>
-                                    <div style="color:var(--text-muted); font-size: 10px; margin-top:1px;">5-GW: ${get5GwXp(comp, state.currentGw).toFixed(1)} XP</div>
-                                    
-                                    <!-- Swap button and alert -->
-                                    <div style="display: flex; flex-direction: column; gap: 4px; align-items: stretch; margin-top: 10px;">
+                                <div class="compare-alternative-card" style="display: flex; flex-direction: column; gap: 8px; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 8px; font-size: 11px; text-align: left;">
+                                    <!-- Name, Team, Price, xP Header -->
+                                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                                        <div style="display: flex; align-items: center; gap: 8px; overflow: hidden;">
+                                            <span style="font-size: 10px; font-weight: 800; padding: 2px 6px; background: rgba(59,130,246,0.15); color: #3b82f6; border-radius: 4px; flex-shrink: 0;">#${idx + 1}</span>
+                                            <div style="overflow: hidden;">
+                                                <div style="font-weight: 700; font-size: 13px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${comp.name}">
+                                                    ${actions.getWebName ? actions.getWebName(comp.name) : comp.name}
+                                                </div>
+                                                <div style="font-size: 10.5px; color: var(--text-muted); margin-top: 1px; display: flex; align-items: center; gap: 6px;">
+                                                    <span style="font-weight: 700; padding: 1px 5px; background: rgba(0,0,0,0.15); border-radius: 3px; color: var(--text-main);">${comp.team}</span>
+                                                    <span>${comp.position}</span>
+                                                    <span>• £${comp.price.toFixed(1)}m</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="text-align: right; flex-shrink: 0;">
+                                            <div style="font-size: 14px; font-weight: 800; color: #8b5cf6;">${comp5Xp.toFixed(1)} <span style="font-size: 9px; font-weight: 600; color: var(--text-muted);">xP (5GW)</span></div>
+                                            <div style="font-size: 10.5px; color: #3b82f6; font-weight: 700;">GW${state.currentGw}: ${compNextXp.toFixed(1)} xP</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Form & FDR Metrics Bar -->
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: rgba(0,0,0,0.15); padding: 6px 10px; border-radius: 6px;">
+                                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                                            <span style="font-size: 10px; color: var(--text-muted);">Last 5 Form:</span>
+                                            <strong style="font-size: 11px; color: #22c55e;">${last5Pts} pts</strong>
+                                        </div>
+                                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                                            <span style="font-size: 10px; color: var(--text-muted);">5-GW FDR Rating:</span>
+                                            <strong style="font-size: 11px; color: #f59e0b;">${fdrData.avg} Avg</strong>
+                                        </div>
+                                    </div>
+
+                                    <!-- Upcoming 5 Fixtures -->
+                                    <div style="display: flex; align-items: center; gap: 3px;">
+                                        ${fdrData.fixtures.map(f => {
+                                            const st = getFdrColorStyles(f.diff);
+                                            return `
+                                                <div style="flex: 1; text-align: center; padding: 3px 2px; border-radius: 4px; background: ${st.bg}; color: ${st.text}; font-size: 9px; font-weight: 700; white-space: nowrap;" title="GW${f.gw}: ${f.opp} (${f.loc}) - FDR ${f.diff}">
+                                                    <div>${f.opp}</div>
+                                                    <div style="font-size: 7.5px; opacity: 0.85;">(${f.loc})</div>
+                                                </div>
+                                            `;
+                                        }).join('')}
+                                    </div>
+
+                                    <!-- Swap Button -->
+                                    <div style="display: flex; flex-direction: column; gap: 4px; align-items: stretch; margin-top: 4px;">
                                         ${disabledReason ? `
-                                            <span style="font-size: 8.5px; color: #f43f5e; font-weight: 600; text-align: center; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${disabledReason}">
+                                            <span style="font-size: 9px; color: #f43f5e; font-weight: 600; text-align: center; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${disabledReason}">
                                                 ${disabledReason}
                                             </span>
                                         ` : ''}
                                         <button class="action-main-btn btn-secondary-action direct-comp-swap-btn" 
                                                 data-comp-id="${comp.id}" 
-                                                style="font-size: 10px; padding: 4px 8px; height: 24px; margin: 0; width: 100%;" 
+                                                style="font-size: 10.5px; padding: 4px 8px; height: 26px; margin: 0; width: 100%;" 
                                                 ${!allOk ? 'disabled' : ''}>
-                                            Swap
+                                            Swap with ${actions.getWebName ? actions.getWebName(comp.name) : comp.name}
                                         </button>
                                     </div>
                                 </div>
@@ -2139,19 +2231,25 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
 
         document.getElementById('closeDetailModalBtn').addEventListener('click', actions.hideModal);
         
-        document.getElementById('detailSwapBtn').addEventListener('click', () => {
-            actions.hideModal();
-            triggerSwapCallback({ id: playerId, type });
-        });
+        const swapBtn = document.getElementById('detailSwapBtn');
+        if (swapBtn) {
+            swapBtn.addEventListener('click', () => {
+                actions.hideModal();
+                if (triggerSwapCallback) triggerSwapCallback({ id: playerId, type });
+            });
+        }
 
         // Wire direct comparison swap buttons
         const compBtns = document.querySelectorAll('.direct-comp-swap-btn');
         compBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const compId = parseInt(btn.getAttribute('data-comp-id'));
-                const ok = actions.addTransfer(state.currentGw, playerId, compId);
+                const ok = actions.addTransfer ? actions.addTransfer(state.currentGw, playerId, compId) : false;
                 if (ok) {
                     actions.hideModal();
+                } else if (triggerSwapCallback) {
+                    actions.hideModal();
+                    triggerSwapCallback({ id: playerId, compId });
                 }
             });
         });
@@ -2159,7 +2257,7 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
         const capBtn = document.getElementById('detailCapBtn');
         if (capBtn) {
             capBtn.addEventListener('click', () => {
-                actions.setCaptain(playerId);
+                if (actions.setCaptain) actions.setCaptain(playerId);
                 actions.hideModal();
             });
         }
@@ -2167,15 +2265,18 @@ function openPlayerDetailModal(playerId, type, starters, bench, state, actions, 
         const viceBtn = document.getElementById('detailViceBtn');
         if (viceBtn) {
             viceBtn.addEventListener('click', () => {
-                actions.setVice(playerId);
+                if (actions.setVice) actions.setVice(playerId);
                 actions.hideModal();
             });
         }
 
-        document.getElementById('detailSellBtn').addEventListener('click', () => {
-            actions.hideModal();
-            actions.removePlayer(playerId);
-        });
+        const sellBtn = document.getElementById('detailSellBtn');
+        if (sellBtn) {
+            sellBtn.addEventListener('click', () => {
+                actions.hideModal();
+                if (actions.removePlayer) actions.removePlayer(playerId);
+            });
+        }
     });
 }
 

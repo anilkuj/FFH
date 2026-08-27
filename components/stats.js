@@ -1,5 +1,6 @@
 import { PLAYERS, TEAMS } from '../data.js';
 import { getPlayerSetPieceDuty } from './optimizer.js';
+import { openPlayerDetailModal } from './planner.js';
 
 export function renderStats(container, state, actions) {
     if (state.tier === 'starter') {
@@ -197,8 +198,8 @@ export function renderStats(container, state, actions) {
             const displayName = formatPlayerShortName(player.name);
             const rowStyles = getGroupStyles(idx % 2 === 0);
             return `
-                <tr>
-                    <td class="col-grp-info cell-player-name" style="${rowStyles.info} text-align: left; padding-left: 8px; cursor: pointer;" title="${player.name}">
+                <tr class="stats-row-item" data-player-id="${player.id}" style="cursor: pointer;">
+                    <td class="col-grp-info cell-player-name" style="${rowStyles.info} text-align: left; padding-left: 8px;" title="Click to view details & replacements for ${player.name}">
                         <div style="display: flex; align-items: center; gap: 5px; overflow: visible;">
                             <strong style="font-weight: 700; font-size: 12.5px; white-space: nowrap;" title="${player.name}">${displayName}</strong>
                             <span class="cell-team-tag" style="font-size: 10px; font-weight: 700; color: var(--text-muted); flex-shrink: 0; padding: 1px 4px; background: rgba(0,0,0,0.06); border-radius: 3px;">${player.team}</span>
@@ -248,6 +249,17 @@ export function renderStats(container, state, actions) {
                 </tr>
             `;
         }).join('');
+
+        tableBody.querySelectorAll('tr[data-player-id]').forEach(row => {
+            row.addEventListener('click', (e) => {
+                if (e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT' || e.target.closest('select')) return;
+                const pId = parseInt(row.getAttribute('data-player-id'));
+                const pObj = PLAYERS.find(p => p.id === pId);
+                if (pObj) {
+                    openPlayerDetailModal(pObj.id, pObj.position, [], [], state, actions);
+                }
+            });
+        });
     };
 
     container.innerHTML = `
