@@ -89,8 +89,11 @@ const safeJsonParse = (str, fallback) => {
 class AppState {
     constructor() {
         this.activeTab = 'planner';
+        // Always default initial site load to current active Gameweek 2
+        const CURRENT_SEASON_GW = 2;
         const savedGw = localStorage.getItem('fpl_hub_current_gw');
-        this.currentGw = (savedGw && !isNaN(parseInt(savedGw, 10))) ? parseInt(savedGw, 10) : 2;
+        const parsedGw = parseInt(savedGw, 10);
+        this.currentGw = (!isNaN(parsedGw) && parsedGw >= CURRENT_SEASON_GW) ? parsedGw : CURRENT_SEASON_GW;
         this.selectedEmptySlot = null;
         
         // Hardcoded to ultra to make all features free
