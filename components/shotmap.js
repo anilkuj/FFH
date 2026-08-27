@@ -228,7 +228,10 @@ export function renderShotMap(container, state, actions) {
         ).join("");
 
         function dot(s) {
-            const cx=px(s.x||0), cy=py(s.y||0), rad=r(s.expected_goals);
+            const isAway = s.team_id === awayId;
+            const xVal = isAway ? (105 - (s.x || 0)) : (s.x || 0);
+            const yVal = isAway ? (68 - (s.y || 0)) : (s.y || 0);
+            const cx=px(xVal), cy=py(yVal), rad=r(s.expected_goals);
             const c=col(s), o=op(s), isG=s.event_type==="Goal";
             const pl=s.player?s.player.name:"Unknown";
             const min=(s.minute||0)+(s.minute_added?"+"+s.minute_added:"");
@@ -241,7 +244,7 @@ export function renderShotMap(container, state, actions) {
         const nonGoals = shots.filter(s=>s.event_type!=="Goal").map(dot).join("");
         const goals    = shots.filter(s=>s.event_type==="Goal").map(dot).join("");
 
-        return "<div><div style='font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:" + textMuted + ";margin-bottom:8px;'>Shot Map (all shots attack right)</div>" +
+        return "<div><div style='font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:" + textMuted + ";margin-bottom:8px;'>Shot Map (Home attacks right &rarr;, Away attacks left &larr;)</div>" +
             "<svg viewBox='0 0 "+W+" "+H+"' xmlns='http://www.w3.org/2000/svg' style='width:100%;border-radius:10px;border:1px solid "+border+";display:block;'>" +
             "<rect x='0' y='0' width='"+W+"' height='"+H+"' fill='"+pitchGreen+"' rx='4'/>" + stripes +
             "<line x1='"+px(52.5)+"' y1='0' x2='"+px(52.5)+"' y2='"+H+"' stroke='"+pitchLine+"' stroke-width='1.5'/>" +
@@ -256,7 +259,8 @@ export function renderShotMap(container, state, actions) {
             "<circle cx='"+px(94)+"' cy='"+py(34)+"' r='2.5' fill='"+pitchLine+"'/>" +
             "<rect x='"+px(-2)+"' y='"+py(30.34)+"' width='"+px(2)+"' height='"+py(7.32)+"' fill='rgba(255,255,255,0.3)' stroke='"+pitchLine+"' stroke-width='1.5'/>" +
             "<rect x='"+px(105)+"' y='"+py(30.34)+"' width='"+px(2)+"' height='"+py(7.32)+"' fill='rgba(255,255,255,0.3)' stroke='"+pitchLine+"' stroke-width='1.5'/>" +
-            "<text x='"+px(90)+"' y='"+(H-8)+"' font-size='10' fill='"+pitchLine+"' text-anchor='middle' font-family='sans-serif'>Attack &gt;&gt;&gt;</text>" +
+            "<text x='"+px(15)+"' y='"+(H-8)+"' font-size='10' fill='"+pitchLine+"' text-anchor='middle' font-family='sans-serif'>&lt;&lt;&lt; Away</text>" +
+            "<text x='"+px(90)+"' y='"+(H-8)+"' font-size='10' fill='"+pitchLine+"' text-anchor='middle' font-family='sans-serif'>Home &gt;&gt;&gt;</text>" +
             nonGoals + goals + "</svg></div>";
     }
 
