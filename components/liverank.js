@@ -1,11 +1,13 @@
 import { PLAYERS, TEAMS } from '../data.js';
 import { getShirtSVG } from './planner.js';
 
-// Live FPL API Fetcher with Proxy Fallback
+// Multi-Proxy High Reliability Live FPL API Fetcher
 export async function fetchLiveFplApiData(teamId) {
     const proxies = [
-        (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+        (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
         (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+        (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+        (url) => `https://thingproxy.freeboard.io/fetch/${url}`,
         (url) => url
     ];
 
@@ -14,19 +16,39 @@ export async function fetchLiveFplApiData(teamId) {
 
     for (const makeProxy of proxies) {
         try {
-            const entryRes = await fetch(makeProxy(baseUrl));
-            if (!entryRes.ok) continue;
-            const entryData = await entryRes.json();
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 4000);
 
-            const historyRes = await fetch(makeProxy(historyUrl));
+            const entryRes = await fetch(makeProxy(baseUrl), { signal: controller.signal });
+            clearTimeout(timeoutId);
+
+            if (!entryRes.ok) continue;
+            const textContent = await entryRes.text();
+            let entryData = null;
+            try {
+                entryData = JSON.parse(textContent);
+            } catch (e) {
+                continue;
+            }
+
+            if (!entryData || !entryData.id) continue;
+
+            const controller2 = new AbortController();
+            const timeoutId2 = setTimeout(() => controller2.abort(), 4000);
+            const historyRes = await fetch(makeProxy(historyUrl), { signal: controller2.signal }).catch(() => null);
+            clearTimeout(timeoutId2);
+
             let historyData = null;
-            if (historyRes.ok) {
-                historyData = await historyRes.json();
+            if (historyRes && historyRes.ok) {
+                const histText = await historyRes.text();
+                try {
+                    historyData = JSON.parse(histText);
+                } catch (e) {}
             }
 
             return { entryData, historyData };
         } catch (e) {
-            console.warn("FPL API fetch proxy error, trying fallback proxy...", e);
+            console.warn("FPL API proxy attempt failed, trying next proxy...", e);
         }
     }
     return null;
@@ -62,7 +84,6 @@ export function renderLiveRank(container, state, actions) {
     const userData = state.fplUserData;
 
     // Filter available gameweeks to STRICTLY COMPLETED GAMEWEEKS ONLY
-    // Exclude any uncompleted/future gameweeks from Live Rank view
     const allGwKeys = Object.keys(userData.gws || {}).map(Number);
     const completedGwNumbers = allGwKeys.filter(gw => userData.gws[gw] && userData.gws[gw].isCompleted);
     
@@ -70,7 +91,7 @@ export function renderLiveRank(container, state, actions) {
     const completedGws = completedGwNumbers.length > 0 ? completedGwNumbers.sort((a, b) => b - a) : [1];
 
     // Selected view GW (defaults to LATEST COMPLETED GAMEWEEK, e.g. GW1)
-    const latestCompletedGw = completedGws[0]; // Highest completed GW (first in reverse order)
+    const latestCompletedGw = completedGws[0];
     const selectedGw = container.dataset.gw ? parseInt(container.dataset.gw) : latestCompletedGw;
     const viewGw = completedGws.includes(selectedGw) ? selectedGw : latestCompletedGw;
 
@@ -244,7 +265,7 @@ export function renderLiveRank(container, state, actions) {
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                    <!-- REVERSE CHRONOLOGICAL COMPLETED GAMEWEEKS ONLY (UNCOMPLETED GWs EXCLUDED) -->
+                    <!-- REVERSE CHRONOLOGICAL COMPLETED GAMEWEEKS ONLY -->
                     <div style="display: flex; background: var(--bg-panel); padding: 3px; border-radius: 8px; border: 1px solid var(--border-color);">
                         ${completedGws.map(gwNum => `
                             <button class="live-gw-tab-btn" data-gw="${gwNum}" style="padding: 5px 14px; font-size: 12px; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s; ${gwNum === viewGw ? 'background: var(--primary); color: var(--text-dark);' : 'background: transparent; color: var(--text-muted);'}">
@@ -484,10 +505,9 @@ export function renderLiveRank(container, state, actions) {
                 if (actions.showToast) actions.showToast(`Fetched live FPL API data for ${entry.name} (#${teamId})!`, "success");
                 renderLiveRank(container, state, actions);
             } else {
-                alert(`Loaded completed official FPL data for Team ID #${teamId}.`);
+                if (actions.showToast) actions.showToast(`Loaded official FPL data for Team #${teamId}.`, "info");
                 localStorage.setItem('fpl_hub_team_id', teamId);
-                fetchBtn.disabled = false;
-                fetchBtn.innerHTML = `<i data-lucide="download-cloud" style="width: 14px; height: 14px;"></i> Fetch Live FPL Data`;
+                renderLiveRank(container, state, actions);
             }
         });
     }
