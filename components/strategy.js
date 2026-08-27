@@ -3,40 +3,60 @@ import { getShirtSVG } from './planner.js';
 
 export const EXPERT_CHANNELS = [
     {
+        id: "ffscout",
         name: "Fantasy Football Scout - FPL Tips",
         handle: "@FFScout_",
         url: "https://www.youtube.com/@FFScout_",
         color: "#22c55e",
         videosCount: 8,
         subscribers: "185K",
-        latestTitle: "THE FPL WATCHLIST GW2 (Odegaard, De Cuyper & Palmer)"
+        latestTitle: "THE FPL WATCHLIST GW2 (Odegaard, De Cuyper & Palmer)",
+        keyTakeaway: "Scout Picks names B.Fernandes (MUN) captain & Haaland (MCI) vice. Advise rolling 1 FT into GW3 to prepare for Chelsea & Arsenal fixture turns.",
+        watchlist: ["Cole Palmer (CHE)", "Odegaard (ARS)", "De Cuyper (BHA)"],
+        captainPick: "B.Fernandes (MUN)",
+        transferRec: "Roll Free Transfer (save for GW3/GW4)"
     },
     {
+        id: "fplharry",
         name: "FPL Harry",
         handle: "@FPLHarry",
         url: "https://www.youtube.com/@FPLHarry",
         color: "#3b82f6",
         videosCount: 6,
         subscribers: "142K",
-        latestTitle: "FPL GW2 PREVIEW! PALMER + ROGERS + JOAO PEDRO GOALS!"
+        latestTitle: "FPL GW2 PREVIEW! PALMER + ROGERS + JOAO PEDRO GOALS!",
+        keyTakeaway: "Highlights M.Sangaré (BRE) (£5.6m) as top budget midfielder enabler. Evaluates Palmer, Rogers & João Pedro ahead of Chelsea's upcoming fixture swing.",
+        watchlist: ["M.Sangaré (BRE)", "João Pedro (CHE)", "Rogers (CHE)"],
+        captainPick: "B.Fernandes (MUN)",
+        transferRec: "Hold transfers or buy M.Sangaré (£5.6m)"
     },
     {
+        id: "letstalkfpl",
         name: "Let's Talk FPL",
         handle: "@LetsTalkFPL",
         url: "https://www.youtube.com/@LetsTalkFPL",
         color: "#8b5cf6",
         videosCount: 6,
         subscribers: "320K",
-        latestTitle: "My FPL Team for GW2 (Fernandes Captain & Wissa Targets)"
+        latestTitle: "My FPL Team for GW2 (Fernandes Captain & Wissa Targets)",
+        keyTakeaway: "Backs B.Fernandes (MUN) home captaincy based on elite Old Trafford underlying stats. Recommends Wissa (NEW) (£6.0m) & Szoboszlai (LIV) (£7.0m). Warns against panic-selling GW1 blankers.",
+        watchlist: ["Wissa (NEW)", "Szoboszlai (LIV)", "B.Fernandes (MUN)"],
+        captainPick: "B.Fernandes (MUN)",
+        transferRec: "Do NOT panic-sell Isak, Wirtz, or Mbeumo"
     },
     {
+        id: "fplraptor",
         name: "FPL Raptor",
         handle: "@FPLRaptor",
         url: "https://www.youtube.com/@FPLRaptor",
         color: "#ec4899",
         videosCount: 5,
         subscribers: "95K",
-        latestTitle: "BENCHING HEADACHE! | MY FPL GW2 TEAM SELECTION"
+        latestTitle: "BENCHING HEADACHE! | MY FPL GW2 TEAM SELECTION",
+        keyTakeaway: "Data model gives B.Fernandes 6.8 xP vs Haaland 6.2 xP for GW2 due to home fixture weighting. Solves benching headaches between De Cuyper vs 5th midfielder.",
+        watchlist: ["De Cuyper (BHA)", "B.Fernandes (MUN)", "Haaland (MCI)"],
+        captainPick: "B.Fernandes (MUN) (6.8 xP model lead)",
+        transferRec: "Save Wildcard for GW4 or GW6"
     }
 ];
 
@@ -109,15 +129,15 @@ export const GAMEWEEK_STRATEGIES = {
         timeLeft: "about 22 hours left",
         videoCount: 25,
         channelCount: 4,
-        overview: "Gameweek 2 brings highly anticipated home fixtures for Manchester United and Manchester City, but the overwhelming expert consensus is to roll your transfer and avoid early chips.",
+        overview: "Gameweek 2 brings highly anticipated home fixtures for Manchester United (B.Fernandes vs Ipswich) and Manchester City (Haaland vs Palace), but the overwhelming expert consensus across Fantasy Football Scout, FPL Harry, Let's Talk FPL, and FPL Raptor is to roll your free transfer and avoid early chips.",
         captainConsensus: {
-            summary: "There is an overwhelming consensus among pundits backing Fernandes (MUN) as the standout captaincy choice for GW2.",
+            summary: "There is an overwhelming consensus among pundits backing B.Fernandes (MUN) as the standout captaincy choice for GW2, closely followed by Haaland (MCI).",
             picks: [
                 {
                     player: "B.Fernandes",
                     team: "MUN",
                     price: "£12.0m",
-                    rationale: "is heavily favored by the vast majority of experts due to his exceptional home record and a highly projected fixture as Manchester United host Ipswich (MUN vs IPS)."
+                    rationale: "is heavily favored by the vast majority of experts (and leads FPL Raptor's data model at 6.8 xP) due to his exceptional home underlying stats and a highly projected fixture as Manchester United host Ipswich (MUN vs IPS)."
                 },
                 {
                     player: "Haaland",
@@ -129,7 +149,7 @@ export const GAMEWEEK_STRATEGIES = {
                     player: "Palmer",
                     team: "CHE",
                     price: "£9.5m",
-                    rationale: "is favored as a top high-upside differential captain pick as Chelsea host their home fixture."
+                    rationale: "is favored as a top high-upside differential captain pick as Chelsea host their home fixture at Stamford Bridge."
                 }
             ]
         },
@@ -140,7 +160,7 @@ export const GAMEWEEK_STRATEGIES = {
                     player: "M.Sangaré",
                     team: "BRE",
                     price: "£5.6m",
-                    rationale: "is the premier budget midfielder target after registering two assists in GW1."
+                    rationale: "is highlighted by FPL Harry as the premier budget midfielder target after registering two assists in GW1."
                 },
                 {
                     groupName: "Chelsea assets",
@@ -160,13 +180,13 @@ export const GAMEWEEK_STRATEGIES = {
                     player: "De Cuyper",
                     team: "BHA",
                     price: "£4.6m",
-                    rationale: "is a highly popular out-of-position prospect playing on the left wing, though managers are split on whether to start or bench him away to Chelsea (CHE vs BHA)."
+                    rationale: "is a highly popular out-of-position prospect playing on the left wing (FFScout Watchlist riser), though managers are split on whether to start or bench him away to Chelsea (CHE vs BHA)."
                 },
                 {
                     player: "Wissa",
                     team: "NEW",
                     price: "£6.0m",
-                    rationale: "is a top mid-priced forward target playing an advanced role with improving fixtures from GW2 onwards."
+                    rationale: "is highlighted by Let's Talk FPL as a top mid-priced forward target playing an advanced role with improving fixtures from GW2 onwards."
                 },
                 {
                     player: "Szoboszlai",
@@ -178,7 +198,7 @@ export const GAMEWEEK_STRATEGIES = {
         },
         avoidSell: {
             items: [
-                "Do NOT panic-sell GW1 blankers. Pundits strongly agree on holding Fernandes (MUN), Haaland (MCI), Mbeumo (MUN), Wirtz (LIV), and Isak (LIV) due to highly encouraging GW2 fixtures.",
+                "Do NOT panic-sell GW1 blankers. Pundits strongly agree on holding B.Fernandes (MUN), Haaland (MCI), Mbeumo (MUN), Wirtz (LIV), and Isak (LIV) due to highly encouraging GW2 fixtures.",
                 "Avoid Chelsea defensive assets for now, as goalkeeper Sánchez (CHE) appeared error-prone in GW1."
             ]
         },
@@ -207,7 +227,7 @@ export function renderStrategy(container, state, actions) {
                         <i data-lucide="compass" style="color: var(--primary); width: 26px; height: 26px;"></i> Gameweek Strategy Hub
                     </h2>
                     <p style="color: var(--text-muted); font-size: 13.5px; margin: 0;">
-                        Real-time expert consensus synthesized across top YouTube FPL analysts & data models.
+                        Synthesized tactical breakdowns & consensus from Fantasy Football Scout, FPL Harry, Let's Talk FPL, and FPL Raptor.
                     </p>
                 </div>
 
@@ -234,34 +254,47 @@ export function renderStrategy(container, state, actions) {
                 </div>
             </div>
 
-            <!-- YouTube Sources Banner Bar -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px;">
-                ${EXPERT_CHANNELS.map(ch => `
-                    <a href="${ch.url}" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
-                        <div style="display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); border-radius: 8px; transition: all 0.2s;" class="hover-lift">
+            <!-- Detailed YouTube Sources Channel Cards (4 Sources) -->
+            <div>
+                <h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--text-muted); margin: 0 0 10px 0; display: flex; align-items: center; gap: 6px;">
+                    <i data-lucide="youtube" style="width: 14px; height: 14px; color: #ef4444;"></i> Source Channels & Latest Video Takeaways (GW${strategy.gw})
+                </h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px;">
+                    ${EXPERT_CHANNELS.map(ch => `
+                        <div style="background: rgba(13, 18, 30, 0.95); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 10px; transition: border-color 0.2s;" class="hover-lift">
                             <div style="display: flex; align-items: center; justify-content: space-between;">
                                 <div style="display: flex; align-items: center; gap: 10px;">
-                                    <div style="width: 30px; height: 30px; border-radius: 50%; background: ${ch.color}; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 11px; flex-shrink: 0;">
+                                    <div style="width: 32px; height: 32px; border-radius: 50%; background: ${ch.color}; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 12px; flex-shrink: 0;">
                                         ▶
                                     </div>
                                     <div style="overflow: hidden;">
-                                        <div style="font-weight: 700; font-size: 12px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${ch.name}</div>
+                                        <a href="${ch.url}" target="_blank" rel="noopener noreferrer" style="font-weight: 700; font-size: 12.5px; color: var(--text-main); text-decoration: none; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" class="hover-underline">
+                                            ${ch.name}
+                                        </a>
                                         <div style="font-size: 10px; color: var(--text-muted);">${ch.handle} • ${ch.subscribers} subs</div>
                                     </div>
                                 </div>
-                                <span style="font-size: 9.5px; font-weight: 700; color: ${ch.color}; background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px;">
-                                    ${ch.videosCount} vids
-                                </span>
                             </div>
-                            <div style="font-size: 10.5px; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; background: rgba(0,0,0,0.2); padding: 4px 8px; border-radius: 4px; border-left: 2px solid ${ch.color};" title="${ch.latestTitle}">
+
+                            <div style="font-size: 11px; color: #cbd5e1; background: rgba(0,0,0,0.25); padding: 6px 8px; border-radius: 6px; border-left: 3px solid ${ch.color}; font-weight: 600;">
                                 📹 "${ch.latestTitle}"
                             </div>
+
+                            <div style="font-size: 11.5px; color: #94a3b8; line-height: 1.45; background: rgba(255,255,255,0.015); padding: 8px; border-radius: 6px;">
+                                <strong style="color: var(--text-main); font-size: 10.5px; text-transform: uppercase; display: block; margin-bottom: 2px;">Key Video Strategy:</strong>
+                                ${highlightSearch(ch.keyTakeaway, searchQuery)}
+                            </div>
+
+                            <div style="display: flex; items-center; justify-content: space-between; font-size: 10px; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,0.05); padding-top: 6px; margin-top: auto;">
+                                <span>Captain: <strong style="color: var(--primary);">${ch.captainPick}</strong></span>
+                                <span style="color: var(--secondary); font-weight: 700;">${ch.transferRec}</span>
+                            </div>
                         </div>
-                    </a>
-                `).join('')}
+                    `).join('')}
+                </div>
             </div>
 
-            <!-- Strategy Card Main Container -->
+            <!-- Strategy Card Main Container (Identical layout to user screenshot) -->
             <div class="strategy-card-main" style="background: rgba(13, 18, 30, 0.95); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-family: var(--font-main);">
                 
                 <!-- Card Header -->
