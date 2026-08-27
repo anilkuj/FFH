@@ -47,20 +47,20 @@ export const GAMEWEEK_STRATEGIES = {
         timeLeft: "Completed",
         videoCount: 28,
         channelCount: 4,
-        overview: "Gameweek 1 set the baseline for the 2026/27 FPL season. The overwhelming pundit consensus was to balance elite premium assets (Haaland & Fernandes) with flexible mid-priced key players like Palmer and Isak.",
+        overview: "Gameweek 1 set the baseline for the 2026/27 FPL season. The overwhelming pundit consensus across FFScout, FPL Harry, Let's Talk FPL, and FPL Raptor was to balance elite premium assets (Haaland & B.Fernandes) with flexible mid-priced key players like Palmer and Isak.",
         captainConsensus: {
-            summary: "Haaland (MCI) and Fernandes (MUN) were the dominant captaincy choices across all expert channels for GW1.",
+            summary: "Haaland (MCI) and B.Fernandes (MUN) were the dominant captaincy choices across all expert channels for GW1.",
             picks: [
                 {
                     player: "Haaland",
                     team: "MCI",
-                    price: "£14.0m",
+                    price: "£15.5m",
                     rationale: "was favored by over 65% of expert managers due to his formidable goalscoring record and top expected goal involvement (xGI)."
                 },
                 {
-                    player: "Fernandes",
+                    player: "B.Fernandes",
                     team: "MUN",
-                    price: "£10.0m",
+                    price: "£12.0m",
                     rationale: "remained the primary home captaincy alternative with elite set-piece and penalty duties."
                 }
             ]
@@ -70,14 +70,14 @@ export const GAMEWEEK_STRATEGIES = {
             targets: [
                 {
                     player: "Isak",
-                    team: "NEW",
-                    price: "£8.5m",
-                    rationale: "was selected by 92% of top pundits as the premier mid-priced forward."
+                    team: "LIV",
+                    price: "£9.0m",
+                    rationale: "was selected by top pundits as a premier forward target."
                 },
                 {
                     player: "Palmer",
                     team: "CHE",
-                    price: "£10.5m",
+                    price: "£9.5m",
                     rationale: "remained the core mid-priced talisman for Chelsea."
                 }
             ]
@@ -86,9 +86,9 @@ export const GAMEWEEK_STRATEGIES = {
             picks: [
                 {
                     player: "Rogers",
-                    team: "AVL",
-                    price: "£5.0m",
-                    rationale: "proved to be the standout budget enabler with a key attacking role."
+                    team: "CHE",
+                    price: "£7.5m",
+                    rationale: "proved to be a standout attacking option."
                 }
             ]
         },
@@ -109,33 +109,27 @@ export const GAMEWEEK_STRATEGIES = {
         timeLeft: "about 22 hours left",
         videoCount: 25,
         channelCount: 4,
-        overview: "Gameweek 2 brings highly anticipated home fixtures for Manchester United and Liverpool, but the overwhelming expert consensus is to roll your transfer and avoid early chips.",
+        overview: "Gameweek 2 brings highly anticipated home fixtures for Manchester United and Manchester City, but the overwhelming expert consensus is to roll your transfer and avoid early chips.",
         captainConsensus: {
             summary: "There is an overwhelming consensus among pundits backing Fernandes (MUN) as the standout captaincy choice for GW2.",
             picks: [
                 {
-                    player: "Fernandes",
+                    player: "B.Fernandes",
                     team: "MUN",
-                    price: "£10.0m",
+                    price: "£12.0m",
                     rationale: "is heavily favored by the vast majority of experts due to his exceptional home record and a highly projected fixture as Manchester United host Ipswich (MUN vs IPS)."
                 },
                 {
                     player: "Haaland",
                     team: "MCI",
-                    price: "£14.0m",
+                    price: "£15.5m",
                     rationale: "is the primary alternative for managers who prefer to back the Norwegian away to Crystal Palace (CRY vs MCI), though some hesitation remains around trusting him for this specific away fixture."
                 },
                 {
                     player: "Palmer",
                     team: "CHE",
-                    price: "£10.5m",
+                    price: "£9.5m",
                     rationale: "is favored as a top high-upside differential captain pick as Chelsea host their home fixture."
-                },
-                {
-                    player: "Odegaard",
-                    team: "ARS",
-                    price: "£8.5m",
-                    rationale: "presents strong midfield attacking potential as Arsenal face Aston Villa."
                 }
             ]
         },
@@ -145,7 +139,7 @@ export const GAMEWEEK_STRATEGIES = {
                 {
                     player: "M.Sangaré",
                     team: "BRE",
-                    price: "£5.5m",
+                    price: "£5.6m",
                     rationale: "is the premier budget midfielder target after registering two assists in GW1."
                 },
                 {
@@ -165,7 +159,7 @@ export const GAMEWEEK_STRATEGIES = {
                 {
                     player: "De Cuyper",
                     team: "BHA",
-                    price: "£4.5m",
+                    price: "£4.6m",
                     rationale: "is a highly popular out-of-position prospect playing on the left wing, though managers are split on whether to start or bench him away to Chelsea (CHE vs BHA)."
                 },
                 {
@@ -184,7 +178,7 @@ export const GAMEWEEK_STRATEGIES = {
         },
         avoidSell: {
             items: [
-                "Do NOT panic-sell GW1 blankers. Pundits strongly agree on holding Fernandes (MUN), Haaland (MCI), Mbeumo (MUN), Maguire (MUN), Wirtz (LIV), and Isak (LIV) due to highly encouraging GW2 fixtures.",
+                "Do NOT panic-sell GW1 blankers. Pundits strongly agree on holding Fernandes (MUN), Haaland (MCI), Mbeumo (MUN), Wirtz (LIV), and Isak (LIV) due to highly encouraging GW2 fixtures.",
                 "Avoid Chelsea defensive assets for now, as goalkeeper Sánchez (CHE) appeared error-prone in GW1."
             ]
         },
@@ -307,13 +301,19 @@ export function renderStrategy(container, state, actions) {
                             ${highlightSearch(strategy.captainConsensus.summary, searchQuery)}
                         </div>
                         <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: #cbd5e1; line-height: 1.5;">
-                            ${strategy.captainConsensus.picks.map(p => `
-                                <li>
-                                    <span style="font-weight: 700; color: #fff;">${p.player}</span>
-                                    <span style="font-size: 10px; font-weight: 700; background: rgba(255,255,255,0.1); padding: 1px 5px; border-radius: 3px; color: #94a3b8; margin: 0 4px;">⚽ ${p.team}</span>
-                                    ${p.rationale ? highlightSearch(p.rationale, searchQuery) : ''}
-                                </li>
-                            `).join('')}
+                            ${strategy.captainConsensus.picks.map(p => {
+                                const foundP = PLAYERS.find(pl => pl.name.includes(p.player) || pl.web_name === p.player);
+                                const teamCode = foundP ? foundP.team : p.team;
+                                const priceVal = foundP ? `£${foundP.price.toFixed(1)}m` : p.price;
+                                return `
+                                    <li>
+                                        <span style="font-weight: 700; color: #fff;">${p.player}</span>
+                                        <span style="font-size: 10px; font-weight: 700; background: rgba(255,255,255,0.1); padding: 1px 5px; border-radius: 3px; color: #94a3b8; margin: 0 4px;">⚽ ${teamCode}</span>
+                                        <span style="color: var(--primary); font-weight: 700; font-size: 11.5px;">(${priceVal})</span>
+                                        ${p.rationale ? highlightSearch(p.rationale, searchQuery) : ''}
+                                    </li>
+                                `;
+                            }).join('')}
                         </ul>
                     </div>
 
@@ -326,23 +326,44 @@ export function renderStrategy(container, state, actions) {
                             ${highlightSearch(strategy.transferTargets.summary, searchQuery)}
                         </div>
                         <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: #cbd5e1; line-height: 1.5;">
-                            ${strategy.transferTargets.targets.map(t => `
-                                <li>
-                                    ${t.player ? `
-                                        <span style="font-weight: 700; color: #fff;">${t.player}</span>
-                                        ${t.team ? `<span style="font-size: 10px; font-weight: 700; background: rgba(255,255,255,0.1); padding: 1px 5px; border-radius: 3px; color: #94a3b8; margin: 0 4px;">⚽ ${t.team}</span>` : ''}
-                                        ${t.price ? `<span style="color: var(--primary); font-weight: 700; font-size: 11.5px;">(${t.price})</span>` : ''}
-                                    ` : ''}
-                                    ${t.groupName ? `
-                                        <span style="font-weight: 700; color: #fff;">${t.groupName}</span> like ${t.players.map(pl => `<span style="font-weight: 700; color: #f8fafc;">${pl}</span>`).join(', ')}
-                                    ` : ''}
-                                    ${t.players && !t.groupName ? `
-                                        ${t.players.map(pl => `<span style="font-weight: 700; color: #fff;">${pl}</span>`).join(' and ')}
-                                        ${t.team ? `<span style="font-size: 10px; font-weight: 700; background: rgba(255,255,255,0.1); padding: 1px 5px; border-radius: 3px; color: #94a3b8; margin: 0 4px;">⚽ ${t.team}</span>` : ''}
-                                    ` : ''}
-                                    ${t.rationale ? highlightSearch(t.rationale, searchQuery) : ''}
-                                </li>
-                            `).join('')}
+                            ${strategy.transferTargets.targets.map(t => {
+                                if (t.player) {
+                                    const foundP = PLAYERS.find(pl => pl.name.includes(t.player) || pl.web_name === t.player);
+                                    const teamCode = foundP ? foundP.team : t.team;
+                                    const priceVal = foundP ? `£${foundP.price.toFixed(1)}m` : t.price;
+                                    return `
+                                        <li>
+                                            <span style="font-weight: 700; color: #fff;">${t.player}</span>
+                                            <span style="font-size: 10px; font-weight: 700; background: rgba(255,255,255,0.1); padding: 1px 5px; border-radius: 3px; color: #94a3b8; margin: 0 4px;">⚽ ${teamCode}</span>
+                                            <span style="color: var(--primary); font-weight: 700; font-size: 11.5px;">(${priceVal})</span>
+                                            ${t.rationale ? highlightSearch(t.rationale, searchQuery) : ''}
+                                        </li>
+                                    `;
+                                }
+                                if (t.groupName) {
+                                    return `
+                                        <li>
+                                            <span style="font-weight: 700; color: #fff;">${t.groupName}</span> like ${t.players.map(pl => {
+                                                const fp = PLAYERS.find(p => p.name.includes(pl) || p.web_name === pl);
+                                                const tc = fp ? fp.team : 'CHE';
+                                                return `<span style="font-weight: 700; color: #f8fafc;">${pl}</span> <span style="font-size: 9.5px; font-weight: 700; background: rgba(255,255,255,0.1); padding: 0 4px; border-radius: 3px; color: #94a3b8;">⚽ ${tc}</span>`;
+                                            }).join(', ')} ${t.rationale ? highlightSearch(t.rationale, searchQuery) : ''}
+                                        </li>
+                                    `;
+                                }
+                                if (t.players && !t.groupName) {
+                                    return `
+                                        <li>
+                                            ${t.players.map(pl => {
+                                                const fp = PLAYERS.find(p => p.name.includes(pl) || p.web_name === pl);
+                                                const tc = fp ? fp.team : (t.team || 'ARS');
+                                                return `<span style="font-weight: 700; color: #fff;">${pl}</span> <span style="font-size: 9.5px; font-weight: 700; background: rgba(255,255,255,0.1); padding: 0 4px; border-radius: 3px; color: #94a3b8;">⚽ ${tc}</span>`;
+                                            }).join(' and ')} ${t.rationale ? highlightSearch(t.rationale, searchQuery) : ''}
+                                        </li>
+                                    `;
+                                }
+                                return '';
+                            }).join('')}
                         </ul>
                     </div>
 
@@ -352,14 +373,19 @@ export function renderStrategy(container, state, actions) {
                             <i data-lucide="gem" style="width: 14px; height: 14px; color: #60a5fa;"></i> DIFFERENTIALS
                         </h4>
                         <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: #cbd5e1; line-height: 1.5;">
-                            ${strategy.differentials.picks.map(d => `
-                                <li>
-                                    <span style="font-weight: 700; color: #fff;">${d.player}</span>
-                                    <span style="font-size: 10px; font-weight: 700; background: rgba(255,255,255,0.1); padding: 1px 5px; border-radius: 3px; color: #94a3b8; margin: 0 4px;">⚽ ${d.team}</span>
-                                    <span style="color: var(--primary); font-weight: 700; font-size: 11.5px;">(${d.price})</span>
-                                    ${d.rationale ? highlightSearch(d.rationale, searchQuery) : ''}
-                                </li>
-                            `).join('')}
+                            ${strategy.differentials.picks.map(d => {
+                                const foundP = PLAYERS.find(pl => pl.name.includes(d.player) || pl.web_name === d.player);
+                                const teamCode = foundP ? foundP.team : d.team;
+                                const priceVal = foundP ? `£${foundP.price.toFixed(1)}m` : d.price;
+                                return `
+                                    <li>
+                                        <span style="font-weight: 700; color: #fff;">${d.player}</span>
+                                        <span style="font-size: 10px; font-weight: 700; background: rgba(255,255,255,0.1); padding: 1px 5px; border-radius: 3px; color: #94a3b8; margin: 0 4px;">⚽ ${teamCode}</span>
+                                        <span style="color: var(--primary); font-weight: 700; font-size: 11.5px;">(${priceVal})</span>
+                                        ${d.rationale ? highlightSearch(d.rationale, searchQuery) : ''}
+                                    </li>
+                                `;
+                            }).join('')}
                         </ul>
                     </div>
 
