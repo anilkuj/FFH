@@ -145,20 +145,34 @@ export function renderShotMap(container, state, actions) {
         if (!sJson || !sJson.success || !sJson.data) {
             shotArea.innerHTML = "<div style='padding:24px;color:" + textMuted + ";font-size:13px;'>No shot data available.</div>"; return;
         }
-        const sides = sJson.data.shots;
-        if (!sides || sides.length === 0) {
-            shotArea.innerHTML = "<div style='padding:24px;color:" + textMuted + ";font-size:13px;'>Shot data not yet rated for this match.</div>"; return;
+
+        // API structure: data.periods[] — each period has shots[] with team_id per shot
+        const periods = sJson.data.periods;
+        if (!periods || periods.length === 0) {
+            shotArea.innerHTML = "<div style='padding:24px;color:" + textMuted + ";font-size:13px;'>Shot data not yet available for this match.</div>"; return;
         }
+
+        // Flatten all shots from all periods into one array
         let allShots = [];
+        periods.forEach(period => {
+            (period.shots || []).forEach(s => allShots.push(s));
+        });
+
+        if (allShots.length === 0) {
+            shotArea.innerHTML = "<div style='padding:24px;color:" + textMuted + ";font-size:13px;'>No shots recorded for this match yet.</div>"; return;
+        }
+
         let homeId   = mObj ? mObj.home_team.id   : null;
         let awayId   = mObj ? mObj.away_team.id   : null;
         let homeName = mObj ? mObj.home_team.name : "Home";
         let awayName = mObj ? mObj.away_team.name : "Away";
-        sides.forEach(side => {
-            if (!homeId) homeId = sides[0].team_id;
-            if (!awayId && sides.length > 1) awayId = sides[1].team_id;
-            (side.shots||[]).forEach(s => allShots.push(Object.assign({},s,{team_id:side.team_id})));
-        });
+
+        // If no matchObj, infer home/away from first two distinct team_ids seen
+        if (!homeId) {
+            const teamIds = [...new Set(allShots.map(s => s.team_id).filter(Boolean))];
+            homeId = teamIds[0] || null;
+            awayId = teamIds[1] || null;
+        }
         const filter = getTeamFilter();
         let filtered = filter==="home" ? allShots.filter(s=>s.team_id===homeId)
                       : filter==="away" ? allShots.filter(s=>s.team_id===awayId)
