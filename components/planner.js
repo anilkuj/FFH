@@ -1987,9 +1987,17 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
         return xpB - xpA;
     }).slice(0, 12);
 
-    const starts = typeof player.GS === 'number' ? player.GS : 0;
-    const avgMins = typeof player.MPPG === 'number' ? player.MPPG.toFixed(0) : '0';
+    // Last Season (2025/26) Historical Stats
+    const lastSeasonStarts = typeof player.GS === 'number' ? player.GS : 0;
+    const lastSeasonAvgMins = typeof player.MPPG === 'number' ? player.MPPG.toFixed(0) : '0';
+    const lastSeasonPts = typeof player.points === 'number' ? player.points : 0;
+    const lastSeasonXG = (player.xG || 0).toFixed(1);
+    const lastSeasonXA = (player.xA || 0).toFixed(1);
+    const lastSeasonXG90 = (player.xG90 || 0).toFixed(2);
+    const lastSeasonXA90 = (player.xA90 || 0).toFixed(2);
+    const lastSeasonIct = (player.ictIndex || 0).toFixed(1);
 
+    // Current Season (2026/27) Actual Stats
     const playedPredictions = (player.predictions || []).filter(pr => pr.gw < state.currentGw && pr.actualPts !== null && pr.actualPts !== undefined);
     const currentSeasonTotalPts = playedPredictions.reduce((sum, pr) => {
         let val = pr.actualPts;
@@ -1999,6 +2007,15 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
         return sum + (val || 0);
     }, 0);
     const currentSeasonPlayedGws = playedPredictions.length;
+    const currentSeasonStarts = playedPredictions.filter(pr => (pr.actualPts || 0) > 0).length;
+    
+    let currentSeasonTotalMins = playedPredictions.reduce((sum, pr) => sum + (pr.mins !== undefined ? pr.mins : ((pr.actualPts || 0) > 0 ? 75 : 0)), 0);
+    const currentSeasonAvgMins = currentSeasonPlayedGws > 0 ? Math.round(currentSeasonTotalMins / currentSeasonPlayedGws) : 0;
+    
+    const currentSeasonXG = playedPredictions.reduce((sum, pr) => sum + (pr.xG || 0), 0);
+    const currentSeasonXA = playedPredictions.reduce((sum, pr) => sum + (pr.xA || 0), 0);
+    const currentSeasonXG90 = currentSeasonTotalMins > 0 ? (currentSeasonXG / (currentSeasonTotalMins / 90)) : 0;
+    const currentSeasonXA90 = currentSeasonTotalMins > 0 ? (currentSeasonXA / (currentSeasonTotalMins / 90)) : 0;
     const currentFormPts = getLast5GamesActualPts(player, state.currentGw, state);
 
     const modalContent = `
@@ -2099,8 +2116,12 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
                             <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Current Pts</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
-                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${currentSeasonPlayedGws} GWs</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Played</span>
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${currentSeasonStarts} / ${currentSeasonPlayedGws}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Starts / Played</span>
+                        </div>
+                        <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${currentSeasonAvgMins}m</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Avg Minutes</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
                             <span class="detail-stat-val" style="font-size: 13px; font-weight: 700; color: #22c55e;">${currentFormPts} pts</span>
@@ -2115,60 +2136,56 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
                             <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">5-GW xP</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
-                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700; color: #8b5cf6;">${getNGwXp(player, state.currentGw, 10).toFixed(1)}</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">10-GW xP</span>
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${currentSeasonXG.toFixed(1)}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Current xG</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
-                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${player.xG.toFixed(1)}</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">xG (Proj)</span>
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${currentSeasonXA.toFixed(1)}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Current xA</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
-                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${player.xA.toFixed(1)}</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">xA (Proj)</span>
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${currentSeasonXG90.toFixed(2)}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">xG per 90</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
-                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${player.xG90.toFixed(2)}</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">xG90</span>
-                        </div>
-                        <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
-                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${player.xA90.toFixed(2)}</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">xA90</span>
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${currentSeasonXA90.toFixed(2)}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">xA per 90</span>
                         </div>
                     </div>
 
                     <!-- Last Season View -->
                     <div id="optaStatsLastView" class="player-detail-stats-grid" style="margin: 0; padding: 0; display: none; grid-template-columns: repeat(4, 1fr); gap: 6px;">
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
-                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700; color: var(--secondary);">${player.points} pts</span>
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700; color: var(--secondary);">${lastSeasonPts} pts</span>
                             <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Total Pts</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
-                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${starts}</span>
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${lastSeasonStarts}</span>
                             <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Starts</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
-                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${avgMins}m</span>
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${lastSeasonAvgMins}m</span>
                             <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Avg Mins</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
-                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${player.ictIndex.toFixed(1)}</span>
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${lastSeasonIct}</span>
                             <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">ICT Index</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
-                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${player.xG.toFixed(1)}</span>
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${lastSeasonXG}</span>
                             <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Total xG</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
-                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${player.xA.toFixed(1)}</span>
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${lastSeasonXA}</span>
                             <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Total xA</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
-                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${player.xG90.toFixed(2)}</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">xG90</span>
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${lastSeasonXG90}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">xG per 90</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
-                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${player.xA90.toFixed(2)}</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">xA90</span>
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${lastSeasonXA90}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">xA per 90</span>
                         </div>
                     </div>
                 </div>
