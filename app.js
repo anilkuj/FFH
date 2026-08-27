@@ -1445,14 +1445,8 @@ const actions = {
             case 'liverank':
                 renderLiveRank(container, state, actions);
                 break;
-            case 'reveals':
-                renderReveals(container, state, actions);
-                break;
             case 'strategy':
                 renderStrategy(container, state, actions);
-                break;
-            case 'solio':
-                renderSolioProjections(container, state, actions);
                 break;
             case 'topperformers':
                 renderTopPerformers(container, state, actions);
