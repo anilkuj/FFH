@@ -89,7 +89,8 @@ const safeJsonParse = (str, fallback) => {
 class AppState {
     constructor() {
         this.activeTab = 'planner';
-        this.currentGw = 1;
+        const savedGw = localStorage.getItem('fpl_hub_current_gw');
+        this.currentGw = (savedGw && !isNaN(parseInt(savedGw, 10))) ? parseInt(savedGw, 10) : 2;
         this.selectedEmptySlot = null;
         
         // Hardcoded to ultra to make all features free
@@ -2762,6 +2763,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('prevGwBtn').addEventListener('click', () => {
         if (state.currentGw > 1) {
             state.currentGw--;
+            localStorage.setItem('fpl_hub_current_gw', state.currentGw);
             actions.renderActiveView();
         }
     });
@@ -2769,6 +2771,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('nextGwBtn').addEventListener('click', () => {
         if (state.currentGw < 38) {
             state.currentGw++;
+            localStorage.setItem('fpl_hub_current_gw', state.currentGw);
             actions.renderActiveView();
         }
     });

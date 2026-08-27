@@ -223499,7 +223499,7 @@ export const XP_CALIBRATION_FACTOR = 1.0;
 
 export const LEAGUE_AVG_GOALS_PER_GAME = 1.5;
 
-export function getPlayerRatings(player, currentGw = 1) {
+export function getPlayerRatings(player, currentGw = 2) {
     // 1. Expected Minutes (based on MPPG - Avg Minutes/Game)
     // A: >= 80, B: >= 60, C: >= 45, D: >= 20, E: < 20
     const mppg = player.MPPG || 0;
