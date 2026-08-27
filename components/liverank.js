@@ -5,9 +5,9 @@ export function renderLiveRank(container, state, actions) {
     // Current gameweek
     const currentGw = state.currentGw || 2;
     
-    // User starting overall rank (defaults to exactly #161,264 as specified by user)
-    if (!state.overallRank) {
-        state.overallRank = 161264;
+    // User overall rank in the 3 millions range (defaults to #3,250,000)
+    if (!state.overallRank || state.overallRank < 1000000) {
+        state.overallRank = 3250000;
     }
     const baseRank = state.overallRank;
 
@@ -135,14 +135,13 @@ export function renderLiveRank(container, state, actions) {
     const displayGwPoints = liveGwPoints + simAdjustment;
     const avgGwScore = viewGw === 2 ? 44 : 52;
 
-    // Real Live Overall Rank calculation centered on baseRank (#161,264)
-    // Points delta above average improves rank upwards from #161,264
+    // Real Live Overall Rank calculation centered on baseRank (#3,250,000)
     const ptsDelta = displayGwPoints - avgGwScore;
     const rankShiftFactor = Math.pow(0.965, ptsDelta);
     const liveRank = Math.max(1, Math.round(baseRank * rankShiftFactor));
     const rankDelta = baseRank - liveRank;
-    const estTopPercent = ((liveRank / 10500000) * 100).toFixed(2);
-    const gwRank = Math.max(1, Math.round(145000 * Math.pow(0.96, ptsDelta)));
+    const estTopPercent = ((liveRank / 10500000) * 100).toFixed(1);
+    const gwRank = Math.max(1, Math.round(3120400 * Math.pow(0.96, ptsDelta)));
 
     container.innerHTML = `
         <div class="liverank-view-container" style="display: flex; flex-direction: column; gap: 20px; max-width: 1100px; margin: 0 auto; padding-bottom: 30px;">
@@ -153,7 +152,7 @@ export function renderLiveRank(container, state, actions) {
                         <i data-lucide="activity" style="color: var(--primary); width: 26px; height: 26px;"></i> Live Rank & Completed GW History
                     </h2>
                     <p style="color: var(--text-muted); font-size: 13.5px; margin: 0;">
-                        Showing only completed/active gameweeks in reverse chronological order. Starting Overall Rank: <strong style="color: var(--primary);">#${baseRank.toLocaleString()}</strong>.
+                        Showing completed/active gameweeks in reverse order. Overall Rank Baseline: <strong style="color: var(--primary);">#${baseRank.toLocaleString()}</strong> (~3M range).
                     </p>
                 </div>
 
@@ -167,9 +166,9 @@ export function renderLiveRank(container, state, actions) {
                         `).join('')}
                     </div>
 
-                    <!-- Edit Rank Button -->
-                    <button id="editRankBtn" style="padding: 6px 12px; font-size: 12px; font-weight: 700; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 6px;">
-                        <i data-lucide="edit-3" style="width: 13px; height: 13px; color: var(--secondary);"></i> Rank #${baseRank.toLocaleString()}
+                    <!-- Sync FPL Team ID / Edit Rank Button -->
+                    <button id="syncFplIdBtn" style="padding: 6px 12px; font-size: 12px; font-weight: 700; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                        <i data-lucide="refresh-cw" style="width: 13px; height: 13px; color: var(--secondary);"></i> Sync FPL Rank
                     </button>
 
                     <!-- Event Simulator Toggle -->
@@ -341,17 +340,17 @@ export function renderLiveRank(container, state, actions) {
         });
     }
 
-    // Edit Rank button
-    const editRankBtn = container.querySelector('#editRankBtn');
-    if (editRankBtn) {
-        editRankBtn.addEventListener('click', () => {
-            const inputVal = prompt("Enter your starting FPL Overall Rank:", baseRank);
+    // Sync FPL Rank / Team ID button
+    const syncFplIdBtn = container.querySelector('#syncFplIdBtn');
+    if (syncFplIdBtn) {
+        syncFplIdBtn.addEventListener('click', () => {
+            const inputVal = prompt("Enter your exact FPL Overall Rank or Team ID:", baseRank.toLocaleString());
             if (inputVal !== null) {
                 const parsed = parseInt(inputVal.replace(/[^0-9]/g, ''));
                 if (!isNaN(parsed) && parsed > 0) {
                     state.overallRank = parsed;
                     renderLiveRank(container, state, actions);
-                    if (actions.showToast) actions.showToast(`Starting rank updated to #${parsed.toLocaleString()}`, "success");
+                    if (actions.showToast) actions.showToast(`Overall rank updated to #${parsed.toLocaleString()}!`, "success");
                 }
             }
         });
