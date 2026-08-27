@@ -1486,15 +1486,13 @@ const actions = {
         document.getElementById('bankValueDisplay').innerText = formattedBankValue;
         document.getElementById('freeTransfersDisplay').innerText = formattedTransfers;
 
-        // Dynamic Available Transfers button configuration next to Gameweek
-        const avTransBtn = document.getElementById('availableTransfersBtn');
-        if (avTransBtn) {
-            const hasTransfersAvailable = (formattedTransfers === 'Unlimited' || parseInt(formattedTransfers) > 0);
-            if (state.activeTab === 'planner' && hasTransfersAvailable) {
-                avTransBtn.style.display = 'flex';
-                avTransBtn.querySelector('span').innerText = `Plan Transfers (${formattedTransfers === 'Unlimited' ? 'Unlimited' : `${formattedTransfers} FT`})`;
+        // Hide or show top header GW selector pill for Live Rank tab (isolated)
+        const gwSelectorPill = document.querySelector('.gw-selector-pill');
+        if (gwSelectorPill) {
+            if (state.activeTab === 'liverank') {
+                gwSelectorPill.style.display = 'none';
             } else {
-                avTransBtn.style.display = 'none';
+                gwSelectorPill.style.display = 'flex';
             }
         }
 
@@ -2764,6 +2762,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Gameweek Planner Controllers
     document.getElementById('prevGwBtn').addEventListener('click', () => {
+        if (state.activeTab === 'liverank') return;
         if (state.currentGw > 1) {
             state.currentGw--;
             localStorage.setItem('fpl_hub_current_gw', state.currentGw);
@@ -2772,6 +2771,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('nextGwBtn').addEventListener('click', () => {
+        if (state.activeTab === 'liverank') return;
         if (state.currentGw < 38) {
             state.currentGw++;
             localStorage.setItem('fpl_hub_current_gw', state.currentGw);
