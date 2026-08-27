@@ -55,6 +55,7 @@ export async function fetchLiveFplApiData(teamId) {
 }
 
 export function renderLiveRank(container, state, actions) {
+    // Current active gameweek
     const currentGw = state.currentGw || 2;
     
     // Check saved FPL Team ID
@@ -84,15 +85,22 @@ export function renderLiveRank(container, state, actions) {
     const userData = state.fplUserData;
 
     // Filter available gameweeks to STRICTLY COMPLETED GAMEWEEKS ONLY
+    // Exclude any uncompleted/future gameweeks (like uncompleted GW2) from Live Rank
     const allGwKeys = Object.keys(userData.gws || {}).map(Number);
     const completedGwNumbers = allGwKeys.filter(gw => userData.gws[gw] && userData.gws[gw].isCompleted);
     
-    // Default to [1] if no completed GWs logged yet
+    // Default to [1] if no completed GWs logged yet, sorted strictly in REVERSE chronological order
     const completedGws = completedGwNumbers.length > 0 ? completedGwNumbers.sort((a, b) => b - a) : [1];
 
     // Selected view GW (defaults to LATEST COMPLETED GAMEWEEK, e.g. GW1)
-    const latestCompletedGw = completedGws[0];
-    const selectedGw = container.dataset.gw ? parseInt(container.dataset.gw) : latestCompletedGw;
+    const latestCompletedGw = completedGws[0]; // Highest completed GW (first in reverse order)
+    
+    // Enforce that viewGw can NEVER exceed latestCompletedGw in Live Rank
+    let selectedGw = container.dataset.gw ? parseInt(container.dataset.gw) : latestCompletedGw;
+    if (selectedGw > latestCompletedGw) {
+        selectedGw = latestCompletedGw;
+        container.dataset.gw = latestCompletedGw;
+    }
     const viewGw = completedGws.includes(selectedGw) ? selectedGw : latestCompletedGw;
 
     const gwStats = userData.gws[viewGw] || {
@@ -105,6 +113,7 @@ export function renderLiveRank(container, state, actions) {
     };
 
     const squadInfo = state.getSquadForGw ? state.getSquadForGw(viewGw) : { starters: [], bench: [], bank: 0 };
+    const lineupInfo = state.getGwLineup ? state.getGwLineup(viewGw) : null;
     
     // Get actual starting 11 and bench players for viewGw
     const starterIds = squadInfo.starters && squadInfo.starters.length > 0
@@ -117,8 +126,10 @@ export function renderLiveRank(container, state, actions) {
 
     const starters = starterIds.map(id => PLAYERS.find(p => p.id === id)).filter(Boolean);
     const benchers = benchIds.map(id => PLAYERS.find(p => p.id === id)).filter(Boolean);
-    const captainId = state.captain || (starters[0] ? starters[0].id : null);
-    const viceId = state.viceCaptain || (starters[1] ? starters[1].id : null);
+    
+    // Resolve exact Captain & Vice-Captain for viewGw from state lineup
+    const captainId = (lineupInfo && lineupInfo.captain) ? lineupInfo.captain : (state.captain || (starters[0] ? starters[0].id : null));
+    const viceId = (lineupInfo && lineupInfo.vice) ? lineupInfo.vice : (state.viceCaptain || (starters[1] ? starters[1].id : null));
     const activeChips = state.chips ? state.chips[viewGw] || {} : {};
 
     // Get simulation state
