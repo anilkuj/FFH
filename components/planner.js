@@ -2137,109 +2137,17 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
                             <thead>
                                 <tr style="background: rgba(0,0,0,0.18); border-bottom: 1px solid var(--border-color); color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 9.5px; position: sticky; top: 0; z-index: 2; backdrop-filter: blur(8px);">
                                     <th style="padding: 8px 6px; text-align: center; width: 24px;">#</th>
-                                    <th style="padding: 8px 8px;">Player</th>
-                                    <th style="padding: 8px 8px;">Price</th>
-                                    <th style="padding: 8px 8px; text-align: center;">5-GW xP</th>
-                                    <th style="padding: 8px 8px; text-align: center;">Next xP</th>
-                                    <th style="padding: 8px 8px; text-align: center;">Form (5GW)</th>
-                                    <th style="padding: 8px 8px;">Next 5 Fixtures</th>
+                                    <th data-sort="name" style="padding: 8px 8px; cursor: pointer; user-select: none;" title="Sort by Player Name">Player <span class="sort-arrow" style="opacity: 0.4;">↕</span></th>
+                                    <th data-sort="price" style="padding: 8px 8px; cursor: pointer; user-select: none;" title="Sort by Price">Price <span class="sort-arrow" style="opacity: 0.4;">↕</span></th>
+                                    <th data-sort="xp5" style="padding: 8px 8px; text-align: center; cursor: pointer; user-select: none;" title="Sort by 5-GW Expected Points">5-GW xP <span class="sort-arrow" style="color: var(--primary);">↓</span></th>
+                                    <th data-sort="xp1" style="padding: 8px 8px; text-align: center; cursor: pointer; user-select: none;" title="Sort by Next GW Expected Points">Next xP <span class="sort-arrow" style="opacity: 0.4;">↕</span></th>
+                                    <th data-sort="form" style="padding: 8px 8px; text-align: center; cursor: pointer; user-select: none;" title="Sort by Last 5 Games Form Points">Form (5GW) <span class="sort-arrow" style="opacity: 0.4;">↕</span></th>
+                                    <th data-sort="fdr" style="padding: 8px 8px; cursor: pointer; user-select: none;" title="Sort by FDR Difficulty Rating">Next 5 Fixtures <span class="sort-arrow" style="opacity: 0.4;">↕</span></th>
                                     <th style="padding: 8px 8px; text-align: right;">Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                ${replacementCandidates.map((comp, idx) => {
-                                    const compNextXp = getNGwXp(comp, state.currentGw, 1);
-                                    const comp5Xp = get5GwXp(comp, state.currentGw);
-                                    const last5Pts = getLast5GamesActualPts(comp, state.currentGw, state);
-                                    const fdrData = getNext5FixturesFDR(comp, state.currentGw);
-                                    
-                                    const newBank = bank + player.price - comp.price;
-                                    const budgetOk = newBank >= 0;
-                                    
-                                    const tempSquad = squad.filter(id => id !== player.id);
-                                    tempSquad.push(comp.id);
-                                    const teamCounts = {};
-                                    let teamOk = true;
-                                    for (const id of tempSquad) {
-                                        const p = PLAYERS.find(pl => pl.id === id);
-                                        if (p) {
-                                            teamCounts[p.team] = (teamCounts[p.team] || 0) + 1;
-                                            if (teamCounts[p.team] > 3) {
-                                                teamOk = false;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                    
-                                    const statusOk = comp.status !== 'i' && comp.status !== 's' && comp.status !== 'u';
-                                    const allOk = budgetOk && teamOk && statusOk;
-                                    
-                                    let disabledReason = "";
-                                    if (!statusOk) disabledReason = "Injured";
-                                    else if (!budgetOk) disabledReason = "Over budget";
-                                    else if (!teamOk) disabledReason = "3/team max";
-
-                                    const rowStyle = !budgetOk 
-                                        ? 'background: rgba(239, 68, 68, 0.09); border-left: 3px solid #ef4444;' 
-                                        : (idx % 2 === 0 ? 'background: rgba(255,255,255,0.015);' : 'background: transparent;');
-
-                                    return `
-                                        <tr style="${rowStyle} border-bottom: 1px solid var(--border-color); transition: background 0.15s;">
-                                            <td style="padding: 8px 6px; text-align: center; font-weight: 800; color: var(--text-muted); font-size: 10px;">${idx + 1}</td>
-                                            
-                                            <td style="padding: 8px 8px;">
-                                                <div style="font-weight: 700; color: var(--text-main); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${comp.name}">
-                                                    ${actions.getWebName ? actions.getWebName(comp.name) : comp.name}
-                                                </div>
-                                                <div style="font-size: 9.5px; color: var(--text-muted); margin-top: 1px; display: flex; align-items: center; gap: 4px;">
-                                                    <span style="font-weight: 700; padding: 0 4px; background: rgba(0,0,0,0.15); border-radius: 3px; color: var(--text-main);">${comp.team}</span>
-                                                    <span>${comp.position}</span>
-                                                </div>
-                                            </td>
-
-                                            <td style="padding: 8px 8px; white-space: nowrap;">
-                                                <span style="font-weight: 800; color: ${!budgetOk ? '#ef4444' : 'var(--primary)'}; font-size: 12px;">£${comp.price.toFixed(1)}m</span>
-                                                ${!budgetOk ? `<span style="display: block; font-size: 8px; font-weight: 700; color: #ef4444; text-transform: uppercase;">+£${Math.abs(newBank).toFixed(1)}m over</span>` : ''}
-                                            </td>
-
-                                            <td style="padding: 8px 8px; text-align: center; font-weight: 800; color: #8b5cf6; font-size: 12.5px; background: rgba(139,92,246,0.05);">
-                                                ${comp5Xp.toFixed(1)}
-                                            </td>
-
-                                            <td style="padding: 8px 8px; text-align: center; font-weight: 700; color: #3b82f6; font-size: 11.5px;">
-                                                ${compNextXp.toFixed(1)}
-                                            </td>
-
-                                            <td style="padding: 8px 8px; text-align: center; font-weight: 700; color: #22c55e; font-size: 11.5px;">
-                                                ${last5Pts} pts
-                                            </td>
-
-                                            <td style="padding: 8px 8px;">
-                                                <div style="display: flex; align-items: center; gap: 2px;">
-                                                    ${fdrData.fixtures.map(f => {
-                                                        const st = getFdrColorStyles(f.diff);
-                                                        return `
-                                                            <div style="padding: 2px 4px; border-radius: 3px; background: ${st.bg}; color: ${st.text}; font-size: 8.5px; font-weight: 700; text-align: center; line-height: 1.1; min-width: 28px;" title="GW${f.gw}: ${f.opp} (${f.loc}) - FDR ${f.diff}">
-                                                                <div>${f.opp}</div>
-                                                                <div style="font-size: 7px; opacity: 0.85;">${f.loc}</div>
-                                                            </div>
-                                                        `;
-                                                    }).join('')}
-                                                </div>
-                                            </td>
-
-                                            <td style="padding: 8px 8px; text-align: right; white-space: nowrap;">
-                                                <button class="action-main-btn btn-secondary-action direct-comp-swap-btn" 
-                                                        data-comp-id="${comp.id}" 
-                                                        style="font-size: 10px; padding: 4px 8px; height: 24px; margin: 0;" 
-                                                        ${!allOk ? 'disabled' : ''}
-                                                        title="${disabledReason || 'Swap into team'}">
-                                                    ${!budgetOk ? 'Over Budget' : (disabledReason || 'Swap')}
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    `;
-                                }).join('')}
+                            <tbody id="replacementTbody">
+                                <!-- Populated by JS -->
                             </tbody>
                         </table>
                     </div>
@@ -2252,6 +2160,183 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
         lucide.createIcons();
 
         document.getElementById('closeDetailModalBtn').addEventListener('click', actions.hideModal);
+
+        // Pre-calculate stats for fast interactive column sorting
+        const candidateRowsData = replacementCandidates.map(comp => {
+            const nextXp = getNGwXp(comp, state.currentGw, 1);
+            const fiveXp = get5GwXp(comp, state.currentGw);
+            const last5Pts = getLast5GamesActualPts(comp, state.currentGw, state);
+            const fdrData = getNext5FixturesFDR(comp, state.currentGw);
+            const fdrAvg = parseFloat(fdrData.avg);
+            
+            const newBank = bank + player.price - comp.price;
+            const budgetOk = newBank >= 0;
+            
+            const tempSquad = squad.filter(id => id !== player.id);
+            tempSquad.push(comp.id);
+            const teamCounts = {};
+            let teamOk = true;
+            for (const id of tempSquad) {
+                const p = PLAYERS.find(pl => pl.id === id);
+                if (p) {
+                    teamCounts[p.team] = (teamCounts[p.team] || 0) + 1;
+                    if (teamCounts[p.team] > 3) {
+                        teamOk = false;
+                        break;
+                    }
+                }
+            }
+            
+            const statusOk = comp.status !== 'i' && comp.status !== 's' && comp.status !== 'u';
+            const allOk = budgetOk && teamOk && statusOk;
+            
+            let disabledReason = "";
+            if (!statusOk) disabledReason = "Injured";
+            else if (!budgetOk) disabledReason = "Over budget";
+            else if (!teamOk) disabledReason = "3/team max";
+
+            return {
+                comp,
+                nextXp,
+                fiveXp,
+                last5Pts,
+                fdrData,
+                fdrAvg,
+                newBank,
+                budgetOk,
+                allOk,
+                disabledReason
+            };
+        });
+
+        let sortCol = 'xp5';
+        let sortAsc = false;
+
+        const renderCandidateRows = () => {
+            candidateRowsData.sort((a, b) => {
+                let valA = a.comp.name, valB = b.comp.name;
+                if (sortCol === 'price') { valA = a.comp.price; valB = b.comp.price; }
+                else if (sortCol === 'xp5') { valA = a.fiveXp; valB = b.fiveXp; }
+                else if (sortCol === 'xp1') { valA = a.nextXp; valB = b.nextXp; }
+                else if (sortCol === 'form') { valA = a.last5Pts; valB = b.last5Pts; }
+                else if (sortCol === 'fdr') { valA = a.fdrAvg; valB = b.fdrAvg; }
+                else if (sortCol === 'name') { valA = a.comp.name; valB = b.comp.name; }
+
+                if (typeof valA === 'string') {
+                    return sortAsc ? valA.localeCompare(valB) : valB.localeCompare(valA);
+                }
+                return sortAsc ? valA - valB : valB - valA;
+            });
+
+            const tbody = document.querySelector('#replacementTbody');
+            if (!tbody) return;
+
+            tbody.innerHTML = candidateRowsData.map((item, idx) => {
+                const { comp, nextXp, fiveXp, last5Pts, fdrData, newBank, budgetOk, allOk, disabledReason } = item;
+                const rowStyle = !budgetOk 
+                    ? 'background: rgba(239, 68, 68, 0.09); border-left: 3px solid #ef4444;' 
+                    : (idx % 2 === 0 ? 'background: rgba(255,255,255,0.015);' : 'background: transparent;');
+
+                return `
+                    <tr style="${rowStyle} border-bottom: 1px solid var(--border-color); transition: background 0.15s;">
+                        <td style="padding: 8px 6px; text-align: center; font-weight: 800; color: var(--text-muted); font-size: 10px;">${idx + 1}</td>
+                        <td style="padding: 8px 8px;">
+                            <div style="font-weight: 700; color: var(--text-main); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${comp.name}">
+                                ${actions.getWebName ? actions.getWebName(comp.name) : comp.name}
+                            </div>
+                            <div style="font-size: 9.5px; color: var(--text-muted); margin-top: 1px; display: flex; align-items: center; gap: 4px;">
+                                <span style="font-weight: 700; padding: 0 4px; background: rgba(0,0,0,0.15); border-radius: 3px; color: var(--text-main);">${comp.team}</span>
+                                <span>${comp.position}</span>
+                            </div>
+                        </td>
+                        <td style="padding: 8px 8px; white-space: nowrap;">
+                            <span style="font-weight: 800; color: ${!budgetOk ? '#ef4444' : 'var(--primary)'}; font-size: 12px;">£${comp.price.toFixed(1)}m</span>
+                            ${!budgetOk ? `<span style="display: block; font-size: 8px; font-weight: 700; color: #ef4444; text-transform: uppercase;">+£${Math.abs(newBank).toFixed(1)}m over</span>` : ''}
+                        </td>
+                        <td style="padding: 8px 8px; text-align: center; font-weight: 800; color: #8b5cf6; font-size: 12.5px; background: rgba(139,92,246,0.05);">
+                            ${fiveXp.toFixed(1)}
+                        </td>
+                        <td style="padding: 8px 8px; text-align: center; font-weight: 700; color: #3b82f6; font-size: 11.5px;">
+                            ${nextXp.toFixed(1)}
+                        </td>
+                        <td style="padding: 8px 8px; text-align: center; font-weight: 700; color: #22c55e; font-size: 11.5px;">
+                            ${last5Pts} pts
+                        </td>
+                        <td style="padding: 8px 8px;">
+                            <div style="display: flex; align-items: center; gap: 2px;">
+                                ${fdrData.fixtures.map(f => {
+                                    const st = getFdrColorStyles(f.diff);
+                                    return `
+                                        <div style="padding: 2px 4px; border-radius: 3px; background: ${st.bg}; color: ${st.text}; font-size: 8.5px; font-weight: 700; text-align: center; line-height: 1.1; min-width: 28px;" title="GW${f.gw}: ${f.opp} (${f.loc}) - FDR ${f.diff}">
+                                            <div>${f.opp}</div>
+                                            <div style="font-size: 7px; opacity: 0.85;">${f.loc}</div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </td>
+                        <td style="padding: 8px 8px; text-align: right; white-space: nowrap;">
+                            <button class="action-main-btn btn-secondary-action direct-comp-swap-btn" 
+                                    data-comp-id="${comp.id}" 
+                                    style="font-size: 10px; padding: 4px 8px; height: 24px; margin: 0;" 
+                                    ${!allOk ? 'disabled' : ''}
+                                    title="${disabledReason || 'Swap into team'}">
+                                ${!budgetOk ? 'Over Budget' : (disabledReason || 'Swap')}
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Wire direct comparison swap buttons
+            tbody.querySelectorAll('.direct-comp-swap-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const compId = parseInt(btn.getAttribute('data-comp-id'));
+                    const ok = actions.addTransfer ? actions.addTransfer(state.currentGw, playerId, compId) : false;
+                    if (ok) {
+                        actions.hideModal();
+                    } else if (triggerSwapCallback) {
+                        actions.hideModal();
+                        triggerSwapCallback({ id: playerId, compId });
+                    }
+                });
+            });
+        };
+
+        // Wire column header sorting
+        const ths = document.querySelectorAll('.replacement-table-wrapper th[data-sort]');
+        ths.forEach(th => {
+            th.addEventListener('click', () => {
+                const col = th.getAttribute('data-sort');
+                if (sortCol === col) {
+                    sortAsc = !sortAsc;
+                } else {
+                    sortCol = col;
+                    sortAsc = (col === 'fdr' || col === 'price' || col === 'name');
+                }
+
+                ths.forEach(otherTh => {
+                    const c = otherTh.getAttribute('data-sort');
+                    const arrowSpan = otherTh.querySelector('.sort-arrow');
+                    if (arrowSpan) {
+                        if (c === sortCol) {
+                            arrowSpan.textContent = sortAsc ? '↑' : '↓';
+                            arrowSpan.style.opacity = '1';
+                            arrowSpan.style.color = 'var(--primary)';
+                        } else {
+                            arrowSpan.textContent = '↕';
+                            arrowSpan.style.opacity = '0.4';
+                            arrowSpan.style.color = 'inherit';
+                        }
+                    }
+                });
+
+                renderCandidateRows();
+            });
+        });
+
+        // Initial render
+        renderCandidateRows();
         
         const swapBtn = document.getElementById('detailSwapBtn');
         if (swapBtn) {
