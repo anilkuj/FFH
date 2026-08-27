@@ -2107,119 +2107,136 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
                         <div class="detail-stat-box" style="padding: 8px;">
                             <span class="detail-stat-val" style="font-size: 13px;">${player.xA90.toFixed(2)}</span>
                             <span class="detail-stat-lbl" style="font-size: 9px;">xA per 90</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Suitable Replacement Candidates (Sorted by 5-GW xP) -->
-                <div style="border-top: 1px solid var(--border-color); padding-top: 12px; display: flex; flex-direction: column; gap: 10px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                                       <!-- Suitable Replacement Candidates (Compact Table Format with Over-Budget Highlighting) -->
+                <div style="border-top: 1px solid var(--border-color); padding-top: 12px; display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;">
                         <h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--secondary); display: flex; align-items: center; gap: 6px; margin: 0;">
                             <i data-lucide="arrow-right-left" style="width: 14px; height: 14px;"></i> Top ${player.position} Replacement Options
                         </h4>
-                        <span style="font-size: 10px; color: var(--text-muted); font-weight: 600; background: rgba(139,92,246,0.12); color: #8b5cf6; padding: 2px 6px; border-radius: 4px;">
-                            Sorted by 5-GW xP ↓
-                        </span>
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 10px; color: var(--text-muted);">
+                            <span style="display: flex; align-items: center; gap: 4px;">
+                                <span style="width: 8px; height: 8px; border-radius: 50%; background: #22c55e; display: inline-block;"></span> In Budget
+                            </span>
+                            <span style="display: flex; align-items: center; gap: 4px;">
+                                <span style="width: 8px; height: 8px; border-radius: 50%; background: #ef4444; display: inline-block;"></span> Over Budget
+                            </span>
+                            <span style="background: rgba(139,92,246,0.12); color: #8b5cf6; padding: 2px 6px; border-radius: 4px; font-weight: 700;">
+                                Sorted by 5-GW xP ↓
+                            </span>
+                        </div>
                     </div>
 
-                    <div class="alternatives-scroll-container" style="display: flex; flex-direction: column; gap: 10px; max-height: 360px; overflow-y: auto; padding-right: 4px;">
-                        ${replacementCandidates.map((comp, idx) => {
-                            const compNextXp = getNGwXp(comp, state.currentGw, 1);
-                            const comp5Xp = get5GwXp(comp, state.currentGw);
-                            const last5Pts = getLast5GamesActualPts(comp, state.currentGw);
-                            const fdrData = getNext5FixturesFDR(comp, state.currentGw);
-                            
-                            const newBank = bank + player.price - comp.price;
-                            const budgetOk = newBank >= 0;
-                            
-                            const tempSquad = squad.filter(id => id !== player.id);
-                            tempSquad.push(comp.id);
-                            const teamCounts = {};
-                            let teamOk = true;
-                            for (const id of tempSquad) {
-                                const p = PLAYERS.find(pl => pl.id === id);
-                                if (p) {
-                                    teamCounts[p.team] = (teamCounts[p.team] || 0) + 1;
-                                    if (teamCounts[p.team] > 3) {
-                                        teamOk = false;
-                                        break;
+                    <!-- Replacement Table Container -->
+                    <div class="replacement-table-wrapper" style="max-height: 380px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 8px;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 11px; text-align: left;">
+                            <thead>
+                                <tr style="background: rgba(0,0,0,0.18); border-bottom: 1px solid var(--border-color); color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 9.5px; position: sticky; top: 0; z-index: 2; backdrop-filter: blur(8px);">
+                                    <th style="padding: 8px 6px; text-align: center; width: 24px;">#</th>
+                                    <th style="padding: 8px 8px;">Player</th>
+                                    <th style="padding: 8px 8px;">Price</th>
+                                    <th style="padding: 8px 8px; text-align: center;">5-GW xP</th>
+                                    <th style="padding: 8px 8px; text-align: center;">Next xP</th>
+                                    <th style="padding: 8px 8px; text-align: center;">Form (5GW)</th>
+                                    <th style="padding: 8px 8px;">Next 5 Fixtures</th>
+                                    <th style="padding: 8px 8px; text-align: right;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${replacementCandidates.map((comp, idx) => {
+                                    const compNextXp = getNGwXp(comp, state.currentGw, 1);
+                                    const comp5Xp = get5GwXp(comp, state.currentGw);
+                                    const last5Pts = getLast5GamesActualPts(comp, state.currentGw);
+                                    const fdrData = getNext5FixturesFDR(comp, state.currentGw);
+                                    
+                                    const newBank = bank + player.price - comp.price;
+                                    const budgetOk = newBank >= 0;
+                                    
+                                    const tempSquad = squad.filter(id => id !== player.id);
+                                    tempSquad.push(comp.id);
+                                    const teamCounts = {};
+                                    let teamOk = true;
+                                    for (const id of tempSquad) {
+                                        const p = PLAYERS.find(pl => pl.id === id);
+                                        if (p) {
+                                            teamCounts[p.team] = (teamCounts[p.team] || 0) + 1;
+                                            if (teamCounts[p.team] > 3) {
+                                                teamOk = false;
+                                                break;
+                                            }
+                                        }
                                     }
-                                }
-                            }
-                            
-                            const statusOk = comp.status !== 'i' && comp.status !== 's' && comp.status !== 'u';
-                            const allOk = budgetOk && teamOk && statusOk;
-                            
-                            let disabledReason = "";
-                            if (!statusOk) disabledReason = "Injured";
-                            else if (!budgetOk) disabledReason = "Over budget";
-                            else if (!teamOk) disabledReason = "3/team max";
-                            
-                            return `
-                                <div class="compare-alternative-card" style="display: flex; flex-direction: column; gap: 8px; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 8px; font-size: 11px; text-align: left;">
-                                    <!-- Name, Team, Price, xP Header -->
-                                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
-                                        <div style="display: flex; align-items: center; gap: 8px; overflow: hidden;">
-                                            <span style="font-size: 10px; font-weight: 800; padding: 2px 6px; background: rgba(59,130,246,0.15); color: #3b82f6; border-radius: 4px; flex-shrink: 0;">#${idx + 1}</span>
-                                            <div style="overflow: hidden;">
-                                                <div style="font-weight: 700; font-size: 13px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${comp.name}">
+                                    
+                                    const statusOk = comp.status !== 'i' && comp.status !== 's' && comp.status !== 'u';
+                                    const allOk = budgetOk && teamOk && statusOk;
+                                    
+                                    let disabledReason = "";
+                                    if (!statusOk) disabledReason = "Injured";
+                                    else if (!budgetOk) disabledReason = "Over budget";
+                                    else if (!teamOk) disabledReason = "3/team max";
+
+                                    const rowStyle = !budgetOk 
+                                        ? 'background: rgba(239, 68, 68, 0.09); border-left: 3px solid #ef4444;' 
+                                        : (idx % 2 === 0 ? 'background: rgba(255,255,255,0.015);' : 'background: transparent;');
+
+                                    return `
+                                        <tr style="${rowStyle} border-bottom: 1px solid var(--border-color); transition: background 0.15s;">
+                                            <td style="padding: 8px 6px; text-align: center; font-weight: 800; color: var(--text-muted); font-size: 10px;">${idx + 1}</td>
+                                            
+                                            <td style="padding: 8px 8px;">
+                                                <div style="font-weight: 700; color: var(--text-main); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${comp.name}">
                                                     ${actions.getWebName ? actions.getWebName(comp.name) : comp.name}
                                                 </div>
-                                                <div style="font-size: 10.5px; color: var(--text-muted); margin-top: 1px; display: flex; align-items: center; gap: 6px;">
-                                                    <span style="font-weight: 700; padding: 1px 5px; background: rgba(0,0,0,0.15); border-radius: 3px; color: var(--text-main);">${comp.team}</span>
+                                                <div style="font-size: 9.5px; color: var(--text-muted); margin-top: 1px; display: flex; align-items: center; gap: 4px;">
+                                                    <span style="font-weight: 700; padding: 0 4px; background: rgba(0,0,0,0.15); border-radius: 3px; color: var(--text-main);">${comp.team}</span>
                                                     <span>${comp.position}</span>
-                                                    <span>• £${comp.price.toFixed(1)}m</span>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div style="text-align: right; flex-shrink: 0;">
-                                            <div style="font-size: 14px; font-weight: 800; color: #8b5cf6;">${comp5Xp.toFixed(1)} <span style="font-size: 9px; font-weight: 600; color: var(--text-muted);">xP (5GW)</span></div>
-                                            <div style="font-size: 10.5px; color: #3b82f6; font-weight: 700;">GW${state.currentGw}: ${compNextXp.toFixed(1)} xP</div>
-                                        </div>
-                                    </div>
+                                            </td>
 
-                                    <!-- Form & FDR Metrics Bar -->
-                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: rgba(0,0,0,0.15); padding: 6px 10px; border-radius: 6px;">
-                                        <div style="display: flex; align-items: center; justify-content: space-between;">
-                                            <span style="font-size: 10px; color: var(--text-muted);">Last 5 Form:</span>
-                                            <strong style="font-size: 11px; color: #22c55e;">${last5Pts} pts</strong>
-                                        </div>
-                                        <div style="display: flex; align-items: center; justify-content: space-between;">
-                                            <span style="font-size: 10px; color: var(--text-muted);">5-GW FDR Rating:</span>
-                                            <strong style="font-size: 11px; color: #f59e0b;">${fdrData.avg} Avg</strong>
-                                        </div>
-                                    </div>
+                                            <td style="padding: 8px 8px; white-space: nowrap;">
+                                                <span style="font-weight: 800; color: ${!budgetOk ? '#ef4444' : 'var(--primary)'}; font-size: 12px;">£${comp.price.toFixed(1)}m</span>
+                                                ${!budgetOk ? `<span style="display: block; font-size: 8px; font-weight: 700; color: #ef4444; text-transform: uppercase;">+£${Math.abs(newBank).toFixed(1)}m over</span>` : ''}
+                                            </td>
 
-                                    <!-- Upcoming 5 Fixtures -->
-                                    <div style="display: flex; align-items: center; gap: 3px;">
-                                        ${fdrData.fixtures.map(f => {
-                                            const st = getFdrColorStyles(f.diff);
-                                            return `
-                                                <div style="flex: 1; text-align: center; padding: 3px 2px; border-radius: 4px; background: ${st.bg}; color: ${st.text}; font-size: 9px; font-weight: 700; white-space: nowrap;" title="GW${f.gw}: ${f.opp} (${f.loc}) - FDR ${f.diff}">
-                                                    <div>${f.opp}</div>
-                                                    <div style="font-size: 7.5px; opacity: 0.85;">(${f.loc})</div>
+                                            <td style="padding: 8px 8px; text-align: center; font-weight: 800; color: #8b5cf6; font-size: 12.5px; background: rgba(139,92,246,0.05);">
+                                                ${comp5Xp.toFixed(1)}
+                                            </td>
+
+                                            <td style="padding: 8px 8px; text-align: center; font-weight: 700; color: #3b82f6; font-size: 11.5px;">
+                                                ${compNextXp.toFixed(1)}
+                                            </td>
+
+                                            <td style="padding: 8px 8px; text-align: center; font-weight: 700; color: #22c55e; font-size: 11.5px;">
+                                                ${last5Pts} pts
+                                            </td>
+
+                                            <td style="padding: 8px 8px;">
+                                                <div style="display: flex; align-items: center; gap: 2px;">
+                                                    ${fdrData.fixtures.map(f => {
+                                                        const st = getFdrColorStyles(f.diff);
+                                                        return `
+                                                            <div style="padding: 2px 4px; border-radius: 3px; background: ${st.bg}; color: ${st.text}; font-size: 8.5px; font-weight: 700; text-align: center; line-height: 1.1; min-width: 28px;" title="GW${f.gw}: ${f.opp} (${f.loc}) - FDR ${f.diff}">
+                                                                <div>${f.opp}</div>
+                                                                <div style="font-size: 7px; opacity: 0.85;">${f.loc}</div>
+                                                            </div>
+                                                        `;
+                                                    }).join('')}
                                                 </div>
-                                            `;
-                                        }).join('')}
-                                    </div>
+                                            </td>
 
-                                    <!-- Swap Button -->
-                                    <div style="display: flex; flex-direction: column; gap: 4px; align-items: stretch; margin-top: 4px;">
-                                        ${disabledReason ? `
-                                            <span style="font-size: 9px; color: #f43f5e; font-weight: 600; text-align: center; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${disabledReason}">
-                                                ${disabledReason}
-                                            </span>
-                                        ` : ''}
-                                        <button class="action-main-btn btn-secondary-action direct-comp-swap-btn" 
-                                                data-comp-id="${comp.id}" 
-                                                style="font-size: 10.5px; padding: 4px 8px; height: 26px; margin: 0; width: 100%;" 
-                                                ${!allOk ? 'disabled' : ''}>
-                                            Swap with ${actions.getWebName ? actions.getWebName(comp.name) : comp.name}
-                                        </button>
-                                    </div>
-                                </div>
-                            `;
-                        }).join('')}
+                                            <td style="padding: 8px 8px; text-align: right; white-space: nowrap;">
+                                                <button class="action-main-btn btn-secondary-action direct-comp-swap-btn" 
+                                                        data-comp-id="${comp.id}" 
+                                                        style="font-size: 10px; padding: 4px 8px; height: 24px; margin: 0;" 
+                                                        ${!allOk ? 'disabled' : ''}
+                                                        title="${disabledReason || 'Swap into team'}">
+                                                    ${!budgetOk ? 'Over Budget' : (disabledReason || 'Swap')}
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
