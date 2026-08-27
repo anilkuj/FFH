@@ -1990,6 +1990,17 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
     const starts = typeof player.GS === 'number' ? player.GS : 0;
     const avgMins = typeof player.MPPG === 'number' ? player.MPPG.toFixed(0) : '0';
 
+    const playedPredictions = (player.predictions || []).filter(pr => pr.gw < state.currentGw && pr.actualPts !== null && pr.actualPts !== undefined);
+    const currentSeasonTotalPts = playedPredictions.reduce((sum, pr) => {
+        let val = pr.actualPts;
+        if (state && state.livePoints && state.livePoints[pr.gw] && state.livePoints[pr.gw][player.id] !== undefined) {
+            val = state.livePoints[pr.gw][player.id];
+        }
+        return sum + (val || 0);
+    }, 0);
+    const currentSeasonPlayedGws = playedPredictions.length;
+    const currentFormPts = getLast5GamesActualPts(player, state.currentGw, state);
+
     const modalContent = `
         <div class="modal-header-section">
             <h3>Player Profile & Replacement Analysis</h3>
@@ -2057,12 +2068,24 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
 
             <!-- Right Column: OPTA Stats & Replacement Candidates -->
             <div class="detail-right-column" style="display: flex; flex-direction: column; gap: 16px; min-width: 0; border-left: 1px solid var(--border-color); padding-left: 20px;">
-                <!-- OPTA Match Stats -->
+                <!-- OPTA Match Stats with Current / Last Season Tabs -->
                 <div>
-                    <h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; gap: 6px; margin: 0 0 10px 0;">
-                        <i data-lucide="bar-chart-3" style="width: 14px; height: 14px;"></i> OPTA Match Stats
-                    </h4>
-                    <div class="player-detail-stats-grid" style="margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 6px;">
+                        <h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; gap: 6px; margin: 0;">
+                            <i data-lucide="bar-chart-3" style="width: 14px; height: 14px;"></i> OPTA Match Stats
+                        </h4>
+                        <div style="display: flex; background: rgba(0,0,0,0.25); padding: 2px; border-radius: 6px; border: 1px solid var(--border-color);">
+                            <button id="optaTabCurrent" style="padding: 3px 9px; font-size: 10px; font-weight: 700; border: none; border-radius: 4px; background: var(--primary); color: #000; cursor: pointer; transition: all 0.2s;">
+                                Current Season
+                            </button>
+                            <button id="optaTabLast" style="padding: 3px 9px; font-size: 10px; font-weight: 600; border: none; border-radius: 4px; background: transparent; color: var(--text-muted); cursor: pointer; transition: all 0.2s;">
+                                Last Season
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Current Season View (Default) -->
+                    <div id="optaStatsCurrentView" class="player-detail-stats-grid" style="margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
                             <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">£${player.price.toFixed(1)}m</span>
                             <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Price</span>
@@ -2072,7 +2095,51 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
                             <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Ownership</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
-                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${player.points}</span>
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700; color: #22c55e;">${currentSeasonTotalPts} pts</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Current Pts</span>
+                        </div>
+                        <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${currentSeasonPlayedGws} GWs</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Played</span>
+                        </div>
+                        <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700; color: #22c55e;">${currentFormPts} pts</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Form (5GW)</span>
+                        </div>
+                        <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700; color: #3b82f6;">${prediction.pts.toFixed(1)}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Next xP</span>
+                        </div>
+                        <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700; color: #8b5cf6;">${get5GwXp(player, state.currentGw).toFixed(1)}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">5-GW xP</span>
+                        </div>
+                        <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700; color: #8b5cf6;">${getNGwXp(player, state.currentGw, 10).toFixed(1)}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">10-GW xP</span>
+                        </div>
+                        <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${player.xG.toFixed(1)}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">xG (Proj)</span>
+                        </div>
+                        <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${player.xA.toFixed(1)}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">xA (Proj)</span>
+                        </div>
+                        <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${player.xG90.toFixed(2)}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">xG90</span>
+                        </div>
+                        <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${player.xA90.toFixed(2)}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">xA90</span>
+                        </div>
+                    </div>
+
+                    <!-- Last Season View -->
+                    <div id="optaStatsLastView" class="player-detail-stats-grid" style="margin: 0; padding: 0; display: none; grid-template-columns: repeat(4, 1fr); gap: 6px;">
+                        <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700; color: var(--secondary);">${player.points} pts</span>
                             <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Total Pts</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
@@ -2084,24 +2151,16 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
                             <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Avg Mins</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
-                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700; color: #3b82f6;">${prediction.pts.toFixed(1)}</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Next xP</span>
-                        </div>
-                        <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
-                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700; color: #8b5cf6;">${get5GwXp(player, state.currentGw).toFixed(1)}</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">5-GW xP</span>
+                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${player.ictIndex.toFixed(1)}</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">ICT Index</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
                             <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${player.xG.toFixed(1)}</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">xG</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Total xG</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
                             <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${player.xA.toFixed(1)}</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">xA</span>
-                        </div>
-                        <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
-                            <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${player.ictIndex.toFixed(1)}</span>
-                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">ICT Index</span>
+                            <span class="detail-stat-lbl" style="font-size: 9px; color: var(--text-muted); display: block;">Total xA</span>
                         </div>
                         <div class="detail-stat-box" style="padding: 6px 8px; text-align: center;">
                             <span class="detail-stat-val" style="font-size: 13px; font-weight: 700;">${player.xG90.toFixed(2)}</span>
@@ -2160,6 +2219,40 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
         lucide.createIcons();
 
         document.getElementById('closeDetailModalBtn').addEventListener('click', actions.hideModal);
+
+        // OPTA Season Tab Switching (Current Season default vs Last Season)
+        const tabCurrent = document.getElementById('optaTabCurrent');
+        const tabLast = document.getElementById('optaTabLast');
+        const viewCurrent = document.getElementById('optaStatsCurrentView');
+        const viewLast = document.getElementById('optaStatsLastView');
+
+        if (tabCurrent && tabLast && viewCurrent && viewLast) {
+            tabCurrent.addEventListener('click', () => {
+                tabCurrent.style.background = 'var(--primary)';
+                tabCurrent.style.color = '#000';
+                tabCurrent.style.fontWeight = '700';
+
+                tabLast.style.background = 'transparent';
+                tabLast.style.color = 'var(--text-muted)';
+                tabLast.style.fontWeight = '600';
+
+                viewCurrent.style.display = 'grid';
+                viewLast.style.display = 'none';
+            });
+
+            tabLast.addEventListener('click', () => {
+                tabLast.style.background = 'var(--primary)';
+                tabLast.style.color = '#000';
+                tabLast.style.fontWeight = '700';
+
+                tabCurrent.style.background = 'transparent';
+                tabCurrent.style.color = 'var(--text-muted)';
+                tabCurrent.style.fontWeight = '600';
+
+                viewLast.style.display = 'grid';
+                viewCurrent.style.display = 'none';
+            });
+        }
 
         // Pre-calculate stats for fast interactive column sorting
         const candidateRowsData = replacementCandidates.map(comp => {
