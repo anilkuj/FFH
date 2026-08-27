@@ -1,5 +1,5 @@
 import { PLAYERS, TEAMS } from '../data.js';
-import { getShirtSVG, renderPlayerRow, renderBenchRow } from './planner.js';
+import { getShirtSVG, renderPlayerRow, renderBenchRow, openPlayerDetailModal } from './planner.js';
 import { renderSetPieceBadges } from './optimizer.js';
 
 
@@ -909,12 +909,8 @@ export function renderTransferPlanner(container, state, actions) {
                     badge.addEventListener('mouseenter', showTip);
                     badge.addEventListener('mouseleave', hideTip);
                     card.addEventListener('click', (e) => {
-                        if (tooltip.classList.contains('visible')) {
-                            hideTip();
-                        } else {
-                            showTip(e);
-                            setTimeout(hideTip, 3000);
-                        }
+                        hideTip();
+                        openPlayerDetailModal(playerId, position, [], [], state, actions);
                     });
                 }
             });
