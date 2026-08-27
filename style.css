@@ -4210,7 +4210,8 @@ html.light-theme .rating-badge-na {
 
 /* Wide layout for Player Detail popups */
 .modal-content:has(.player-detail-horizontal-layout) {
-    max-width: 900px;
+    max-width: 1060px;
+    width: 94vw;
 }
 
 /* Compare alternative card style */

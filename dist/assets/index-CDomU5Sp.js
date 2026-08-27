@@ -2263,7 +2263,7 @@ ${j.map(Ht=>{const st=Ht.chanceOfPlaying!==void 0?Ht.chanceOfPlaying:100;return`
             <h3>Player Profile & Replacement Analysis</h3>
             <button class="close-modal-btn" id="closeDetailModalBtn"><i data-lucide="x"></i></button>
         </div>
-        <div class="player-detail-horizontal-layout" style="display: grid; grid-template-columns: 1fr 1.3fr; gap: 20px; padding: 20px; text-align: left; max-height: 82vh; overflow-y: auto;">
+        <div class="player-detail-horizontal-layout" style="display: grid; grid-template-columns: 310px 1fr; gap: 16px; padding: 20px; text-align: left; max-height: 85vh; overflow-y: auto;">
             <!-- Left Column: Profile, Ratings & Actions -->
             <div class="detail-left-column" style="display: flex; flex-direction: column; gap: 16px; min-width: 0;">
                 <div class="player-detail-profile" style="padding: 0; display: flex; align-items: center; gap: 16px;">
@@ -2448,18 +2448,18 @@ ${j.map(Ht=>{const st=Ht.chanceOfPlaying!==void 0?Ht.chanceOfPlaying:100;return`
                     </div>
 
                     <!-- Replacement Table Container -->
-                    <div class="replacement-table-wrapper" style="max-height: 380px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 8px;">
+                    <div class="replacement-table-wrapper" style="max-height: 380px; overflow-y: auto; overflow-x: hidden; border: 1px solid var(--border-color); border-radius: 8px;">
                         <table style="width: 100%; border-collapse: collapse; font-size: 11px; text-align: left;">
                             <thead>
-                                <tr style="background: rgba(0,0,0,0.18); border-bottom: 1px solid var(--border-color); color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 9.5px; position: sticky; top: 0; z-index: 2; backdrop-filter: blur(8px);">
-                                    <th style="padding: 8px 6px; text-align: center; width: 24px;">#</th>
-                                    <th data-sort="name" style="padding: 8px 8px; cursor: pointer; user-select: none;" title="Sort by Player Name">Player <span class="sort-arrow" style="opacity: 0.4;">↕</span></th>
-                                    <th data-sort="price" style="padding: 8px 8px; cursor: pointer; user-select: none;" title="Sort by Price">Price <span class="sort-arrow" style="opacity: 0.4;">↕</span></th>
-                                    <th data-sort="xp5" style="padding: 8px 8px; text-align: center; cursor: pointer; user-select: none;" title="Sort by 5-GW Expected Points">5-GW xP <span class="sort-arrow" style="color: var(--primary);">↓</span></th>
-                                    <th data-sort="xp1" style="padding: 8px 8px; text-align: center; cursor: pointer; user-select: none;" title="Sort by Next GW Expected Points">Next xP <span class="sort-arrow" style="opacity: 0.4;">↕</span></th>
-                                    <th data-sort="form" style="padding: 8px 8px; text-align: center; cursor: pointer; user-select: none;" title="Sort by Last 5 Games Form Points">Form (5GW) <span class="sort-arrow" style="opacity: 0.4;">↕</span></th>
-                                    <th data-sort="fdr" style="padding: 8px 8px; cursor: pointer; user-select: none;" title="Sort by FDR Difficulty Rating">Next 5 Fixtures <span class="sort-arrow" style="opacity: 0.4;">↕</span></th>
-                                    <th style="padding: 8px 8px; text-align: right;">Action</th>
+                                <tr style="background: rgba(0,0,0,0.18); border-bottom: 1px solid var(--border-color); color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 9px; position: sticky; top: 0; z-index: 2; backdrop-filter: blur(8px);">
+                                    <th style="padding: 6px 4px; text-align: center; width: 18px;">#</th>
+                                    <th data-sort="name" style="padding: 6px 6px; cursor: pointer; user-select: none;" title="Sort by Player Name">Player <span class="sort-arrow" style="opacity: 0.4;">↕</span></th>
+                                    <th data-sort="price" style="padding: 6px 6px; cursor: pointer; user-select: none;" title="Sort by Price">Price <span class="sort-arrow" style="opacity: 0.4;">↕</span></th>
+                                    <th data-sort="xp5" style="padding: 6px 4px; text-align: center; cursor: pointer; user-select: none;" title="Sort by 5-GW Expected Points">5-GW xP <span class="sort-arrow" style="color: var(--primary);">↓</span></th>
+                                    <th data-sort="xp1" style="padding: 6px 4px; text-align: center; cursor: pointer; user-select: none;" title="Sort by Next GW Expected Points">Next xP <span class="sort-arrow" style="opacity: 0.4;">↕</span></th>
+                                    <th data-sort="form" style="padding: 6px 4px; text-align: center; cursor: pointer; user-select: none;" title="Sort by Last 5 Games Form Points">Form <span class="sort-arrow" style="opacity: 0.4;">↕</span></th>
+                                    <th data-sort="fdr" style="padding: 6px 6px; cursor: pointer; user-select: none;" title="Sort by FDR Difficulty Rating">Next 5 Fixtures <span class="sort-arrow" style="opacity: 0.4;">↕</span></th>
+                                    <th style="padding: 6px 6px; text-align: right;">Action</th>
                                 </tr>
                             </thead>
                             <tbody id="replacementTbody">
@@ -2472,43 +2472,43 @@ ${j.map(Ht=>{const st=Ht.chanceOfPlaying!==void 0?Ht.chanceOfPlaying:100;return`
         </div>
     `;f.showModal(bt,()=>{lucide.createIcons(),document.getElementById("closeDetailModalBtn").addEventListener("click",f.hideModal);const At=document.getElementById("optaTabCurrent"),Ut=document.getElementById("optaTabLast"),O=document.getElementById("optaStatsCurrentView"),d=document.getElementById("optaStatsLastView");At&&Ut&&O&&d&&(At.addEventListener("click",()=>{At.style.background="var(--primary)",At.style.color="#000",At.style.fontWeight="700",Ut.style.background="transparent",Ut.style.color="var(--text-muted)",Ut.style.fontWeight="600",O.style.display="grid",d.style.display="none"}),Ut.addEventListener("click",()=>{Ut.style.background="var(--primary)",Ut.style.color="#000",Ut.style.fontWeight="700",At.style.background="transparent",At.style.color="var(--text-muted)",At.style.fontWeight="600",d.style.display="grid",O.style.display="none"}));const U=V.map(I=>{const W=Ol(I,s.currentGw,1),pt=Ul(I,s.currentGw),Z=dp(I,s.currentGw,s),ot=Dp(I,s.currentGw),Pt=parseFloat(ot.avg),Ht=k+i.price-I.price,st=Ht>=0,tt=x.filter(J=>J!==i.id);tt.push(I.id);const K={};let m=!0;for(const J of tt){const wt=y.find(rt=>rt.id===J);if(wt&&(K[wt.team]=(K[wt.team]||0)+1,K[wt.team]>3)){m=!1;break}}const A=I.status!=="i"&&I.status!=="s"&&I.status!=="u",h=st&&m&&A;let R="";return A?st?m||(R="3/team max"):R="Over budget":R="Injured",{comp:I,nextXp:W,fiveXp:pt,last5Pts:Z,fdrData:ot,fdrAvg:Pt,newBank:Ht,budgetOk:st,allOk:h,disabledReason:R}});let L="xp5",b=!1;const q=()=>{U.sort((W,pt)=>{let Z=W.comp.name,ot=pt.comp.name;return L==="price"?(Z=W.comp.price,ot=pt.comp.price):L==="xp5"?(Z=W.fiveXp,ot=pt.fiveXp):L==="xp1"?(Z=W.nextXp,ot=pt.nextXp):L==="form"?(Z=W.last5Pts,ot=pt.last5Pts):L==="fdr"?(Z=W.fdrAvg,ot=pt.fdrAvg):L==="name"&&(Z=W.comp.name,ot=pt.comp.name),typeof Z=="string"?b?Z.localeCompare(ot):ot.localeCompare(Z):b?Z-ot:ot-Z});const I=document.querySelector("#replacementTbody");I&&(I.innerHTML=U.map((W,pt)=>{const{comp:Z,nextXp:ot,fiveXp:Pt,last5Pts:Ht,fdrData:st,newBank:tt,budgetOk:K,allOk:m,disabledReason:A}=W;return`
                     <tr style="${K?pt%2===0?"background: rgba(255,255,255,0.015);":"background: transparent;":"background: rgba(239, 68, 68, 0.09); border-left: 3px solid #ef4444;"} border-bottom: 1px solid var(--border-color); transition: background 0.15s;">
-                        <td style="padding: 8px 6px; text-align: center; font-weight: 800; color: var(--text-muted); font-size: 10px;">${pt+1}</td>
-                        <td style="padding: 8px 8px;">
-                            <div style="font-weight: 700; color: var(--text-main); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${Z.name}">
+                        <td style="padding: 6px 4px; text-align: center; font-weight: 800; color: var(--text-muted); font-size: 10px;">${pt+1}</td>
+                        <td style="padding: 6px 5px;">
+                            <div style="font-weight: 700; color: var(--text-main); font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100px;" title="${Z.name}">
                                 ${f.getWebName?f.getWebName(Z.name):Z.name}
                             </div>
-                            <div style="font-size: 9.5px; color: var(--text-muted); margin-top: 1px; display: flex; align-items: center; gap: 4px;">
-                                <span style="font-weight: 700; padding: 0 4px; background: rgba(0,0,0,0.15); border-radius: 3px; color: var(--text-main);">${Z.team}</span>
+                            <div style="font-size: 9px; color: var(--text-muted); margin-top: 1px; display: flex; align-items: center; gap: 3px;">
+                                <span style="font-weight: 700; padding: 0 3px; background: rgba(0,0,0,0.15); border-radius: 3px; color: var(--text-main);">${Z.team}</span>
                                 <span>${Z.position}</span>
                             </div>
                         </td>
-                        <td style="padding: 8px 8px; white-space: nowrap;">
-                            <span style="font-weight: 800; color: ${K?"var(--primary)":"#ef4444"}; font-size: 12px;">£${Z.price.toFixed(1)}m</span>
-                            ${K?"":`<span style="display: block; font-size: 8px; font-weight: 700; color: #ef4444; text-transform: uppercase;">+£${Math.abs(tt).toFixed(1)}m over</span>`}
+                        <td style="padding: 6px 5px; white-space: nowrap;">
+                            <span style="font-weight: 800; color: ${K?"var(--primary)":"#ef4444"}; font-size: 11.5px;">£${Z.price.toFixed(1)}m</span>
+                            ${K?"":`<span style="display: block; font-size: 7.5px; font-weight: 700; color: #ef4444; text-transform: uppercase;">+£${Math.abs(tt).toFixed(1)}m</span>`}
                         </td>
-                        <td style="padding: 8px 8px; text-align: center; font-weight: 800; color: #8b5cf6; font-size: 12.5px; background: rgba(139,92,246,0.05);">
+                        <td style="padding: 6px 4px; text-align: center; font-weight: 800; color: #8b5cf6; font-size: 12px; background: rgba(139,92,246,0.05);">
                             ${Pt.toFixed(1)}
                         </td>
-                        <td style="padding: 8px 8px; text-align: center; font-weight: 700; color: #3b82f6; font-size: 11.5px;">
+                        <td style="padding: 6px 4px; text-align: center; font-weight: 700; color: #3b82f6; font-size: 11px;">
                             ${ot.toFixed(1)}
                         </td>
-                        <td style="padding: 8px 8px; text-align: center; font-weight: 700; color: #22c55e; font-size: 11.5px;">
+                        <td style="padding: 6px 4px; text-align: center; font-weight: 700; color: #22c55e; font-size: 11px;">
                             ${Ht} pts
                         </td>
-                        <td style="padding: 8px 8px;">
-                            <div style="display: flex; align-items: center; gap: 2px;">
+                        <td style="padding: 6px 4px;">
+                            <div style="display: flex; align-items: center; gap: 1.5px;">
                                 ${st.fixtures.map(R=>{const J=$p(R.diff);return`
-                                        <div style="padding: 2px 4px; border-radius: 3px; background: ${J.bg}; color: ${J.text}; font-size: 8.5px; font-weight: 700; text-align: center; line-height: 1.1; min-width: 28px;" title="GW${R.gw}: ${R.opp} (${R.loc}) - FDR ${R.diff}">
+                                        <div style="padding: 1.5px 3px; border-radius: 3px; background: ${J.bg}; color: ${J.text}; font-size: 8px; font-weight: 700; text-align: center; line-height: 1.1; min-width: 23px;" title="GW${R.gw}: ${R.opp} (${R.loc}) - FDR ${R.diff}">
                                             <div>${R.opp}</div>
-                                            <div style="font-size: 7px; opacity: 0.85;">${R.loc}</div>
+                                            <div style="font-size: 6.5px; opacity: 0.85;">${R.loc}</div>
                                         </div>
                                     `}).join("")}
                             </div>
                         </td>
-                        <td style="padding: 8px 8px; text-align: right; white-space: nowrap;">
+                        <td style="padding: 6px 5px; text-align: right; white-space: nowrap;">
                             <button class="action-main-btn btn-secondary-action direct-comp-swap-btn" 
                                     data-comp-id="${Z.id}" 
-                                    style="font-size: 10px; padding: 4px 8px; height: 24px; margin: 0;" 
+                                    style="font-size: 9.5px; padding: 3px 6px; height: 22px; margin: 0;" 
                                     ${m?"":"disabled"}
                                     title="${A||"Swap into team"}">
                                 ${K?A||"Swap":"Over Budget"}
