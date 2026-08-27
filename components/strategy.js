@@ -57,6 +57,20 @@ export const EXPERT_CHANNELS = [
         watchlist: ["De Cuyper (BHA)", "B.Fernandes (MUN)", "Haaland (MCI)"],
         captainPick: "B.Fernandes (MUN) (6.8 xP model lead)",
         transferRec: "Save Wildcard for GW4 or GW6"
+    },
+    {
+        id: "fplfocal",
+        name: "FPL Focal",
+        handle: "@FPLfocal",
+        url: "https://www.youtube.com/fplfocal",
+        color: "#eab308",
+        videosCount: 7,
+        subscribers: "210K",
+        latestTitle: "MY FPL GW2 TEAM REVEAL & TRANSFERS!",
+        keyTakeaway: "Advises patience and rolling the free transfer into GW3. Backs B.Fernandes (MUN) home captaincy vs Ipswich Town, and highlights Palmer & Saka as core targets.",
+        watchlist: ["Cole Palmer (CHE)", "Saka (ARS)", "B.Fernandes (MUN)"],
+        captainPick: "B.Fernandes (MUN)",
+        transferRec: "Roll Free Transfer (save for GW3)"
     }
 ];
 
@@ -127,9 +141,9 @@ export const GAMEWEEK_STRATEGIES = {
         gw: 2,
         deadline: "Fri, Aug 28, 01:30 PM",
         timeLeft: "about 22 hours left",
-        videoCount: 25,
-        channelCount: 4,
-        overview: "Gameweek 2 brings highly anticipated home fixtures for Manchester United (B.Fernandes vs Ipswich) and Manchester City (Haaland vs Palace), but the overwhelming expert consensus across Fantasy Football Scout, FPL Harry, Let's Talk FPL, and FPL Raptor is to roll your free transfer and avoid early chips.",
+        videoCount: 32,
+        channelCount: 5,
+        overview: "Gameweek 2 brings highly anticipated home fixtures for Manchester United (B.Fernandes vs Ipswich) and Manchester City (Haaland vs Palace), but the overwhelming expert consensus across Fantasy Football Scout, FPL Harry, Let's Talk FPL, FPL Raptor, and FPL Focal is to roll your free transfer and avoid early chips.",
         captainConsensus: {
             summary: "There is an overwhelming consensus among pundits backing B.Fernandes (MUN) as the standout captaincy choice for GW2, closely followed by Haaland (MCI).",
             picks: [
