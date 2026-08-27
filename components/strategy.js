@@ -254,10 +254,176 @@ export function renderStrategy(container, state, actions) {
                 </div>
             </div>
 
-            <!-- Detailed YouTube Sources Channel Cards (4 Sources) -->
+            <!-- Strategy Card Main Container (Identical layout to user screenshot) -->
+            <div class="strategy-card-main" style="background: rgba(13, 18, 30, 0.95); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-family: var(--font-main);">
+                
+                <!-- Card Header -->
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <h3 style="font-family: var(--font-heading); font-size: 20px; font-weight: 800; color: #22c55e; margin: 0; display: flex; align-items: center; gap: 8px;">
+                            <i data-lucide="trending-up" style="width: 22px; height: 22px;"></i> GW${strategy.gw} Strategy
+                        </h3>
+                        <span style="background: rgba(34, 197, 94, 0.15); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.3); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 16px; display: flex; align-items: center; gap: 5px;">
+                            <i data-lucide="clock" style="width: 12px; height: 12px;"></i> ${strategy.timeLeft}
+                        </span>
+                    </div>
+
+                    <button id="sendStrategyBtn" style="padding: 6px 14px; font-size: 12px; font-weight: 700; border-radius: 16px; background: #2563eb; color: #fff; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 10px rgba(37, 99, 235, 0.4);">
+                        <i data-lucide="send" style="width: 13px; height: 13px;"></i> Send
+                    </button>
+                </div>
+
+                <!-- Deadline & Video Count Subtitle -->
+                <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 16px;">
+                    Deadline: <span style="color: #f8fafc; font-weight: 600;">${strategy.deadline}</span> • <span style="color: #60a5fa; font-weight: 600;">${strategy.videoCount} videos</span> from <span style="color: #60a5fa; font-weight: 600;">${strategy.channelCount} channels</span>
+                </div>
+
+                <!-- Executive Summary -->
+                <div style="font-size: 13.5px; line-height: 1.6; color: #cbd5e1; margin-bottom: 22px; background: rgba(255,255,255,0.02); padding: 12px 16px; border-radius: 8px; border-left: 3px solid #22c55e;">
+                    ${highlightSearch(strategy.overview, searchQuery)}
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    
+                    <!-- 1. CAPTAIN CONSENSUS -->
+                    <div class="strategy-section">
+                        <h4 style="font-family: var(--font-heading); font-size: 12px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: #60a5fa; display: flex; align-items: center; gap: 6px; margin: 0 0 8px 0;">
+                            <i data-lucide="target" style="width: 14px; height: 14px; color: #60a5fa;"></i> CAPTAIN CONSENSUS
+                        </h4>
+                        <div style="font-size: 13px; color: #cbd5e1; margin-bottom: 8px;">
+                            ${highlightSearch(strategy.captainConsensus.summary, searchQuery)}
+                        </div>
+                        <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: #cbd5e1; line-height: 1.5;">
+                            ${strategy.captainConsensus.picks.map(p => {
+                                const foundP = PLAYERS.find(pl => pl.name.includes(p.player) || pl.web_name === p.player);
+                                const teamCode = foundP ? foundP.team : p.team;
+                                const priceVal = foundP ? `£${foundP.price.toFixed(1)}m` : p.price;
+                                return `
+                                    <li>
+                                        <span style="font-weight: 700; color: #fff;">${p.player}</span>
+                                        <span style="font-size: 10px; font-weight: 700; background: rgba(255,255,255,0.1); padding: 1px 5px; border-radius: 3px; color: #94a3b8; margin: 0 4px;">⚽ ${teamCode}</span>
+                                        <span style="color: var(--primary); font-weight: 700; font-size: 11.5px;">(${priceVal})</span>
+                                        ${p.rationale ? highlightSearch(p.rationale, searchQuery) : ''}
+                                    </li>
+                                `;
+                            }).join('')}
+                        </ul>
+                    </div>
+
+                    <!-- 2. TRANSFER TARGETS -->
+                    <div class="strategy-section">
+                        <h4 style="font-family: var(--font-heading); font-size: 12px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: #60a5fa; display: flex; align-items: center; gap: 6px; margin: 0 0 8px 0;">
+                            <i data-lucide="repeat" style="width: 14px; height: 14px; color: #60a5fa;"></i> TRANSFER TARGETS
+                        </h4>
+                        <div style="font-size: 13px; color: #cbd5e1; margin-bottom: 8px;">
+                            ${highlightSearch(strategy.transferTargets.summary, searchQuery)}
+                        </div>
+                        <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: #cbd5e1; line-height: 1.5;">
+                            ${strategy.transferTargets.targets.map(t => {
+                                if (t.player) {
+                                    const foundP = PLAYERS.find(pl => pl.name.includes(t.player) || pl.web_name === t.player);
+                                    const teamCode = foundP ? foundP.team : t.team;
+                                    const priceVal = foundP ? `£${foundP.price.toFixed(1)}m` : t.price;
+                                    return `
+                                        <li>
+                                            <span style="font-weight: 700; color: #fff;">${t.player}</span>
+                                            <span style="font-size: 10px; font-weight: 700; background: rgba(255,255,255,0.1); padding: 1px 5px; border-radius: 3px; color: #94a3b8; margin: 0 4px;">⚽ ${teamCode}</span>
+                                            <span style="color: var(--primary); font-weight: 700; font-size: 11.5px;">(${priceVal})</span>
+                                            ${t.rationale ? highlightSearch(t.rationale, searchQuery) : ''}
+                                        </li>
+                                    `;
+                                }
+                                if (t.groupName) {
+                                    return `
+                                        <li>
+                                            <span style="font-weight: 700; color: #fff;">${t.groupName}</span> like ${t.players.map(pl => {
+                                                const fp = PLAYERS.find(p => p.name.includes(pl) || p.web_name === pl);
+                                                const tc = fp ? fp.team : 'CHE';
+                                                return `<span style="font-weight: 700; color: #f8fafc;">${pl}</span> <span style="font-size: 9.5px; font-weight: 700; background: rgba(255,255,255,0.1); padding: 0 4px; border-radius: 3px; color: #94a3b8;">⚽ ${tc}</span>`;
+                                            }).join(', ')} ${t.rationale ? highlightSearch(t.rationale, searchQuery) : ''}
+                                        </li>
+                                    `;
+                                }
+                                if (t.players && !t.groupName) {
+                                    return `
+                                        <li>
+                                            ${t.players.map(pl => {
+                                                const fp = PLAYERS.find(p => p.name.includes(pl) || p.web_name === pl);
+                                                const tc = fp ? fp.team : (t.team || 'ARS');
+                                                return `<span style="font-weight: 700; color: #fff;">${pl}</span> <span style="font-size: 9.5px; font-weight: 700; background: rgba(255,255,255,0.1); padding: 0 4px; border-radius: 3px; color: #94a3b8;">⚽ ${tc}</span>`;
+                                            }).join(' and ')} ${t.rationale ? highlightSearch(t.rationale, searchQuery) : ''}
+                                        </li>
+                                    `;
+                                }
+                                return '';
+                            }).join('')}
+                        </ul>
+                    </div>
+
+                    <!-- 3. DIFFERENTIALS -->
+                    <div class="strategy-section">
+                        <h4 style="font-family: var(--font-heading); font-size: 12px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: #60a5fa; display: flex; align-items: center; gap: 6px; margin: 0 0 8px 0;">
+                            <i data-lucide="gem" style="width: 14px; height: 14px; color: #60a5fa;"></i> DIFFERENTIALS
+                        </h4>
+                        <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: #cbd5e1; line-height: 1.5;">
+                            ${strategy.differentials.picks.map(d => {
+                                const foundP = PLAYERS.find(pl => pl.name.includes(d.player) || pl.web_name === d.player);
+                                const teamCode = foundP ? foundP.team : d.team;
+                                const priceVal = foundP ? `£${foundP.price.toFixed(1)}m` : d.price;
+                                return `
+                                    <li>
+                                        <span style="font-weight: 700; color: #fff;">${d.player}</span>
+                                        <span style="font-size: 10px; font-weight: 700; background: rgba(255,255,255,0.1); padding: 1px 5px; border-radius: 3px; color: #94a3b8; margin: 0 4px;">⚽ ${teamCode}</span>
+                                        <span style="color: var(--primary); font-weight: 700; font-size: 11.5px;">(${priceVal})</span>
+                                        ${d.rationale ? highlightSearch(d.rationale, searchQuery) : ''}
+                                    </li>
+                                `;
+                            }).join('')}
+                        </ul>
+                    </div>
+
+                    <!-- 4. AVOID / SELL -->
+                    <div class="strategy-section">
+                        <h4 style="font-family: var(--font-heading); font-size: 12px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: #f87171; display: flex; align-items: center; gap: 6px; margin: 0 0 8px 0;">
+                            <i data-lucide="alert-octagon" style="width: 14px; height: 14px; color: #f87171;"></i> AVOID / SELL
+                        </h4>
+                        <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: #cbd5e1; line-height: 1.5;">
+                            ${strategy.avoidSell.items.map(item => `
+                                <li>${highlightSearch(item, searchQuery)}</li>
+                            `).join('')}
+                        </ul>
+                    </div>
+
+                    <!-- 5. CHIP STRATEGY -->
+                    <div class="strategy-section">
+                        <h4 style="font-family: var(--font-heading); font-size: 12px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: #c084fc; display: flex; align-items: center; gap: 6px; margin: 0 0 8px 0;">
+                            <i data-lucide="rocket" style="width: 14px; height: 14px; color: #c084fc;"></i> CHIP STRATEGY
+                        </h4>
+                        <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: #cbd5e1; line-height: 1.5;">
+                            ${strategy.chipStrategy.items.map(item => `
+                                <li>${highlightSearch(item, searchQuery)}</li>
+                            `).join('')}
+                        </ul>
+                    </div>
+
+                </div>
+
+                <!-- Footer Sources Bar -->
+                <div style="margin-top: 24px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                    <span style="font-weight: 700; color: #94a3b8;">Sources:</span>
+                    ${EXPERT_CHANNELS.map(ch => `
+                        <a href="${ch.url}" target="_blank" rel="noopener noreferrer" style="color: #22c55e; font-weight: 600; text-decoration: none;" class="source-link-item hover-underline">
+                            ${ch.name}
+                        </a>
+                    `).join('<span style="color: rgba(255,255,255,0.2);">•</span>')}
+                </div>
+
+            </div>
+
+            <!-- Detailed YouTube Sources Channel Cards (4 Sources) - Placed at Bottom -->
             <div>
                 <h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--text-muted); margin: 0 0 10px 0; display: flex; align-items: center; gap: 6px;">
-                    <i data-lucide="youtube" style="width: 14px; height: 14px; color: #ef4444;"></i> Source Channels & Latest Video Takeaways (GW${strategy.gw})
+                    <i data-lucide="youtube" style="width: 14px; height: 14px; color: #ef4444;"></i> Source Channel Video Takeaways (GW${strategy.gw})
                 </h4>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px;">
                     ${EXPERT_CHANNELS.map(ch => `
