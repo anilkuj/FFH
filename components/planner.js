@@ -1903,16 +1903,19 @@ ${squadListText}
     // Scroll active draft tab into view removed
 }
 
-export function getLast5GamesActualPts(player, currentGw) {
+export function getLast5GamesActualPts(player, currentGw, state = null) {
     if (!player || !player.predictions) return 0;
     const played = player.predictions
         .filter(pr => pr.gw < currentGw && pr.actualPts !== null && pr.actualPts !== undefined)
         .sort((a, b) => b.gw - a.gw);
     if (played.length > 0) {
-        return played.slice(0, 5).reduce((sum, pr) => sum + (pr.actualPts || 0), 0);
-    }
-    if (typeof player.points === 'number' && player.points > 0) {
-        return Math.round(player.points * 0.22);
+        return played.slice(0, 5).reduce((sum, pr) => {
+            let val = pr.actualPts;
+            if (state && state.livePoints && state.livePoints[pr.gw] && state.livePoints[pr.gw][player.id] !== undefined) {
+                val = state.livePoints[pr.gw][player.id];
+            }
+            return sum + (val || 0);
+        }, 0);
     }
     return 0;
 }
@@ -2147,7 +2150,7 @@ export function openPlayerDetailModal(playerId, type, starters, bench, state, ac
                                 ${replacementCandidates.map((comp, idx) => {
                                     const compNextXp = getNGwXp(comp, state.currentGw, 1);
                                     const comp5Xp = get5GwXp(comp, state.currentGw);
-                                    const last5Pts = getLast5GamesActualPts(comp, state.currentGw);
+                                    const last5Pts = getLast5GamesActualPts(comp, state.currentGw, state);
                                     const fdrData = getNext5FixturesFDR(comp, state.currentGw);
                                     
                                     const newBank = bank + player.price - comp.price;
