@@ -345,6 +345,90 @@ export const BASELINE_PRESS_CONFERENCES = [
     }
 ];
 
+function renderTeamCardsHtml(filteredTeams, cardBg, panelBg, border, textMain, textMuted) {
+    if (filteredTeams.length === 0) {
+        return `
+            <div style="text-align: center; padding: 40px; color: ${textMuted}; font-size: 13px; background: ${cardBg}; border-radius: 12px; border: 1px solid ${border};">
+                No press conference updates found matching your search.
+            </div>
+        `;
+    }
+
+    return filteredTeams.map(team => `
+        <div class="optimizer-card" style="background: ${cardBg}; border: 1px solid ${border}; border-radius: 14px; padding: 20px; box-shadow: var(--shadow-md);">
+            
+            <!-- Team Header -->
+            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid ${border}; padding-bottom: 12px; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <h3 style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: ${textMain}; margin: 0;">
+                        ${team.teamName}
+                    </h3>
+                    <span style="background: rgba(139, 92, 246, 0.15); color: #8b5cf6; border: 1px solid rgba(139, 92, 246, 0.3); font-weight: 800; font-size: 10px; padding: 2px 8px; border-radius: 4px;">
+                        ${team.teamCode}
+                    </span>
+                    <span style="font-size: 11.5px; color: ${textMuted};">${team.updateCount} updates</span>
+                </div>
+                <div style="font-size: 11.5px; color: ${textMuted}; font-weight: 600;">
+                    ${team.updatedTime}
+                </div>
+            </div>
+
+            <!-- Match Fixture Header Pill -->
+            <div style="background: ${panelBg}; border: 1px solid ${border}; border-radius: 8px; padding: 8px 12px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: ${textMain};">
+                    <i data-lucide="video" style="width: 14px; height: 14px; color: var(--secondary);"></i>
+                    <span>${team.fixtureLabel}</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 11px;">
+                    <span style="background: rgba(34, 197, 94, 0.15); color: #22c55e; padding: 2px 6px; border-radius: 4px; font-weight: 800;">${team.matchStatus}</span>
+                    <span style="color: ${textMuted}; font-weight: 600;">${team.fixtureUpdateCount} updates</span>
+                </div>
+            </div>
+
+            <!-- Player Quote Cards Stack -->
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                ${team.players.map(p => {
+                    let badgeColor = "#22c55e";
+                    let badgeBg = "rgba(34, 197, 94, 0.15)";
+                    let badgeBorder = "rgba(34, 197, 94, 0.3)";
+                    if (p.badgeType === "doubt") {
+                        badgeColor = "#f59e0b";
+                        badgeBg = "rgba(245, 158, 11, 0.15)";
+                        badgeBorder = "rgba(245, 158, 11, 0.3)";
+                    } else if (p.badgeType === "out") {
+                        badgeColor = "#ef4444";
+                        badgeBg = "rgba(239, 68, 68, 0.15)";
+                        badgeBorder = "rgba(239, 68, 68, 0.3)";
+                    }
+
+                    return `
+                        <div style="background: ${panelBg}; border: 1px solid ${border}; border-radius: 10px; padding: 14px 16px;">
+                            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 6px;">
+                                <div>
+                                    <div style="font-weight: 800; font-size: 13.5px; color: ${textMain}; display: flex; align-items: center; gap: 8px;">
+                                        <span>${p.name}</span>
+                                        <span style="font-size: 10.5px; color: ${textMuted}; font-weight: 500;">${p.stats}</span>
+                                    </div>
+                                    <p style="margin: 4px 0 0 0; font-size: 12px; color: ${textMuted}; line-height: 1.4;">
+                                        ${p.subtitle}
+                                    </p>
+                                </div>
+                                <span style="font-size: 10px; font-weight: 800; background: ${badgeBg}; color: ${badgeColor}; border: 1px solid ${badgeBorder}; padding: 3px 10px; border-radius: 6px; text-transform: uppercase; white-space: nowrap;">
+                                    ${p.badge} ${p.risk}
+                                </span>
+                            </div>
+                            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px stroke ${border}; font-size: 12px; font-style: italic; color: ${textMain}; line-height: 1.5; background: rgba(0, 0, 0, 0.15); padding: 8px 12px; border-radius: 6px;">
+                                ${p.quote}
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+
+        </div>
+    `).join('');
+}
+
 export function renderPressConference(container, state, actions) {
     const isLight = document.documentElement.classList.contains("light-theme");
     const cardBg = isLight ? "#ffffff" : "var(--bg-card)";
@@ -353,14 +437,15 @@ export function renderPressConference(container, state, actions) {
     const textMain = isLight ? "#0f172a" : "var(--text-main)";
     const textMuted = isLight ? "#64748b" : "var(--text-muted)";
 
-    // Active press conferences data (defaults to baseline, can be refreshed live)
+    // Active press conferences data
     let activePressData = state.livePressData || BASELINE_PRESS_CONFERENCES;
 
     // Read current filters from dataset
     const selectedTeam = container.dataset.pcTeam || "ALL";
     const selectedType = container.dataset.pcType || "ALL";
     const selectedSource = container.dataset.pcSource || "ALL";
-    const searchQuery = (container.dataset.pcSearch || "").toLowerCase();
+    const currentSearchText = container.dataset.pcSearch || "";
+    const searchQuery = currentSearchText.toLowerCase().trim();
 
     // Filter press conference teams
     let filteredTeams = activePressData;
@@ -513,90 +598,14 @@ export function renderPressConference(container, state, actions) {
                 <div style="display: flex; align-items: center; gap: 8px; flex: 1; max-width: 260px;">
                     <div style="position: relative; width: 100%;">
                         <i data-lucide="search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: ${textMuted};"></i>
-                        <input type="text" id="pcSearchInput" value="${container.dataset.pcSearch || ''}" placeholder="Search player or quote..." style="width: 100%; padding: 6px 12px 6px 30px; font-size: 12px; background: ${panelBg}; border: 1px solid ${border}; border-radius: 6px; color: ${textMain}; outline: none;">
+                        <input type="text" id="pcSearchInput" value="${currentSearchText}" placeholder="Search player or quote..." style="width: 100%; padding: 6px 12px 6px 30px; font-size: 12px; background: ${panelBg}; border: 1px solid ${border}; border-radius: 6px; color: ${textMain}; outline: none;">
                     </div>
                 </div>
             </div>
 
-            <!-- Team-by-Team Manager Quotes & Player Cards -->
-            <div style="display: flex; flex-direction: column; gap: 20px;">
-                ${filteredTeams.length === 0 ? `
-                    <div style="text-align: center; padding: 40px; color: ${textMuted}; font-size: 13px; background: ${cardBg}; border-radius: 12px; border: 1px solid ${border};">
-                        No press conference updates found matching your search.
-                    </div>
-                ` : filteredTeams.map(team => `
-                    <div class="optimizer-card" style="background: ${cardBg}; border: 1px solid ${border}; border-radius: 14px; padding: 20px; box-shadow: var(--shadow-md);">
-                        
-                        <!-- Team Header -->
-                        <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid ${border}; padding-bottom: 12px; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <h3 style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: ${textMain}; margin: 0;">
-                                    ${team.teamName}
-                                </h3>
-                                <span style="background: rgba(139, 92, 246, 0.15); color: #8b5cf6; border: 1px solid rgba(139, 92, 246, 0.3); font-weight: 800; font-size: 10px; padding: 2px 8px; border-radius: 4px;">
-                                    ${team.teamCode}
-                                </span>
-                                <span style="font-size: 11.5px; color: ${textMuted};">${team.updateCount} updates</span>
-                            </div>
-                            <div style="font-size: 11.5px; color: ${textMuted}; font-weight: 600;">
-                                ${team.updatedTime}
-                            </div>
-                        </div>
-
-                        <!-- Match Fixture Header Pill -->
-                        <div style="background: ${panelBg}; border: 1px solid ${border}; border-radius: 8px; padding: 8px 12px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-                            <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: ${textMain};">
-                                <i data-lucide="video" style="width: 14px; height: 14px; color: var(--secondary);"></i>
-                                <span>${team.fixtureLabel}</span>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 8px; font-size: 11px;">
-                                <span style="background: rgba(34, 197, 94, 0.15); color: #22c55e; padding: 2px 6px; border-radius: 4px; font-weight: 800;">${team.matchStatus}</span>
-                                <span style="color: ${textMuted}; font-weight: 600;">${team.fixtureUpdateCount} updates</span>
-                            </div>
-                        </div>
-
-                        <!-- Player Quote Cards Stack -->
-                        <div style="display: flex; flex-direction: column; gap: 12px;">
-                            ${team.players.map(p => {
-                                let badgeColor = "#22c55e";
-                                let badgeBg = "rgba(34, 197, 94, 0.15)";
-                                let badgeBorder = "rgba(34, 197, 94, 0.3)";
-                                if (p.badgeType === "doubt") {
-                                    badgeColor = "#f59e0b";
-                                    badgeBg = "rgba(245, 158, 11, 0.15)";
-                                    badgeBorder = "rgba(245, 158, 11, 0.3)";
-                                } else if (p.badgeType === "out") {
-                                    badgeColor = "#ef4444";
-                                    badgeBg = "rgba(239, 68, 68, 0.15)";
-                                    badgeBorder = "rgba(239, 68, 68, 0.3)";
-                                }
-
-                                return `
-                                    <div style="background: ${panelBg}; border: 1px solid ${border}; border-radius: 10px; padding: 14px 16px;">
-                                        <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 6px;">
-                                            <div>
-                                                <div style="font-weight: 800; font-size: 13.5px; color: ${textMain}; display: flex; align-items: center; gap: 8px;">
-                                                    <span>${p.name}</span>
-                                                    <span style="font-size: 10.5px; color: ${textMuted}; font-weight: 500;">${p.stats}</span>
-                                                </div>
-                                                <p style="margin: 4px 0 0 0; font-size: 12px; color: ${textMuted}; line-height: 1.4;">
-                                                    ${p.subtitle}
-                                                </p>
-                                            </div>
-                                            <span style="font-size: 10px; font-weight: 800; background: ${badgeBg}; color: ${badgeColor}; border: 1px solid ${badgeBorder}; padding: 3px 10px; border-radius: 6px; text-transform: uppercase; white-space: nowrap;">
-                                                ${p.badge} ${p.risk}
-                                            </span>
-                                        </div>
-                                        <div style="margin-top: 10px; padding-top: 10px; border-top: 1px stroke ${border}; font-size: 12px; font-style: italic; color: ${textMain}; line-height: 1.5; background: rgba(0, 0, 0, 0.15); padding: 8px 12px; border-radius: 6px;">
-                                            ${p.quote}
-                                        </div>
-                                    </div>
-                                `;
-                            }).join('')}
-                        </div>
-
-                    </div>
-                `).join('')}
+            <!-- Team-by-Team Manager Quotes & Player Cards Container -->
+            <div id="pcCardsArea" style="display: flex; flex-direction: column; gap: 20px;">
+                ${renderTeamCardsHtml(filteredTeams, cardBg, panelBg, border, textMain, textMuted)}
             </div>
         </div>
     `;
@@ -650,12 +659,34 @@ export function renderPressConference(container, state, actions) {
         });
     });
 
-    // Search Input Listener
+    // Search Input Listener: Updates ONLY #pcCardsArea without re-rendering search input element (preserves 100% typing focus)
     const searchInput = container.querySelector('#pcSearchInput');
     if (searchInput) {
         searchInput.addEventListener('input', () => {
+            const query = searchInput.value.toLowerCase().trim();
             container.dataset.pcSearch = searchInput.value;
-            renderPressConference(container, state, actions);
+
+            let liveTeams = activePressData;
+            if (selectedTeam !== "ALL") {
+                liveTeams = liveTeams.filter(t => t.teamCode === selectedTeam || t.teamName.toLowerCase().includes(selectedTeam.toLowerCase()));
+            }
+
+            if (query) {
+                liveTeams = liveTeams.map(t => {
+                    const matchingPlayers = t.players.filter(p => 
+                        p.name.toLowerCase().includes(query) ||
+                        p.subtitle.toLowerCase().includes(query) ||
+                        p.quote.toLowerCase().includes(query)
+                    );
+                    return { ...t, players: matchingPlayers };
+                }).filter(t => t.players.length > 0);
+            }
+
+            const cardsArea = container.querySelector('#pcCardsArea');
+            if (cardsArea) {
+                cardsArea.innerHTML = renderTeamCardsHtml(liveTeams, cardBg, panelBg, border, textMain, textMuted);
+                if (window.lucide) window.lucide.createIcons();
+            }
         });
     }
 }
