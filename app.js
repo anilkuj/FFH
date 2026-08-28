@@ -784,29 +784,29 @@ class AppState {
             bank = Math.max(0.0, Math.round(bank * 10) / 10);
 
             // Adjust free transfers for next week (starts at 1, max 5)
-            // Wildcard/Free Hit gives unlimited free transfers for that week
+            // Wildcard gives max free transfers. Free Hit resets next week to 1 FT per FPL rules.
             if (gw < targetGw) {
                 const txCount = weeklyTransfers.length;
                 if (this.chips[gw]?.wildcard) {
                     freeTransfers = 5; // Reset to max after wildcard
                 } else if (this.chips[gw]?.freeHit) {
-                    // Free Hit does not consume accumulated free transfers, and you get 1 more next week
-                    freeTransfers = Math.min(5, freeTransfers + 1);
+                    // FPL Official Rule: After Free Hit, squad reverts and manager receives 1 Free Transfer for following week
+                    freeTransfers = 1;
                 } else {
                     freeTransfers = Math.min(5, Math.max(0, freeTransfers - txCount) + 1);
                 }
             } else {
                 const txCount = weeklyTransfers.length;
                 if (this.chips[gw]?.wildcard || this.chips[gw]?.freeHit) {
-                    // No transfers consumed
+                    // No transfers consumed on active chip week
                 } else {
                     freeTransfers = Math.max(0, freeTransfers - txCount);
                 }
             }
         }
 
-        // Apply custom free transfers override if user has set it for targetGw
-        if (this.customFreeTransfers && this.customFreeTransfers[targetGw] !== undefined) {
+        // Apply custom free transfers override if user has explicitly set one for targetGw
+        if (this.customFreeTransfers && this.customFreeTransfers[targetGw] !== undefined && this.customFreeTransfers[targetGw] !== null) {
             freeTransfers = this.customFreeTransfers[targetGw];
         }
 
@@ -2625,6 +2625,10 @@ const actions = {
                 if (state.weeklyLineups && state.weeklyLineups[gw]) {
                     delete state.weeklyLineups[gw];
                 }
+                if (state.customFreeTransfers) {
+                    delete state.customFreeTransfers[gw];
+                    delete state.customFreeTransfers[gw + 1];
+                }
             } else {
                 state.chips[gw].freeHit = true;
                 state.planFreeHit = true;
@@ -2633,6 +2637,9 @@ const actions = {
                     if (g !== gw && state.chips[g]) {
                         state.chips[g].freeHit = false;
                     }
+                }
+                if (state.customFreeTransfers) {
+                    delete state.customFreeTransfers[gw + 1];
                 }
                 // FPL rule: only one chip per GW, so turn off planned Bench Boost or Wildcard if they are planned for this GW
                 if (state.planBenchBoost && state.benchBoostTargetGw === gw) state.planBenchBoost = false;
