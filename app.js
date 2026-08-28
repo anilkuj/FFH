@@ -24,6 +24,7 @@ import { renderTopPerformers } from './components/topperformers.js';
 import { renderLeagueAnalyzer } from './components/leagueanalyzer.js';
 import { renderShotMap } from './components/shotmap.js';
 import { renderStrategy } from './components/strategy.js';
+import { renderPressConference } from './components/pressconference.js';
 
 if (typeof window !== 'undefined') {
     window.PLAYERS = PLAYERS;
@@ -1473,6 +1474,9 @@ const actions = {
                 break;
             case 'shotmap':
                 renderShotMap(container, state, actions);
+                break;
+            case 'pressconference':
+                renderPressConference(container, state, actions);
                 break;
         }
     },
