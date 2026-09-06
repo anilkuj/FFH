@@ -252,12 +252,16 @@ export function renderOptimizer(container, state, actions) {
                             </div>
 
                             <div class="setting-group">
-                                <label for="seasonPhase">Season Mode</label>
+                                <label for="seasonPhase">Optimization Mode / Scope</label>
                                 <select id="seasonPhase" class="settings-select">
-                                    <option value="preseason" ${state.currentGw === 1 ? 'selected' : ''}>Preseason (Unlimited Transfers)</option>
-                                    <option value="midseason" ${state.currentGw > 1 ? 'selected' : ''}>Midseason (Respect Free Transfers)</option>
+                                    <option value="preseason" ${state.optMode === 'preseason' || (state.optMode !== 'midseason' && state.currentGw === 1) ? 'selected' : ''}>⚡ Full Squad Optimization (Complete 15-Player Rebuild)</option>
+                                    <option value="midseason" ${state.optMode === 'midseason' || (state.optMode !== 'preseason' && state.currentGw > 1) ? 'selected' : ''}>🔁 Tactical Transfers (1-2 Weekly Transfers)</option>
                                 </select>
-                                <span class="setting-help" id="phaseHelpText">Respects FPL rules.</span>
+                                <span class="setting-help" id="phaseHelpText">
+                                    ${state.optMode === 'preseason' || (state.optMode !== 'midseason' && state.currentGw === 1)
+                                        ? '⚡ Builds and optimizes a complete 15-player squad (starters + bench) from scratch.'
+                                        : '🔁 Finds the single best or double transfer for your current squad.'}
+                                </span>
                             </div>
 
                             <div class="setting-group">
@@ -483,11 +487,13 @@ export function renderOptimizer(container, state, actions) {
     const benchGroup = container.querySelector('#benchBudgetGroup');
 
     const updateHelpText = () => {
+        state.optMode = phaseSelect.value;
+        localStorage.setItem('fpl_hub_opt_mode', phaseSelect.value);
         if (phaseSelect.value === 'preseason') {
-            helpText.textContent = `Allows unlimited squad upgrades within total squad budget. Perfect for preseason/wildcard planning.`;
+            helpText.textContent = `⚡ Builds and optimizes a complete 15-player squad (starters + bench) from scratch.`;
         } else {
             const currentFt = state.currentGw === 1 ? 'Unlimited' : freeTransfers;
-            helpText.textContent = `Respects your available free transfers (${currentFt} FT) for GW${state.currentGw} to avoid points hits.`;
+            helpText.textContent = `🔁 Finds the single best or double transfer for your current squad respecting your available transfers (${currentFt} FT).`;
         }
     };
 
