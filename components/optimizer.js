@@ -1395,16 +1395,23 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
         return slots;
     })();
 
-    // Helper: expected points over horizon (every gameweek counts equally, see
-    // getExpectedPtsOverHorizon above for why this doesn't decay-weight later gameweeks)
+    const currentGwChips = state.chips[state.currentGw] || {};
+    const hasActiveFreeHit = !!(currentGwChips.freeHit || state.planFreeHit);
+    const targetStartGw = hasActiveFreeHit ? (state.freeHitTargetGw || state.currentGw) : state.currentGw;
+    const calcHorizon = hasActiveFreeHit ? 1 : horizon;
+
+    // Helper: expected points over horizon (or single Free Hit Gameweek)
     const getExpectedPts = (player) => {
         if (!player || !player.predictions) return 0;
         const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(player) : 1.0;
         let sum = 0;
-        for (let gw = state.currentGw; gw < state.currentGw + horizon; gw++) {
+        for (let gw = targetStartGw; gw < targetStartGw + calcHorizon; gw++) {
             const pred = player.predictions.find(pr => pr.gw == gw);
             if (pred) {
-                const raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
+                let raw = pred._rawPts !== undefined ? pred._rawPts : pred.pts;
+                if (player.solioPts && player.solioPts[gw] !== undefined) {
+                    raw = player.solioPts[gw];
+                }
                 sum += (raw * factor);
             }
         }
@@ -3420,7 +3427,15 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
             <div class="optimizer-card" style="grid-column: span 2; position: relative;">
                 <button class="close-modal-btn" id="closeResultsBtn" style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center;"><i data-lucide="x" style="width: 18px; height: 18px;"></i></button>
                 <h3><i data-lucide="sparkles" class="highlight-transfers"></i> Preseason AI Full-Squad Optimization</h3>
-                ${isOptimumMode ? `
+                ${(state.chips[state.currentGw]?.freeHit || state.planFreeHit) ? `
+                    <div style="display:inline-flex; align-items:center; gap:8px; margin-top:10px; padding:8px 14px; background:linear-gradient(135deg, rgba(139,92,246,0.15), rgba(168,85,247,0.1)); border:1px solid rgba(139,92,246,0.3); border-radius:10px; font-size:12px; font-weight:600;">
+                        <i data-lucide="zap" style="width:14px;height:14px;color:#a855f7;"></i>
+                        <span style="color:#a855f7; font-weight:800;">Free Hit Single-GW Optimal Team:</span>
+                        <span style="color:var(--text-main); font-family:var(--font-heading); font-size:14px; font-weight:800;">GW ${state.freeHitTargetGw || state.currentGw}</span>
+                        <span style="color:var(--text-muted); font-weight:400;">— GW Horizon ignored; 15-player squad optimized exclusively for maximum points in GW${state.freeHitTargetGw || state.currentGw}!</span>
+                    </div>
+                ` : ''}
+                ${(!state.chips[state.currentGw]?.freeHit && !state.planFreeHit && isOptimumMode) ? `
                     <div style="display:inline-flex; align-items:center; gap:8px; margin-top:10px; padding:8px 14px; background:linear-gradient(135deg, rgba(0,255,136,0.1), rgba(0,242,254,0.07)); border:1px solid rgba(0,255,136,0.25); border-radius:10px; font-size:12px; font-weight:600;">
                         <i data-lucide="zap" style="width:14px;height:14px;color:var(--primary);"></i>
                         <span style="color:var(--primary);">AI Selected Formation:</span>

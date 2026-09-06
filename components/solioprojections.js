@@ -6,6 +6,29 @@ let solioData = null;
 let isLoading = false;
 let loadError = null;
 
+export function syncSolioDataToPlayers(data) {
+    if (!data || typeof window === 'undefined') return;
+    const players = window.PLAYERS || [];
+    const projectedList = data.topProjected || [];
+    
+    projectedList.forEach(item => {
+        if (!item || !item.name) return;
+        const player = players.find(p => 
+            p.name.toLowerCase() === item.name.toLowerCase() ||
+            p.name.toLowerCase().includes(item.name.toLowerCase()) ||
+            item.name.toLowerCase().includes(p.name.toLowerCase())
+        );
+        if (player) {
+            if (!player.solioPts) player.solioPts = {};
+            const gw = data.gameweek || 1;
+            const pts = parseFloat(item.xP || item.pts || item.projected);
+            if (!isNaN(pts)) {
+                player.solioPts[gw] = pts;
+            }
+        }
+    });
+}
+
 export function renderSolioProjections(container, state, actions) {
     
     function render() {
@@ -498,25 +521,53 @@ export function renderSolioProjections(container, state, actions) {
         loadError = null;
         render();
 
-        try {
-            const res = await fetch('/api/solio-projections');
-            if (res.ok) {
-                const responseData = await res.json();
-                if (responseData && responseData.success && responseData.data) {
-                    solioData = responseData.data;
-                } else {
-                    throw new Error('API returned invalid JSON format');
+        const targetUrl = "https://fpl.solioanalytics.com/api/data/latest.json";
+        const fetchers = [
+            async () => {
+                const res = await fetch('/api/solio-projections');
+                if (res.ok) {
+                    const json = await res.json();
+                    if (json && json.success && json.data) return json.data;
                 }
-            } else {
-                throw new Error(`Failed to fetch: HTTP ${res.status}`);
+                return null;
+            },
+            async () => {
+                const res = await fetch(targetUrl);
+                if (res.ok) return await res.json();
+                return null;
+            },
+            async () => {
+                const res = await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}`);
+                if (res.ok) return await res.json();
+                return null;
+            },
+            async () => {
+                const res = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`);
+                if (res.ok) return await res.json();
+                return null;
             }
-        } catch (e) {
-            console.error('Error fetching Solio projections:', e);
-            loadError = e.message;
-        } finally {
-            isLoading = false;
-            render();
+        ];
+
+        let loaded = null;
+        for (const fetcher of fetchers) {
+            try {
+                loaded = await fetcher();
+                if (loaded && (loaded.topProjected || loaded.topCaptains || loaded.gameweek)) {
+                    solioData = loaded;
+                    window.SOLIO_DATA = loaded;
+                    syncSolioDataToPlayers(loaded);
+                    break;
+                }
+            } catch (e) {
+                console.warn('Solio fetch proxy attempt failed:', e);
+            }
         }
+
+        if (!solioData) {
+            loadError = "Unable to load Solio Projections data.";
+        }
+        isLoading = false;
+        render();
     }
 
     function setupErrorListeners() {
