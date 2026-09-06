@@ -2128,18 +2128,42 @@ const actions = {
 
     setCaptain(playerId) {
         const gw = state.currentGw;
-        if (!state.weeklyLineups[gw]) {
-            const current = state.getGwLineup(gw);
-            state.weeklyLineups[gw] = { 
-                starters: current.starters, 
-                bench: current.bench, 
-                captain: current.captain, 
-                vice: current.vice, 
-                formation: current.formation 
-            };
+        const current = state.getGwLineup(gw);
+        let starters = [...current.starters];
+        let bench = [...current.bench];
+
+        if (bench.includes(playerId)) {
+            const p = PLAYERS.find(pl => pl.id === playerId);
+            if (p) {
+                const swapStarterId = starters.find(id => {
+                    const sp = PLAYERS.find(pl => pl.id === id);
+                    return sp && sp.position === p.position;
+                });
+                if (swapStarterId) {
+                    starters = starters.map(id => id === swapStarterId ? playerId : id);
+                    bench = bench.map(id => id === playerId ? swapStarterId : id);
+                }
+            }
         }
-        state.weeklyLineups[gw].captain = playerId;
-        // Fallback global update
+
+        if (!starters.includes(playerId)) {
+            starters.push(playerId);
+            bench = bench.filter(id => id !== playerId);
+        }
+
+        let vice = current.vice;
+        if (vice === playerId) {
+            vice = starters.find(id => id !== playerId) || null;
+        }
+
+        state.weeklyLineups[gw] = { 
+            starters, 
+            bench, 
+            captain: playerId, 
+            vice, 
+            formation: current.formation 
+        };
+
         state.captain = playerId;
         state.saveState();
         actions.renderActiveView();
@@ -2148,18 +2172,42 @@ const actions = {
 
     setVice(playerId) {
         const gw = state.currentGw;
-        if (!state.weeklyLineups[gw]) {
-            const current = state.getGwLineup(gw);
-            state.weeklyLineups[gw] = { 
-                starters: current.starters, 
-                bench: current.bench, 
-                captain: current.captain, 
-                vice: current.vice, 
-                formation: current.formation 
-            };
+        const current = state.getGwLineup(gw);
+        let starters = [...current.starters];
+        let bench = [...current.bench];
+
+        if (bench.includes(playerId)) {
+            const p = PLAYERS.find(pl => pl.id === playerId);
+            if (p) {
+                const swapStarterId = starters.find(id => {
+                    const sp = PLAYERS.find(pl => pl.id === id);
+                    return sp && sp.position === p.position;
+                });
+                if (swapStarterId) {
+                    starters = starters.map(id => id === swapStarterId ? playerId : id);
+                    bench = bench.map(id => id === playerId ? swapStarterId : id);
+                }
+            }
         }
-        state.weeklyLineups[gw].vice = playerId;
-        // Fallback global update
+
+        if (!starters.includes(playerId)) {
+            starters.push(playerId);
+            bench = bench.filter(id => id !== playerId);
+        }
+
+        let captain = current.captain;
+        if (captain === playerId) {
+            captain = starters.find(id => id !== playerId) || null;
+        }
+
+        state.weeklyLineups[gw] = { 
+            starters, 
+            bench, 
+            captain, 
+            vice: playerId, 
+            formation: current.formation 
+        };
+
         state.vice = playerId;
         state.saveState();
         actions.renderActiveView();
@@ -2525,7 +2573,25 @@ const actions = {
             state.transfers[gw].push({ out: outId, in: inId });
         }
 
-        state.optimizeCaptaincy();
+        // Update weeklyLineups[gw] if present so newly transferred inId replaces outId in starters, bench, and captaincy
+        if (state.weeklyLineups && state.weeklyLineups[gw]) {
+            const weekly = state.weeklyLineups[gw];
+            if (weekly.starters) {
+                weekly.starters = weekly.starters.map(id => id === outId ? inId : id);
+            }
+            if (weekly.bench) {
+                weekly.bench = weekly.bench.map(id => id === outId ? inId : id);
+            }
+            if (weekly.captain === outId) {
+                weekly.captain = inId;
+                state.captain = inId;
+            }
+            if (weekly.vice === outId) {
+                weekly.vice = inId;
+                state.vice = inId;
+            }
+        }
+
         state.saveState();
         if (shouldRender) {
             actions.renderActiveView();
