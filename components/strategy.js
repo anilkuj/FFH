@@ -85,7 +85,7 @@ export function renderStrategy(container, state, actions) {
 
     const savedTeamId = localStorage.getItem('fpl_hub_team_id') || '231731';
     const activeSubTab = container.dataset.stratTab || "actionhub";
-    const solverResult = solveQuantStrategy(state);
+    const solverResult = solveQuantStrategy(state, { targetGwXp: 60.0 });
 
     container.innerHTML = `
         <div class="quant-dashboard-container" style="display: flex; flex-direction: column; gap: 24px; max-width: 1240px; margin: 0 auto; padding-bottom: 40px;">
@@ -205,6 +205,40 @@ function renderActionHubView(res, state, savedTeamId, cardBg, panelBg, border, t
                         </button>
                     </div>
 
+                </div>
+            </div>
+
+            <!-- 60.0 xP Gameweek Target Benchmark Card -->
+            <div style="background: linear-gradient(135deg, rgba(0, 255, 136, 0.08), rgba(0, 242, 254, 0.06)); border: 1px solid rgba(0, 255, 136, 0.25); border-radius: 14px; padding: 18px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; box-shadow: var(--shadow-sm);">
+                <div style="display: flex; align-items: center; gap: 14px;">
+                    <div style="width: 42px; height: 42px; border-radius: 12px; background: rgba(0, 255, 136, 0.15); display: flex; align-items: center; justify-content: center; color: var(--primary); font-weight: 800; font-size: 20px;">
+                        🎯
+                    </div>
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 11px; font-weight: 800; color: ${textMuted}; text-transform: uppercase;">GW${state.currentGw} Target Benchmark</span>
+                            <span style="font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 4px; ${res.targetStatus === 'EXCEEDED' ? 'background: rgba(0,255,136,0.2); color: var(--primary);' : (res.targetStatus === 'NEAR' ? 'background: rgba(234,179,8,0.2); color: #eab308;' : 'background: rgba(239,68,68,0.2); color: #ef4444;')}">
+                                ${res.targetStatus === 'EXCEEDED' ? '🟢 TARGET EXCEEDED' : (res.targetStatus === 'NEAR' ? '🟡 NEAR TARGET' : '🔴 BELOW TARGET')}
+                            </span>
+                        </div>
+                        <h4 style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: ${textMain}; margin: 2px 0 0 0; display: flex; align-items: center; gap: 10px;">
+                            <span>Starting XI xP: ${res.currentGwStartingXp.toFixed(1)} / ${res.targetGwXp.toFixed(1)} xP</span>
+                            <span style="font-size: 13px; color: ${res.targetDelta >= 0 ? 'var(--primary)' : '#ef4444'}; font-weight: 700;">
+                                (${res.targetDelta >= 0 ? '+' : ''}${res.targetDelta.toFixed(1)} xP vs 60.0 Goal)
+                            </span>
+                        </h4>
+                    </div>
+                </div>
+
+                <!-- Progress Meter -->
+                <div style="min-width: 200px; flex: 1; max-width: 300px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: ${textMuted}; margin-bottom: 4px;">
+                        <span>Progress to 60 xP Goal</span>
+                        <span style="color: var(--primary);">${Math.min(100, Math.round((res.currentGwStartingXp / res.targetGwXp) * 100))}%</span>
+                    </div>
+                    <div style="width: 100%; height: 8px; background: ${panelBg}; border-radius: 4px; border: 1px solid ${border}; overflow: hidden;">
+                        <div style="width: ${Math.min(100, Math.round((res.currentGwStartingXp / res.targetGwXp) * 100))}%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 4px; transition: width 0.3s ease;"></div>
+                    </div>
                 </div>
             </div>
 
