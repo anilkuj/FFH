@@ -1,5 +1,5 @@
 import { PLAYERS, TEAMS } from '../data.js';
-import { solveQuantStrategy, RISK_PROFILES } from '../lib/quantSolver.js';
+import { solveQuantStrategy, RISK_PROFILES, getUsedChipsStatus } from '../lib/quantSolver.js';
 import { fetchLiveFplApiData } from './liverank.js';
 
 export const EXPERT_CHANNELS = [
@@ -161,11 +161,12 @@ function renderActionHubView(res, state, savedTeamId, cardBg, panelBg, border, t
     const primaryCap = res.primaryCaptain;
     const viceCap = res.viceCaptain;
     const userData = state.fplUserData || {};
+    const riskMode = state.riskAppetite || 'conservative';
 
     return `
         <div style="display: flex; flex-direction: column; gap: 24px;">
             
-            <!-- FPL Team ID Input & Manager State Card -->
+            <!-- FPL Team ID Input & Risk Selector Header Card -->
             <div style="background: ${cardBg}; border: 1px solid ${border}; border-radius: 14px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; box-shadow: var(--shadow-sm);">
                 <div style="display: flex; align-items: center; gap: 12px;">
                     <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(0, 255, 136, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary); font-weight: 800;">
@@ -180,15 +181,30 @@ function renderActionHubView(res, state, savedTeamId, cardBg, panelBg, border, t
                     </div>
                 </div>
 
-                <!-- Team ID Input & Fetch Button -->
-                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                    <div style="position: relative; display: flex; align-items: center;">
-                        <i data-lucide="hash" style="position: absolute; left: 10px; width: 14px; height: 14px; color: ${textMuted};"></i>
-                        <input type="text" id="actionHubTeamIdInput" value="${savedTeamId}" placeholder="Enter Team ID..." style="padding: 7px 12px 7px 30px; font-size: 12px; font-weight: 700; background: ${panelBg}; border: 1px solid ${border}; border-radius: 8px; color: ${textMain}; outline: none; width: 150px;" />
+                <!-- Right Controls: Risk Profile Selector + Team ID Input -->
+                <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                    
+                    <!-- Risk Profile Dropdown Selector -->
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <span style="font-size: 11px; font-weight: 700; color: ${textMuted};">Risk Profile:</span>
+                        <select id="actionHubRiskSelect" style="padding: 6px 10px; font-size: 11.5px; font-weight: 700; background: ${panelBg}; border: 1px solid ${border}; border-radius: 8px; color: ${textMain}; outline: none; cursor: pointer;">
+                            <option value="conservative" ${riskMode === 'conservative' ? 'selected' : ''}>🟢 Conservative (No Hits, Roll FTs)</option>
+                            <option value="moderate" ${riskMode === 'moderate' ? 'selected' : ''}>🟡 Moderate (Balanced EV)</option>
+                            <option value="aggressive" ${riskMode === 'aggressive' ? 'selected' : ''}>🔴 Aggressive (Differential Hits)</option>
+                        </select>
                     </div>
-                    <button id="syncActionHubTeamBtn" style="padding: 7px 14px; font-size: 12px; font-weight: 800; background: var(--primary); color: #000; border: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: transform 0.1s;">
-                        <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> Sync Team
-                    </button>
+
+                    <!-- FPL Team ID Input & Fetch Button -->
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div style="position: relative; display: flex; align-items: center;">
+                            <i data-lucide="hash" style="position: absolute; left: 10px; width: 14px; height: 14px; color: ${textMuted};"></i>
+                            <input type="text" id="actionHubTeamIdInput" value="${savedTeamId}" placeholder="Enter Team ID..." style="padding: 6px 12px 6px 30px; font-size: 12px; font-weight: 700; background: ${panelBg}; border: 1px solid ${border}; border-radius: 8px; color: ${textMain}; outline: none; width: 140px;" />
+                        </div>
+                        <button id="syncActionHubTeamBtn" style="padding: 6px 12px; font-size: 12px; font-weight: 800; background: var(--primary); color: #000; border: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: transform 0.1s;">
+                            <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> Sync
+                        </button>
+                    </div>
+
                 </div>
             </div>
 
@@ -230,7 +246,7 @@ function renderActionHubView(res, state, savedTeamId, cardBg, panelBg, border, t
                         <strong style="font-size: 16px; color: var(--secondary); font-family: var(--font-heading);">${res.nextFreeTransfers} FTs</strong>
                     </div>
                     <div>
-                        <span style="font-size: 11px; color: ${textMuted}; display: block;">Risk Profile</span>
+                        <span style="font-size: 11px; color: ${textMuted}; display: block;">Active Risk Profile</span>
                         <strong style="font-size: 14px; color: #8b5cf6; text-transform: uppercase;">${res.riskProfile.label.split(' ')[0]}</strong>
                     </div>
                 </div>
@@ -281,7 +297,7 @@ function renderActionHubView(res, state, savedTeamId, cardBg, panelBg, border, t
                 <div style="background: ${cardBg}; border: 1px solid ${border}; border-radius: 14px; padding: 20px; box-shadow: var(--shadow-md);">
                     <h3 style="font-family: var(--font-heading); font-size: 16px; font-weight: 800; color: ${textMain}; margin: 0 0 16px 0; display: flex; align-items: center; gap: 8px;">
                         <i data-lucide="shield-alert" style="color: var(--secondary); width: 18px; height: 18px;"></i>
-                        Chip Advisory & Roadmap
+                        Chip Advisory & Strategy
                     </h3>
 
                     <div style="background: rgba(0, 242, 254, 0.06); border: 1px solid rgba(0, 242, 254, 0.2); border-radius: 10px; padding: 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
@@ -298,11 +314,46 @@ function renderActionHubView(res, state, savedTeamId, cardBg, panelBg, border, t
                         </div>
                     </div>
 
-                    <p style="font-size: 12px; color: ${textMuted}; line-height: 1.5; margin: 0; background: ${panelBg}; padding: 10px 12px; border-radius: 8px; border: 1px solid ${border};">
+                    <p style="font-size: 12px; color: ${textMuted}; line-height: 1.5; margin: 0 0 10px 0; background: ${panelBg}; padding: 10px 12px; border-radius: 8px; border: 1px solid ${border};">
                         ${res.chipAdvisory.rationale}
                     </p>
+
+                    ${res.chipAdvisory.freeHitStrategy ? `
+                        <div style="background: rgba(0, 242, 254, 0.06); border: 1px solid rgba(0, 242, 254, 0.2); padding: 10px 12px; border-radius: 8px;">
+                            <span style="font-size: 11px; font-weight: 800; color: var(--secondary); display: block; margin-bottom: 4px;">🚀 Free Hit Strategy Guidance:</span>
+                            <p style="font-size: 11.5px; color: ${textMuted}; margin: 0; line-height: 1.4;">${res.chipAdvisory.freeHitStrategy}</p>
+                        </div>
+                    ` : ''}
                 </div>
 
+            </div>
+
+            <!-- Active Season Chips Used Inventory Grid -->
+            <div style="background: ${cardBg}; border: 1px solid ${border}; border-radius: 14px; padding: 20px; box-shadow: var(--shadow-md);">
+                <h3 style="font-family: var(--font-heading); font-size: 15px; font-weight: 800; color: ${textMain}; margin: 0 0 12px 0; display: flex; align-items: center; justify-content: space-between;">
+                    <span style="display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="layers" style="color: var(--primary); width: 16px; height: 16px;"></i>
+                        Active Season Chips Inventory
+                    </span>
+                    <span style="font-size: 11px; font-weight: 600; color: ${textMuted};">GW1 – GW38 Tracker</span>
+                </h3>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px;">
+                    ${Object.keys(res.usedChips).map(key => {
+                        const chip = res.usedChips[key];
+                        return `
+                            <div style="background: ${chip.used ? 'rgba(239, 68, 68, 0.08)' : 'rgba(0, 255, 136, 0.08)'}; border: 1px solid ${chip.used ? 'rgba(239, 68, 68, 0.25)' : 'rgba(0, 255, 136, 0.25)'}; border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between;">
+                                <div>
+                                    <strong style="font-size: 12px; color: ${textMain}; display: block;">${chip.name}</strong>
+                                    <span style="font-size: 10px; color: ${textMuted};">${chip.limit}</span>
+                                </div>
+                                <span style="font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; ${chip.used ? 'background: rgba(239, 68, 68, 0.2); color: #ef4444;' : 'background: rgba(0, 255, 136, 0.2); color: var(--primary);'}">
+                                    ${chip.used ? `USED (GW${chip.usedGw})` : 'AVAILABLE'}
+                                </span>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
             </div>
 
         </div>
@@ -312,6 +363,17 @@ function renderActionHubView(res, state, savedTeamId, cardBg, panelBg, border, t
 function attachActionHubListeners(container, state, actions) {
     const teamInput = container.querySelector('#actionHubTeamIdInput');
     const syncBtn = container.querySelector('#syncActionHubTeamBtn');
+    const riskSelect = container.querySelector('#actionHubRiskSelect');
+
+    if (riskSelect) {
+        riskSelect.addEventListener('change', () => {
+            const newMode = riskSelect.value;
+            state.riskAppetite = newMode;
+            localStorage.setItem('fpl_hub_risk_appetite', newMode);
+            state.saveState();
+            renderStrategy(container, state, actions);
+        });
+    }
 
     if (syncBtn && teamInput) {
         const handleSync = async () => {
