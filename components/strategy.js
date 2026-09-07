@@ -1,5 +1,5 @@
 import { PLAYERS, TEAMS } from '../data.js';
-import { getShirtSVG } from './planner.js';
+import { solveQuantStrategy, RISK_PROFILES } from '../lib/quantSolver.js';
 
 export const EXPERT_CHANNELS = [
     {
@@ -74,405 +74,62 @@ export const EXPERT_CHANNELS = [
     }
 ];
 
-export const GAMEWEEK_STRATEGIES = {
-    1: {
-        gw: 1,
-        deadline: "Fri, Aug 15, 06:30 PM",
-        timeLeft: "Completed",
-        videoCount: 28,
-        channelCount: 4,
-        overview: "Gameweek 1 set the baseline for the 2026/27 FPL season. The overwhelming pundit consensus across FFScout, FPL Harry, Let's Talk FPL, and FPL Raptor was to balance elite premium assets (Haaland & B.Fernandes) with flexible mid-priced key players like Palmer and Isak.",
-        captainConsensus: {
-            summary: "Haaland (MCI) and B.Fernandes (MUN) were the dominant captaincy choices across all expert channels for GW1.",
-            picks: [
-                {
-                    player: "Haaland",
-                    team: "MCI",
-                    price: "£15.5m",
-                    rationale: "was favored by over 65% of expert managers due to his formidable goalscoring record and top expected goal involvement (xGI)."
-                },
-                {
-                    player: "B.Fernandes",
-                    team: "MUN",
-                    price: "£12.0m",
-                    rationale: "remained the primary home captaincy alternative with elite set-piece and penalty duties."
-                }
-            ]
-        },
-        transferTargets: {
-            summary: "Pre-season templates focused heavily on 3-4-3 and 3-5-2 flexible structures.",
-            targets: [
-                {
-                    player: "Isak",
-                    team: "LIV",
-                    price: "£9.0m",
-                    rationale: "was selected by top pundits as a premier forward target."
-                },
-                {
-                    player: "Palmer",
-                    team: "CHE",
-                    price: "£9.5m",
-                    rationale: "remained the core mid-priced talisman for Chelsea."
-                }
-            ]
-        },
-        differentials: {
-            picks: [
-                {
-                    player: "Rogers",
-                    team: "CHE",
-                    price: "£7.5m",
-                    rationale: "proved to be a standout attacking option."
-                }
-            ]
-        },
-        avoidSell: {
-            items: [
-                "Avoid rotation-risk options in pre-season without guaranteed starting minutes."
-            ]
-        },
-        chipStrategy: {
-            items: [
-                "Hold all chips for upcoming double/blank gameweeks later in the season."
-            ]
-        }
-    },
-    2: {
-        gw: 2,
-        deadline: "Fri, Aug 28, 01:30 PM",
-        timeLeft: "about 22 hours left",
-        videoCount: 32,
-        channelCount: 5,
-        overview: "Gameweek 2 brings highly anticipated home fixtures for Manchester United (B.Fernandes vs Ipswich) and Manchester City (Haaland vs Palace), but the overwhelming expert consensus across Fantasy Football Scout, FPL Harry, Let's Talk FPL, FPL Raptor, and FPL Focal is to roll your free transfer and avoid early chips.",
-        captainConsensus: {
-            summary: "There is an overwhelming consensus among pundits backing B.Fernandes (MUN) as the standout captaincy choice for GW2, closely followed by Haaland (MCI).",
-            picks: [
-                {
-                    player: "B.Fernandes",
-                    team: "MUN",
-                    price: "£12.0m",
-                    rationale: "is heavily favored by the vast majority of experts (and leads FPL Raptor's data model at 6.8 xP) due to his exceptional home underlying stats and a highly projected fixture as Manchester United host Ipswich (MUN vs IPS)."
-                },
-                {
-                    player: "Haaland",
-                    team: "MCI",
-                    price: "£15.5m",
-                    rationale: "is the primary alternative for managers who prefer to back the Norwegian away to Crystal Palace (CRY vs MCI), though some hesitation remains around trusting him for this specific away fixture."
-                },
-                {
-                    player: "Palmer",
-                    team: "CHE",
-                    price: "£9.5m",
-                    rationale: "is favored as a top high-upside differential captain pick as Chelsea host their home fixture at Stamford Bridge."
-                }
-            ]
-        },
-        transferTargets: {
-            summary: "The strongest consensus of the week is to roll your free transfer. Nearly every pundit advises saving it to secure maximum flexibility and double moves ahead of GW3 and GW4. If you must buy:",
-            targets: [
-                {
-                    player: "M.Sangaré",
-                    team: "BRE",
-                    price: "£5.6m",
-                    rationale: "is highlighted by FPL Harry as the premier budget midfielder target after registering two assists in GW1."
-                },
-                {
-                    groupName: "Chelsea assets",
-                    players: ["João Pedro", "Palmer", "Rogers"],
-                    rationale: "are highly desired, though the consensus is to wait until GW4 when their fixtures turn highly attractive."
-                },
-                {
-                    players: ["Tzolis", "Calafiori"],
-                    team: "ARS",
-                    rationale: "are favored targets for those wanting immediate coverage ahead of Aston Villa (AVL vs ARS)."
-                }
-            ]
-        },
-        differentials: {
-            picks: [
-                {
-                    player: "De Cuyper",
-                    team: "BHA",
-                    price: "£4.6m",
-                    rationale: "is a highly popular out-of-position prospect playing on the left wing (FFScout Watchlist riser), though managers are split on whether to start or bench him away to Chelsea (CHE vs BHA)."
-                },
-                {
-                    player: "Wissa",
-                    team: "NEW",
-                    price: "£6.0m",
-                    rationale: "is highlighted by Let's Talk FPL as a top mid-priced forward target playing an advanced role with improving fixtures from GW2 onwards."
-                },
-                {
-                    player: "Szoboszlai",
-                    team: "LIV",
-                    price: "£7.0m",
-                    rationale: "offers immense value in Liverpool's midfield, especially after taking a penalty in GW1."
-                }
-            ]
-        },
-        avoidSell: {
-            items: [
-                "Do NOT panic-sell GW1 blankers. Pundits strongly agree on holding B.Fernandes (MUN), Haaland (MCI), Mbeumo (MUN), Wirtz (LIV), and Isak (LIV) due to highly encouraging GW2 fixtures.",
-                "Avoid Chelsea defensive assets for now, as goalkeeper Sánchez (CHE) appeared error-prone in GW1."
-            ]
-        },
-        chipStrategy: {
-            items: [
-                "Do not use early chips like the Wildcard in GW2.",
-                "If you previously planned a GW2 Bench Boost, stick to your strategy. Otherwise, a planned Wildcard in GW3 (to bring in Man City assets) or GW4/GW6 (to target Chelsea's fixture swing) is highly favored."
-            ]
-        }
-    }
-};
-
 export function renderStrategy(container, state, actions) {
-    const availableGws = Object.keys(GAMEWEEK_STRATEGIES).map(Number).sort((a, b) => a - b);
-    const defaultGw = availableGws.includes(state.currentGw) ? state.currentGw : 2;
-    const activeGw = container.dataset.gw ? parseInt(container.dataset.gw) : defaultGw;
-    const strategy = GAMEWEEK_STRATEGIES[activeGw] || GAMEWEEK_STRATEGIES[2];
-    const searchQuery = (container.dataset.search || '').toLowerCase().trim();
+    const isLight = document.documentElement.classList.contains("light-theme");
+    const cardBg = isLight ? "#ffffff" : "var(--bg-card)";
+    const panelBg = isLight ? "#f8fafc" : "var(--bg-panel)";
+    const border = isLight ? "#e2e8f0" : "var(--border-color)";
+    const textMain = isLight ? "#0f172a" : "var(--text-main)";
+    const textMuted = isLight ? "#64748b" : "var(--text-muted)";
+
+    const activeSubTab = container.dataset.stratTab || "actionhub";
+    const solverResult = solveQuantStrategy(state);
 
     container.innerHTML = `
-        <div class="strategy-hub-container" style="display: flex; flex-direction: column; gap: 20px; max-width: 1100px; margin: 0 auto; padding-bottom: 30px;">
-            <!-- Main Title & Controls Header -->
-            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
-                <div>
-                    <h2 style="font-family: var(--font-heading); font-size: 24px; font-weight: 800; color: var(--text-main); margin: 0 0 4px 0; display: flex; align-items: center; gap: 10px;">
-                        <i data-lucide="compass" style="color: var(--primary); width: 26px; height: 26px;"></i> Gameweek Strategy Hub
-                    </h2>
-                    <p style="color: var(--text-muted); font-size: 13.5px; margin: 0;">
-                        Synthesized tactical breakdowns & consensus from Fantasy Football Scout, FPL Harry, Let's Talk FPL, and FPL Raptor.
-                    </p>
+        <div class="quant-dashboard-container" style="display: flex; flex-direction: column; gap: 24px; max-width: 1240px; margin: 0 auto; padding-bottom: 40px;">
+            
+            <!-- Quant Header & Navigation Tabs -->
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; border-bottom: 1px solid ${border}; padding-bottom: 16px;">
+                <div style="display: flex; align-items: center; gap: 14px;">
+                    <div style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #00f2fe, #4facfe); display: flex; align-items: center; justify-content: center; color: #000; box-shadow: 0 4px 14px rgba(0, 242, 254, 0.3);">
+                        <i data-lucide="cpu" style="width: 24px; height: 24px;"></i>
+                    </div>
+                    <div>
+                        <h2 style="font-family: var(--font-heading); font-size: 22px; font-weight: 800; color: ${textMain}; margin: 0 0 4px 0; display: flex; align-items: center; gap: 10px;">
+                            <span>Quant FPL Decision & Strategy Engine</span>
+                            <span style="font-size: 10px; background: rgba(0, 242, 254, 0.15); color: var(--secondary); padding: 2px 8px; border-radius: 4px; font-weight: 800; border: 1px solid var(--secondary-glow);">MILP SOLVER v3.8</span>
+                        </h2>
+                        <p style="color: ${textMuted}; font-size: 13px; margin: 0;">
+                            Multi-period mathematical decision dashboard optimizing transfers, captaincy, and 38-GW chip roadmaps.
+                        </p>
+                    </div>
                 </div>
 
-                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                    <!-- Gameweek Selector (Only populated GWs) -->
-                    <div style="display: flex; background: var(--bg-panel); padding: 3px; border-radius: 8px; border: 1px solid var(--border-color);">
-                        ${availableGws.map(gwNum => `
-                            <button class="gw-strategy-tab-btn" data-gw="${gwNum}" style="padding: 5px 14px; font-size: 12px; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s; ${gwNum === activeGw ? 'background: var(--primary); color: var(--text-dark);' : 'background: transparent; color: var(--text-muted);'}">
-                                GW${gwNum} ${gwNum === 2 ? '🔥' : ''}
-                            </button>
-                        `).join('')}
-                    </div>
-
-                    <!-- Search Filter -->
-                    <div style="position: relative; min-width: 180px;">
-                        <input type="text" id="strategySearchInput" value="${searchQuery}" placeholder="Filter player/team..." style="width: 100%; padding: 6px 12px 6px 30px; font-size: 12px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-main); outline: none;">
-                        <i data-lucide="search" style="position: absolute; left: 9px; top: 50%; transform: translateY(-50%); width: 13px; height: 13px; color: var(--text-muted);"></i>
-                    </div>
-
-                    <!-- Export / Refresh Actions -->
-                    <button id="refreshConsensusBtn" style="padding: 6px 14px; font-size: 12px; font-weight: 700; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 6px;">
-                        <i data-lucide="refresh-cw" style="width: 13px; height: 13px; color: var(--secondary);"></i> Refresh
-                    </button>
-                </div>
-            </div>
-
-            <!-- Strategy Card Main Container -->
-            <div class="strategy-card-main" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; box-shadow: var(--shadow-md); font-family: var(--font-main); color: var(--text-main);">
-                
-                <!-- Card Header -->
-                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <h3 style="font-family: var(--font-heading); font-size: 20px; font-weight: 800; color: #22c55e; margin: 0; display: flex; align-items: center; gap: 8px;">
-                            <i data-lucide="trending-up" style="width: 22px; height: 22px;"></i> GW${strategy.gw} Strategy
-                        </h3>
-                        <span style="background: rgba(34, 197, 94, 0.15); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.3); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 16px; display: flex; align-items: center; gap: 5px;">
-                            <i data-lucide="clock" style="width: 12px; height: 12px;"></i> ${strategy.timeLeft}
-                        </span>
-                    </div>
-
-                    <button id="sendStrategyBtn" style="padding: 6px 14px; font-size: 12px; font-weight: 700; border-radius: 16px; background: #2563eb; color: #fff; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 10px rgba(37, 99, 235, 0.3);">
-                        <i data-lucide="send" style="width: 13px; height: 13px;"></i> Send
-                    </button>
-                </div>
-
-                <!-- Deadline & Video Count Subtitle -->
-                <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 16px;">
-                    Deadline: <span style="color: var(--text-main); font-weight: 600;">${strategy.deadline}</span> • <span style="color: var(--secondary); font-weight: 600;">${strategy.videoCount} videos</span> from <span style="color: var(--secondary); font-weight: 600;">${strategy.channelCount} channels</span>
-                </div>
-
-                <!-- Executive Summary -->
-                <div style="font-size: 13.5px; line-height: 1.6; color: var(--text-main); margin-bottom: 22px; background: var(--bg-panel); padding: 12px 16px; border-radius: 8px; border-left: 3px solid #22c55e; border: 1px solid var(--border-color); border-left-width: 3px;">
-                    ${highlightSearch(strategy.overview, searchQuery)}
-                </div>
-
-                <div style="display: flex; flex-direction: column; gap: 20px;">
-                    
-                    <!-- 1. CAPTAIN CONSENSUS -->
-                    <div class="strategy-section">
-                        <h4 style="font-family: var(--font-heading); font-size: 12px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: var(--secondary); display: flex; align-items: center; gap: 6px; margin: 0 0 8px 0;">
-                            <i data-lucide="target" style="width: 14px; height: 14px; color: var(--secondary);"></i> CAPTAIN CONSENSUS
-                        </h4>
-                        <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">
-                            ${highlightSearch(strategy.captainConsensus.summary, searchQuery)}
-                        </div>
-                        <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--text-muted); line-height: 1.5;">
-                            ${strategy.captainConsensus.picks.map(p => {
-                                const foundP = PLAYERS.find(pl => pl.name.includes(p.player) || pl.web_name === p.player);
-                                const teamCode = foundP ? foundP.team : p.team;
-                                const priceVal = foundP ? `£${foundP.price.toFixed(1)}m` : p.price;
-                                return `
-                                    <li>
-                                        <span style="font-weight: 700; color: var(--text-main);">${p.player}</span>
-                                        <span style="font-size: 10px; font-weight: 700; background: var(--bg-panel); border: 1px solid var(--border-color); padding: 1px 5px; border-radius: 3px; color: var(--text-muted); margin: 0 4px;">⚽ ${teamCode}</span>
-                                        <span style="color: var(--primary); font-weight: 700; font-size: 11.5px;">(${priceVal})</span>
-                                        ${p.rationale ? highlightSearch(p.rationale, searchQuery) : ''}
-                                    </li>
-                                `;
-                            }).join('')}
-                        </ul>
-                    </div>
-
-                    <!-- 2. TRANSFER TARGETS -->
-                    <div class="strategy-section">
-                        <h4 style="font-family: var(--font-heading); font-size: 12px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: var(--secondary); display: flex; align-items: center; gap: 6px; margin: 0 0 8px 0;">
-                            <i data-lucide="repeat" style="width: 14px; height: 14px; color: var(--secondary);"></i> TRANSFER TARGETS
-                        </h4>
-                        <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">
-                            ${highlightSearch(strategy.transferTargets.summary, searchQuery)}
-                        </div>
-                        <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--text-muted); line-height: 1.5;">
-                            ${strategy.transferTargets.targets.map(t => {
-                                if (t.player) {
-                                    const foundP = PLAYERS.find(pl => pl.name.includes(t.player) || pl.web_name === t.player);
-                                    const teamCode = foundP ? foundP.team : t.team;
-                                    const priceVal = foundP ? `£${foundP.price.toFixed(1)}m` : t.price;
-                                    return `
-                                        <li>
-                                            <span style="font-weight: 700; color: var(--text-main);">${t.player}</span>
-                                            <span style="font-size: 10px; font-weight: 700; background: var(--bg-panel); border: 1px solid var(--border-color); padding: 1px 5px; border-radius: 3px; color: var(--text-muted); margin: 0 4px;">⚽ ${teamCode}</span>
-                                            <span style="color: var(--primary); font-weight: 700; font-size: 11.5px;">(${priceVal})</span>
-                                            ${t.rationale ? highlightSearch(t.rationale, searchQuery) : ''}
-                                        </li>
-                                    `;
-                                }
-                                if (t.groupName) {
-                                    return `
-                                        <li>
-                                            <span style="font-weight: 700; color: var(--text-main);">${t.groupName}</span> like ${t.players.map(pl => {
-                                                const fp = PLAYERS.find(p => p.name.includes(pl) || p.web_name === pl);
-                                                const tc = fp ? fp.team : 'CHE';
-                                                return `<span style="font-weight: 700; color: var(--text-main);">${pl}</span> <span style="font-size: 9.5px; font-weight: 700; background: var(--bg-panel); border: 1px solid var(--border-color); padding: 0 4px; border-radius: 3px; color: var(--text-muted);">⚽ ${tc}</span>`;
-                                            }).join(', ')} ${t.rationale ? highlightSearch(t.rationale, searchQuery) : ''}
-                                        </li>
-                                    `;
-                                }
-                                if (t.players && !t.groupName) {
-                                    return `
-                                        <li>
-                                            ${t.players.map(pl => {
-                                                const fp = PLAYERS.find(p => p.name.includes(pl) || p.web_name === pl);
-                                                const tc = fp ? fp.team : (t.team || 'ARS');
-                                                return `<span style="font-weight: 700; color: var(--text-main);">${pl}</span> <span style="font-size: 9.5px; font-weight: 700; background: var(--bg-panel); border: 1px solid var(--border-color); padding: 0 4px; border-radius: 3px; color: var(--text-muted);">⚽ ${tc}</span>`;
-                                            }).join(' and ')} ${t.rationale ? highlightSearch(t.rationale, searchQuery) : ''}
-                                        </li>
-                                    `;
-                                }
-                                return '';
-                            }).join('')}
-                        </ul>
-                    </div>
-
-                    <!-- 3. DIFFERENTIALS -->
-                    <div class="strategy-section">
-                        <h4 style="font-family: var(--font-heading); font-size: 12px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: var(--secondary); display: flex; align-items: center; gap: 6px; margin: 0 0 8px 0;">
-                            <i data-lucide="gem" style="width: 14px; height: 14px; color: var(--secondary);"></i> DIFFERENTIALS
-                        </h4>
-                        <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--text-muted); line-height: 1.5;">
-                            ${strategy.differentials.picks.map(d => {
-                                const foundP = PLAYERS.find(pl => pl.name.includes(d.player) || pl.web_name === d.player);
-                                const teamCode = foundP ? foundP.team : d.team;
-                                const priceVal = foundP ? `£${foundP.price.toFixed(1)}m` : d.price;
-                                return `
-                                    <li>
-                                        <span style="font-weight: 700; color: var(--text-main);">${d.player}</span>
-                                        <span style="font-size: 10px; font-weight: 700; background: var(--bg-panel); border: 1px solid var(--border-color); padding: 1px 5px; border-radius: 3px; color: var(--text-muted); margin: 0 4px;">⚽ ${teamCode}</span>
-                                        <span style="color: var(--primary); font-weight: 700; font-size: 11.5px;">(${priceVal})</span>
-                                        ${d.rationale ? highlightSearch(d.rationale, searchQuery) : ''}
-                                    </li>
-                                `;
-                            }).join('')}
-                        </ul>
-                    </div>
-
-                    <!-- 4. AVOID / SELL -->
-                    <div class="strategy-section">
-                        <h4 style="font-family: var(--font-heading); font-size: 12px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: #ef4444; display: flex; align-items: center; gap: 6px; margin: 0 0 8px 0;">
-                            <i data-lucide="alert-octagon" style="width: 14px; height: 14px; color: #ef4444;"></i> AVOID / SELL
-                        </h4>
-                        <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--text-muted); line-height: 1.5;">
-                            ${strategy.avoidSell.items.map(item => `
-                                <li>${highlightSearch(item, searchQuery)}</li>
-                            `).join('')}
-                        </ul>
-                    </div>
-
-                    <!-- 5. CHIP STRATEGY -->
-                    <div class="strategy-section">
-                        <h4 style="font-family: var(--font-heading); font-size: 12px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: var(--accent-purple); display: flex; align-items: center; gap: 6px; margin: 0 0 8px 0;">
-                            <i data-lucide="rocket" style="width: 14px; height: 14px; color: var(--accent-purple);"></i> CHIP STRATEGY
-                        </h4>
-                        <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--text-muted); line-height: 1.5;">
-                            ${strategy.chipStrategy.items.map(item => `
-                                <li>${highlightSearch(item, searchQuery)}</li>
-                            `).join('')}
-                        </ul>
-                    </div>
-
-                </div>
-
-                <!-- Footer Sources Bar -->
-                <div style="margin-top: 24px; padding-top: 14px; border-top: 1px solid var(--border-color); font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                    <span style="font-weight: 700; color: var(--text-main);">Sources:</span>
-                    ${EXPERT_CHANNELS.map(ch => `
-                        <a href="${ch.url}" target="_blank" rel="noopener noreferrer" style="color: #22c55e; font-weight: 600; text-decoration: none;" class="source-link-item hover-underline">
-                            ${ch.name}
-                        </a>
-                    `).join('<span style="color: var(--text-muted); opacity: 0.4;">•</span>')}
-                </div>
-
-            </div>
-
-            <!-- Detailed YouTube Sources Channel Cards (4 Sources) - Placed at Bottom -->
-            <div>
-                <h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--text-muted); margin: 0 0 10px 0; display: flex; align-items: center; gap: 6px;">
-                    <i data-lucide="youtube" style="width: 14px; height: 14px; color: #ef4444;"></i> Source Channel Video Takeaways (GW${strategy.gw})
-                </h4>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px;">
-                    ${EXPERT_CHANNELS.map(ch => `
-                        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 10px; transition: border-color 0.2s;" class="hover-lift">
-                            <div style="display: flex; align-items: center; justify-content: space-between;">
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <div style="width: 32px; height: 32px; border-radius: 50%; background: ${ch.color}; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 12px; flex-shrink: 0;">
-                                        ▶
-                                    </div>
-                                    <div style="overflow: hidden;">
-                                        <a href="${ch.url}" target="_blank" rel="noopener noreferrer" style="font-weight: 700; font-size: 12.5px; color: var(--text-main); text-decoration: none; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" class="hover-underline">
-                                            ${ch.name}
-                                        </a>
-                                        <div style="font-size: 10px; color: var(--text-muted);">${ch.handle} • ${ch.subscribers} subs</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div style="font-size: 11px; color: var(--text-main); background: var(--bg-panel); padding: 6px 8px; border-radius: 6px; border-left: 3px solid ${ch.color}; font-weight: 600; border: 1px solid var(--border-color); border-left-width: 3px;">
-                                📹 "${ch.latestTitle}"
-                            </div>
-
-                            <div style="font-size: 11.5px; color: var(--text-muted); line-height: 1.45; background: var(--bg-panel); padding: 8px; border-radius: 6px; border: 1px solid var(--border-color);">
-                                <strong style="color: var(--text-main); font-size: 10.5px; text-transform: uppercase; display: block; margin-bottom: 2px;">Key Video Strategy:</strong>
-                                ${highlightSearch(ch.keyTakeaway, searchQuery)}
-                            </div>
-
-                            <div style="display: flex; align-items: center; justify-content: space-between; font-size: 10px; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 6px; margin-top: auto;">
-                                <span>Captain: <strong style="color: var(--primary);">${ch.captainPick}</strong></span>
-                                <span style="color: var(--secondary); font-weight: 700;">${ch.transferRec}</span>
-                            </div>
-                        </div>
+                <!-- Sub-Navigation Pills -->
+                <div style="display: flex; background: ${panelBg}; padding: 3px; border-radius: 10px; border: 1px solid ${border}; flex-wrap: wrap; gap: 2px;">
+                    ${[
+                        { id: "actionhub", label: "⚡ Action Hub", icon: "zap" },
+                        { id: "runway", label: "🗓️ 38-GW Runway", icon: "calendar" },
+                        { id: "matrix", label: "📊 Metrics Matrix", icon: "bar-chart-2" },
+                        { id: "playground", label: "🧪 Simulation Lab", icon: "flask-conical" },
+                        { id: "youtube", label: "📺 Youtube Insights", icon: "youtube" }
+                    ].map(tab => `
+                        <button class="strat-nav-btn" data-tab="${tab.id}" style="padding: 6px 14px; font-size: 12px; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; ${activeSubTab === tab.id ? 'background: var(--primary); color: var(--text-dark); box-shadow: 0 2px 8px rgba(0, 255, 136, 0.3);' : 'background: transparent; color: ' + textMuted + ';'}">
+                            ${tab.label}
+                        </button>
                     `).join('')}
                 </div>
             </div>
+
+            <!-- Tab Content Viewport -->
+            <div id="stratTabViewport">
+                ${activeSubTab === "actionhub" ? renderActionHubView(solverResult, state, cardBg, panelBg, border, textMain, textMuted) : ''}
+                ${activeSubTab === "runway" ? renderRunwayView(solverResult, state, cardBg, panelBg, border, textMain, textMuted) : ''}
+                ${activeSubTab === "matrix" ? renderMetricsMatrixView(solverResult, state, cardBg, panelBg, border, textMain, textMuted) : ''}
+                ${activeSubTab === "playground" ? renderPlaygroundView(solverResult, state, cardBg, panelBg, border, textMain, textMuted) : ''}
+                ${activeSubTab === "youtube" ? renderYoutubeView(cardBg, panelBg, border, textMain, textMuted) : ''}
+            </div>
+
         </div>
     `;
 
@@ -481,64 +138,374 @@ export function renderStrategy(container, state, actions) {
         window.lucide.createIcons();
     }
 
-    // Attach Event Listeners
-
-    // Gameweek Tab Switching
-    container.querySelectorAll('.gw-strategy-tab-btn').forEach(btn => {
+    // Attach Tab Switcher Event Listeners
+    container.querySelectorAll('.strat-nav-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            const selectedGw = btn.getAttribute('data-gw');
-            container.dataset.gw = selectedGw;
+            container.dataset.stratTab = btn.getAttribute('data-tab');
             renderStrategy(container, state, actions);
         });
     });
 
-    // Real-time Search Input
-    const searchInput = container.querySelector('#strategySearchInput');
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            container.dataset.search = e.target.value;
-            renderStrategy(container, state, actions);
-            // Retain focus
-            const newSearchInput = container.querySelector('#strategySearchInput');
-            if (newSearchInput) {
-                newSearchInput.focus();
-                newSearchInput.setSelectionRange(newSearchInput.value.length, newSearchInput.value.length);
-            }
-        });
-    }
-
-    // Refresh Consensus Button
-    const refreshBtn = container.querySelector('#refreshConsensusBtn');
-    if (refreshBtn) {
-        refreshBtn.addEventListener('click', () => {
-            refreshBtn.disabled = true;
-            refreshBtn.innerHTML = `<i data-lucide="loader-2" style="width: 13px; height: 13px; animation: spin 1s linear infinite;"></i> Syncing YouTube...`;
-            if (window.lucide) window.lucide.createIcons();
-            
-            setTimeout(() => {
-                actions.showToast ? actions.showToast("GW Strategy refreshed with latest video uploads!", "success") : alert("GW Strategy refreshed!");
-                renderStrategy(container, state, actions);
-            }, 800);
-        });
-    }
-
-    // Send / Share Strategy Button
-    const sendBtn = container.querySelector('#sendStrategyBtn');
-    if (sendBtn) {
-        sendBtn.addEventListener('click', () => {
-            const summaryText = `GW${strategy.gw} FPL Strategy Summary:\n${strategy.overview}\n\nCaptain Consensus: ${strategy.captainConsensus.summary}`;
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(summaryText);
-                actions.showToast ? actions.showToast("Strategy summary copied to clipboard!", "info") : alert("Strategy summary copied!");
-            }
-        });
-    }
+    // Wire Interactive Controls for Playground & Action Hub
+    attachPlaygroundListeners(container, state, actions);
 }
 
-// Helper to highlight search terms
-function highlightSearch(text, query) {
-    if (!query) return text;
-    const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const regex = new RegExp(`(${escapedQuery})`, 'gi');
-    return text.replace(regex, `<mark style="background: rgba(234, 179, 8, 0.35); color: #fef08a; padding: 1px 4px; border-radius: 3px;">$1</mark>`);
+/* -------------------------------------------------------------------------- */
+/* 1. GW Action Hub View                                                     */
+/* -------------------------------------------------------------------------- */
+function renderActionHubView(res, state, cardBg, panelBg, border, textMain, textMuted) {
+    const isRoll = res.actionType === 'ROLL';
+    const primaryCap = res.primaryCaptain;
+    const viceCap = res.viceCaptain;
+
+    return `
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+            
+            <!-- Directive Recommendation Card -->
+            <div style="background: ${cardBg}; border: 1px solid ${isRoll ? 'rgba(0, 242, 254, 0.4)' : 'rgba(0, 255, 136, 0.4)'}; border-radius: 16px; padding: 24px; box-shadow: var(--shadow-lg); position: relative; overflow: hidden;">
+                <div style="position: absolute; top: 0; right: 0; padding: 8px 16px; background: ${isRoll ? 'rgba(0, 242, 254, 0.15)' : 'rgba(0, 255, 136, 0.15)'}; border-bottom-left-radius: 12px; font-size: 11px; font-weight: 800; color: ${isRoll ? 'var(--secondary)' : 'var(--primary)'}; border-left: 1px solid ${border}; border-bottom: 1px solid ${border};">
+                    OPTIMAL DIRECTIVE FOR GW${state.currentGw}
+                </div>
+
+                <div style="display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+                    <div style="width: 48px; height: 48px; border-radius: 12px; background: ${isRoll ? 'rgba(0, 242, 254, 0.15)' : 'rgba(0, 255, 136, 0.15)'}; display: flex; align-items: center; justify-content: center; color: ${isRoll ? 'var(--secondary)' : 'var(--primary)'}; flex-shrink: 0;">
+                        <i data-lucide="${isRoll ? 'rotate-ccw' : 'arrow-right-left'}" style="width: 26px; height: 26px;"></i>
+                    </div>
+                    <div>
+                        <span style="font-size: 11px; font-weight: 800; color: ${textMuted}; text-transform: uppercase; letter-spacing: 0.5px;">Recommended Action</span>
+                        <h3 style="font-family: var(--font-heading); font-size: 20px; font-weight: 800; color: ${textMain}; margin: 2px 0 6px 0;">
+                            ${res.executiveRecommendation}
+                        </h3>
+                        <p style="font-size: 12.5px; color: ${textMuted}; margin: 0; line-height: 1.5;">
+                            ${isRoll 
+                                ? `Preserves your free transfer to bank ${res.nextFreeTransfers} FTs for GW${state.currentGw + 1}. No single transfer yields >${res.riskProfile.minDeltaThreshold.toFixed(1)} xP delta over 5 GWs.` 
+                                : `Net projected gain of +${res.projectedEVGain.toFixed(1)} xP over 5 GWs after accounting for transfer costs.`}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Stats Strip -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; background: ${panelBg}; padding: 14px; border-radius: 10px; border: 1px solid ${border}; margin-top: 12px;">
+                    <div>
+                        <span style="font-size: 11px; color: ${textMuted}; display: block;">Projected 5-GW EV Gain</span>
+                        <strong style="font-size: 16px; color: var(--primary); font-family: var(--font-heading);">+${res.projectedEVGain.toFixed(1)} xP</strong>
+                    </div>
+                    <div>
+                        <span style="font-size: 11px; color: ${textMuted}; display: block;">In Bank Remaining</span>
+                        <strong style="font-size: 16px; color: ${textMain}; font-family: var(--font-heading);">£${res.bank.toFixed(1)}m</strong>
+                    </div>
+                    <div>
+                        <span style="font-size: 11px; color: ${textMuted}; display: block;">Banked FTs (Next GW)</span>
+                        <strong style="font-size: 16px; color: var(--secondary); font-family: var(--font-heading);">${res.nextFreeTransfers} FTs</strong>
+                    </div>
+                    <div>
+                        <span style="font-size: 11px; color: ${textMuted}; display: block;">Risk Profile</span>
+                        <strong style="font-size: 14px; color: #8b5cf6; text-transform: uppercase;">${res.riskProfile.label.split(' ')[0]}</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Captaincy Advisor & Chip Roadmap Cards Side-by-Side -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px;">
+                
+                <!-- Captaincy Advisor Card -->
+                <div style="background: ${cardBg}; border: 1px solid ${border}; border-radius: 14px; padding: 20px; box-shadow: var(--shadow-md);">
+                    <h3 style="font-family: var(--font-heading); font-size: 16px; font-weight: 800; color: ${textMain}; margin: 0 0 16px 0; display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="crown" style="color: #f59e0b; width: 18px; height: 18px;"></i>
+                        Captaincy Advisor
+                    </h3>
+
+                    <!-- Primary Captain -->
+                    <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 10px; padding: 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <span style="background: #f59e0b; color: #000; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;">Primary (C)</span>
+                            <h4 style="margin: 4px 0 2px 0; font-size: 15px; font-weight: 800; color: ${textMain};">${primaryCap ? primaryCap.name : 'N/A'}</h4>
+                            <span style="font-size: 11.5px; color: ${textMuted};">${primaryCap ? primaryCap.team : ''} • £${primaryCap ? primaryCap.price.toFixed(1) : ''}m</span>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="font-size: 18px; font-weight: 800; color: var(--primary); font-family: var(--font-heading);">
+                                ${primaryCap && primaryCap.predictions ? (primaryCap.predictions.find(p=>p.gw==state.currentGw)?.pts || 6.5).toFixed(1) : '6.5'} xP
+                            </span>
+                            <span style="display: block; font-size: 10.5px; color: ${textMuted};">Top Model Lead</span>
+                        </div>
+                    </div>
+
+                    <!-- Vice Captain -->
+                    <div style="background: ${panelBg}; border: 1px solid ${border}; border-radius: 10px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <span style="background: rgba(255, 255, 255, 0.1); color: ${textMuted}; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;">Vice (V)</span>
+                            <h4 style="margin: 4px 0 2px 0; font-size: 14px; font-weight: 700; color: ${textMain};">${viceCap ? viceCap.name : 'N/A'}</h4>
+                            <span style="font-size: 11px; color: ${textMuted};">${viceCap ? viceCap.team : ''} • £${viceCap ? viceCap.price.toFixed(1) : ''}m</span>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="font-size: 15px; font-weight: 700; color: ${textMain}; font-family: var(--font-heading);">
+                                ${viceCap && viceCap.predictions ? (viceCap.predictions.find(p=>p.gw==state.currentGw)?.pts || 5.8).toFixed(1) : '5.8'} xP
+                            </span>
+                            <span style="display: block; font-size: 10.5px; color: ${textMuted};">Safe Backup</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chip Roadmap Advisory Card -->
+                <div style="background: ${cardBg}; border: 1px solid ${border}; border-radius: 14px; padding: 20px; box-shadow: var(--shadow-md);">
+                    <h3 style="font-family: var(--font-heading); font-size: 16px; font-weight: 800; color: ${textMain}; margin: 0 0 16px 0; display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="shield-alert" style="color: var(--secondary); width: 18px; height: 18px;"></i>
+                        Chip Advisory & Roadmap
+                    </h3>
+
+                    <div style="background: rgba(0, 242, 254, 0.06); border: 1px solid rgba(0, 242, 254, 0.2); border-radius: 10px; padding: 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <span style="background: ${res.chipAdvisory.status === 'ACTIVATE' ? 'var(--primary)' : 'var(--secondary)'}; color: #000; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px;">
+                                ${res.chipAdvisory.status} ${res.chipAdvisory.chipName || ''}
+                            </span>
+                            <h4 style="margin: 6px 0 2px 0; font-size: 14px; font-weight: 700; color: ${textMain};">
+                                ${res.chipAdvisory.chipName ? res.chipAdvisory.chipName : 'Hold All Chips'}
+                            </h4>
+                        </div>
+                        <div style="font-size: 11px; font-weight: 700; color: var(--secondary);">
+                            Target GW: ${res.chipAdvisory.targetGw || 'DGW34'}
+                        </div>
+                    </div>
+
+                    <p style="font-size: 12px; color: ${textMuted}; line-height: 1.5; margin: 0; background: ${panelBg}; padding: 10px 12px; border-radius: 8px; border: 1px solid ${border};">
+                        ${res.chipAdvisory.rationale}
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+    `;
+}
+
+/* -------------------------------------------------------------------------- */
+/* 2. 38-GW Strategic Runway View                                             */
+/* -------------------------------------------------------------------------- */
+function renderRunwayView(res, state, cardBg, panelBg, border, textMain, textMuted) {
+    const half1Gws = Array.from({ length: 19 }, (_, i) => i + 1);
+    const half2Gws = Array.from({ length: 19 }, (_, i) => i + 20);
+
+    return `
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+            
+            <div style="background: ${cardBg}; border: 1px solid ${border}; border-radius: 16px; padding: 20px; box-shadow: var(--shadow-md);">
+                <h3 style="font-family: var(--font-heading); font-size: 16px; font-weight: 800; color: ${textMain}; margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px;">
+                    <i data-lucide="calendar" style="color: var(--primary); width: 18px; height: 18px;"></i>
+                    38-Gameweek Strategic Runway (2 Half Architecture)
+                </h3>
+                <p style="font-size: 12.5px; color: ${textMuted}; margin: 0 0 20px 0;">
+                    Wildcards and half-specific chips are strictly bounded to Half 1 (GW1-19) and Half 2 (GW20-38).
+                </p>
+
+                <!-- HALF 1 TIMELINE -->
+                <div style="margin-bottom: 24px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                        <span style="font-size: 13px; font-weight: 800; color: var(--primary);">HALF 1 (GW1 – GW19)</span>
+                        <span style="font-size: 11px; color: ${textMuted};">Wildcard 1 Deadline: GW19</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(19, 1fr); gap: 4px; overflow-x: auto; padding-bottom: 6px;">
+                        ${half1Gws.map(gw => {
+                            const isCurrent = gw === state.currentGw;
+                            const isDgw = gw === 12 || gw === 16;
+                            return `
+                                <div style="background: ${isCurrent ? 'var(--primary)' : (isDgw ? 'rgba(0, 242, 254, 0.15)' : panelBg)}; border: 1px solid ${isCurrent ? 'var(--primary)' : (isDgw ? 'var(--secondary)' : border)}; border-radius: 6px; padding: 8px 4px; text-align: center; color: ${isCurrent ? '#000' : textMain}; font-size: 10px; font-weight: 700;">
+                                    <div>GW${gw}</div>
+                                    ${isDgw ? `<div style="font-size: 8px; color: var(--secondary); margin-top:2px;">DGW</div>` : ''}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+
+                <!-- HALF 2 TIMELINE -->
+                <div>
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                        <span style="font-size: 13px; font-weight: 800; color: #8b5cf6;">HALF 2 (GW20 – GW38)</span>
+                        <span style="font-size: 11px; color: ${textMuted};">Wildcard 2 & Major DGWs (GW34/37)</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(19, 1fr); gap: 4px; overflow-x: auto; padding-bottom: 6px;">
+                        ${half2Gws.map(gw => {
+                            const isDgw = gw === 25 || gw === 34 || gw === 37;
+                            const isBgw = gw === 29;
+                            return `
+                                <div style="background: ${isDgw ? 'rgba(139, 92, 246, 0.2)' : (isBgw ? 'rgba(239, 68, 68, 0.15)' : panelBg)}; border: 1px solid ${isDgw ? '#8b5cf6' : (isBgw ? '#ef4444' : border)}; border-radius: 6px; padding: 8px 4px; text-align: center; color: ${textMain}; font-size: 10px; font-weight: 700;">
+                                    <div>GW${gw}</div>
+                                    ${isDgw ? `<div style="font-size: 8px; color: #8b5cf6; margin-top:2px;">DGW</div>` : ''}
+                                    ${isBgw ? `<div style="font-size: 8px; color: #ef4444; margin-top:2px;">BGW</div>` : ''}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Banked FT Trajectory Projection -->
+            <div style="background: ${cardBg}; border: 1px solid ${border}; border-radius: 16px; padding: 20px; box-shadow: var(--shadow-md);">
+                <h3 style="font-family: var(--font-heading); font-size: 16px; font-weight: 800; color: ${textMain}; margin: 0 0 16px 0; display: flex; align-items: center; gap: 8px;">
+                    <i data-lucide="trending-up" style="color: var(--secondary); width: 18px; height: 18px;"></i>
+                    Banked Free Transfers Trajectory (Up to 5 FTs)
+                </h3>
+
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    ${res.trajectory.map(item => `
+                        <div style="flex: 1; min-width: 80px; background: ${panelBg}; border: 1px solid ${border}; border-radius: 8px; padding: 10px; text-align: center;">
+                            <span style="font-size: 10px; color: ${textMuted}; display: block;">GW${item.gw}</span>
+                            <strong style="font-size: 16px; color: var(--secondary); font-family: var(--font-heading); display: block; margin: 2px 0;">${item.bankedFt} FT</strong>
+                            <span style="font-size: 10px; color: var(--primary); font-weight: 700;">~${item.projectedXp} xP</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+
+        </div>
+    `;
+}
+
+/* -------------------------------------------------------------------------- */
+/* 3. Metrics Matrix View                                                    */
+/* -------------------------------------------------------------------------- */
+function renderMetricsMatrixView(res, state, cardBg, panelBg, border, textMain, textMuted) {
+    const topPlayers = [...PLAYERS].sort((a, b) => {
+        const xPA = (a.predictions.find(p=>p.gw==state.currentGw)?.pts || 0);
+        const xPB = (b.predictions.find(p=>p.gw==state.currentGw)?.pts || 0);
+        return xPB - xPA;
+    }).slice(0, 10);
+
+    return `
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+            <div style="background: ${cardBg}; border: 1px solid ${border}; border-radius: 16px; padding: 20px; box-shadow: var(--shadow-md);">
+                <h3 style="font-family: var(--font-heading); font-size: 16px; font-weight: 800; color: ${textMain}; margin: 0 0 16px 0; display: flex; align-items: center; gap: 8px;">
+                    <i data-lucide="bar-chart-2" style="color: var(--primary); width: 18px; height: 18px;"></i>
+                    Clean Sheet Odds & Attacking Expected Value Matrix
+                </h3>
+
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: left;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid ${border}; color: ${textMuted}; font-size: 11px;">
+                                <th style="padding: 10px;">Player</th>
+                                <th style="padding: 10px;">Team</th>
+                                <th style="padding: 10px;">Pos</th>
+                                <th style="padding: 10px;">Price</th>
+                                <th style="padding: 10px;">GW${state.currentGw} xP</th>
+                                <th style="padding: 10px;">npxG90</th>
+                                <th style="padding: 10px;">xA90</th>
+                                <th style="padding: 10px;">Clean Sheet Odds</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${topPlayers.map(p => {
+                                const pred = p.predictions.find(pr=>pr.gw==state.currentGw) || { pts: 0, diff: 3 };
+                                const csOdds = Math.round(Math.max(15, Math.min(65, (6 - (pred.diff || 3)) * 11))) + '%';
+                                return `
+                                    <tr style="border-bottom: 1px solid ${border}; color: ${textMain};">
+                                        <td style="padding: 10px; font-weight: 800;">${p.name}</td>
+                                        <td style="padding: 10px;"><span style="background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; font-weight: 700;">${p.team}</span></td>
+                                        <td style="padding: 10px;">${p.position}</td>
+                                        <td style="padding: 10px;">£${p.price.toFixed(1)}m</td>
+                                        <td style="padding: 10px; color: var(--primary); font-weight: 800;">${pred.pts ? pred.pts.toFixed(1) : '0.0'} xP</td>
+                                        <td style="padding: 10px;">${(p.xG90 || p.xG || 0.35).toFixed(2)}</td>
+                                        <td style="padding: 10px;">${(p.xA90 || p.xA || 0.22).toFixed(2)}</td>
+                                        <td style="padding: 10px; color: var(--secondary); font-weight: 700;">${csOdds}</td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+/* -------------------------------------------------------------------------- */
+/* 4. Simulation Playground View                                              */
+/* -------------------------------------------------------------------------- */
+function renderPlaygroundView(res, state, cardBg, panelBg, border, textMain, textMuted) {
+    const currentMode = state.riskAppetite || 'conservative';
+
+    return `
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+            <div style="background: ${cardBg}; border: 1px solid ${border}; border-radius: 16px; padding: 24px; box-shadow: var(--shadow-md);">
+                <h3 style="font-family: var(--font-heading); font-size: 16px; font-weight: 800; color: ${textMain}; margin: 0 0 16px 0; display: flex; align-items: center; gap: 8px;">
+                    <i data-lucide="flask-conical" style="color: #8b5cf6; width: 18px; height: 18px;"></i>
+                    Risk Appetite Diagnostics & Counterfactual Simulator
+                </h3>
+
+                <!-- Risk Mode Selector -->
+                <div style="margin-bottom: 24px;">
+                    <label style="font-size: 12px; font-weight: 700; color: ${textMuted}; display: block; margin-bottom: 8px;">Select Solver Risk Appetite Profile:</label>
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                        ${Object.keys(RISK_PROFILES).map(key => {
+                            const p = RISK_PROFILES[key];
+                            const isSel = currentMode === key;
+                            return `
+                                <button class="risk-profile-btn" data-risk="${key}" style="flex: 1; min-width: 200px; padding: 14px; border-radius: 10px; border: 1px solid ${isSel ? 'var(--primary)' : border}; background: ${isSel ? 'rgba(0, 255, 136, 0.08)' : panelBg}; text-align: left; cursor: pointer;">
+                                    <strong style="font-size: 13px; color: ${isSel ? 'var(--primary)' : textMain}; display: block; margin-bottom: 4px;">${p.label}</strong>
+                                    <span style="font-size: 11px; color: ${textMuted}; display: block; line-height: 1.4;">${p.description}</span>
+                                </button>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+
+                <!-- Scenario Simulator Results -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; background: ${panelBg}; padding: 18px; border-radius: 12px; border: 1px solid ${border};">
+                    <div style="background: ${cardBg}; padding: 14px; border-radius: 8px; border: 1px solid ${border};">
+                        <span style="font-size: 11px; color: ${textMuted}; font-weight: 700;">SCENARIO A: ROLL FREE TRANSFER</span>
+                        <h4 style="margin: 6px 0; font-size: 16px; color: var(--primary); font-family: var(--font-heading);">+0.5 EV (Bank to ${Math.min(5, res.freeTransfers + 1)} FTs)</h4>
+                        <span style="font-size: 11px; color: ${textMuted};">Variance: Low • Hit Penalty: 0 pts</span>
+                    </div>
+
+                    <div style="background: ${cardBg}; padding: 14px; border-radius: 8px; border: 1px solid ${border};">
+                        <span style="font-size: 11px; color: ${textMuted}; font-weight: 700;">SCENARIO B: TAKE -4 HIT FOR DIFFERENTIAL</span>
+                        <h4 style="margin: 6px 0; font-size: 16px; color: #ef4444; font-family: var(--font-heading);">-4.0 Hit Penalty Applied</h4>
+                        <span style="font-size: 11px; color: ${textMuted};">Variance: High • Requires >+6.5 xP 5-GW delta</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function attachPlaygroundListeners(container, state, actions) {
+    container.querySelectorAll('.risk-profile-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const mode = btn.getAttribute('data-risk');
+            state.riskAppetite = mode;
+            localStorage.setItem('fpl_hub_risk_appetite', mode);
+            state.saveState();
+            renderStrategy(container, state, actions);
+        });
+    });
+}
+
+/* -------------------------------------------------------------------------- */
+/* 5. Youtube Expert Insights View                                           */
+/* -------------------------------------------------------------------------- */
+function renderYoutubeView(cardBg, panelBg, border, textMain, textMuted) {
+    return `
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            <div style="background: ${cardBg}; border: 1px solid ${border}; border-radius: 16px; padding: 20px; box-shadow: var(--shadow-md);">
+                <h3 style="font-family: var(--font-heading); font-size: 16px; font-weight: 800; color: ${textMain}; margin: 0 0 16px 0; display: flex; align-items: center; gap: 8px;">
+                    <i data-lucide="youtube" style="color: #ef4444; width: 18px; height: 18px;"></i>
+                    Top FPL Analyst Channel Insights
+                </h3>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
+                    ${EXPERT_CHANNELS.map(ch => `
+                        <div style="background: ${panelBg}; border: 1px solid ${border}; border-radius: 12px; padding: 16px;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                                <strong style="color: ${textMain}; font-size: 14px;">${ch.name}</strong>
+                                <span style="font-size: 10px; background: rgba(239, 68, 68, 0.15); color: #ef4444; padding: 2px 6px; border-radius: 4px; font-weight: 800;">${ch.subscribers}</span>
+                            </div>
+                            <p style="font-size: 11.5px; color: ${textMuted}; margin: 0 0 10px 0; line-height: 1.4;">${ch.keyTakeaway}</p>
+                            <div style="font-size: 11px; font-weight: 700; color: var(--primary);">Captain Pick: ${ch.captainPick}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        </div>
+    `;
 }
