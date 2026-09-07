@@ -1,5 +1,6 @@
 import { PLAYERS, TEAMS } from '../data.js';
 import { solveQuantStrategy, RISK_PROFILES } from '../lib/quantSolver.js';
+import { fetchLiveFplApiData } from './liverank.js';
 
 export const EXPERT_CHANNELS = [
     {
@@ -82,6 +83,7 @@ export function renderStrategy(container, state, actions) {
     const textMain = isLight ? "#0f172a" : "var(--text-main)";
     const textMuted = isLight ? "#64748b" : "var(--text-muted)";
 
+    const savedTeamId = localStorage.getItem('fpl_hub_team_id') || '231731';
     const activeSubTab = container.dataset.stratTab || "actionhub";
     const solverResult = solveQuantStrategy(state);
 
@@ -123,7 +125,7 @@ export function renderStrategy(container, state, actions) {
 
             <!-- Tab Content Viewport -->
             <div id="stratTabViewport">
-                ${activeSubTab === "actionhub" ? renderActionHubView(solverResult, state, cardBg, panelBg, border, textMain, textMuted) : ''}
+                ${activeSubTab === "actionhub" ? renderActionHubView(solverResult, state, savedTeamId, cardBg, panelBg, border, textMain, textMuted) : ''}
                 ${activeSubTab === "runway" ? renderRunwayView(solverResult, state, cardBg, panelBg, border, textMain, textMuted) : ''}
                 ${activeSubTab === "matrix" ? renderMetricsMatrixView(solverResult, state, cardBg, panelBg, border, textMain, textMuted) : ''}
                 ${activeSubTab === "playground" ? renderPlaygroundView(solverResult, state, cardBg, panelBg, border, textMain, textMuted) : ''}
@@ -146,21 +148,50 @@ export function renderStrategy(container, state, actions) {
         });
     });
 
-    // Wire Interactive Controls for Playground & Action Hub
+    // Wire Interactive Controls for FPL Team ID, Playground & Action Hub
+    attachActionHubListeners(container, state, actions);
     attachPlaygroundListeners(container, state, actions);
 }
 
 /* -------------------------------------------------------------------------- */
 /* 1. GW Action Hub View                                                     */
 /* -------------------------------------------------------------------------- */
-function renderActionHubView(res, state, cardBg, panelBg, border, textMain, textMuted) {
+function renderActionHubView(res, state, savedTeamId, cardBg, panelBg, border, textMain, textMuted) {
     const isRoll = res.actionType === 'ROLL';
     const primaryCap = res.primaryCaptain;
     const viceCap = res.viceCaptain;
+    const userData = state.fplUserData || {};
 
     return `
         <div style="display: flex; flex-direction: column; gap: 24px;">
             
+            <!-- FPL Team ID Input & Manager State Card -->
+            <div style="background: ${cardBg}; border: 1px solid ${border}; border-radius: 14px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; box-shadow: var(--shadow-sm);">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(0, 255, 136, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary); font-weight: 800;">
+                        <i data-lucide="user-check" style="width: 20px; height: 20px;"></i>
+                    </div>
+                    <div>
+                        <span style="font-size: 11px; font-weight: 700; color: ${textMuted}; text-transform: uppercase;">Active Manager Profile</span>
+                        <div style="font-size: 14px; font-weight: 800; color: ${textMain}; display: flex; align-items: center; gap: 8px;">
+                            <span>${userData.managerName || 'Adidas Striker'}</span>
+                            <span style="font-size: 11px; color: var(--secondary); font-weight: 700; background: rgba(0, 242, 254, 0.1); padding: 1px 6px; border-radius: 4px;">#${savedTeamId}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team ID Input & Fetch Button -->
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                    <div style="position: relative; display: flex; align-items: center;">
+                        <i data-lucide="hash" style="position: absolute; left: 10px; width: 14px; height: 14px; color: ${textMuted};"></i>
+                        <input type="text" id="actionHubTeamIdInput" value="${savedTeamId}" placeholder="Enter Team ID..." style="padding: 7px 12px 7px 30px; font-size: 12px; font-weight: 700; background: ${panelBg}; border: 1px solid ${border}; border-radius: 8px; color: ${textMain}; outline: none; width: 150px;" />
+                    </div>
+                    <button id="syncActionHubTeamBtn" style="padding: 7px 14px; font-size: 12px; font-weight: 800; background: var(--primary); color: #000; border: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: transform 0.1s;">
+                        <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> Sync Team
+                    </button>
+                </div>
+            </div>
+
             <!-- Directive Recommendation Card -->
             <div style="background: ${cardBg}; border: 1px solid ${isRoll ? 'rgba(0, 242, 254, 0.4)' : 'rgba(0, 255, 136, 0.4)'}; border-radius: 16px; padding: 24px; box-shadow: var(--shadow-lg); position: relative; overflow: hidden;">
                 <div style="position: absolute; top: 0; right: 0; padding: 8px 16px; background: ${isRoll ? 'rgba(0, 242, 254, 0.15)' : 'rgba(0, 255, 136, 0.15)'}; border-bottom-left-radius: 12px; font-size: 11px; font-weight: 800; color: ${isRoll ? 'var(--secondary)' : 'var(--primary)'}; border-left: 1px solid ${border}; border-bottom: 1px solid ${border};">
@@ -276,6 +307,50 @@ function renderActionHubView(res, state, cardBg, panelBg, border, textMain, text
 
         </div>
     `;
+}
+
+function attachActionHubListeners(container, state, actions) {
+    const teamInput = container.querySelector('#actionHubTeamIdInput');
+    const syncBtn = container.querySelector('#syncActionHubTeamBtn');
+
+    if (syncBtn && teamInput) {
+        const handleSync = async () => {
+            const inputId = teamInput.value.trim();
+            if (!inputId) {
+                if (actions.showToast) actions.showToast("Please enter a valid FPL Team ID!", "warning");
+                return;
+            }
+            syncBtn.disabled = true;
+            syncBtn.innerHTML = `<i data-lucide="loader-2" style="width:14px;height:14px;animation:spin 1s linear infinite;"></i> Syncing...`;
+            if (window.lucide) window.lucide.createIcons();
+
+            const fetched = await fetchLiveFplApiData(inputId);
+            if (fetched && fetched.entryData) {
+                const entry = fetched.entryData;
+                localStorage.setItem('fpl_hub_team_id', inputId);
+                state.fplTeamId = inputId;
+                state.fplUserData = state.fplUserData || {};
+                state.fplUserData.teamId = inputId;
+                state.fplUserData.managerName = entry.name || "Manager";
+                state.fplUserData.userName = `${entry.player_first_name || ''} ${entry.player_last_name || ''}`;
+                state.saveState();
+
+                if (actions.showToast) actions.showToast(`Loaded FPL Team #${inputId} (${entry.name})!`, "success");
+            } else {
+                localStorage.setItem('fpl_hub_team_id', inputId);
+                state.fplTeamId = inputId;
+                state.saveState();
+                if (actions.showToast) actions.showToast(`Saved FPL Team ID #${inputId}.`, "info");
+            }
+
+            renderStrategy(container, state, actions);
+        };
+
+        syncBtn.addEventListener('click', handleSync);
+        teamInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') handleSync();
+        });
+    }
 }
 
 /* -------------------------------------------------------------------------- */
