@@ -273,7 +273,7 @@ export const PLAYERS = [
         "team": "ARS",
         "position": "GKP",
         "price": 6,
-        "ownership": 38.9,
+        "ownership": 39,
         "points": 162,
         "xG": 0,
         "xA": 0.01,
@@ -281,7 +281,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.01,
         "ictIndex": 4.7,
-        "priceChangeTarget": 8.687385078286065,
+        "priceChangeTarget": 8.188467971595594,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -628,7 +628,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -46.080760095011875,
+        "priceChangeTarget": -46.54377880184332,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -975,7 +975,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -46.27831715210356,
+        "priceChangeTarget": -45.911949685534594,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -1314,7 +1314,7 @@ export const PLAYERS = [
         "team": "ARS",
         "position": "DEF",
         "price": 8,
-        "ownership": 24.6,
+        "ownership": 24.5,
         "points": 209,
         "xG": 0.49,
         "xA": 0.05,
@@ -1322,7 +1322,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.54,
         "ictIndex": 13.8,
-        "priceChangeTarget": -62.48165031291045,
+        "priceChangeTarget": -62.651297403204474,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -1669,7 +1669,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -34.990439770554495,
+        "priceChangeTarget": -35.027898326100434,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -2020,7 +2020,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -61.947700631199275,
+        "priceChangeTarget": -61.910377358490564,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -2371,7 +2371,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 0.39,
         "ictIndex": 7,
-        "priceChangeTarget": -16.588765887658877,
+        "priceChangeTarget": -17.14900741449414,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -2710,7 +2710,7 @@ export const PLAYERS = [
         "team": "ARS",
         "position": "DEF",
         "price": 5.7,
-        "ownership": 48.1,
+        "ownership": 48.2,
         "points": 109,
         "xG": 0.54,
         "xA": 0.58,
@@ -2718,7 +2718,7 @@ export const PLAYERS = [
         "xA90": 0.22,
         "xGI": 1.12,
         "ictIndex": 11.8,
-        "priceChangeTarget": 68.9014309025403,
+        "priceChangeTarget": 68.84024256160862,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -3065,7 +3065,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 1,
-        "priceChangeTarget": -66.03279506203629,
+        "priceChangeTarget": -65.81849024597116,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -3412,7 +3412,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 0.47,
         "ictIndex": 14.1,
-        "priceChangeTarget": 3.679774915006969,
+        "priceChangeTarget": 2.993302713566573,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -3759,7 +3759,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.01,
         "ictIndex": 2.7,
-        "priceChangeTarget": -98.89823035890451,
+        "priceChangeTarget": -98.91656362244598,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -4106,7 +4106,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 1.85,
         "ictIndex": 30.3,
-        "priceChangeTarget": 19.269922096982768,
+        "priceChangeTarget": 18.360609226086844,
         "setPieceDuty": {
             "pk": true,
             "fk": false,
@@ -4453,7 +4453,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 0.36,
         "ictIndex": 12.3,
-        "priceChangeTarget": -67.91027614144951,
+        "priceChangeTarget": -68.09003358314177,
         "setPieceDuty": {
             "pk": false,
             "fk": true,
@@ -4792,7 +4792,7 @@ export const PLAYERS = [
         "team": "ARS",
         "position": "MID",
         "price": 6.4,
-        "ownership": 1.3,
+        "ownership": 1.2,
         "points": 113,
         "xG": 0.04,
         "xA": 0.07,
@@ -4800,7 +4800,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 0.11,
         "ictIndex": 0.7,
-        "priceChangeTarget": -74.81513143834152,
+        "priceChangeTarget": -74.91480342448675,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -5143,7 +5143,7 @@ export const PLAYERS = [
         "team": "ARS",
         "position": "MID",
         "price": 6.6,
-        "ownership": 15,
+        "ownership": 15.3,
         "points": 74,
         "xG": 1.01,
         "xA": 1.05,
@@ -5151,7 +5151,7 @@ export const PLAYERS = [
         "xA90": 0.43,
         "xGI": 2.06,
         "ictIndex": 27.1,
-        "priceChangeTarget": 70.02808239462802,
+        "priceChangeTarget": 70.87939491283808,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -5498,7 +5498,7 @@ export const PLAYERS = [
         "xA90": 0.2,
         "xGI": 0.05,
         "ictIndex": 5.6,
-        "priceChangeTarget": -44.47325005892058,
+        "priceChangeTarget": -44.59428571428571,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -5841,7 +5841,7 @@ export const PLAYERS = [
         "team": "ARS",
         "position": "MID",
         "price": 5.9,
-        "ownership": 0.5,
+        "ownership": 0.4,
         "points": 67,
         "xG": 0.14,
         "xA": 0.02,
@@ -5849,7 +5849,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.16,
         "ictIndex": 2.4,
-        "priceChangeTarget": -67.46756909193458,
+        "priceChangeTarget": -67.25068870523417,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -6551,7 +6551,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 0.12,
         "ictIndex": 2.5,
-        "priceChangeTarget": -75.17013817281914,
+        "priceChangeTarget": -75.49422980431511,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -6902,7 +6902,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -35.69444444444444,
+        "priceChangeTarget": -35.20374081496326,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -8298,7 +8298,7 @@ export const PLAYERS = [
         "team": "ARS",
         "position": "FWD",
         "price": 7.3,
-        "ownership": 4,
+        "ownership": 3.9,
         "points": 128,
         "xG": 0,
         "xA": 0,
@@ -8306,7 +8306,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -86.18144390530804,
+        "priceChangeTarget": -86.23555790405736,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -8653,7 +8653,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 0.88,
         "ictIndex": 24.1,
-        "priceChangeTarget": 43.20199408944486,
+        "priceChangeTarget": 43.04039974007932,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -9339,7 +9339,7 @@ export const PLAYERS = [
         "team": "ARS",
         "position": "DEF",
         "price": 4.4,
-        "ownership": 14.1,
+        "ownership": 14.2,
         "points": 100,
         "xG": 0,
         "xA": 0.01,
@@ -9347,7 +9347,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.01,
         "ictIndex": 2.8,
-        "priceChangeTarget": 69.77626178487999,
+        "priceChangeTarget": 70.17394251236514,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -9694,7 +9694,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.01,
         "ictIndex": 0.4,
-        "priceChangeTarget": -88.50957535387177,
+        "priceChangeTarget": -88.49815562972071,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -10033,7 +10033,7 @@ export const PLAYERS = [
         "team": "ARS",
         "position": "MID",
         "price": 6.4,
-        "ownership": 17,
+        "ownership": 16.9,
         "points": 75,
         "xG": 0.19,
         "xA": 0.35,
@@ -10041,7 +10041,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 0.54,
         "ictIndex": 18.8,
-        "priceChangeTarget": -67.05713555690953,
+        "priceChangeTarget": -67.07051387604656,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -10388,7 +10388,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 2.8,
-        "priceChangeTarget": -22.50139586823004,
+        "priceChangeTarget": -23.035230352303522,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -11082,7 +11082,7 @@ export const PLAYERS = [
         "team": "AVL",
         "position": "DEF",
         "price": 4.5,
-        "ownership": 6.7,
+        "ownership": 6.6,
         "points": 117,
         "xG": 0.15,
         "xA": 0.04,
@@ -11090,7 +11090,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.19,
         "ictIndex": 6.5,
-        "priceChangeTarget": -39.070502248224855,
+        "priceChangeTarget": -42.21763085399449,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -11437,7 +11437,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.13,
         "ictIndex": 3.4,
-        "priceChangeTarget": 22.00446539320268,
+        "priceChangeTarget": 22.797927461139896,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -11788,7 +11788,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.01,
         "ictIndex": 1.2,
-        "priceChangeTarget": -40.21297192642788,
+        "priceChangeTarget": -38.269302499067514,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -12135,7 +12135,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.3,
-        "priceChangeTarget": -23.993808049535602,
+        "priceChangeTarget": -24.05446293494705,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -12486,7 +12486,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 0.52,
         "ictIndex": 6.4,
-        "priceChangeTarget": 31.46551724137931,
+        "priceChangeTarget": 32.16863517060368,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -12833,7 +12833,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.16,
         "ictIndex": 6.7,
-        "priceChangeTarget": 27.338732197710137,
+        "priceChangeTarget": 27.96587576646228,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -13180,7 +13180,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -14.45976899459038,
+        "priceChangeTarget": -14.562831188493567,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -13882,7 +13882,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 0.94,
         "ictIndex": 6.3,
-        "priceChangeTarget": -31.018846535354967,
+        "priceChangeTarget": -30.20311503779943,
         "setPieceDuty": {
             "pk": true,
             "fk": true,
@@ -14580,7 +14580,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.86,
         "ictIndex": 3.3,
-        "priceChangeTarget": -34.80878867465249,
+        "priceChangeTarget": -34.09470752089136,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -14927,7 +14927,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.48,
         "ictIndex": 13.9,
-        "priceChangeTarget": 16.04848923466618,
+        "priceChangeTarget": 16.22615088394889,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -15274,7 +15274,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.1,
         "ictIndex": 7.9,
-        "priceChangeTarget": -11.483506791321222,
+        "priceChangeTarget": -11.62074276912545,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -15621,7 +15621,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -44.52554744525548,
+        "priceChangeTarget": -44.60431654676259,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -16323,7 +16323,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -6.18242306626005,
+        "priceChangeTarget": -6.587792417316483,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -16674,7 +16674,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 0.22,
         "ictIndex": 7.5,
-        "priceChangeTarget": 39.69918349806618,
+        "priceChangeTarget": 39.365733113673805,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -17021,7 +17021,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 1,
-        "priceChangeTarget": -16.296296296296298,
+        "priceChangeTarget": -15.502958579881657,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -17372,7 +17372,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -63.997591812161346,
+        "priceChangeTarget": -63.032069970845484,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -17719,7 +17719,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.01,
         "ictIndex": 1.2,
-        "priceChangeTarget": -62.231759656652365,
+        "priceChangeTarget": -61.18143459915611,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -18417,7 +18417,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.4,
-        "priceChangeTarget": 22.56085088975251,
+        "priceChangeTarget": 22.169059011164276,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -18768,7 +18768,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.5,
-        "priceChangeTarget": -68.11962194949922,
+        "priceChangeTarget": -68.019747668678,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -19107,7 +19107,7 @@ export const PLAYERS = [
         "team": "AVL",
         "position": "FWD",
         "price": 6.5,
-        "ownership": 1.1,
+        "ownership": 1.2,
         "points": 87.5,
         "xG": 0.24,
         "xA": 0.54,
@@ -19115,7 +19115,7 @@ export const PLAYERS = [
         "xA90": 0.32,
         "xGI": 0.78,
         "ictIndex": 5.1,
-        "priceChangeTarget": 32.32736278292922,
+        "priceChangeTarget": 33.16429181710443,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -19462,7 +19462,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -86.55043586550435,
+        "priceChangeTarget": -86.53149891383056,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -19813,7 +19813,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.01,
         "ictIndex": 0.9,
-        "priceChangeTarget": -63.5427394438723,
+        "priceChangeTarget": -62.96296296296296,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -20160,7 +20160,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 4.1,
-        "priceChangeTarget": 64.58204747526982,
+        "priceChangeTarget": 64.13824057450628,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -20507,7 +20507,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 23.338391502276178,
+        "priceChangeTarget": 23.28928046989721,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -21201,7 +21201,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.8,
-        "priceChangeTarget": 16.118330107824164,
+        "priceChangeTarget": 16.990162190906673,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -21548,7 +21548,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -21.367521367521366,
+        "priceChangeTarget": -23.30564057717534,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -21895,7 +21895,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 43.16436251920123,
+        "priceChangeTarget": 42.55952380952381,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -22242,7 +22242,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 36.357908002520475,
+        "priceChangeTarget": 35.65056905567518,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -22589,7 +22589,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 7.4,
-        "priceChangeTarget": -12.587586343984494,
+        "priceChangeTarget": -12.459236524074429,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -22936,7 +22936,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 27.71295380703489,
+        "priceChangeTarget": 27.440898827498028,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -23638,7 +23638,7 @@ export const PLAYERS = [
         "xA90": 0.25,
         "xGI": 0.76,
         "ictIndex": 11.3,
-        "priceChangeTarget": -19.096509240246405,
+        "priceChangeTarget": -18.96640826873385,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -23985,7 +23985,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.14,
         "ictIndex": 10.1,
-        "priceChangeTarget": -63.236629801784474,
+        "priceChangeTarget": -63.11773255813954,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -24332,7 +24332,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -38.65634892718959,
+        "priceChangeTarget": -38.9041095890411,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -24683,7 +24683,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -42.35294117647059,
+        "priceChangeTarget": -42.04545454545455,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -25034,7 +25034,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.07,
         "ictIndex": 7.8,
-        "priceChangeTarget": -15.10204081632653,
+        "priceChangeTarget": -14.41219872110182,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -25381,7 +25381,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -39.27125506072874,
+        "priceChangeTarget": -37.5,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -25732,7 +25732,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 19.117325759230937,
+        "priceChangeTarget": 19.165964616680707,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -26083,7 +26083,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.54,
         "ictIndex": 10.4,
-        "priceChangeTarget": -69.10295959194893,
+        "priceChangeTarget": -69.06566782603527,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -26430,7 +26430,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 1.84,
         "ictIndex": 27.6,
-        "priceChangeTarget": 56.531561266851504,
+        "priceChangeTarget": 55.787370047268425,
         "setPieceDuty": {
             "pk": false,
             "fk": true,
@@ -26769,7 +26769,7 @@ export const PLAYERS = [
         "team": "BOU",
         "position": "MID",
         "price": 6,
-        "ownership": 4.8,
+        "ownership": 4.9,
         "points": 136,
         "xG": 0.33,
         "xA": 0.3,
@@ -26777,7 +26777,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 0.63,
         "ictIndex": 16.5,
-        "priceChangeTarget": 75.70293518475573,
+        "priceChangeTarget": 75.40698332938621,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -27124,7 +27124,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.84,
         "ictIndex": 13.9,
-        "priceChangeTarget": -44.22164726175076,
+        "priceChangeTarget": -44.36808142280048,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -27471,7 +27471,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.01,
         "ictIndex": 2.4,
-        "priceChangeTarget": -20.99868593955322,
+        "priceChangeTarget": -20.745088032661393,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -27818,7 +27818,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.02,
         "ictIndex": 1,
-        "priceChangeTarget": -45.69948186528497,
+        "priceChangeTarget": -45.654345654345654,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -28165,7 +28165,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.01,
         "ictIndex": 3.1,
-        "priceChangeTarget": 23.190453760401947,
+        "priceChangeTarget": 22.591514780211362,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -28512,7 +28512,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.01,
         "ictIndex": 0.1,
-        "priceChangeTarget": -7.2265625,
+        "priceChangeTarget": -6.0606060606060606,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -28859,7 +28859,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.3,
-        "priceChangeTarget": 27.27272727272727,
+        "priceChangeTarget": 27.392120075046904,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -29206,7 +29206,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.3,
-        "priceChangeTarget": -45.91836734693878,
+        "priceChangeTarget": -47.524752475247524,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -29553,7 +29553,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -70.67669172932331,
+        "priceChangeTarget": -71.32352941176471,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -29900,7 +29900,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -89.37308868501529,
+        "priceChangeTarget": -89.10041060097052,
         "setPieceDuty": {
             "pk": true,
             "fk": false,
@@ -30247,7 +30247,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 0.97,
         "ictIndex": 12.1,
-        "priceChangeTarget": 2.112580993520518,
+        "priceChangeTarget": 2.1056605012226943,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -30941,7 +30941,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -14.13512218495448,
+        "priceChangeTarget": -14.312267657992564,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -31288,7 +31288,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.31,
         "ictIndex": 10.7,
-        "priceChangeTarget": -11.468094600624722,
+        "priceChangeTarget": -11.378963983354858,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -31635,7 +31635,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -71.54340836012861,
+        "priceChangeTarget": -71.47335423197492,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -31982,7 +31982,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.1,
         "ictIndex": 2.1,
-        "priceChangeTarget": 29.553072625698324,
+        "priceChangeTarget": 29.274891774891778,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -32329,7 +32329,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 16.57397107897664,
+        "priceChangeTarget": 17.532467532467532,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -32676,7 +32676,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.01,
         "ictIndex": 5.7,
-        "priceChangeTarget": -22.544741026421732,
+        "priceChangeTarget": -22.68396712042227,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -33023,7 +33023,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -24.099722991689752,
+        "priceChangeTarget": -24.57852706299911,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -33370,7 +33370,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.56,
         "ictIndex": 11.4,
-        "priceChangeTarget": -95.03141896828876,
+        "priceChangeTarget": -95.1702360228331,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -33717,7 +33717,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -88.85511651469098,
+        "priceChangeTarget": -88.89990089197225,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -34068,7 +34068,7 @@ export const PLAYERS = [
         "xA90": 0.22,
         "xGI": 1.68,
         "ictIndex": 22.9,
-        "priceChangeTarget": -6.138228487271197,
+        "priceChangeTarget": -6.446095325623548,
         "setPieceDuty": {
             "pk": false,
             "fk": true,
@@ -34415,7 +34415,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.14,
         "ictIndex": 12.9,
-        "priceChangeTarget": -28.8767533997216,
+        "priceChangeTarget": -29.329921801946217,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -34762,7 +34762,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 0.76,
         "ictIndex": 12.9,
-        "priceChangeTarget": -38.87875082306462,
+        "priceChangeTarget": -38.727173119065014,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -35109,7 +35109,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -72.12121212121212,
+        "priceChangeTarget": -71.29750982961993,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -35460,7 +35460,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.02,
         "ictIndex": 1.7,
-        "priceChangeTarget": -39.74175035868006,
+        "priceChangeTarget": -39.74895397489539,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -35811,7 +35811,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -40.16393442622951,
+        "priceChangeTarget": -36.964980544747085,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -36162,7 +36162,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.11,
         "ictIndex": 2.1,
-        "priceChangeTarget": -16.869095816464238,
+        "priceChangeTarget": -14.100905562742561,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -36513,7 +36513,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 0.97,
         "ictIndex": 20.1,
-        "priceChangeTarget": -47.7715797343148,
+        "priceChangeTarget": -48.24393624393624,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -36860,7 +36860,7 @@ export const PLAYERS = [
         "xA90": 0.24,
         "xGI": 0.45,
         "ictIndex": 9.8,
-        "priceChangeTarget": -88.18350643097874,
+        "priceChangeTarget": -88.25561312607945,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -37211,7 +37211,7 @@ export const PLAYERS = [
         "xA90": 0.24,
         "xGI": 0.48,
         "ictIndex": 15.3,
-        "priceChangeTarget": 13.160819177647246,
+        "priceChangeTarget": 12.591911764705882,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -37562,7 +37562,7 @@ export const PLAYERS = [
         "xA90": 0.46,
         "xGI": 0.42,
         "ictIndex": 7.2,
-        "priceChangeTarget": -98.61495844875347,
+        "priceChangeTarget": -98.57627118644068,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -37913,7 +37913,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 0.82,
         "ictIndex": 24,
-        "priceChangeTarget": 65.07915761269136,
+        "priceChangeTarget": 64.61388840959359,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -38260,7 +38260,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -17.94871794871795,
+        "priceChangeTarget": -20,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -38611,7 +38611,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 3.792415169660679,
+        "priceChangeTarget": 3.937007874015748,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -38962,7 +38962,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.1,
         "ictIndex": 3.4,
-        "priceChangeTarget": -89.93460335513221,
+        "priceChangeTarget": -89.95425434583714,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -39313,7 +39313,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -90.65817409766454,
+        "priceChangeTarget": -90.87136929460581,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -39664,7 +39664,7 @@ export const PLAYERS = [
         "xA90": 0.3,
         "xGI": 0.61,
         "ictIndex": 9.5,
-        "priceChangeTarget": -55.92903828197946,
+        "priceChangeTarget": -55.949137148047235,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -40003,7 +40003,7 @@ export const PLAYERS = [
         "team": "BRE",
         "position": "FWD",
         "price": 7.9,
-        "ownership": 11.7,
+        "ownership": 11.6,
         "points": 181,
         "xG": 2.3,
         "xA": 0.1,
@@ -40011,7 +40011,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 2.4,
         "ictIndex": 13.8,
-        "priceChangeTarget": -86.06508137482325,
+        "priceChangeTarget": -86.00059262451849,
         "setPieceDuty": {
             "pk": true,
             "fk": false,
@@ -40358,7 +40358,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 16.119791666666668,
+        "priceChangeTarget": 15.85540142917192,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -40705,7 +40705,7 @@ export const PLAYERS = [
         "xA90": 0.28,
         "xGI": 0.11,
         "ictIndex": 2.6,
-        "priceChangeTarget": -34.80027081922816,
+        "priceChangeTarget": -35.068357766430566,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -41052,7 +41052,7 @@ export const PLAYERS = [
         "xA90": 0.16,
         "xGI": 0.78,
         "ictIndex": 14.1,
-        "priceChangeTarget": -42.20420754344746,
+        "priceChangeTarget": -42.789635894246366,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -41399,7 +41399,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -8.507462686567164,
+        "priceChangeTarget": -8.60058309037901,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -41746,7 +41746,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 0.2,
         "ictIndex": 4.9,
-        "priceChangeTarget": 12.747829442407872,
+        "priceChangeTarget": 12.455240420251428,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -42093,7 +42093,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 15.597210287564197,
+        "priceChangeTarget": 15.209132807528395,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -42440,7 +42440,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.1,
         "ictIndex": 7.2,
-        "priceChangeTarget": -59.79537505872528,
+        "priceChangeTarget": -59.637279596977336,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -42792,7 +42792,7 @@ export const PLAYERS = [
         "xA90": 0.16,
         "xGI": 0.53,
         "ictIndex": 16.6,
-        "priceChangeTarget": -13.688946015424165,
+        "priceChangeTarget": -13.977167540882443,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -43131,7 +43131,7 @@ export const PLAYERS = [
         "team": "BHA",
         "position": "DEF",
         "price": 4.8,
-        "ownership": 20.3,
+        "ownership": 20.5,
         "points": 84,
         "xG": 1.5,
         "xA": 0.4,
@@ -43139,7 +43139,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 1.9,
         "ictIndex": 21.1,
-        "priceChangeTarget": 64.32146875152858,
+        "priceChangeTarget": 64.15915650717778,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -43486,7 +43486,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.06,
         "ictIndex": 7.4,
-        "priceChangeTarget": 28.163809293027203,
+        "priceChangeTarget": 28.198887343532686,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -43833,7 +43833,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -22.181818181818183,
+        "priceChangeTarget": -21.79930795847751,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -44535,7 +44535,7 @@ export const PLAYERS = [
         "xA90": 0.3,
         "xGI": 0.28,
         "ictIndex": 4.8,
-        "priceChangeTarget": -21.791044776119403,
+        "priceChangeTarget": -21.037463976945244,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -44886,7 +44886,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -6.053268765133172,
+        "priceChangeTarget": -5.663304887509697,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -45233,7 +45233,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -73.0392156862745,
+        "priceChangeTarget": -72.66187050359713,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -45584,7 +45584,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -91.42857142857143,
+        "priceChangeTarget": -91.30434782608695,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -45935,7 +45935,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 1.43,
         "ictIndex": 14.5,
-        "priceChangeTarget": -94.35220377408815,
+        "priceChangeTarget": -94.38384625373328,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -46286,7 +46286,7 @@ export const PLAYERS = [
         "xA90": 0.14,
         "xGI": 1.26,
         "ictIndex": 22.2,
-        "priceChangeTarget": 22.146078995623252,
+        "priceChangeTarget": 21.4323660376508,
         "setPieceDuty": {
             "pk": true,
             "fk": true,
@@ -46633,7 +46633,7 @@ export const PLAYERS = [
         "xA90": 0.44,
         "xGI": 0.52,
         "ictIndex": 4.6,
-        "priceChangeTarget": -88.24375049916141,
+        "priceChangeTarget": -88.22525597269625,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -46980,7 +46980,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -20.579360289680146,
+        "priceChangeTarget": -20.53519488074462,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -47323,7 +47323,7 @@ export const PLAYERS = [
         "team": "BHA",
         "position": "MID",
         "price": 5,
-        "ownership": 4.9,
+        "ownership": 4.8,
         "points": 97,
         "xG": 0.65,
         "xA": 0.7,
@@ -47331,7 +47331,7 @@ export const PLAYERS = [
         "xA90": 0.24,
         "xGI": 1.35,
         "ictIndex": 23.8,
-        "priceChangeTarget": -0.4860387839111243,
+        "priceChangeTarget": -0.5923251136345639,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -48029,7 +48029,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.35,
         "ictIndex": 6.1,
-        "priceChangeTarget": -52.779369627507165,
+        "priceChangeTarget": -52.71447100240875,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -48376,7 +48376,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 0.25,
         "ictIndex": 8.3,
-        "priceChangeTarget": -99.2545871559633,
+        "priceChangeTarget": -99.2689955718001,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -49429,7 +49429,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -15.159574468085108,
+        "priceChangeTarget": -15.142118863049095,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -49780,7 +49780,7 @@ export const PLAYERS = [
         "xA90": 0.22,
         "xGI": 0.03,
         "ictIndex": 0.2,
-        "priceChangeTarget": -40.11857707509881,
+        "priceChangeTarget": -42.53308128544423,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -50131,7 +50131,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -28.37837837837838,
+        "priceChangeTarget": -26.797385620915033,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -50478,7 +50478,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.82,
         "ictIndex": 8.5,
-        "priceChangeTarget": 31.663685152057248,
+        "priceChangeTarget": 31.29201890434667,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -50825,7 +50825,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -17.304747320061256,
+        "priceChangeTarget": -16.84053651266766,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -51172,7 +51172,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -27.4251497005988,
+        "priceChangeTarget": -26.86682063125481,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -51511,7 +51511,7 @@ export const PLAYERS = [
         "team": "BHA",
         "position": "DEF",
         "price": 5,
-        "ownership": 3,
+        "ownership": 3.1,
         "points": 62.5,
         "xG": 0.35,
         "xA": 0.06,
@@ -51519,7 +51519,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.41,
         "ictIndex": 16.3,
-        "priceChangeTarget": 53.53934602946461,
+        "priceChangeTarget": 53.217292592942954,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -51866,7 +51866,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.42,
         "ictIndex": 0.4,
-        "priceChangeTarget": -28.098565649135708,
+        "priceChangeTarget": -28.382247673586257,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -52213,7 +52213,7 @@ export const PLAYERS = [
         "xA90": 0.19,
         "xGI": 0.06,
         "ictIndex": 3,
-        "priceChangeTarget": -31.313131313131315,
+        "priceChangeTarget": -32.450331125827816,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -52564,7 +52564,7 @@ export const PLAYERS = [
         "xA90": 0.14,
         "xGI": 1.01,
         "ictIndex": 16.9,
-        "priceChangeTarget": 52.20903626915354,
+        "priceChangeTarget": 51.907228707361895,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -52911,7 +52911,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -19.54674220963173,
+        "priceChangeTarget": -18.681318681318682,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -53609,7 +53609,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 51.24760076775432,
+        "priceChangeTarget": 50.56179775280899,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -53956,7 +53956,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 41.269841269841265,
+        "priceChangeTarget": 39.849624060150376,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -54303,7 +54303,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.01,
         "ictIndex": 11.9,
-        "priceChangeTarget": 39.48361106024538,
+        "priceChangeTarget": 38.9101025045848,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -54642,7 +54642,7 @@ export const PLAYERS = [
         "team": "CHE",
         "position": "MID",
         "price": 7.6,
-        "ownership": 29.8,
+        "ownership": 30.1,
         "points": 169,
         "xG": 1.18,
         "xA": 1.14,
@@ -54650,7 +54650,7 @@ export const PLAYERS = [
         "xA90": 0.4,
         "xGI": 2.32,
         "ictIndex": 28.7,
-        "priceChangeTarget": 74.52949530390367,
+        "priceChangeTarget": 74.90824327909507,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -54997,7 +54997,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -54.702495201535505,
+        "priceChangeTarget": -54.71698113207547,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -55344,7 +55344,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.2,
-        "priceChangeTarget": -33.83775918515824,
+        "priceChangeTarget": -32.64677035168839,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -56393,7 +56393,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.29,
         "ictIndex": 10.3,
-        "priceChangeTarget": -28.363960982407242,
+        "priceChangeTarget": -28.185132885113916,
         "setPieceDuty": {
             "pk": false,
             "fk": true,
@@ -57095,7 +57095,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.09,
         "ictIndex": 3.9,
-        "priceChangeTarget": -30.25767206616089,
+        "priceChangeTarget": -30.308264682434228,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -57446,7 +57446,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.05,
         "ictIndex": 8.3,
-        "priceChangeTarget": 61.36363636363637,
+        "priceChangeTarget": 61.139747995418105,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -58148,7 +58148,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.12,
         "ictIndex": 13.1,
-        "priceChangeTarget": 53.207940988116974,
+        "priceChangeTarget": 52.751283932501835,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -58495,7 +58495,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.04,
         "ictIndex": 2.9,
-        "priceChangeTarget": -61.288527873595186,
+        "priceChangeTarget": -61.65886719380346,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -59197,7 +59197,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.02,
         "ictIndex": 5.1,
-        "priceChangeTarget": 9.857834713326042,
+        "priceChangeTarget": 10.058637798827244,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -59548,7 +59548,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -96.75612706662486,
+        "priceChangeTarget": -96.85296646603612,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -59887,7 +59887,7 @@ export const PLAYERS = [
         "team": "CHE",
         "position": "MID",
         "price": 9.6,
-        "ownership": 23.5,
+        "ownership": 23.8,
         "points": 114,
         "xG": 1.05,
         "xA": 0.36,
@@ -59895,7 +59895,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 1.41,
         "ictIndex": 30.8,
-        "priceChangeTarget": 71.90194427127196,
+        "priceChangeTarget": 72.79685439527333,
         "setPieceDuty": {
             "pk": true,
             "fk": false,
@@ -60242,7 +60242,7 @@ export const PLAYERS = [
         "xA90": 0.24,
         "xGI": 0.9,
         "ictIndex": 16.6,
-        "priceChangeTarget": 22.54618937644342,
+        "priceChangeTarget": 22.922019304214984,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -60593,7 +60593,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.04,
         "ictIndex": 2.2,
-        "priceChangeTarget": -54.760019008395375,
+        "priceChangeTarget": -54.841698841698836,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -60944,7 +60944,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -28.64864864864865,
+        "priceChangeTarget": -28.295254833040424,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -61295,7 +61295,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -92.34799174472138,
+        "priceChangeTarget": -92.49845774213449,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -61646,7 +61646,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.79,
         "ictIndex": 14.9,
-        "priceChangeTarget": 31.48031694126525,
+        "priceChangeTarget": 30.935428431131847,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -62344,7 +62344,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.4,
-        "priceChangeTarget": -55.871886120996436,
+        "priceChangeTarget": -56.476683937823836,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -62687,7 +62687,7 @@ export const PLAYERS = [
         "team": "CHE",
         "position": "FWD",
         "price": 7.7,
-        "ownership": 72.6,
+        "ownership": 72.7,
         "points": 177,
         "xG": 1.88,
         "xA": 0.15,
@@ -62695,7 +62695,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 2.03,
         "ictIndex": 26.9,
-        "priceChangeTarget": 51.60673490767269,
+        "priceChangeTarget": 51.769995412142535,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -63389,7 +63389,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 14.322552917159129,
+        "priceChangeTarget": 13.993530209746426,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -63736,7 +63736,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -8.153804199618216,
+        "priceChangeTarget": -9.68950749464668,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -64083,7 +64083,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 0.23,
         "ictIndex": 10.5,
-        "priceChangeTarget": -16.386497814232275,
+        "priceChangeTarget": -16.45828795469397,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -64430,7 +64430,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -46.14305750350631,
+        "priceChangeTarget": -45.62334217506631,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -64781,7 +64781,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 3.8327526132404177,
+        "priceChangeTarget": 2.684563758389262,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -65132,7 +65132,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.04,
         "ictIndex": 0.2,
-        "priceChangeTarget": -31.62393162393162,
+        "priceChangeTarget": -30.158730158730158,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -65479,7 +65479,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.02,
         "ictIndex": 2,
-        "priceChangeTarget": -55.002763957987845,
+        "priceChangeTarget": -55.79284570208222,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -65826,7 +65826,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.11,
         "ictIndex": 2.9,
-        "priceChangeTarget": -5.803571428571429,
+        "priceChangeTarget": -5.639913232104121,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -66173,7 +66173,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.01,
         "ictIndex": 0.6,
-        "priceChangeTarget": -44.04145077720207,
+        "priceChangeTarget": -44.34163701067615,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -66520,7 +66520,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.01,
         "ictIndex": 4.4,
-        "priceChangeTarget": -51.332203911905125,
+        "priceChangeTarget": -51.36697043787508,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -67218,7 +67218,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -79.43925233644859,
+        "priceChangeTarget": -78.99159663865547,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -67569,7 +67569,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 0.43,
         "ictIndex": 11.8,
-        "priceChangeTarget": 22.000499066141387,
+        "priceChangeTarget": 21.80479380288611,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -68259,7 +68259,7 @@ export const PLAYERS = [
         "team": "COV",
         "position": "DEF",
         "price": 4,
-        "ownership": 11,
+        "ownership": 10.9,
         "points": 62.5,
         "xG": 0,
         "xA": 0.26,
@@ -68267,7 +68267,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 0.26,
         "ictIndex": 9.4,
-        "priceChangeTarget": -62.1500601695943,
+        "priceChangeTarget": -62.259299879537565,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -68614,7 +68614,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.33,
         "ictIndex": 9.5,
-        "priceChangeTarget": -34.77229601518027,
+        "priceChangeTarget": -34.24595026237737,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -68961,7 +68961,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -70.44145873320538,
+        "priceChangeTarget": -69.74169741697416,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -69312,7 +69312,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -8.75,
+        "priceChangeTarget": -9.034907597535934,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -69663,7 +69663,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -13.126491646778044,
+        "priceChangeTarget": -12.149532710280374,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -70014,7 +70014,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -67.88617886178862,
+        "priceChangeTarget": -67.60287393860223,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -70716,7 +70716,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 0.41,
         "ictIndex": 6.1,
-        "priceChangeTarget": -23.07430129516019,
+        "priceChangeTarget": -23.066776586974445,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -71063,7 +71063,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 0.68,
         "ictIndex": 14.1,
-        "priceChangeTarget": -27.614571092831962,
+        "priceChangeTarget": -27.787209960384835,
         "setPieceDuty": {
             "pk": false,
             "fk": true,
@@ -71414,7 +71414,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.1,
         "ictIndex": 7.6,
-        "priceChangeTarget": -63.59854394175767,
+        "priceChangeTarget": -63.481740870435225,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -71761,7 +71761,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 0.04,
         "ictIndex": 1.9,
-        "priceChangeTarget": -64.66591166477916,
+        "priceChangeTarget": -65.19823788546255,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -72112,7 +72112,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.06,
         "ictIndex": 2.1,
-        "priceChangeTarget": -60.79470198675496,
+        "priceChangeTarget": -61.832061068702295,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -72463,7 +72463,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -49.7907949790795,
+        "priceChangeTarget": -50,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -72785,10 +72785,10 @@ export const PLAYERS = [
         "dcPer90": 0,
         "transferredThisSeason": false,
         "oldTeam": null,
-        "news": "",
-        "status": "a",
-        "chanceOfPlaying": 100,
-        "xp10": 27,
+        "news": "Unspecified injury - Expected back 12 Oct",
+        "status": "i",
+        "chanceOfPlaying": 0,
+        "xp10": 0,
         "startProbability": 0,
         "dataConfidence": "high",
         "historicalStartRate": 0,
@@ -72814,7 +72814,7 @@ export const PLAYERS = [
         "xA90": 0.23,
         "xGI": 0.12,
         "ictIndex": 2.6,
-        "priceChangeTarget": -91.22632103688933,
+        "priceChangeTarget": -91.51398264223722,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -73165,7 +73165,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -34.030281182408075,
+        "priceChangeTarget": -33.889468196037534,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -73516,7 +73516,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 0.37,
         "ictIndex": 9.6,
-        "priceChangeTarget": -72.24880382775119,
+        "priceChangeTarget": -72.00736648250461,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -74565,7 +74565,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -86.04982206405694,
+        "priceChangeTarget": -86.05935127674258,
         "setPieceDuty": {
             "pk": true,
             "fk": false,
@@ -74916,7 +74916,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.02,
         "ictIndex": 1.6,
-        "priceChangeTarget": -3.3855999999999997,
+        "priceChangeTarget": -3.4559781597071417,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -75267,7 +75267,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.31,
         "ictIndex": 6.7,
-        "priceChangeTarget": -40.121703853955374,
+        "priceChangeTarget": -39.97485857950974,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -76320,7 +76320,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 1.27,
         "ictIndex": 11.7,
-        "priceChangeTarget": -13.933721707573298,
+        "priceChangeTarget": -14.203383528536904,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -76667,7 +76667,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 0.16,
         "ictIndex": 3.3,
-        "priceChangeTarget": -66.87370600414079,
+        "priceChangeTarget": -66.65327440739253,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -77014,7 +77014,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 0.02,
         "ictIndex": 0.3,
-        "priceChangeTarget": -77.92642140468227,
+        "priceChangeTarget": -78.01724137931035,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -77361,7 +77361,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -10.067814293166407,
+        "priceChangeTarget": -9.365558912386707,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -77708,7 +77708,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 64.4312326595323,
+        "priceChangeTarget": 63.62076041938734,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -78055,7 +78055,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 50,
+        "priceChangeTarget": 66.66666666666666,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -78402,7 +78402,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.06,
         "ictIndex": 1.5,
-        "priceChangeTarget": 0.5899705014749262,
+        "priceChangeTarget": -0.07147962830593281,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -78749,7 +78749,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.04,
         "ictIndex": 4.8,
-        "priceChangeTarget": 42.39904988123516,
+        "priceChangeTarget": 41.87807648617948,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -79096,7 +79096,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 9.6,
-        "priceChangeTarget": 23.975057339449542,
+        "priceChangeTarget": 24.31537559495068,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -79443,7 +79443,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -28.07192807192807,
+        "priceChangeTarget": -27.079303675048354,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -79790,7 +79790,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.08,
         "ictIndex": 11.1,
-        "priceChangeTarget": -4.500381388253242,
+        "priceChangeTarget": -4.279009846323732,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -80137,7 +80137,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.06,
         "ictIndex": 7.6,
-        "priceChangeTarget": -26.025459688826025,
+        "priceChangeTarget": -25.886930647745483,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -80476,7 +80476,7 @@ export const PLAYERS = [
         "team": "CRY",
         "position": "DEF",
         "price": 4.5,
-        "ownership": 5.9,
+        "ownership": 6,
         "points": 135,
         "xG": 0.77,
         "xA": 0.18,
@@ -80484,7 +80484,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 0.95,
         "ictIndex": 20.3,
-        "priceChangeTarget": 67.29604994421514,
+        "priceChangeTarget": 66.98565431392355,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -81182,7 +81182,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.01,
         "ictIndex": 1.4,
-        "priceChangeTarget": -86.10526315789474,
+        "priceChangeTarget": -84.61538461538461,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -81533,7 +81533,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.3,
-        "priceChangeTarget": -21.2,
+        "priceChangeTarget": -21.19460500963391,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -81880,7 +81880,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -98.90076860320323,
+        "priceChangeTarget": -98.9153560552334,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -82231,7 +82231,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 0.32,
         "ictIndex": 10.9,
-        "priceChangeTarget": -8.501314636283961,
+        "priceChangeTarget": -8.61295809494356,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -82578,7 +82578,7 @@ export const PLAYERS = [
         "xA90": 0.18,
         "xGI": 0.75,
         "ictIndex": 12.5,
-        "priceChangeTarget": 58.30278592375366,
+        "priceChangeTarget": 57.53700621879653,
         "setPieceDuty": {
             "pk": false,
             "fk": true,
@@ -82917,7 +82917,7 @@ export const PLAYERS = [
         "team": "CRY",
         "position": "MID",
         "price": 4.5,
-        "ownership": 8.8,
+        "ownership": 8.7,
         "points": 45,
         "xG": 0,
         "xA": 0,
@@ -82925,7 +82925,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.3,
-        "priceChangeTarget": -58.43581144028322,
+        "priceChangeTarget": -58.75517833686976,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -83276,7 +83276,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -53.524229074889874,
+        "priceChangeTarget": -53.71549893842887,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -83627,7 +83627,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 0.35,
         "ictIndex": 12.6,
-        "priceChangeTarget": 45.71272528672856,
+        "priceChangeTarget": 45.51157580283794,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -84676,7 +84676,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -79.00990099009901,
+        "priceChangeTarget": -79.02912621359224,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -85027,7 +85027,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -30.625000000000004,
+        "priceChangeTarget": -30.707070707070706,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -85378,7 +85378,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -16.030534351145036,
+        "priceChangeTarget": -18.51851851851852,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -86080,7 +86080,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -4.854368932038835,
+        "priceChangeTarget": -4.845814977973569,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -86431,7 +86431,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.31,
         "ictIndex": 3.5,
-        "priceChangeTarget": 12.880216446667214,
+        "priceChangeTarget": 14.290128224934342,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -86778,7 +86778,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.72,
         "ictIndex": 2.5,
-        "priceChangeTarget": -99.01695128867604,
+        "priceChangeTarget": -99.0048528779409,
         "setPieceDuty": {
             "pk": true,
             "fk": false,
@@ -87125,7 +87125,7 @@ export const PLAYERS = [
         "xA90": 0.31,
         "xGI": 1.68,
         "ictIndex": 13,
-        "priceChangeTarget": 52.274377482595135,
+        "priceChangeTarget": 52.11337642963699,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -87472,7 +87472,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 75.3102678034632,
+        "priceChangeTarget": -38.606849678955825,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -87819,7 +87819,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.07,
         "ictIndex": 1.7,
-        "priceChangeTarget": -57.534246575342465,
+        "priceChangeTarget": -56.943521594684384,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -88166,7 +88166,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -21.926032660902976,
+        "priceChangeTarget": -21.987951807228914,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -88513,7 +88513,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.01,
         "ictIndex": 2.1,
-        "priceChangeTarget": -68.18722729075763,
+        "priceChangeTarget": -68.19239720713732,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -88860,7 +88860,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 0.91,
         "ictIndex": 11.8,
-        "priceChangeTarget": 53.211870773854244,
+        "priceChangeTarget": 53.737707771299284,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -89207,7 +89207,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.3,
-        "priceChangeTarget": -22.613065326633166,
+        "priceChangeTarget": -22.115384615384613,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -89554,7 +89554,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 62.04081632653061,
+        "priceChangeTarget": 63.35282651072125,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -89901,7 +89901,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.15,
         "ictIndex": 5.1,
-        "priceChangeTarget": 74.54347461886414,
+        "priceChangeTarget": 74.36328688130706,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -90248,7 +90248,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.02,
         "ictIndex": 0.5,
-        "priceChangeTarget": 60.3542234332425,
+        "priceChangeTarget": 60.58009228740936,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -90595,7 +90595,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.2,
-        "priceChangeTarget": 60.10498687664042,
+        "priceChangeTarget": 60.61381074168798,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -90942,7 +90942,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -85.27472527472527,
+        "priceChangeTarget": -85.21647307286166,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -91289,7 +91289,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.09,
         "ictIndex": 4.4,
-        "priceChangeTarget": -28.329519450800916,
+        "priceChangeTarget": -29.040852575488458,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -91636,7 +91636,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.02,
         "ictIndex": 7.3,
-        "priceChangeTarget": -2.1722795272901156,
+        "priceChangeTarget": -1.8424542674572817,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -91983,7 +91983,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -3.8112522686025407,
+        "priceChangeTarget": -4.181184668989547,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -92330,7 +92330,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -13.852813852813853,
+        "priceChangeTarget": -12.97071129707113,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -92669,7 +92669,7 @@ export const PLAYERS = [
         "team": "EVE",
         "position": "DEF",
         "price": 6,
-        "ownership": 11.3,
+        "ownership": 11.4,
         "points": 170,
         "xG": 0.17,
         "xA": 0.02,
@@ -92677,7 +92677,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.19,
         "ictIndex": 13.6,
-        "priceChangeTarget": 28.899317149475078,
+        "priceChangeTarget": 28.71110078959591,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -93024,7 +93024,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.19,
         "ictIndex": 15.8,
-        "priceChangeTarget": 26.078040284293618,
+        "priceChangeTarget": 25.818024871193117,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -93371,7 +93371,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -85.00806018269748,
+        "priceChangeTarget": -84.90992951005134,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -93722,7 +93722,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -72.86463151403022,
+        "priceChangeTarget": -73.01634472511144,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -94073,7 +94073,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.07,
         "ictIndex": 8.2,
-        "priceChangeTarget": 28.90583522370771,
+        "priceChangeTarget": 28.916755028967465,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -95122,7 +95122,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 0.85,
         "ictIndex": 26.6,
-        "priceChangeTarget": 15.34576397743042,
+        "priceChangeTarget": 15.311517143376681,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -95469,7 +95469,7 @@ export const PLAYERS = [
         "xA90": 0.37,
         "xGI": 0.15,
         "ictIndex": 3,
-        "priceChangeTarget": 44.44371166655675,
+        "priceChangeTarget": 44.05173517735946,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -95816,7 +95816,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 0.11,
         "ictIndex": 6.5,
-        "priceChangeTarget": -22.855879752431477,
+        "priceChangeTarget": -23.67170626349892,
         "setPieceDuty": {
             "pk": false,
             "fk": true,
@@ -96167,7 +96167,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 0.43,
         "ictIndex": 19.3,
-        "priceChangeTarget": 59.024173628264556,
+        "priceChangeTarget": 58.36231845577888,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -96514,7 +96514,7 @@ export const PLAYERS = [
         "xA90": 0.36,
         "xGI": 0.07,
         "ictIndex": 2.7,
-        "priceChangeTarget": -34.57792207792208,
+        "priceChangeTarget": -34.2789598108747,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -96865,7 +96865,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.19,
         "ictIndex": 9.3,
-        "priceChangeTarget": 19.14078533315091,
+        "priceChangeTarget": 19.038155802861688,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -97212,7 +97212,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -31.656184486373167,
+        "priceChangeTarget": -32.10633946830266,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -97563,7 +97563,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 0.2,
         "ictIndex": 6.1,
-        "priceChangeTarget": -25.192307692307693,
+        "priceChangeTarget": -25.348189415041784,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -97910,7 +97910,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 0.16,
         "ictIndex": 9.3,
-        "priceChangeTarget": -9.669211195928753,
+        "priceChangeTarget": -9.557302441042614,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -98604,7 +98604,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 2.42,
         "ictIndex": 21.7,
-        "priceChangeTarget": 40.69215537200022,
+        "priceChangeTarget": 40.42087327294204,
         "setPieceDuty": {
             "pk": true,
             "fk": false,
@@ -98951,7 +98951,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.03,
         "ictIndex": 4.1,
-        "priceChangeTarget": 67.75473101396578,
+        "priceChangeTarget": 67.23758642363293,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -99298,7 +99298,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 67.83625730994152,
+        "priceChangeTarget": 67.13945023220785,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -99649,7 +99649,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 6.8,
-        "priceChangeTarget": -22.228815570852127,
+        "priceChangeTarget": -22.401078878654847,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -99996,7 +99996,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 11.271888434518191,
+        "priceChangeTarget": 11.001111223355894,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -100690,7 +100690,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.1,
         "ictIndex": 8.6,
-        "priceChangeTarget": -15.170871925902269,
+        "priceChangeTarget": -15.379864113650402,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -101037,7 +101037,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 0.37,
         "ictIndex": 11.2,
-        "priceChangeTarget": -66.2776702077555,
+        "priceChangeTarget": -66.46560900197679,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -101384,7 +101384,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.03,
         "ictIndex": 5.4,
-        "priceChangeTarget": -70.13574660633483,
+        "priceChangeTarget": -69.91150442477876,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -101735,7 +101735,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -83.65564566437928,
+        "priceChangeTarget": -83.202416918429,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -102086,7 +102086,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.09,
         "ictIndex": 6.2,
-        "priceChangeTarget": -61.22613605808013,
+        "priceChangeTarget": -61.06631989596879,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -102433,7 +102433,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 1.04,
         "ictIndex": 16.4,
-        "priceChangeTarget": -38.66044934294193,
+        "priceChangeTarget": -38.89079317200247,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -102780,7 +102780,7 @@ export const PLAYERS = [
         "xA90": 0.24,
         "xGI": 0.75,
         "ictIndex": 11.6,
-        "priceChangeTarget": -72.2929086217635,
+        "priceChangeTarget": -72.32812904338826,
         "setPieceDuty": {
             "pk": false,
             "fk": true,
@@ -103127,7 +103127,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 0.08,
         "ictIndex": 3.8,
-        "priceChangeTarget": -68.44634276561665,
+        "priceChangeTarget": -68.65399635511585,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -103478,7 +103478,7 @@ export const PLAYERS = [
         "xA90": 0.19,
         "xGI": 0.05,
         "ictIndex": 0.8,
-        "priceChangeTarget": -60.53811659192825,
+        "priceChangeTarget": -60.86956521739131,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -103829,7 +103829,7 @@ export const PLAYERS = [
         "xA90": 0.39,
         "xGI": 1.24,
         "ictIndex": 17.8,
-        "priceChangeTarget": -41.94500830411515,
+        "priceChangeTarget": -42.27174694464414,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -104176,7 +104176,7 @@ export const PLAYERS = [
         "xA90": 0.16,
         "xGI": 0.36,
         "ictIndex": 8.6,
-        "priceChangeTarget": -73.63128491620111,
+        "priceChangeTarget": -73.4235453315291,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -104527,7 +104527,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -19.298245614035086,
+        "priceChangeTarget": -20,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -104878,7 +104878,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 1.29,
         "ictIndex": 23.9,
-        "priceChangeTarget": 46.654403924077634,
+        "priceChangeTarget": 45.90174489730217,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -105225,7 +105225,7 @@ export const PLAYERS = [
         "xA90": 0.79,
         "xGI": 0.57,
         "ictIndex": 7.5,
-        "priceChangeTarget": -86.57243816254417,
+        "priceChangeTarget": -86.63028649386084,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -105576,7 +105576,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -58.50961538461539,
+        "priceChangeTarget": -58.55212055305267,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -105927,7 +105927,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.4,
         "ictIndex": 6.5,
-        "priceChangeTarget": -36.59640684679587,
+        "priceChangeTarget": -36.82037164487268,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -106278,7 +106278,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -33.40832091069251,
+        "priceChangeTarget": -33.749819915392976,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -106629,7 +106629,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 1.66,
         "ictIndex": 17.3,
-        "priceChangeTarget": -39.38736726827645,
+        "priceChangeTarget": -39.619881513368924,
         "setPieceDuty": {
             "pk": true,
             "fk": false,
@@ -106976,7 +106976,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 1.01,
         "ictIndex": 12.4,
-        "priceChangeTarget": -8.210890233362143,
+        "priceChangeTarget": -8.508845829823084,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -107323,7 +107323,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 0.21,
         "ictIndex": 7,
-        "priceChangeTarget": -43.19371727748691,
+        "priceChangeTarget": -43.53826850690088,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -107670,7 +107670,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -33.97769516728624,
+        "priceChangeTarget": -33.140376266280754,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -108021,7 +108021,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 31.999716251684756,
+        "priceChangeTarget": 31.718153418951754,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -108368,7 +108368,7 @@ export const PLAYERS = [
         "xA90": 1.8,
         "xGI": 0.35,
         "ictIndex": 1.4,
-        "priceChangeTarget": 57.80590717299579,
+        "priceChangeTarget": 56.97211155378486,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -108715,7 +108715,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 41.49659863945578,
+        "priceChangeTarget": 40,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -109062,7 +109062,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 49.43396226415094,
+        "priceChangeTarget": 49.07749077490775,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -109409,7 +109409,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 27,
+        "priceChangeTarget": 27.27272727272727,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -109756,7 +109756,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -0.8616485124370021,
+        "priceChangeTarget": -1.0964739291630512,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -110107,7 +110107,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -72.43319268635724,
+        "priceChangeTarget": -72.1311475409836,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -111148,7 +111148,7 @@ export const PLAYERS = [
         "team": "HUL",
         "position": "DEF",
         "price": 4.1,
-        "ownership": 6.2,
+        "ownership": 6.3,
         "points": 62.5,
         "xG": 0,
         "xA": 0,
@@ -111156,7 +111156,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 8.6,
-        "priceChangeTarget": 61.26312991556034,
+        "priceChangeTarget": 60.06304861306918,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -111503,7 +111503,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -79.56371986222732,
+        "priceChangeTarget": -78.91231964483907,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -111846,7 +111846,7 @@ export const PLAYERS = [
         "team": "HUL",
         "position": "DEF",
         "price": 4.1,
-        "ownership": 11.5,
+        "ownership": 11.6,
         "points": 62.5,
         "xG": 0.52,
         "xA": 0,
@@ -111854,7 +111854,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.52,
         "ictIndex": 10.7,
-        "priceChangeTarget": 64.28582150040528,
+        "priceChangeTarget": 63.87803539430594,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -112201,7 +112201,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.02,
         "ictIndex": 2.8,
-        "priceChangeTarget": 30.828600553371192,
+        "priceChangeTarget": 30.955378374597846,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -112891,7 +112891,7 @@ export const PLAYERS = [
         "team": "HUL",
         "position": "DEF",
         "price": 4,
-        "ownership": 1.3,
+        "ownership": 1.4,
         "points": 62.5,
         "xG": 0.02,
         "xA": 0.18,
@@ -112899,7 +112899,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 0.2,
         "ictIndex": 10.5,
-        "priceChangeTarget": 57.48432801590133,
+        "priceChangeTarget": 56.95955505683759,
         "setPieceDuty": {
             "pk": false,
             "fk": true,
@@ -113597,7 +113597,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -9.210526315789473,
+        "priceChangeTarget": -8.872901678657074,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -113948,7 +113948,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.4,
-        "priceChangeTarget": -43.77224199288256,
+        "priceChangeTarget": -43.957968476357266,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -114299,7 +114299,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.26,
         "ictIndex": 11.1,
-        "priceChangeTarget": 42.141852189025904,
+        "priceChangeTarget": 41.50442477876106,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -114997,7 +114997,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -18.481295365717475,
+        "priceChangeTarget": -19.28740229049264,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -115348,7 +115348,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 2.1,
-        "priceChangeTarget": -74.05512929809605,
+        "priceChangeTarget": -72.83577994237893,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -115691,7 +115691,7 @@ export const PLAYERS = [
         "team": "HUL",
         "position": "MID",
         "price": 4.5,
-        "ownership": 5.2,
+        "ownership": 5.3,
         "points": 75,
         "xG": 0.04,
         "xA": 0.46,
@@ -115699,7 +115699,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 0.5,
         "ictIndex": 8.4,
-        "priceChangeTarget": 29.13561651075525,
+        "priceChangeTarget": 28.876768494849536,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -116046,7 +116046,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -3.75,
+        "priceChangeTarget": -3.7037037037037033,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -116397,7 +116397,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -1.834862385321101,
+        "priceChangeTarget": -2.9082774049217,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -117099,7 +117099,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -17.865429234338748,
+        "priceChangeTarget": -13.854989231873654,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -117446,7 +117446,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.61,
         "ictIndex": 14.1,
-        "priceChangeTarget": -26.90687880205896,
+        "priceChangeTarget": -26.947655632943203,
         "setPieceDuty": {
             "pk": true,
             "fk": false,
@@ -117793,7 +117793,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -16.064981949458485,
+        "priceChangeTarget": -15.901060070671377,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -118144,7 +118144,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -45.05494505494506,
+        "priceChangeTarget": -45.32374100719424,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -119197,7 +119197,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 5.64516129032258,
+        "priceChangeTarget": 7.5098814229249005,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -119544,7 +119544,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -61.66355981230315,
+        "priceChangeTarget": -61.724395713929724,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -119891,7 +119891,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 2.4,
-        "priceChangeTarget": -42.278481012658226,
+        "priceChangeTarget": -43.552311435523116,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -120238,7 +120238,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 7.3,
-        "priceChangeTarget": 61.008424739968106,
+        "priceChangeTarget": 60.47597801425846,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -120585,7 +120585,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -26.666666666666668,
+        "priceChangeTarget": -27.35135135135135,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -120932,7 +120932,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.1,
         "ictIndex": 3.6,
-        "priceChangeTarget": -22.946175637393768,
+        "priceChangeTarget": -23.662737987307345,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -121279,7 +121279,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 1.8,
-        "priceChangeTarget": -41.59806295399516,
+        "priceChangeTarget": -41.99195647030991,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -121618,7 +121618,7 @@ export const PLAYERS = [
         "team": "HUL",
         "position": "DEF",
         "price": 4,
-        "ownership": 7.6,
+        "ownership": 7.8,
         "points": 15,
         "xG": 0.32,
         "xA": 0,
@@ -121626,7 +121626,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.32,
         "ictIndex": 15.1,
-        "priceChangeTarget": 69.16163287291755,
+        "priceChangeTarget": 69.38084882395154,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -121973,7 +121973,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.02,
         "ictIndex": 4.9,
-        "priceChangeTarget": -20.80536912751678,
+        "priceChangeTarget": -20.13201320132013,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -122320,7 +122320,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.05,
         "ictIndex": 2.1,
-        "priceChangeTarget": 31.428571428571427,
+        "priceChangeTarget": 30.82706766917293,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -122667,7 +122667,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 50.30198446937014,
+        "priceChangeTarget": 48.22996318323421,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -123014,7 +123014,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 61.220692221808704,
+        "priceChangeTarget": 61.15523465703971,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -123361,7 +123361,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.5,
-        "priceChangeTarget": 64.08977556109726,
+        "priceChangeTarget": 63.64035408588777,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -123708,7 +123708,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 0.04,
         "ictIndex": 1.4,
-        "priceChangeTarget": 55.71955719557196,
+        "priceChangeTarget": 55.449101796407184,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -124055,7 +124055,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 54.88721804511278,
+        "priceChangeTarget": 54.01459854014598,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -124394,7 +124394,7 @@ export const PLAYERS = [
         "team": "IPS",
         "position": "DEF",
         "price": 4,
-        "ownership": 14.7,
+        "ownership": 14.6,
         "points": 31,
         "xG": 0,
         "xA": 0.02,
@@ -124402,7 +124402,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.02,
         "ictIndex": 8.9,
-        "priceChangeTarget": -59.93500890414731,
+        "priceChangeTarget": -60.03632420232228,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -124749,7 +124749,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.08,
         "ictIndex": 9.6,
-        "priceChangeTarget": -29.041916167664674,
+        "priceChangeTarget": -30.03636363636364,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -125096,7 +125096,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -82.40837696335078,
+        "priceChangeTarget": -82.63959390862944,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -125447,7 +125447,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -14.151549878413505,
+        "priceChangeTarget": -14.306498545101842,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -125798,7 +125798,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 45.67523826649883,
+        "priceChangeTarget": 45.03236944324557,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -126149,7 +126149,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -74.75196715703045,
+        "priceChangeTarget": -75.06613756613757,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -126496,7 +126496,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 0.25,
         "ictIndex": 11.6,
-        "priceChangeTarget": -43.34229099607241,
+        "priceChangeTarget": -43.60101437024514,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -126843,7 +126843,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 0.9,
         "ictIndex": 18.8,
-        "priceChangeTarget": -18.766525241345384,
+        "priceChangeTarget": -19.03459086943019,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -127190,7 +127190,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.05,
         "ictIndex": 6.9,
-        "priceChangeTarget": -63.732999843676716,
+        "priceChangeTarget": -64.015606242497,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -127888,7 +127888,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.6,
-        "priceChangeTarget": -81.30400628436763,
+        "priceChangeTarget": -81.27627053878487,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -128239,7 +128239,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.08,
         "ictIndex": 5,
-        "priceChangeTarget": -65.60846560846561,
+        "priceChangeTarget": -65.64885496183206,
         "setPieceDuty": {
             "pk": false,
             "fk": true,
@@ -129292,7 +129292,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -47.629796839729124,
+        "priceChangeTarget": -47.368421052631575,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -129643,7 +129643,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.17,
         "ictIndex": 7.1,
-        "priceChangeTarget": -76.04651162790698,
+        "priceChangeTarget": -76.27502833396298,
         "setPieceDuty": {
             "pk": true,
             "fk": false,
@@ -130345,7 +130345,7 @@ export const PLAYERS = [
         "xA90": 0.31,
         "xGI": 0.81,
         "ictIndex": 17.3,
-        "priceChangeTarget": -10.32258064516129,
+        "priceChangeTarget": -10.621942697414395,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -130692,7 +130692,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 1.1,
         "ictIndex": 13.7,
-        "priceChangeTarget": 3.0608381629146404,
+        "priceChangeTarget": 2.9199568255411013,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -131390,7 +131390,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -97.5609756097561,
+        "priceChangeTarget": -97.22497522299307,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -132092,7 +132092,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.97,
         "ictIndex": 5.5,
-        "priceChangeTarget": 32.62643174147599,
+        "priceChangeTarget": 32.43578479507985,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -132439,7 +132439,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 19.394922840682618,
+        "priceChangeTarget": 19.10841444402309,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -133141,7 +133141,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.05,
         "ictIndex": 1.4,
-        "priceChangeTarget": -27.25563909774436,
+        "priceChangeTarget": -27.66166362743723,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -133492,7 +133492,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -64.23529411764706,
+        "priceChangeTarget": -64.97695852534562,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -134190,7 +134190,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.72,
         "ictIndex": 7.4,
-        "priceChangeTarget": -64.15490843590513,
+        "priceChangeTarget": -64.07710280373831,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -134537,7 +134537,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.01,
         "ictIndex": 8.8,
-        "priceChangeTarget": 3.769121589654629,
+        "priceChangeTarget": 3.932926829268293,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -134884,7 +134884,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -45.554335894621296,
+        "priceChangeTarget": -46.89146469968388,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -135231,7 +135231,7 @@ export const PLAYERS = [
         "xA90": 0.23,
         "xGI": 1.51,
         "ictIndex": 16.5,
-        "priceChangeTarget": 27.82848814911406,
+        "priceChangeTarget": 27.551854880678018,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -135578,7 +135578,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.02,
         "ictIndex": 3.4,
-        "priceChangeTarget": -31.196336576989125,
+        "priceChangeTarget": -31.292895566685214,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -136276,7 +136276,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.03,
         "ictIndex": 6.4,
-        "priceChangeTarget": 45.54794520547945,
+        "priceChangeTarget": 44.83043837882548,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -136623,7 +136623,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.03,
         "ictIndex": 1.1,
-        "priceChangeTarget": 57.5669099756691,
+        "priceChangeTarget": 57.51295336787565,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -136962,7 +136962,7 @@ export const PLAYERS = [
         "team": "LEE",
         "position": "MID",
         "price": 6.3,
-        "ownership": 3.2,
+        "ownership": 3.1,
         "points": 168,
         "xG": 0.01,
         "xA": 0.06,
@@ -136970,7 +136970,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.07,
         "ictIndex": 7.7,
-        "priceChangeTarget": -94.77408021860056,
+        "priceChangeTarget": -94.76587617002598,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -137668,7 +137668,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.11,
         "ictIndex": 5.4,
-        "priceChangeTarget": -52.61226083561109,
+        "priceChangeTarget": -52.59913235406043,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -138012,7 +138012,7 @@ export const PLAYERS = [
         "team": "LEE",
         "position": "DEF",
         "price": 4.4,
-        "ownership": 1.6,
+        "ownership": 1.5,
         "points": 109,
         "xG": 0.03,
         "xA": 0.06,
@@ -138020,7 +138020,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.09,
         "ictIndex": 4.5,
-        "priceChangeTarget": -99.656831113979,
+        "priceChangeTarget": -99.65878070973613,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -138363,7 +138363,7 @@ export const PLAYERS = [
         "team": "LEE",
         "position": "DEF",
         "price": 4.5,
-        "ownership": 1.6,
+        "ownership": 1.7,
         "points": 96,
         "xG": 0.9,
         "xA": 0.03,
@@ -138371,7 +138371,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.93,
         "ictIndex": 11.2,
-        "priceChangeTarget": 68.34905097290199,
+        "priceChangeTarget": 67.82973263992302,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -138718,7 +138718,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 1.6,
-        "priceChangeTarget": 34.124629080118694,
+        "priceChangeTarget": 33.711048158640224,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -139069,7 +139069,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.19,
         "ictIndex": 11.3,
-        "priceChangeTarget": 8.213839252886242,
+        "priceChangeTarget": 8.500175623463296,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -139759,7 +139759,7 @@ export const PLAYERS = [
         "team": "LEE",
         "position": "DEF",
         "price": 5,
-        "ownership": 3.5,
+        "ownership": 3.6,
         "points": 62.5,
         "xG": 0.09,
         "xA": 0.02,
@@ -139767,7 +139767,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.11,
         "ictIndex": 11.9,
-        "priceChangeTarget": 30.54803161292716,
+        "priceChangeTarget": 30.722212020252364,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -140114,7 +140114,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.65,
         "ictIndex": 16.3,
-        "priceChangeTarget": -25.17132579030929,
+        "priceChangeTarget": -24.97768117067112,
         "setPieceDuty": {
             "pk": false,
             "fk": true,
@@ -140461,7 +140461,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 0.26,
         "ictIndex": 5.6,
-        "priceChangeTarget": -49.20318725099602,
+        "priceChangeTarget": -49.36562860438293,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -140808,7 +140808,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.03,
         "ictIndex": 2,
-        "priceChangeTarget": -81.56862745098039,
+        "priceChangeTarget": -81.3894523326572,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -141155,7 +141155,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.15,
         "ictIndex": 10.4,
-        "priceChangeTarget": -71.31782945736434,
+        "priceChangeTarget": -71.5380226587334,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -141502,7 +141502,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -44.07294832826747,
+        "priceChangeTarget": -44.014084507042256,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -142555,7 +142555,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.25,
         "ictIndex": 1.1,
-        "priceChangeTarget": -43.92419175027871,
+        "priceChangeTarget": -44.390243902439025,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -142906,7 +142906,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -63.26530612244898,
+        "priceChangeTarget": -64,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -143257,7 +143257,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.55,
         "ictIndex": 6.8,
-        "priceChangeTarget": 33.535455617315144,
+        "priceChangeTarget": 33.03950375448906,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -143600,7 +143600,7 @@ export const PLAYERS = [
         "team": "LEE",
         "position": "FWD",
         "price": 6,
-        "ownership": 23.4,
+        "ownership": 23.3,
         "points": 142,
         "xG": 1.61,
         "xA": 0.08,
@@ -143608,7 +143608,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 1.69,
         "ictIndex": 12.1,
-        "priceChangeTarget": -63.478497282695145,
+        "priceChangeTarget": -63.58518882187868,
         "setPieceDuty": {
             "pk": true,
             "fk": false,
@@ -143955,7 +143955,7 @@ export const PLAYERS = [
         "xA90": 0.33,
         "xGI": 0.41,
         "ictIndex": 5.4,
-        "priceChangeTarget": -9.544242143105649,
+        "priceChangeTarget": -9.109176155391827,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -144649,7 +144649,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -12.155591572123177,
+        "priceChangeTarget": -11.737089201877934,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -144996,7 +144996,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 9.2,
-        "priceChangeTarget": 15.328165659291487,
+        "priceChangeTarget": 15.154963872641137,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -145343,7 +145343,7 @@ export const PLAYERS = [
         "xA90": 0.35,
         "xGI": 0.57,
         "ictIndex": 7.8,
-        "priceChangeTarget": 34.32282003710575,
+        "priceChangeTarget": 33.82480485689506,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -145690,7 +145690,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 10.29940119760479,
+        "priceChangeTarget": 9.988385598141695,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -146041,7 +146041,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 23.13764183522447,
+        "priceChangeTarget": 23.228441028104733,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -146392,7 +146392,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 49.15312824058071,
+        "priceChangeTarget": 48.78579802378161,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -146743,7 +146743,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 66.61827232189152,
+        "priceChangeTarget": 66.28023186088346,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -147090,7 +147090,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 49.275362318840585,
+        "priceChangeTarget": 48.04270462633452,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -147437,7 +147437,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 41.067285382830626,
+        "priceChangeTarget": 40.61433447098976,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -147784,7 +147784,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 5.6,
-        "priceChangeTarget": 14.358693669038496,
+        "priceChangeTarget": 14.951898845134004,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -148131,7 +148131,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -54.668105774419864,
+        "priceChangeTarget": -54.45440168687401,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -148478,7 +148478,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -33.70694368507381,
+        "priceChangeTarget": -33.546240851630074,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -149172,7 +149172,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 22.932917316692667,
+        "priceChangeTarget": 23.214285714285715,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -149519,7 +149519,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 5.00316656111463,
+        "priceChangeTarget": 4.622871046228711,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -149866,7 +149866,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.31,
         "ictIndex": 10.7,
-        "priceChangeTarget": -21.153606669059634,
+        "priceChangeTarget": -21.131049329386606,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -150213,7 +150213,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 0.12,
         "ictIndex": 9.2,
-        "priceChangeTarget": -89.8600663269433,
+        "priceChangeTarget": -89.79782172270436,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -150564,7 +150564,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.08,
         "ictIndex": 10.6,
-        "priceChangeTarget": -48.840052987330594,
+        "priceChangeTarget": -48.79799776065336,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -150911,7 +150911,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -48.35680751173709,
+        "priceChangeTarget": -49.54128440366973,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -151262,7 +151262,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -38.46153846153847,
+        "priceChangeTarget": -38.37837837837838,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -151613,7 +151613,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -29.56204379562044,
+        "priceChangeTarget": -29.245283018867923,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -151964,7 +151964,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.1,
         "ictIndex": 10.9,
-        "priceChangeTarget": 15.600101795117748,
+        "priceChangeTarget": 15.660327422586864,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -152311,7 +152311,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -45.53775743707094,
+        "priceChangeTarget": -46.10244988864143,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -152662,7 +152662,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.05,
         "ictIndex": 1.4,
-        "priceChangeTarget": -62.81736281736282,
+        "priceChangeTarget": -62.00317965023847,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -153356,7 +153356,7 @@ export const PLAYERS = [
         "team": "LIV",
         "position": "MID",
         "price": 7.4,
-        "ownership": 8.3,
+        "ownership": 8.2,
         "points": 125,
         "xG": 0.67,
         "xA": 0.29,
@@ -153364,7 +153364,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 0.96,
         "ictIndex": 19.4,
-        "priceChangeTarget": -86.74373977231255,
+        "priceChangeTarget": -86.16036170090997,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -153703,7 +153703,7 @@ export const PLAYERS = [
         "team": "LIV",
         "position": "MID",
         "price": 7.2,
-        "ownership": 14,
+        "ownership": 13.9,
         "points": 131,
         "xG": 0.36,
         "xA": 1.2,
@@ -153711,7 +153711,7 @@ export const PLAYERS = [
         "xA90": 0.43,
         "xGI": 1.56,
         "ictIndex": 27.7,
-        "priceChangeTarget": 67.0405050443085,
+        "priceChangeTarget": 63.957258458697666,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -154058,7 +154058,7 @@ export const PLAYERS = [
         "xA90": 0.17,
         "xGI": 1.69,
         "ictIndex": 25.5,
-        "priceChangeTarget": -52.256159797602955,
+        "priceChangeTarget": -50.30611553919753,
         "setPieceDuty": {
             "pk": true,
             "fk": true,
@@ -154405,7 +154405,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 0.09,
         "ictIndex": 1.8,
-        "priceChangeTarget": -85.90998043052838,
+        "priceChangeTarget": -85.27542372881356,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -154756,7 +154756,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -97.46341463414635,
+        "priceChangeTarget": -97.52144899904671,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -155107,7 +155107,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.12,
         "ictIndex": 6.5,
-        "priceChangeTarget": -76.09892763984156,
+        "priceChangeTarget": -76.00301848824047,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -155458,7 +155458,7 @@ export const PLAYERS = [
         "xA90": 0.2,
         "xGI": 0.5,
         "ictIndex": 7.4,
-        "priceChangeTarget": -38.579387186629525,
+        "priceChangeTarget": -37.2841726618705,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -156156,7 +156156,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -34.79318734793188,
+        "priceChangeTarget": -34.81363996827914,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -156507,7 +156507,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.9,
-        "priceChangeTarget": -19.153936545240892,
+        "priceChangeTarget": -20.591581342434583,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -157209,7 +157209,7 @@ export const PLAYERS = [
         "xA90": 0.12,
         "xGI": 0.67,
         "ictIndex": 12.6,
-        "priceChangeTarget": -25.897555659349216,
+        "priceChangeTarget": -25.781415154169057,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -157556,7 +157556,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -46.42998027613412,
+        "priceChangeTarget": -46.006144393241165,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -157899,7 +157899,7 @@ export const PLAYERS = [
         "team": "LIV",
         "position": "FWD",
         "price": 9.1,
-        "ownership": 21.3,
+        "ownership": 21.5,
         "points": 41,
         "xG": 2.29,
         "xA": 0.06,
@@ -157907,7 +157907,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 2.35,
         "ictIndex": 29.1,
-        "priceChangeTarget": 76.07634700877391,
+        "priceChangeTarget": 75.6474023920686,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -158254,7 +158254,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -63.539134662129314,
+        "priceChangeTarget": -63.23809523809524,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -158601,7 +158601,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.03,
         "ictIndex": 0.9,
-        "priceChangeTarget": -40.23668639053255,
+        "priceChangeTarget": -40.116279069767444,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -158948,7 +158948,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 50.394852295992976,
+        "priceChangeTarget": 50.078047396055055,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -159646,7 +159646,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.05,
         "ictIndex": 4.6,
-        "priceChangeTarget": 39.711263722492355,
+        "priceChangeTarget": 40.93889575216193,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -159985,7 +159985,7 @@ export const PLAYERS = [
         "team": "LIV",
         "position": "MID",
         "price": 8,
-        "ownership": 1.8,
+        "ownership": 1.9,
         "points": 75,
         "xG": 0,
         "xA": 0.07,
@@ -159993,7 +159993,7 @@ export const PLAYERS = [
         "xA90": 0.24,
         "xGI": 0.07,
         "ictIndex": 1.6,
-        "priceChangeTarget": 41.712258166825244,
+        "priceChangeTarget": 41.338360398465085,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -160340,7 +160340,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 0.27,
         "ictIndex": 6.2,
-        "priceChangeTarget": -16.037085022967812,
+        "priceChangeTarget": -15.478436219345607,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -160679,7 +160679,7 @@ export const PLAYERS = [
         "team": "MCI",
         "position": "MID",
         "price": 5.9,
-        "ownership": 9.8,
+        "ownership": 9.7,
         "points": 128,
         "xG": 0.28,
         "xA": 0.43,
@@ -160687,7 +160687,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 0.71,
         "ictIndex": 20.1,
-        "priceChangeTarget": -73.92874746813683,
+        "priceChangeTarget": -74.13782714363187,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -161034,7 +161034,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 6.1,
-        "priceChangeTarget": -36.87208771760021,
+        "priceChangeTarget": -36.90709473062572,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -161381,7 +161381,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -29.50191570881226,
+        "priceChangeTarget": -29.32330827067669,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -161720,7 +161720,7 @@ export const PLAYERS = [
         "team": "MCI",
         "position": "DEF",
         "price": 6.5,
-        "ownership": 14.4,
+        "ownership": 14.3,
         "points": 160,
         "xG": 0.09,
         "xA": 0.43,
@@ -161728,7 +161728,7 @@ export const PLAYERS = [
         "xA90": 0.26,
         "xGI": 0.52,
         "ictIndex": 6.6,
-        "priceChangeTarget": -97.81066278201179,
+        "priceChangeTarget": -97.8528544052551,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -162075,7 +162075,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 1.27,
         "ictIndex": 16.9,
-        "priceChangeTarget": -3.6712108831835315,
+        "priceChangeTarget": -3.921527763305059,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -162422,7 +162422,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 0.04,
         "ictIndex": 0.9,
-        "priceChangeTarget": -62.367355869160924,
+        "priceChangeTarget": -61.84294530751223,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -162769,7 +162769,7 @@ export const PLAYERS = [
         "xA90": 0.25,
         "xGI": 0.83,
         "ictIndex": 15.5,
-        "priceChangeTarget": -18.772980355079316,
+        "priceChangeTarget": -18.890814558058924,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -163116,7 +163116,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.31,
         "ictIndex": 17.1,
-        "priceChangeTarget": 41.67605359041968,
+        "priceChangeTarget": 40.92500258737725,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -163463,7 +163463,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -80.31738782966093,
+        "priceChangeTarget": -79.96434143080009,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -163810,7 +163810,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.06,
         "ictIndex": 6.8,
-        "priceChangeTarget": -34.48124908799066,
+        "priceChangeTarget": -34.420418291386035,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -164504,7 +164504,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.19,
         "ictIndex": 4.7,
-        "priceChangeTarget": -61.74347584675181,
+        "priceChangeTarget": -61.04808211777417,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -164851,7 +164851,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.2,
-        "priceChangeTarget": -57.414448669201526,
+        "priceChangeTarget": -57.62081784386617,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -165190,7 +165190,7 @@ export const PLAYERS = [
         "team": "MCI",
         "position": "MID",
         "price": 8.4,
-        "ownership": 17.6,
+        "ownership": 17.5,
         "points": 202,
         "xG": 0.17,
         "xA": 0.93,
@@ -165198,7 +165198,7 @@ export const PLAYERS = [
         "xA90": 0.31,
         "xGI": 1.1,
         "ictIndex": 23.8,
-        "priceChangeTarget": -76.50621298859534,
+        "priceChangeTarget": -76.83090131712085,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -165537,7 +165537,7 @@ export const PLAYERS = [
         "team": "MCI",
         "position": "MID",
         "price": 7,
-        "ownership": 4.6,
+        "ownership": 4.5,
         "points": 131,
         "xG": 1.61,
         "xA": 0.86,
@@ -165545,7 +165545,7 @@ export const PLAYERS = [
         "xA90": 0.4,
         "xGI": 2.47,
         "ictIndex": 20.7,
-        "priceChangeTarget": -81.67274588852626,
+        "priceChangeTarget": -81.76650333094753,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -165888,7 +165888,7 @@ export const PLAYERS = [
         "team": "MCI",
         "position": "MID",
         "price": 7.8,
-        "ownership": 30.1,
+        "ownership": 30,
         "points": 135,
         "xG": 0.56,
         "xA": 1.35,
@@ -165896,7 +165896,7 @@ export const PLAYERS = [
         "xA90": 0.7,
         "xGI": 1.91,
         "ictIndex": 34.8,
-        "priceChangeTarget": -5.630988281508807,
+        "priceChangeTarget": -6.754402941745694,
         "setPieceDuty": {
             "pk": false,
             "fk": true,
@@ -166247,7 +166247,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -96.19691119691119,
+        "priceChangeTarget": -96.16973338340217,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -167300,7 +167300,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.02,
         "ictIndex": 0.9,
-        "priceChangeTarget": -49.218168279970214,
+        "priceChangeTarget": -49.19941775836973,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -169051,7 +169051,7 @@ export const PLAYERS = [
         "xA90": 0.17,
         "xGI": 2.96,
         "ictIndex": 30.4,
-        "priceChangeTarget": 17.114972136985457,
+        "priceChangeTarget": 17.31811385796812,
         "setPieceDuty": {
             "pk": true,
             "fk": false,
@@ -169398,7 +169398,7 @@ export const PLAYERS = [
         "xA90": 0.25,
         "xGI": 0.73,
         "ictIndex": 14.6,
-        "priceChangeTarget": -64.36484490398819,
+        "priceChangeTarget": -64.59024517834281,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -169745,7 +169745,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -32.36363636363636,
+        "priceChangeTarget": -33.096085409252666,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -170092,7 +170092,7 @@ export const PLAYERS = [
         "xA90": 0.49,
         "xGI": 0.12,
         "ictIndex": 1.8,
-        "priceChangeTarget": 1.0258107213765717,
+        "priceChangeTarget": 1.9607843137254901,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -170439,7 +170439,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.1,
         "ictIndex": 0.8,
-        "priceChangeTarget": 23.437154848685665,
+        "priceChangeTarget": 23.504089539388723,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -170790,7 +170790,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.1,
-        "priceChangeTarget": 24.686783130404095,
+        "priceChangeTarget": 25.09440439409543,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -171137,7 +171137,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 26.509186351706038,
+        "priceChangeTarget": 26.94300518134715,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -171484,7 +171484,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 59.616043880699344,
+        "priceChangeTarget": 59.38951559389516,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -171835,7 +171835,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 0.84,
         "ictIndex": 16.7,
-        "priceChangeTarget": -65.0440152410984,
+        "priceChangeTarget": -65.08249356264106,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -172182,7 +172182,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -46.63382594417077,
+        "priceChangeTarget": -46.986027944111775,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -172529,7 +172529,7 @@ export const PLAYERS = [
         "xA90": 0.26,
         "xGI": 0.24,
         "ictIndex": 3.9,
-        "priceChangeTarget": -59.93452889268431,
+        "priceChangeTarget": -60.18306636155606,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -172876,7 +172876,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -20.361990950226243,
+        "priceChangeTarget": -18.421052631578945,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -173215,7 +173215,7 @@ export const PLAYERS = [
         "team": "MUN",
         "position": "GKP",
         "price": 5,
-        "ownership": 12.1,
+        "ownership": 12,
         "points": 109,
         "xG": 0,
         "xA": 0,
@@ -173223,7 +173223,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 7.9,
-        "priceChangeTarget": -89.44132602097041,
+        "priceChangeTarget": -89.48511650261219,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -173917,7 +173917,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -9.194312796208532,
+        "priceChangeTarget": -8.775137111517367,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -174264,7 +174264,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 0.7,
         "ictIndex": 7.3,
-        "priceChangeTarget": -84.22893027902661,
+        "priceChangeTarget": -83.84161167071899,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -174615,7 +174615,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -49.83277591973244,
+        "priceChangeTarget": -49.50819672131148,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -174962,7 +174962,7 @@ export const PLAYERS = [
         "xA90": 0.07,
         "xGI": 0.29,
         "ictIndex": 14.5,
-        "priceChangeTarget": -76.87348581283621,
+        "priceChangeTarget": -77.09279171644764,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -175301,7 +175301,7 @@ export const PLAYERS = [
         "team": "MUN",
         "position": "DEF",
         "price": 4.9,
-        "ownership": 12,
+        "ownership": 11.9,
         "points": 90,
         "xG": 0.07,
         "xA": 0.42,
@@ -175309,7 +175309,7 @@ export const PLAYERS = [
         "xA90": 0.14,
         "xGI": 0.49,
         "ictIndex": 11.8,
-        "priceChangeTarget": -89.01759808389139,
+        "priceChangeTarget": -89.12327464728952,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -175656,7 +175656,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.09,
         "ictIndex": 3.9,
-        "priceChangeTarget": -36.299130989396474,
+        "priceChangeTarget": -36.43386897404203,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -176003,7 +176003,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 0.02,
         "ictIndex": 1.3,
-        "priceChangeTarget": -76.48134601316752,
+        "priceChangeTarget": -76.33642195295795,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -176350,7 +176350,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.16,
         "ictIndex": 2,
-        "priceChangeTarget": -73.25966850828729,
+        "priceChangeTarget": -73.700042973786,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -176697,7 +176697,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 0.28,
         "ictIndex": 6.4,
-        "priceChangeTarget": -76.83388547089446,
+        "priceChangeTarget": -76.3569457221711,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -177036,7 +177036,7 @@ export const PLAYERS = [
         "team": "MUN",
         "position": "DEF",
         "price": 4.4,
-        "ownership": 13.6,
+        "ownership": 13.5,
         "points": 113,
         "xG": 0.02,
         "xA": 0.51,
@@ -177044,7 +177044,7 @@ export const PLAYERS = [
         "xA90": 0.18,
         "xGI": 0.53,
         "ictIndex": 18.4,
-        "priceChangeTarget": -85.20066559246949,
+        "priceChangeTarget": -85.11114312590571,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -177391,7 +177391,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -10.519951632406288,
+        "priceChangeTarget": -10.673493501378495,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -178077,7 +178077,7 @@ export const PLAYERS = [
         "team": "MUN",
         "position": "MID",
         "price": 12,
-        "ownership": 45.3,
+        "ownership": 45.1,
         "points": 235,
         "xG": 2.25,
         "xA": 0.8,
@@ -178085,7 +178085,7 @@ export const PLAYERS = [
         "xA90": 0.27,
         "xGI": 3.05,
         "ictIndex": 40.5,
-        "priceChangeTarget": -63.44097206420617,
+        "priceChangeTarget": -64.18327554096741,
         "setPieceDuty": {
             "pk": true,
             "fk": true,
@@ -178424,7 +178424,7 @@ export const PLAYERS = [
         "team": "MUN",
         "position": "MID",
         "price": 7.9,
-        "ownership": 25.1,
+        "ownership": 25,
         "points": 148,
         "xG": 2.31,
         "xA": 0.47,
@@ -178432,7 +178432,7 @@ export const PLAYERS = [
         "xA90": 0.16,
         "xGI": 2.78,
         "ictIndex": 28.3,
-        "priceChangeTarget": -47.98181654989626,
+        "priceChangeTarget": -48.256617062939895,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -178779,7 +178779,7 @@ export const PLAYERS = [
         "xA90": 0.16,
         "xGI": 0.88,
         "ictIndex": 16.4,
-        "priceChangeTarget": -87.0190659916372,
+        "priceChangeTarget": -86.854932008269,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -179126,7 +179126,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 0.47,
         "ictIndex": 19.6,
-        "priceChangeTarget": -8.278223901747756,
+        "priceChangeTarget": -8.657501357647126,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -179477,7 +179477,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 3.260869565217391,
+        "priceChangeTarget": 4.232804232804233,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -179828,7 +179828,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -97.11943793911007,
+        "priceChangeTarget": -97.16765646413887,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -180179,7 +180179,7 @@ export const PLAYERS = [
         "xA90": 0.17,
         "xGI": 0.56,
         "ictIndex": 9.7,
-        "priceChangeTarget": 43.509282854022565,
+        "priceChangeTarget": 43.014355754647106,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -180530,7 +180530,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -34.54545454545455,
+        "priceChangeTarget": -36.84210526315789,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -180881,7 +180881,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -25.128205128205128,
+        "priceChangeTarget": -27.363184079601986,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -181232,7 +181232,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.1,
-        "priceChangeTarget": -60.40172166427546,
+        "priceChangeTarget": -59.944367176634216,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -181934,7 +181934,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -16.346153846153847,
+        "priceChangeTarget": -16.44479248238058,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -182285,7 +182285,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -36.67285095856524,
+        "priceChangeTarget": -36.54883163571,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -182636,7 +182636,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.34,
         "ictIndex": 7.6,
-        "priceChangeTarget": -3.3561665259141096,
+        "priceChangeTarget": -2.5565091260727666,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -182983,7 +182983,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -36.78068870838577,
+        "priceChangeTarget": -37.214509628302736,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -183330,7 +183330,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 6.088916013332708,
+        "priceChangeTarget": 5.907557662503419,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -183677,7 +183677,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 0.21,
         "ictIndex": 5.8,
-        "priceChangeTarget": 6.277939747327503,
+        "priceChangeTarget": 5.873436907919666,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -184024,7 +184024,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -59.28311397367684,
+        "priceChangeTarget": -59.21425308359982,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -184375,7 +184375,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -32.450331125827816,
+        "priceChangeTarget": -31.629392971246006,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -184726,7 +184726,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -39.59731543624161,
+        "priceChangeTarget": -40.98360655737705,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -185077,7 +185077,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.07,
         "ictIndex": 6.8,
-        "priceChangeTarget": -0.9917813919617158,
+        "priceChangeTarget": -1.0867753442010868,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -185424,7 +185424,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -51.716181136429185,
+        "priceChangeTarget": -51.46396396396396,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -185775,7 +185775,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 0.18,
         "ictIndex": 7.9,
-        "priceChangeTarget": -1.9656897784131524,
+        "priceChangeTarget": -1.4585311124536118,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -186122,7 +186122,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -97.28607034062587,
+        "priceChangeTarget": -97.30603448275862,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -186465,7 +186465,7 @@ export const PLAYERS = [
         "team": "NEW",
         "position": "DEF",
         "price": 5.1,
-        "ownership": 12.2,
+        "ownership": 12.4,
         "points": 79,
         "xG": 0.04,
         "xA": 0.67,
@@ -186473,7 +186473,7 @@ export const PLAYERS = [
         "xA90": 0.22,
         "xGI": 0.71,
         "ictIndex": 15.1,
-        "priceChangeTarget": 65.78112254161137,
+        "priceChangeTarget": 65.51151477742016,
         "setPieceDuty": {
             "pk": false,
             "fk": true,
@@ -186812,7 +186812,7 @@ export const PLAYERS = [
         "team": "NEW",
         "position": "DEF",
         "price": 4.9,
-        "ownership": 0,
+        "ownership": 0.1,
         "points": 59,
         "xG": 0,
         "xA": 0,
@@ -186820,7 +186820,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 56.74603174603175,
+        "priceChangeTarget": 56.04642456008986,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -187522,7 +187522,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.28,
         "ictIndex": 11.2,
-        "priceChangeTarget": 58.21853056806995,
+        "priceChangeTarget": 57.45444315944113,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -187869,7 +187869,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 0.76,
         "ictIndex": 19.4,
-        "priceChangeTarget": 27.190702982034477,
+        "priceChangeTarget": 26.93857662873685,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -188216,7 +188216,7 @@ export const PLAYERS = [
         "xA90": 0.21,
         "xGI": 0.33,
         "ictIndex": 6.7,
-        "priceChangeTarget": 43.4654919236417,
+        "priceChangeTarget": 42.59866962305986,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -188567,7 +188567,7 @@ export const PLAYERS = [
         "xA90": 0.51,
         "xGI": 0.2,
         "ictIndex": 0.9,
-        "priceChangeTarget": -32.315035799522676,
+        "priceChangeTarget": -32.12627669452182,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -188918,7 +188918,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -78.26086956521739,
+        "priceChangeTarget": -77.96610169491525,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -189269,7 +189269,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.12,
         "ictIndex": 7.2,
-        "priceChangeTarget": -15.486194477791116,
+        "priceChangeTarget": -15.746658919233003,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -189616,7 +189616,7 @@ export const PLAYERS = [
         "xA90": 0.11,
         "xGI": 0.72,
         "ictIndex": 8.5,
-        "priceChangeTarget": 25.996733014701434,
+        "priceChangeTarget": 25.903860755796977,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -189967,7 +189967,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -80.15748031496062,
+        "priceChangeTarget": -79.74780282766527,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -190314,7 +190314,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 1,
-        "priceChangeTarget": -55.83398590446359,
+        "priceChangeTarget": -56.449165402124436,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -191004,7 +191004,7 @@ export const PLAYERS = [
         "team": "NEW",
         "position": "FWD",
         "price": 6.2,
-        "ownership": 17.2,
+        "ownership": 17.3,
         "points": 27,
         "xG": 1.35,
         "xA": 0.05,
@@ -191012,7 +191012,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 1.4,
         "ictIndex": 16.3,
-        "priceChangeTarget": 42.27938304419484,
+        "priceChangeTarget": 41.88436546877072,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -191359,7 +191359,7 @@ export const PLAYERS = [
         "xA90": 0.23,
         "xGI": 0.2,
         "ictIndex": 5,
-        "priceChangeTarget": -96.1120764552563,
+        "priceChangeTarget": -95.99194146962145,
         "setPieceDuty": {
             "pk": true,
             "fk": false,
@@ -192061,7 +192061,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.4,
-        "priceChangeTarget": -47.21862871927555,
+        "priceChangeTarget": -47.580138277812694,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -192408,7 +192408,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 10.9,
-        "priceChangeTarget": 35.365177439797215,
+        "priceChangeTarget": 35.23095278677348,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -192755,7 +192755,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.22,
         "ictIndex": 11.3,
-        "priceChangeTarget": 17.928910244563543,
+        "priceChangeTarget": 15.464188760927541,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -193102,7 +193102,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 10.635903207653348,
+        "priceChangeTarget": 10.531118817302428,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -193453,7 +193453,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.7,
-        "priceChangeTarget": 57.209462959765155,
+        "priceChangeTarget": 56.57584931046081,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -193800,7 +193800,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 0.19,
         "ictIndex": 4.9,
-        "priceChangeTarget": 23.906933886201337,
+        "priceChangeTarget": 23.607261021192883,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -194139,7 +194139,7 @@ export const PLAYERS = [
         "team": "NFO",
         "position": "DEF",
         "price": 5.4,
-        "ownership": 5.9,
+        "ownership": 5.8,
         "points": 136,
         "xG": 0.26,
         "xA": 0.01,
@@ -194147,7 +194147,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.27,
         "ictIndex": 3.1,
-        "priceChangeTarget": -76.9294281896927,
+        "priceChangeTarget": -77.03583774559138,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -194494,7 +194494,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.01,
         "ictIndex": 3.3,
-        "priceChangeTarget": 6.158903429882776,
+        "priceChangeTarget": 5.931495405179615,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -194841,7 +194841,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -40.099009900990104,
+        "priceChangeTarget": -39.95157384987893,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -195188,7 +195188,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 0.36,
         "ictIndex": 11.9,
-        "priceChangeTarget": 8.32331759205807,
+        "priceChangeTarget": 7.507953917134233,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -195886,7 +195886,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.14,
         "ictIndex": 7,
-        "priceChangeTarget": -1.5676202285005756,
+        "priceChangeTarget": -2.2203171881697386,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -196233,7 +196233,7 @@ export const PLAYERS = [
         "xA90": 0.09,
         "xGI": 0.63,
         "ictIndex": 10.7,
-        "priceChangeTarget": 22.62628934144406,
+        "priceChangeTarget": 22.44976321515423,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -196580,7 +196580,7 @@ export const PLAYERS = [
         "xA90": 0.22,
         "xGI": 0.56,
         "ictIndex": 10.8,
-        "priceChangeTarget": -71.72031076581577,
+        "priceChangeTarget": -71.73108883289552,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -196927,7 +196927,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.04,
         "ictIndex": 5.9,
-        "priceChangeTarget": 30.010867877658747,
+        "priceChangeTarget": 30.014513788098697,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -197274,7 +197274,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 29.82456140350877,
+        "priceChangeTarget": 33.33333333333333,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -197625,7 +197625,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -30.62360801781737,
+        "priceChangeTarget": -30.12439156300703,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -198327,7 +198327,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.3,
-        "priceChangeTarget": -53.191489361702125,
+        "priceChangeTarget": -53.11572700296736,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -199029,7 +199029,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 1.51,
         "ictIndex": 13.2,
-        "priceChangeTarget": 7.694729243444797,
+        "priceChangeTarget": 7.488808544410497,
         "setPieceDuty": {
             "pk": true,
             "fk": true,
@@ -199376,7 +199376,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -58.571959836370404,
+        "priceChangeTarget": -58.71294287780188,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -199727,7 +199727,7 @@ export const PLAYERS = [
         "xA90": 0.31,
         "xGI": 0.98,
         "ictIndex": 10,
-        "priceChangeTarget": -11.88945136133534,
+        "priceChangeTarget": -12.237576401807068,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -200776,7 +200776,7 @@ export const PLAYERS = [
         "xA90": 0.19,
         "xGI": 0.67,
         "ictIndex": 16.5,
-        "priceChangeTarget": 18.5533114138093,
+        "priceChangeTarget": 17.995444191343964,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -201123,7 +201123,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -42.22222222222222,
+        "priceChangeTarget": -42.517814726840854,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -201466,7 +201466,7 @@ export const PLAYERS = [
         "team": "NFO",
         "position": "MID",
         "price": 4.9,
-        "ownership": 0.6,
+        "ownership": 0.5,
         "points": 89,
         "xG": 0.03,
         "xA": 0.01,
@@ -201474,7 +201474,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.04,
         "ictIndex": 3.4,
-        "priceChangeTarget": -54.446371067624476,
+        "priceChangeTarget": -55.339113909015325,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -201825,7 +201825,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -32.82721280602637,
+        "priceChangeTarget": -32.85223367697594,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -202176,7 +202176,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.13,
         "ictIndex": 0.4,
-        "priceChangeTarget": -60.199747445758234,
+        "priceChangeTarget": -60.55692238872735,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -202527,7 +202527,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 1.02,
         "ictIndex": 10.5,
-        "priceChangeTarget": -67.00795079507951,
+        "priceChangeTarget": -67.19474708525073,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -202874,7 +202874,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 22.50464972101674,
+        "priceChangeTarget": 22.052535125229078,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -203225,7 +203225,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.14,
         "ictIndex": 4.8,
-        "priceChangeTarget": -9.887005649717514,
+        "priceChangeTarget": -9.646739130434783,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -203572,7 +203572,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -65.98240469208211,
+        "priceChangeTarget": -66.16541353383458,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -203919,7 +203919,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -6.426735218508997,
+        "priceChangeTarget": -6.3354037267080745,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -204266,7 +204266,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.27,
         "ictIndex": 14.6,
-        "priceChangeTarget": -39.60328602604912,
+        "priceChangeTarget": -39.69909729187563,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -204613,7 +204613,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -41.956664478003944,
+        "priceChangeTarget": -42.41842610364684,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -204960,7 +204960,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.42,
         "ictIndex": 8.2,
-        "priceChangeTarget": 1.33923129168771,
+        "priceChangeTarget": 1.4202426954104805,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -205307,7 +205307,7 @@ export const PLAYERS = [
         "xA90": 0.4,
         "xGI": 0.29,
         "ictIndex": 3.9,
-        "priceChangeTarget": -6.24006106481776,
+        "priceChangeTarget": -5.983747845358286,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -205654,7 +205654,7 @@ export const PLAYERS = [
         "xA90": 0.03,
         "xGI": 0.18,
         "ictIndex": 8.7,
-        "priceChangeTarget": -49.683056364570845,
+        "priceChangeTarget": -50.13818262215344,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -206348,7 +206348,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 22.474182902161182,
+        "priceChangeTarget": 22.33606557377049,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -206695,7 +206695,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 6.8,
-        "priceChangeTarget": -29.850108234951705,
+        "priceChangeTarget": -28.873948995900218,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -207042,7 +207042,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 3.105276126333879,
+        "priceChangeTarget": 3.7069667803156023,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -207381,7 +207381,7 @@ export const PLAYERS = [
         "team": "TOT",
         "position": "DEF",
         "price": 5.9,
-        "ownership": 4.8,
+        "ownership": 4.7,
         "points": 175,
         "xG": 0,
         "xA": 0.02,
@@ -207389,7 +207389,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.02,
         "ictIndex": 3.9,
-        "priceChangeTarget": -92.4211736369608,
+        "priceChangeTarget": -92.3944638523694,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -207736,7 +207736,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 0.52,
         "ictIndex": 9.3,
-        "priceChangeTarget": -9.760267997347944,
+        "priceChangeTarget": -10.200411388492363,
         "setPieceDuty": {
             "pk": false,
             "fk": true,
@@ -208426,7 +208426,7 @@ export const PLAYERS = [
         "team": "TOT",
         "position": "DEF",
         "price": 4.5,
-        "ownership": 2.9,
+        "ownership": 2.8,
         "points": 55,
         "xG": 0.06,
         "xA": 0.08,
@@ -208434,7 +208434,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.14,
         "ictIndex": 11.2,
-        "priceChangeTarget": -86.34465580816098,
+        "priceChangeTarget": -86.39320606533721,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -208781,7 +208781,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.59,
         "ictIndex": 5.4,
-        "priceChangeTarget": 19.036041572043068,
+        "priceChangeTarget": 18.601028197538557,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -209479,7 +209479,7 @@ export const PLAYERS = [
         "xA90": 0.24,
         "xGI": 0.23,
         "ictIndex": 2.7,
-        "priceChangeTarget": -29.975124378109452,
+        "priceChangeTarget": -29.305135951661633,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -210181,7 +210181,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -56.4771038768067,
+        "priceChangeTarget": -56.359821662732756,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -210532,7 +210532,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -2.6615969581749046,
+        "priceChangeTarget": -3.233830845771144,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -210883,7 +210883,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -2.868447082096934,
+        "priceChangeTarget": -2.8019323671497585,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -211585,7 +211585,7 @@ export const PLAYERS = [
         "xA90": 0.3,
         "xGI": 0.21,
         "ictIndex": 3.8,
-        "priceChangeTarget": 5.929062996294335,
+        "priceChangeTarget": 6.0278207109737245,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -211936,7 +211936,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -38.67924528301887,
+        "priceChangeTarget": -36.986301369863014,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -212287,7 +212287,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.34,
         "ictIndex": 13.3,
-        "priceChangeTarget": -67.72423255016292,
+        "priceChangeTarget": -67.40175758580666,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -212634,7 +212634,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.01,
         "ictIndex": 2.1,
-        "priceChangeTarget": -97.66505636070853,
+        "priceChangeTarget": -97.64590485532123,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -212985,7 +212985,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.06,
         "ictIndex": 6.8,
-        "priceChangeTarget": -1.2273524254821742,
+        "priceChangeTarget": -2.272727272727273,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -213336,7 +213336,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 41.17647058823529,
+        "priceChangeTarget": 44.44444444444444,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -214038,7 +214038,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 0.14,
         "ictIndex": 2.2,
-        "priceChangeTarget": -46.97986577181208,
+        "priceChangeTarget": -47.353760445682454,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -214389,7 +214389,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.01,
         "ictIndex": 0,
-        "priceChangeTarget": -69.64980544747081,
+        "priceChangeTarget": -70.06887914840325,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -214740,7 +214740,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -32.57142857142858,
+        "priceChangeTarget": -31.491712707182316,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -215091,7 +215091,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.01,
         "ictIndex": 1.3,
-        "priceChangeTarget": -56.33754697642638,
+        "priceChangeTarget": -56.70103092783505,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -215793,7 +215793,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -71.10778443113772,
+        "priceChangeTarget": -71.21570052698529,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -216144,7 +216144,7 @@ export const PLAYERS = [
         "xA90": 0.15,
         "xGI": 0.24,
         "ictIndex": 9.7,
-        "priceChangeTarget": -88.8222617820669,
+        "priceChangeTarget": -88.86864638367643,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -216491,7 +216491,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.44,
         "ictIndex": 1.9,
-        "priceChangeTarget": -50.23451879118922,
+        "priceChangeTarget": -50.522366522366525,
         "setPieceDuty": {
             "pk": true,
             "fk": false,
@@ -217544,7 +217544,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.1,
-        "priceChangeTarget": 9.295570079883806,
+        "priceChangeTarget": 7.484923731819794,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -217891,7 +217891,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 12.094763092269327,
+        "priceChangeTarget": 12.24551807961106,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -218242,7 +218242,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 0.08,
         "ictIndex": 3.2,
-        "priceChangeTarget": 1.2080536912751678,
+        "priceChangeTarget": 0.8257279443720122,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -218581,7 +218581,7 @@ export const PLAYERS = [
         "team": "SUN",
         "position": "GKP",
         "price": 5,
-        "ownership": 3.1,
+        "ownership": 3,
         "points": 136,
         "xG": 0,
         "xA": 0,
@@ -218589,7 +218589,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 3.2,
-        "priceChangeTarget": -90.0003211200668,
+        "priceChangeTarget": -89.93804676068615,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -219283,7 +219283,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -48.652931854199686,
+        "priceChangeTarget": -48.536209553158706,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -219630,7 +219630,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.24,
         "ictIndex": 9.4,
-        "priceChangeTarget": -84.77972662023986,
+        "priceChangeTarget": -84.87139803964921,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -219977,7 +219977,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.03,
         "ictIndex": 9,
-        "priceChangeTarget": -52.19734045182659,
+        "priceChangeTarget": -52.500597086219244,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -220320,7 +220320,7 @@ export const PLAYERS = [
         "team": "SUN",
         "position": "DEF",
         "price": 4.5,
-        "ownership": 4.4,
+        "ownership": 4.3,
         "points": 110,
         "xG": 0.04,
         "xA": 0.28,
@@ -220328,7 +220328,7 @@ export const PLAYERS = [
         "xA90": 0.13,
         "xGI": 0.32,
         "ictIndex": 10.6,
-        "priceChangeTarget": -95.72353213129912,
+        "priceChangeTarget": -95.79580784274397,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -220679,7 +220679,7 @@ export const PLAYERS = [
         "xA90": 0.04,
         "xGI": 0.01,
         "ictIndex": 0,
-        "priceChangeTarget": -87.55656108597285,
+        "priceChangeTarget": -87.49171270718233,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -221030,7 +221030,7 @@ export const PLAYERS = [
         "xA90": 0.1,
         "xGI": 0.31,
         "ictIndex": 9.5,
-        "priceChangeTarget": -70.03200465522258,
+        "priceChangeTarget": -69.91250352808355,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -222071,7 +222071,7 @@ export const PLAYERS = [
         "team": "SUN",
         "position": "DEF",
         "price": 4,
-        "ownership": 2.8,
+        "ownership": 2.7,
         "points": 26,
         "xG": 0.01,
         "xA": 0.01,
@@ -222079,7 +222079,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 0.02,
         "ictIndex": 1.7,
-        "priceChangeTarget": -87.64054891544932,
+        "priceChangeTarget": -87.66618063298739,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -222781,7 +222781,7 @@ export const PLAYERS = [
         "xA90": 0.05,
         "xGI": 0.34,
         "ictIndex": 9.5,
-        "priceChangeTarget": -49.94954591321898,
+        "priceChangeTarget": -49.14592484138604,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -223128,7 +223128,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 1.44,
         "ictIndex": 13.8,
-        "priceChangeTarget": -84.69493278179938,
+        "priceChangeTarget": -84.90921288982189,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -223475,7 +223475,7 @@ export const PLAYERS = [
         "xA90": 0.51,
         "xGI": 0.19,
         "ictIndex": 2.9,
-        "priceChangeTarget": -96.2756052141527,
+        "priceChangeTarget": -96.16788321167883,
         "setPieceDuty": {
             "pk": true,
             "fk": false,
@@ -223818,7 +223818,7 @@ export const PLAYERS = [
         "team": "SUN",
         "position": "MID",
         "price": 5.5,
-        "ownership": 4.4,
+        "ownership": 4.3,
         "points": 124,
         "xG": 0.06,
         "xA": 0.57,
@@ -223826,7 +223826,7 @@ export const PLAYERS = [
         "xA90": 0.19,
         "xGI": 0.63,
         "ictIndex": 16.7,
-        "priceChangeTarget": -36.76229508196721,
+        "priceChangeTarget": -37.13965551519095,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -224173,7 +224173,7 @@ export const PLAYERS = [
         "xA90": 0.08,
         "xGI": 0.59,
         "ictIndex": 17.6,
-        "priceChangeTarget": -68.96935933147633,
+        "priceChangeTarget": -68.8697059616941,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -224871,7 +224871,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0.17,
         "ictIndex": 2.5,
-        "priceChangeTarget": -40.12738853503185,
+        "priceChangeTarget": -41.104294478527606,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -225222,7 +225222,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -63.63636363636363,
+        "priceChangeTarget": -62.890625,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -225573,7 +225573,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -84.52047111609646,
+        "priceChangeTarget": -83.82513661202185,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -225924,7 +225924,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -5.88235294117647,
+        "priceChangeTarget": -6.666666666666667,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -226275,7 +226275,7 @@ export const PLAYERS = [
         "xA90": 0.06,
         "xGI": 0.27,
         "ictIndex": 10.6,
-        "priceChangeTarget": -29.25170068027211,
+        "priceChangeTarget": -29.613733905579398,
         "setPieceDuty": {
             "pk": false,
             "fk": true,
@@ -226622,7 +226622,7 @@ export const PLAYERS = [
         "xA90": 0.02,
         "xGI": 0.65,
         "ictIndex": 8.9,
-        "priceChangeTarget": -87.20761152499776,
+        "priceChangeTarget": -87.34535335381761,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -226961,7 +226961,7 @@ export const PLAYERS = [
         "team": "SUN",
         "position": "FWD",
         "price": 5.5,
-        "ownership": 1.4,
+        "ownership": 1.5,
         "points": 74,
         "xG": 1.49,
         "xA": 0.01,
@@ -226969,7 +226969,7 @@ export const PLAYERS = [
         "xA90": 0.01,
         "xGI": 1.5,
         "ictIndex": 6.5,
-        "priceChangeTarget": 42.969552578085725,
+        "priceChangeTarget": 42.567452910232475,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -227320,7 +227320,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": -10.655737704918032,
+        "priceChangeTarget": -9.375,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -227667,7 +227667,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 24.059599413776258,
+        "priceChangeTarget": 24.12811387900356,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -228014,7 +228014,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0.1,
-        "priceChangeTarget": 48.26546003016591,
+        "priceChangeTarget": 46.85418208734271,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -228361,7 +228361,7 @@ export const PLAYERS = [
         "xA90": 0,
         "xGI": 0,
         "ictIndex": 0,
-        "priceChangeTarget": 58.61192235011167,
+        "priceChangeTarget": 58.197321963893145,
         "setPieceDuty": {
             "pk": false,
             "fk": false,
@@ -228704,8 +228704,8 @@ export const DEFAULT_SQUAD = [
     388,
     426,
     368,
-    399,
     40,
+    399,
     427,
     165,
     411,
@@ -228730,8 +228730,8 @@ export const EXPERT_REVEALS = [
             388,
             426,
             368,
-            399,
             40,
+            399,
             427,
             165,
             411,
@@ -228758,8 +228758,8 @@ export const EXPERT_REVEALS = [
             388,
             426,
             368,
-            399,
             40,
+            399,
             427,
             165,
             411,
@@ -228786,8 +228786,8 @@ export const EXPERT_REVEALS = [
             388,
             426,
             368,
-            399,
             40,
+            399,
             427,
             165,
             411,
