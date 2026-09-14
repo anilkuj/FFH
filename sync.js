@@ -22,19 +22,40 @@ function findSolioPlayer(team, playerWebName, playerName) {
 
   const pWeb = norm(playerWebName);
   const pFull = norm(playerName);
+  const parts = (playerName || '').split(' ');
+  const pFirst = norm(parts[0]);
+  const pLast = norm(parts[parts.length - 1]);
 
-  for (const solioName of Object.keys(players)) {
-    const sn = norm(solioName);
-    if (pWeb === sn) return { name: solioName, target: players[solioName] };
-    if (pFull === sn) return { name: solioName, target: players[solioName] };
-    if (pWeb.includes(sn) || sn.includes(pWeb)) return { name: solioName, target: players[solioName] };
-    
-    const last = norm(playerName.split(' ').pop());
-    if (last === sn || last.includes(sn) || sn.includes(last)) return { name: solioName, target: players[solioName] };
+  const solioNames = Object.keys(players);
 
-    const first = norm(playerName.split(' ')[0]);
-    if (first === sn || sn.startsWith(first) || first.startsWith(sn)) return { name: solioName, target: players[solioName] };
+  // 1. Exact match on web_name
+  for (const sn of solioNames) {
+    if (pWeb && pWeb === norm(sn)) return { name: sn, target: players[sn] };
   }
+
+  // 2. Exact match on full name
+  for (const sn of solioNames) {
+    if (pFull && pFull === norm(sn)) return { name: sn, target: players[sn] };
+  }
+
+  // 3. Exact match on last name
+  for (const sn of solioNames) {
+    if (pLast && pLast === norm(sn)) return { name: sn, target: players[sn] };
+  }
+
+  // 4. Exact match on first name
+  for (const sn of solioNames) {
+    if (pFirst && pFirst === norm(sn)) return { name: sn, target: players[sn] };
+  }
+
+  // 5. Substring / partial match
+  for (const sn of solioNames) {
+    const normSn = norm(sn);
+    if (pWeb && (pWeb.includes(normSn) || normSn.includes(pWeb))) return { name: sn, target: players[sn] };
+    if (pLast && (pLast.includes(normSn) || normSn.includes(pLast))) return { name: sn, target: players[sn] };
+    if (pFirst && (pFirst.startsWith(normSn) || normSn.startsWith(pFirst))) return { name: sn, target: players[sn] };
+  }
+
   return null;
 }
 
@@ -575,12 +596,16 @@ async function parseAndWriteData(data, fixturesData) {
     // value, so it's correctly reflected from the start.
     playerBaseList.forEach(p => {
         const isPromotedOrRecentTransfer = PROMOTED_TEAMS.includes(p.team) || p.transferredThisSeason;
+        const solioMatch = findSolioPlayer(p.team, p.web_name, p.name);
+        const isInSolioAsStarter = solioMatch && solioMatch.target > 0;
         const hasLowStarts = typeof p.GS === 'number' && p.GS < 8 && typeof p.MPPG === 'number' && p.MPPG < 45;
-        if (hasLowStarts && !p.news && p.status === 'a' && !isPromotedOrRecentTransfer) {
+        if (hasLowStarts && !p.news && p.status === 'a' && !isPromotedOrRecentTransfer && !isInSolioAsStarter) {
             p.chanceOfPlaying = 15;
             p.news = "Backup/squad rotation option based on low historical starts.";
         }
     });
+
+    const nextUnplayedGw = getNextUnplayedGw(fixturesData) || 1;
 
     const playersList = playerBaseList.map(player => {
         // basePPG/mppg/starts/minutes/rawStarts are pass-1 scratch fields (not part of the
@@ -592,26 +617,46 @@ async function parseAndWriteData(data, fixturesData) {
         const predictions = [];
         const fixtures = fixturesSchedule[player.team] || [];
 
+        const solioMatch = findSolioPlayer(player.team, player.web_name, player.name);
+        const solioPts1to5 = solioMatch ? getSolioGw1to5(solioMatch.name, solioMatch.target) : null;
+        const avgSolio = solioPts1to5 ? solioPts1to5.reduce((s, x) => s + x, 0) / 5 : 0;
+
         for (let gw = 1; gw <= 38; gw++) {
             const fixture = fixtures.find(f => f.gw == gw) || { opp: 'BYE', loc: 'H', diff: 3 };
+            const gwOffset = gw - nextUnplayedGw;
 
-            const { pts } = computeGwPrediction({
-                basePPG,
-                position: player.position,
-                xG90: player.xG90,
-                xA90: player.xA90,
-                saves90: player.saves90,
-                mppg,
-                starts,
-                chanceOfPlaying: player.chanceOfPlaying,
-                fixture,
-                goalsConceded90: player.goalsConceded90,
-                leagueAvgGoalsConceded90,
-                setPieceDuty: player.setPieceDuty,
-                dcPer90,
-                teamShort: player.team,
-                price: player.price
-            });
+            let pts = 0;
+            if (fixture.opp === 'BYE') {
+                pts = 0.0;
+            } else if (solioMatch && solioPts1to5 && gwOffset >= 0 && gwOffset < 5) {
+                pts = solioPts1to5[gwOffset];
+            } else if (solioMatch && gwOffset >= 5) {
+                let mult = 1.0;
+                if (fixture.diff === 1 || fixture.diff === 2) mult = 1.12;
+                else if (fixture.diff === 3) mult = 1.00;
+                else if (fixture.diff === 4) mult = 0.88;
+                else if (fixture.diff === 5) mult = 0.70;
+                pts = Math.round(avgSolio * mult * 10) / 10;
+            } else {
+                const pred = computeGwPrediction({
+                    basePPG,
+                    position: player.position,
+                    xG90: player.xG90,
+                    xA90: player.xA90,
+                    saves90: player.saves90,
+                    mppg,
+                    starts,
+                    chanceOfPlaying: player.chanceOfPlaying,
+                    fixture,
+                    goalsConceded90: player.goalsConceded90,
+                    leagueAvgGoalsConceded90,
+                    setPieceDuty: player.setPieceDuty,
+                    dcPer90,
+                    teamShort: player.team,
+                    price: player.price
+                });
+                pts = pred.pts;
+            }
 
             // Calculate deterministic actual points if the fixture is completed
             let actualPts = null;
@@ -829,6 +874,21 @@ async function parseAndWriteData(data, fixturesData) {
 
             p.startProbability = Math.round(result.startProbability * 1000) / 1000;
             p.dataConfidence = result.dataConfidence;
+
+            const solioMatch = findSolioPlayer(p.team, p.web_name, p.name);
+            if (solioMatch) {
+                const officialChance = officialChanceOfPlayingById.get(p.id);
+                if (officialChance === 0 || p.status === 'i' || p.status === 's' || p.status === 'u') {
+                    p.startProbability = 0.0;
+                    p.chanceOfPlaying = 0;
+                } else if (solioMatch.target > 0) {
+                    p.startProbability = 1.0;
+                    p.chanceOfPlaying = 100;
+                } else {
+                    p.startProbability = 0.0;
+                    p.chanceOfPlaying = 0;
+                }
+            }
         } catch (err) {
             console.warn(`Rotation: computeStartProbability failed for player id=${p.id} code=${p.code}:`, err.message);
             // Deliberate sentinel: null means "computation failed, no signal", NOT "0% chance of starting".
