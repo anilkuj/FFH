@@ -1726,8 +1726,8 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
         const outStarts = outPlayer && typeof outPlayer.GS === 'number' ? outPlayer.GS : 0;
         const inStarts = typeof inPlayer.GS === 'number' ? inPlayer.GS : 0;
 
-        const isBudgetEnabler = outPlayer && inPlayer.price < outPlayer.price;
-        const freedPrice = outPlayer ? (outPlayer.price - inPlayer.price).toFixed(1) : '0.0';
+        const isBudgetEnabler = outPlayer && inPlayer && (typeof inPlayer.price === 'number') && (typeof outPlayer.price === 'number') && (inPlayer.price < outPlayer.price);
+        const freedPrice = (outPlayer && inPlayer && typeof outPlayer.price === 'number' && typeof inPlayer.price === 'number') ? (outPlayer.price - inPlayer.price).toFixed(1) : '0.0';
 
         // 1. OUTGOING PLAYER EXIT RATIONALE
         let exitReasons = [];
@@ -1740,7 +1740,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
             } else if (outPlayer.status && outPlayer.status !== 'a') {
                 exitReasons.push(`Availability/injury flag (${outPlayer.news || 'Flagged'}).`);
             }
-            if (isBudgetEnabler) {
+            if (isBudgetEnabler && typeof outPlayer.price === 'number') {
                 exitReasons.push(`High price tag (£${outPlayer.price.toFixed(1)}m) ties up capital needed for starting XI talismans.`);
             } else if (gain > 0) {
                 exitReasons.push(`Lower points output (${outPts.toFixed(1)} XP over ${horizon} GWs) compared to top target.`);
@@ -3506,11 +3506,12 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
                             <div style="display:flex; flex-direction:column; gap:20px;">
                                 ${upgrades.map(up => {
                                     const currentSquadIds = activeSquadSlots.map(s => s.playerId).filter(id => id !== null);
-                                    const outPrice = up.out ? up.out.price : 0;
-                                    const budgetOk = bank + outPrice - up.in.price >= -0.01;
+                                    const outPrice = up.out && typeof up.out.price === 'number' ? up.out.price : 0;
+                                    const inPrice = up.in && typeof up.in.price === 'number' ? up.in.price : 0;
+                                    const budgetOk = bank + outPrice - inPrice >= -0.01;
 
                                     const hypSquad = currentSquadIds.filter(id => id !== (up.out ? up.out.id : null));
-                                    hypSquad.push(up.in.id);
+                                    if (up.in) hypSquad.push(up.in.id);
                                     const teamCounts = {};
                                     let teamOk = true;
                                     for (const id of hypSquad) {
@@ -3523,7 +3524,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
                                             }
                                         }
                                     }
-                                    const canApply = budgetOk && teamOk;
+                                    const canApply = budgetOk && teamOk && up.in;
                                     const isDowngrade = up.gain < -0.01;
                                     const isNextDowngrade = up.gain1Gw < -0.01;
 
@@ -3563,7 +3564,7 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
                                             <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px;">
                                                 <div class="transfer-player-card player-card-out" style="flex:1;">
                                                     <span class="player-name-main">${up.out ? up.out.name : 'Empty Slot'}</span>
-                                                    <span class="player-team-sub">${up.out ? `${up.out.team} • £${up.out.price.toFixed(1)}m` : 'N/A'}</span>
+                                                    <span class="player-team-sub">${up.out && typeof up.out.price === 'number' ? `${up.out.team} • £${up.out.price.toFixed(1)}m` : 'N/A'}</span>
                                                     ${up.out ? renderSetPieceBadges(up.out) : ''}
                                                     ${up.out ? renderPlayerStatsBreakdown(up.out) : ''}
                                                     ${up.out ? renderFdrFixtures(up.out, state.currentGw) : ''}
@@ -3582,18 +3583,18 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
                                                     <span style="font-size: 8px; font-weight: 800; color: ${badgeColor}; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center;">${badgeLabel}</span>
                                                 </div>
                                                 <div class="transfer-player-card player-card-in" style="flex:1;">
-                                                    <span class="player-name-main">${up.in.name}</span>
-                                                    <span class="player-team-sub">${up.in.team} • £${up.in.price.toFixed(1)}m</span>
-                                                    ${renderSetPieceBadges(up.in)}
-                                                    ${renderPlayerStatsBreakdown(up.in)}
-                                                    ${renderFdrFixtures(up.in, state.currentGw)}
+                                                    <span class="player-name-main">${up.in ? up.in.name : 'Empty Slot'}</span>
+                                                    <span class="player-team-sub">${up.in && typeof up.in.price === 'number' ? `${up.in.team} • £${up.in.price.toFixed(1)}m` : 'N/A'}</span>
+                                                    ${up.in ? renderSetPieceBadges(up.in) : ''}
+                                                    ${up.in ? renderPlayerStatsBreakdown(up.in) : ''}
+                                                    ${up.in ? renderFdrFixtures(up.in, state.currentGw) : ''}
                                                 </div>
                                             </div>
                                             
-                                            ${isDowngrade ? `
+                                            ${isDowngrade && up.out && up.in ? `
                                                 <div style="font-size: 11px; color: var(--secondary); background: rgba(0, 242, 254, 0.05); padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(0, 242, 254, 0.2); margin-top: 8px; text-align: left; display: flex; align-items: center; gap: 6px;">
                                                     <i data-lucide="coins" style="width:13px; height:13px;"></i>
-                                                    <span><strong>Capital Release Enabler:</strong> Frees up <strong>£${(up.out.price - up.in.price).toFixed(1)}m</strong> in budget to fund high-value talisman upgrades elsewhere in your squad.</span>
+                                                    <span><strong>Capital Release Enabler:</strong> Frees up <strong>£${(outPrice - inPrice).toFixed(1)}m</strong> in budget to fund high-value talisman upgrades elsewhere in your squad.</span>
                                                 </div>
                                             ` : ''}
 
@@ -4208,31 +4209,38 @@ function generateAIStrategistReport(reportContainer, state, actions, squadSlots,
     lucide.createIcons();
 
     const apiKey = localStorage.getItem('fpl_hub_gemini_api_key');
-    const squadPlayers = squadSlots.map(s => s.playerId ? PLAYERS.find(p => p.id === s.playerId) : null).filter(p => p !== null);
+    const squadPlayers = squadSlots.map(s => s.playerId ? PLAYERS.find(p => p.id === s.playerId) : null).filter(Boolean);
     
-    const starters = squadSlots.filter(s => s.isStarting && s.playerId !== null).map(s => PLAYERS.find(p => p.id === s.playerId));
-    const bench = squadSlots.filter(s => !s.isStarting && s.playerId !== null).map(s => PLAYERS.find(p => p.id === s.playerId));
+    const starters = squadSlots.filter(s => s.isStarting && s.playerId !== null).map(s => PLAYERS.find(p => p.id === s.playerId)).filter(Boolean);
+    const bench = squadSlots.filter(s => !s.isStarting && s.playerId !== null).map(s => PLAYERS.find(p => p.id === s.playerId)).filter(Boolean);
 
     const bestPlayer = [...starters].sort((a, b) => {
-        const predA = a.predictions.find(pr => pr.gw == state.currentGw)?.pts || 0;
-        const predB = b.predictions.find(pr => pr.gw == state.currentGw)?.pts || 0;
+        if (!a || !b) return 0;
+        const predA = (a.predictions || []).find(pr => pr.gw == state.currentGw)?.pts || 0;
+        const predB = (b.predictions || []).find(pr => pr.gw == state.currentGw)?.pts || 0;
         return predB - predA;
     })[0];
     const secondBestPlayer = starters.filter(p => p !== bestPlayer).sort((a, b) => {
-        const predA = a.predictions.find(pr => pr.gw == state.currentGw)?.pts || 0;
-        const predB = b.predictions.find(pr => pr.gw == state.currentGw)?.pts || 0;
+        if (!a || !b) return 0;
+        const predA = (a.predictions || []).find(pr => pr.gw == state.currentGw)?.pts || 0;
+        const predB = (b.predictions || []).find(pr => pr.gw == state.currentGw)?.pts || 0;
         return predB - predA;
     })[0] || bestPlayer;
 
-    const differentials = squadPlayers.filter(p => p.ownership < 15).slice(0, 3);
+    const differentials = squadPlayers.filter(p => p && typeof p.ownership === 'number' && p.ownership < 15).slice(0, 3);
     
     let squadDesc = `\n**Starting XI:**\n`;
     starters.forEach(p => {
-        squadDesc += `- ${p.name} (${p.position}, ${p.team}, £${p.price.toFixed(1)}m, expected points next ${horizon} GWs: ${(p.predictions.filter(pr => pr.gw >= state.currentGw && pr.gw < state.currentGw + horizon).reduce((s, pr) => s + pr.pts, 0)).toFixed(1)} XP)\n`;
+        if (!p) return;
+        const pPrice = typeof p.price === 'number' ? p.price.toFixed(1) : '0.0';
+        const pXp = (p.predictions || []).filter(pr => pr.gw >= state.currentGw && pr.gw < state.currentGw + horizon).reduce((s, pr) => s + (pr.pts || 0), 0);
+        squadDesc += `- ${p.name} (${p.position}, ${p.team}, £${pPrice}m, expected points next ${horizon} GWs: ${pXp.toFixed(1)} XP)\n`;
     });
     squadDesc += `\n**Bench:**\n`;
     bench.forEach((p, idx) => {
-        squadDesc += `- Bench Slot ${idx + 1}: ${p.name} (${p.position}, ${p.team}, £${p.price.toFixed(1)}m)\n`;
+        if (!p) return;
+        const pPrice = typeof p.price === 'number' ? p.price.toFixed(1) : '0.0';
+        squadDesc += `- Bench Slot ${idx + 1}: ${p.name} (${p.position}, ${p.team}, £${pPrice}m)\n`;
     });
 
     if (apiKey) {
