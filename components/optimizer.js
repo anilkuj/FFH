@@ -413,6 +413,14 @@ export function renderOptimizer(container, state, actions) {
                                 <span class="setting-help">Builds a one-week-only squad (unlimited transfers) maximizing expected points for the target Gameweek only.</span>
                             </div>
 
+                            <div class="setting-group" id="prioritizeFixturesGroup">
+                                <label for="prioritizeFixturesCheckbox" style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12px; font-weight: 700; color: var(--text-main); line-height: 1.3;">
+                                    <input type="checkbox" id="prioritizeFixturesCheckbox" ${state.prioritizeFixtures !== false ? 'checked' : ''} style="width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0;">
+                                    📅 Prioritize Favorable Fixtures (FDR 1-2)
+                                </label>
+                                <span class="setting-help">Heavily prioritizes players with green fixture difficulty runs (FDR &le; 2.5) and penalizes tough opposition (FDR &ge; 3.5).</span>
+                            </div>
+
                             <div class="setting-group" id="prioritizeDefconGroup">
                                 <label for="prioritizeDefconCheckbox" style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12px; font-weight: 700; color: var(--text-main); line-height: 1.3;">
                                     <input type="checkbox" id="prioritizeDefconCheckbox" ${state.prioritizeDefcon ? 'checked' : ''} style="width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0;">
@@ -783,6 +791,17 @@ export function renderOptimizer(container, state, actions) {
         });
     }
 
+    // Wire Prioritize Favorable Fixtures listener
+    const prioritizeFixturesCheckbox = container.querySelector('#prioritizeFixturesCheckbox');
+    if (prioritizeFixturesCheckbox) {
+        prioritizeFixturesCheckbox.addEventListener('change', (e) => {
+            const isChecked = e.target.checked;
+            state.prioritizeFixtures = isChecked;
+            localStorage.setItem('fpl_hub_prioritize_fixtures', isChecked ? 'true' : 'false');
+            state.saveState();
+        });
+    }
+
     // Wire Prioritize Defcon Monsters listener
     const prioritizeDefconCheckbox = container.querySelector('#prioritizeDefconCheckbox');
     if (prioritizeDefconCheckbox) {
@@ -1148,6 +1167,9 @@ export function renderOptimizer(container, state, actions) {
             if (state.chips[fhTarget]) state.chips[fhTarget].freeHit = false;
         }
 
+        const prioritizeFixturesCheckbox = container.querySelector('#prioritizeFixturesCheckbox');
+        if (prioritizeFixturesCheckbox) state.prioritizeFixtures = prioritizeFixturesCheckbox.checked;
+
         const prioritizeDefconCheckbox = container.querySelector('#prioritizeDefconCheckbox');
         if (prioritizeDefconCheckbox) state.prioritizeDefcon = prioritizeDefconCheckbox.checked;
 
@@ -1460,6 +1482,11 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
             baseScore = getExpectedPts(player) + (setPieceBonus * horizon);
         }
 
+        if (state.prioritizeFixtures !== false) {
+            const avgFdr = parseFloat(getAvgFDR(player)) || 3.0;
+            baseScore += (3.0 - avgFdr) * 1.5 * horizon;
+        }
+
         // Add Defcon Monster with easiest FDR bonus if prioritizeDefcon option is checked.
         // GKP excluded: getPlayerRatings' defconPotential is always 'N/A' for GKP (real FPL
         // defensive-contribution points don't apply to goalkeepers), so a GKP check here would
@@ -1500,6 +1527,16 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
         const factor = window.getPlayerMinutesFactor ? window.getPlayerMinutesFactor(p) : 1.0;
         const pts = raw * chance * factor;
         let score = objective === 'efficiency' ? getPlayerEfficiency(p, state.currentGw) * 10 : pts;
+        
+        if (includeHeuristics && state.prioritizeFixtures !== false) {
+            const predDiff = pred.diff || 3;
+            if (predDiff <= 2) {
+                score += (3 - predDiff) * 1.2;
+            } else if (predDiff >= 4) {
+                score -= (predDiff - 3) * 1.2;
+            }
+        }
+        
         // GKP excluded here too -- same reason as the other prioritizeDefcon check above.
         if (includeHeuristics && state.prioritizeDefcon && (p.position === 'DEF' || p.position === 'MID')) {
             const ratings = getPlayerRatings(p, state.currentGw);

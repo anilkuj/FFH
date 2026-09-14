@@ -158,6 +158,7 @@ export function renderStrategy(container, state, actions) {
 /* -------------------------------------------------------------------------- */
 function renderActionHubView(res, state, savedTeamId, cardBg, panelBg, border, textMain, textMuted) {
     const isRoll = res.actionType === 'ROLL';
+    const isRuleBreach = res.hasRuleBreach;
     const primaryCap = res.primaryCaptain;
     const viceCap = res.viceCaptain;
     const userData = state.fplUserData || {};
@@ -208,6 +209,27 @@ function renderActionHubView(res, state, savedTeamId, cardBg, panelBg, border, t
                 </div>
             </div>
 
+            ${isRuleBreach ? `
+                <!-- Rule Breach Emergency Alert Banner -->
+                <div style="background: rgba(239, 68, 68, 0.12); border: 2px solid #ef4444; border-radius: 14px; padding: 18px 20px; display: flex; align-items: flex-start; gap: 14px; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.25);">
+                    <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(239, 68, 68, 0.2); display: flex; align-items: center; justify-content: center; color: #ef4444; font-weight: 800; flex-shrink: 0;">
+                        <i data-lucide="alert-triangle" style="width: 24px; height: 24px;"></i>
+                    </div>
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                            <span style="background: #ef4444; color: #fff; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 4px; text-transform: uppercase;">FPL Rule Breach Detected</span>
+                            <span style="font-size: 11px; font-weight: 700; color: #ef4444;">${res.breachedTeams.join(', ')} Limit Exceeded (4 Players Selected)</span>
+                        </div>
+                        <h4 style="font-family: var(--font-heading); font-size: 16px; font-weight: 800; color: ${textMain}; margin: 0 0 6px 0;">
+                            You currently have 4 players selected from ${res.breachedTeams.join(', ')} (FPL Limit is 3)!
+                        </h4>
+                        <p style="font-size: 12px; color: ${textMuted}; margin: 0; line-height: 1.5;">
+                            FPL rules strictly cap squad selection to 3 players per Premier League team. No further transfer submissions are permitted until you transfer out 1 ${res.breachedTeams.join(', ')} player OR activate your <strong>Wildcard</strong> / <strong>Free Hit</strong> chip strategy to restructure your squad with 0 hit penalty.
+                        </p>
+                    </div>
+                </div>
+            ` : ''}
+
             <!-- 60.0 xP Gameweek Target Benchmark Card -->
             <div style="background: linear-gradient(135deg, rgba(0, 255, 136, 0.08), rgba(0, 242, 254, 0.06)); border: 1px solid rgba(0, 255, 136, 0.25); border-radius: 14px; padding: 18px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; box-shadow: var(--shadow-sm);">
                 <div style="display: flex; align-items: center; gap: 14px;">
@@ -243,14 +265,14 @@ function renderActionHubView(res, state, savedTeamId, cardBg, panelBg, border, t
             </div>
 
             <!-- Directive Recommendation Card -->
-            <div style="background: ${cardBg}; border: 1px solid ${isRoll ? 'rgba(0, 242, 254, 0.4)' : 'rgba(0, 255, 136, 0.4)'}; border-radius: 16px; padding: 24px; box-shadow: var(--shadow-lg); position: relative; overflow: hidden;">
-                <div style="position: absolute; top: 0; right: 0; padding: 8px 16px; background: ${isRoll ? 'rgba(0, 242, 254, 0.15)' : 'rgba(0, 255, 136, 0.15)'}; border-bottom-left-radius: 12px; font-size: 11px; font-weight: 800; color: ${isRoll ? 'var(--secondary)' : 'var(--primary)'}; border-left: 1px solid ${border}; border-bottom: 1px solid ${border};">
-                    OPTIMAL DIRECTIVE FOR GW${state.currentGw}
+            <div style="background: ${cardBg}; border: 1px solid ${isRuleBreach ? '#ef4444' : (isRoll ? 'rgba(0, 242, 254, 0.4)' : 'rgba(0, 255, 136, 0.4)')}; border-radius: 16px; padding: 24px; box-shadow: var(--shadow-lg); position: relative; overflow: hidden;">
+                <div style="position: absolute; top: 0; right: 0; padding: 8px 16px; background: ${isRuleBreach ? 'rgba(239, 68, 68, 0.15)' : (isRoll ? 'rgba(0, 242, 254, 0.15)' : 'rgba(0, 255, 136, 0.15)')}; border-bottom-left-radius: 12px; font-size: 11px; font-weight: 800; color: ${isRuleBreach ? '#ef4444' : (isRoll ? 'var(--secondary)' : 'var(--primary)')}; border-left: 1px solid ${border}; border-bottom: 1px solid ${border};">
+                    ${isRuleBreach ? 'EMERGENCY ACTION REQUIRED' : `OPTIMAL DIRECTIVE FOR GW${state.currentGw}`}
                 </div>
 
                 <div style="display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
-                    <div style="width: 48px; height: 48px; border-radius: 12px; background: ${isRoll ? 'rgba(0, 242, 254, 0.15)' : 'rgba(0, 255, 136, 0.15)'}; display: flex; align-items: center; justify-content: center; color: ${isRoll ? 'var(--secondary)' : 'var(--primary)'}; flex-shrink: 0;">
-                        <i data-lucide="${isRoll ? 'rotate-ccw' : 'arrow-right-left'}" style="width: 26px; height: 26px;"></i>
+                    <div style="width: 48px; height: 48px; border-radius: 12px; background: ${isRuleBreach ? 'rgba(239, 68, 68, 0.15)' : (isRoll ? 'rgba(0, 242, 254, 0.15)' : 'rgba(0, 255, 136, 0.15)')}; display: flex; align-items: center; justify-content: center; color: ${isRuleBreach ? '#ef4444' : (isRoll ? 'var(--secondary)' : 'var(--primary)')}; flex-shrink: 0;">
+                        <i data-lucide="${isRuleBreach ? 'alert-triangle' : (isRoll ? 'rotate-ccw' : 'arrow-right-left')}" style="width: 26px; height: 26px;"></i>
                     </div>
                     <div>
                         <span style="font-size: 11px; font-weight: 800; color: ${textMuted}; text-transform: uppercase; letter-spacing: 0.5px;">Recommended Action</span>
@@ -258,9 +280,11 @@ function renderActionHubView(res, state, savedTeamId, cardBg, panelBg, border, t
                             ${res.executiveRecommendation}
                         </h3>
                         <p style="font-size: 12.5px; color: ${textMuted}; margin: 0; line-height: 1.5;">
-                            ${isRoll 
-                                ? `Preserves your free transfer to bank ${res.nextFreeTransfers} FTs for GW${state.currentGw + 1}. No single transfer yields >${res.riskProfile.minDeltaThreshold.toFixed(1)} xP delta over 5 GWs.` 
-                                : `Net projected gain of +${res.projectedEVGain.toFixed(1)} xP over 5 GWs after accounting for transfer costs.`}
+                            ${isRuleBreach
+                                ? `Must sell 1 ${res.breachedTeams[0]} player to restore FPL squad compliance, OR trigger a Wildcard / Free Hit chip strategy.`
+                                : (isRoll 
+                                    ? `Preserves your free transfer to bank ${res.nextFreeTransfers} FTs for GW${state.currentGw + 1}. No single transfer yields >${res.riskProfile.minDeltaThreshold.toFixed(1)} xP delta over 5 GWs.` 
+                                    : `Net projected gain of +${res.projectedEVGain.toFixed(1)} xP over 5 GWs after accounting for transfer costs.`)}
                         </p>
                     </div>
                 </div>
@@ -268,7 +292,7 @@ function renderActionHubView(res, state, savedTeamId, cardBg, panelBg, border, t
                 <!-- Stats Strip -->
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; background: ${panelBg}; padding: 14px; border-radius: 10px; border: 1px solid ${border}; margin-top: 12px;">
                     <div>
-                        <span style="font-size: 11px; color: ${textMuted}; display: block;">Projected 5-GW EV Gain</span>
+                        <span style="font-size: 11px; color: ${textMuted}; display: block;">Projected EV Gain</span>
                         <strong style="font-size: 16px; color: var(--primary); font-family: var(--font-heading);">+${res.projectedEVGain.toFixed(1)} xP</strong>
                     </div>
                     <div>
@@ -362,31 +386,67 @@ function renderActionHubView(res, state, savedTeamId, cardBg, panelBg, border, t
 
             </div>
 
-            <!-- Active Season Chips Used Inventory Grid -->
+            <!-- Active Season Chips Used Inventory Grid (2 Half Split) -->
             <div style="background: ${cardBg}; border: 1px solid ${border}; border-radius: 14px; padding: 20px; box-shadow: var(--shadow-md);">
-                <h3 style="font-family: var(--font-heading); font-size: 15px; font-weight: 800; color: ${textMain}; margin: 0 0 12px 0; display: flex; align-items: center; justify-content: space-between;">
+                <h3 style="font-family: var(--font-heading); font-size: 15px; font-weight: 800; color: ${textMain}; margin: 0 0 16px 0; display: flex; align-items: center; justify-content: space-between;">
                     <span style="display: flex; align-items: center; gap: 8px;">
                         <i data-lucide="layers" style="color: var(--primary); width: 16px; height: 16px;"></i>
-                        Active Season Chips Inventory
+                        2-Half Chip Deployment Strategy & Inventory
                     </span>
-                    <span style="font-size: 11px; font-weight: 600; color: ${textMuted};">GW1 – GW38 Tracker</span>
+                    <span style="font-size: 11px; font-weight: 600; color: ${textMuted};">Half 1 (GW1-19) vs Half 2 (GW20-38)</span>
                 </h3>
 
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px;">
-                    ${Object.keys(res.usedChips).map(key => {
-                        const chip = res.usedChips[key];
-                        return `
-                            <div style="background: ${chip.used ? 'rgba(239, 68, 68, 0.08)' : 'rgba(0, 255, 136, 0.08)'}; border: 1px solid ${chip.used ? 'rgba(239, 68, 68, 0.25)' : 'rgba(0, 255, 136, 0.25)'}; border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between;">
-                                <div>
-                                    <strong style="font-size: 12px; color: ${textMain}; display: block;">${chip.name}</strong>
-                                    <span style="font-size: 10px; color: ${textMuted};">${chip.limit}</span>
-                                </div>
-                                <span style="font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; ${chip.used ? 'background: rgba(239, 68, 68, 0.2); color: #ef4444;' : 'background: rgba(0, 255, 136, 0.2); color: var(--primary);'}">
-                                    ${chip.used ? `USED (GW${chip.usedGw})` : 'AVAILABLE'}
-                                </span>
-                            </div>
-                        `;
-                    }).join('')}
+                <!-- 2-Half Split Grid -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+                    
+                    <!-- HALF 1 CHIPS -->
+                    <div style="background: ${panelBg}; border: 1px solid ${border}; border-radius: 10px; padding: 14px;">
+                        <div style="font-size: 12px; font-weight: 800; color: var(--primary); margin-bottom: 10px; display: flex; justify-content: space-between;">
+                            <span>HALF 1 CHIPS (GW1 – GW19)</span>
+                            <span style="font-size: 10px; color: ${textMuted}; font-weight: 600;">Expires GW19</span>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            ${['wildcard1', 'freeHit'].map(key => {
+                                const chip = res.usedChips[key];
+                                return `
+                                    <div style="background: ${chip.used ? 'rgba(239, 68, 68, 0.08)' : 'rgba(0, 255, 136, 0.08)'}; border: 1px solid ${chip.used ? 'rgba(239, 68, 68, 0.25)' : 'rgba(0, 255, 136, 0.25)'}; border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between;">
+                                        <div>
+                                            <strong style="font-size: 12px; color: ${textMain}; display: block;">${chip.name}</strong>
+                                            <span style="font-size: 10px; color: ${textMuted};">${chip.limit}</span>
+                                        </div>
+                                        <span style="font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; ${chip.used ? 'background: rgba(239, 68, 68, 0.2); color: #ef4444;' : 'background: rgba(0, 255, 136, 0.2); color: var(--primary);'}">
+                                            ${chip.used ? `USED (GW${chip.usedGw})` : 'AVAILABLE'}
+                                        </span>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+
+                    <!-- HALF 2 CHIPS -->
+                    <div style="background: ${panelBg}; border: 1px solid ${border}; border-radius: 10px; padding: 14px;">
+                        <div style="font-size: 12px; font-weight: 800; color: #8b5cf6; margin-bottom: 10px; display: flex; justify-content: space-between;">
+                            <span>HALF 2 CHIPS (GW20 – GW38)</span>
+                            <span style="font-size: 10px; color: ${textMuted}; font-weight: 600;">Unlocks GW20</span>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            ${['wildcard2', 'tripleCaptain', 'benchBoost'].map(key => {
+                                const chip = res.usedChips[key];
+                                return `
+                                    <div style="background: ${chip.used ? 'rgba(239, 68, 68, 0.08)' : 'rgba(0, 255, 136, 0.08)'}; border: 1px solid ${chip.used ? 'rgba(239, 68, 68, 0.25)' : 'rgba(0, 255, 136, 0.25)'}; border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between;">
+                                        <div>
+                                            <strong style="font-size: 12px; color: ${textMain}; display: block;">${chip.name}</strong>
+                                            <span style="font-size: 10px; color: ${textMuted};">${chip.limit}</span>
+                                        </div>
+                                        <span style="font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; ${chip.used ? 'background: rgba(239, 68, 68, 0.2); color: #ef4444;' : 'background: rgba(0, 255, 136, 0.2); color: var(--primary);'}">
+                                            ${chip.used ? `USED (GW${chip.usedGw})` : 'AVAILABLE'}
+                                        </span>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+
                 </div>
             </div>
 

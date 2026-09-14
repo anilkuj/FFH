@@ -421,9 +421,26 @@ export function showPlannerSquadAnalysisModal(container, state, actions) {
         return null;
     };
 
+    const squadTeamCounts = {};
+    squad.forEach(id => {
+        const p = PLAYERS.find(pl => pl.id === id);
+        if (p && p.team) {
+            squadTeamCounts[p.team] = (squadTeamCounts[p.team] || 0) + 1;
+        }
+    });
+
     const squadRisksReport = squad.map(id => {
         const p = PLAYERS.find(pl => pl.id === id);
         if (!p) return null;
+        if (p.team && squadTeamCounts[p.team] > 3) {
+            return {
+                player: p,
+                risk: "High",
+                type: "FPL RULE BREACH",
+                reason: `4 ${p.team} players selected in squad (FPL limit is 3).`,
+                details: `You cannot make further transfers until you sell 1 ${p.team} player or activate your Wildcard/Free Hit chip.`
+            };
+        }
         const risk = computeDetailedLocalRisk(p);
         if (risk) {
             return { player: p, ...risk };
