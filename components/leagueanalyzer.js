@@ -1,3 +1,5 @@
+import { PLAYERS } from '../data.js';
+
 export function renderLeagueAnalyzer(container, state, actions) {
     const isLight = document.documentElement.classList.contains('light-theme');
 
@@ -5,9 +7,12 @@ export function renderLeagueAnalyzer(container, state, actions) {
     let leagueId = container.dataset.leagueId || localStorage.getItem('fpl_hub_last_analyzed_league_id') || '';
     let leagueData = null;
     let entriesHistory = {}; // Key: entryId, Value: history data
+    let rivalPicks = {}; // Key: entryId, Value: squad picks data
+    let userEntryId = null;
+    let isFetchingRivalPicks = false;
     let isLoading = false;
     let loadProgress = '';
-    let activeSubTab = container.dataset.subTab || 'analysis'; // Tab options: analysis, standings, chart
+    let activeSubTab = container.dataset.subTab || 'analysis'; // Tab options: analysis, rivals, standings, chart
     let selectedEntries = []; // List of entryIds to compare in the chart
 
     // Read stored variables if already loaded in container memory
@@ -16,6 +21,8 @@ export function renderLeagueAnalyzer(container, state, actions) {
             const cached = JSON.parse(container.dataset.loadedData);
             leagueData = cached.leagueData;
             entriesHistory = cached.entriesHistory;
+            rivalPicks = cached.rivalPicks || {};
+            userEntryId = cached.userEntryId || null;
             selectedEntries = cached.selectedEntries || [];
         } catch (e) {
             console.error('Failed to parse cached league analyzer data:', e);
@@ -28,11 +35,32 @@ export function renderLeagueAnalyzer(container, state, actions) {
         container.dataset.loadedData = JSON.stringify({
             leagueData,
             entriesHistory,
+            rivalPicks,
+            userEntryId,
             selectedEntries
         });
         if (leagueId) {
             localStorage.setItem('fpl_hub_last_analyzed_league_id', leagueId);
         }
+    }
+
+    async function loadRivalPicksAsync(managersAbove, gw) {
+        for (const mgr of managersAbove) {
+            if (!rivalPicks[mgr.entry]) {
+                try {
+                    const res = await fetch(`/api/fpl-picks?teamId=${mgr.entry}&gw=${gw}`);
+                    const result = await res.json();
+                    if (result.success && result.data) {
+                        rivalPicks[mgr.entry] = result.data;
+                    }
+                } catch (e) {
+                    console.error(`Failed to fetch picks for rival entry ${mgr.entry}:`, e);
+                }
+            }
+        }
+        isFetchingRivalPicks = false;
+        saveStateToContainer();
+        render();
     }
 
     async function loadLeague() {
@@ -356,6 +384,7 @@ export function renderLeagueAnalyzer(container, state, actions) {
         // Sub tab navigation items
         const subTabs = [
             { key: 'analysis', label: 'League Highlights', icon: 'award' },
+            { key: 'rivals', label: 'Rival Transfer Suggestions', icon: 'zap' },
             { key: 'standings', label: 'Standings Grid', icon: 'list' },
             { key: 'chart', label: 'Performance Plot', icon: 'activity' }
         ];
@@ -397,6 +426,585 @@ export function renderLeagueAnalyzer(container, state, actions) {
                             </div>
                         `}
                     </div>
+                </div>
+            `;
+        } else if (activeSubTab === 'rivals') {
+            // 1. Identify User Entry and Teams Above User
+            const standings = leagueData.standings ? leagueData.standings.results : [];
+            let storedUserTeamId = localStorage.getItem('fpl_hub_last_imported_team_id');
+            let parsedUserTeamId = storedUserTeamId ? parseInt(storedUserTeamId, 10) : null;
+            
+            if (userEntryId === null) {
+                if (parsedUserTeamId && standings.some(s => s.entry === parsedUserTeamId)) {
+                    userEntryId = parsedUserTeamId;
+                } else {
+                    userEntryId = standings.length > 2 ? standings[2].entry : (standings[0] ? standings[0].entry : null);
+                }
+            }
+
+            const userIndex = standings.findIndex(e => e.entry === userEntryId);
+            const userEntry = userIndex >= 0 ? standings[userIndex] : (standings[0] || { rank: 1, entry_name: 'My Team', total: 0 });
+            const userRank = userEntry.rank || (userIndex >= 0 ? userIndex + 1 : 1);
+            
+            // Managers ranked strictly above user (or top pursuers if user is 1st)
+            let managersAbove = [];
+            if (userIndex > 0) {
+                managersAbove = standings.slice(0, userIndex);
+            } else if (userIndex === 0 && standings.length > 1) {
+                managersAbove = standings.slice(1, Math.min(6, standings.length));
+            }
+
+            // Cap managers to top 10 above user for performance
+            managersAbove = managersAbove.slice(0, 10);
+
+            // Check if we need to fetch rival picks
+            const missingPicks = managersAbove.filter(mgr => !rivalPicks[mgr.entry]);
+            const currentGw = state ? state.currentGw : 2;
+            
+            if (missingPicks.length > 0 && !isFetchingRivalPicks) {
+                isFetchingRivalPicks = true;
+                loadRivalPicksAsync(managersAbove, currentGw);
+            }
+
+            // Gameweek Horizon (Next 3 Gameweeks)
+            const targetGws = [currentGw, currentGw + 1, currentGw + 2];
+
+            // Calculate rival ownership among teams above
+            const rivalCountMap = {};
+            let fetchedRivalsCount = 0;
+
+            managersAbove.forEach(mgr => {
+                const pickData = rivalPicks[mgr.entry];
+                if (pickData && pickData.picks) {
+                    fetchedRivalsCount++;
+                    pickData.picks.forEach(p => {
+                        const pid = p.element;
+                        rivalCountMap[pid] = (rivalCountMap[pid] || 0) + 1;
+                    });
+                }
+            });
+
+            // Calculate user squad IDs & starting XI
+            const userSquadIds = state ? state.squad : [];
+            const userStarters = state ? state.starters : [];
+            const userBank = state ? state.getSquadForGw(currentGw).bank : 0.5;
+
+            // Helper to get 3-GW fixture metrics for any player
+            const get3GwMetrics = (player) => {
+                if (!player || !player.predictions) return { xp3: 0, fixtures: [] };
+                let sumXp = 0;
+                const fixtures = [];
+                targetGws.forEach(gw => {
+                    const pr = player.predictions.find(p => p.gw == gw);
+                    if (pr) {
+                        const factor = (typeof window !== 'undefined' && window.getPlayerMinutesFactor) ? window.getPlayerMinutesFactor(player) : 1;
+                        const pts = Math.round((pr.pts || 0) * factor * 10) / 10;
+                        sumXp += pts;
+                        fixtures.push({ gw, opp: pr.opp || 'BYE', loc: pr.loc || '', diff: pr.diff || 3, pts });
+                    } else {
+                        fixtures.push({ gw, opp: 'BYE', loc: '', diff: 3, pts: 0 });
+                    }
+                });
+                return { xp3: Math.round(sumXp * 10) / 10, fixtures };
+            };
+
+            // Process Rival Ownership & Threat List
+            const rivalThreats = [];
+            Object.keys(rivalCountMap).forEach(pidStr => {
+                const pid = parseInt(pidStr, 10);
+                const count = rivalCountMap[pidStr];
+                const pct = fetchedRivalsCount > 0 ? Math.round((count / fetchedRivalsCount) * 100) : 0;
+                const player = PLAYERS.find(p => p.id === pid);
+                if (player) {
+                    const metrics = get3GwMetrics(player);
+                    const isUserOwned = userSquadIds.includes(pid);
+                    rivalThreats.push({
+                        player,
+                        count,
+                        pct,
+                        xp3: metrics.xp3,
+                        fixtures: metrics.fixtures,
+                        isUserOwned
+                    });
+                }
+            });
+
+            // Sort rival threats by rival ownership desc, then 3-GW xP desc
+            rivalThreats.sort((a, b) => b.pct - a.pct || b.xp3 - a.xp3);
+
+            // Find User Weakest Starters over next 3 GWs
+            const userStarterPlayers = userStarters.map(id => PLAYERS.find(p => p.id === id)).filter(Boolean);
+            const userStarterMetrics = userStarterPlayers.map(p => ({
+                player: p,
+                ...get3GwMetrics(p)
+            })).sort((a, b) => a.xp3 - b.xp3); // Lowest xP first
+
+            // Find Transfer Suggestions
+            const suggestions = [];
+
+            if (userStarterMetrics.length > 0 && PLAYERS && PLAYERS.length > 0) {
+                // Candidate replacements across positions
+                ['MID', 'FWD', 'DEF'].forEach(pos => {
+                    const weakAsset = userStarterMetrics.find(m => m.player.position === pos);
+                    if (!weakAsset) return;
+
+                    const maxAffordablePrice = Math.round((weakAsset.player.price + userBank) * 10) / 10;
+                    
+                    // Filter market targets in same position
+                    const validTargets = PLAYERS.filter(p => 
+                        p.position === pos &&
+                        p.id !== weakAsset.player.id &&
+                        !userSquadIds.includes(p.id) &&
+                        p.price <= maxAffordablePrice &&
+                        p.status !== 'i' && p.status !== 's' && p.status !== 'u'
+                    ).map(p => ({
+                        player: p,
+                        rivalPct: fetchedRivalsCount > 0 ? Math.round(((rivalCountMap[p.id] || 0) / fetchedRivalsCount) * 100) : 0,
+                        ...get3GwMetrics(p)
+                    }));
+
+                    // 1. Sword Suggestion (Differential Rank Attack)
+                    const diffTargets = validTargets.filter(t => t.rivalPct <= 25 && t.xp3 > weakAsset.xp3 + 1.2)
+                        .sort((a, b) => b.xp3 - a.xp3);
+                    
+                    if (diffTargets.length > 0 && !suggestions.some(s => s.type === 'sword')) {
+                        const topDiff = diffTargets[0];
+                        suggestions.push({
+                            type: 'sword',
+                            title: '⚔️ Rank-Climbing Differential Attack',
+                            subtitle: `Low rival ownership (${topDiff.rivalPct}%) + Great 3-fixture run`,
+                            outPlayer: weakAsset.player,
+                            outMetrics: weakAsset,
+                            inPlayer: topDiff.player,
+                            inMetrics: topDiff,
+                            gain: Math.round((topDiff.xp3 - weakAsset.xp3) * 10) / 10,
+                            rivalPct: topDiff.rivalPct
+                        });
+                    }
+
+                    // 2. Shield Suggestion (Template Blocker)
+                    const shieldTargets = validTargets.filter(t => t.rivalPct >= 40 && t.xp3 >= weakAsset.xp3 - 0.5)
+                        .sort((a, b) => b.rivalPct - a.rivalPct || b.xp3 - a.xp3);
+                    
+                    if (shieldTargets.length > 0 && !suggestions.some(s => s.type === 'shield')) {
+                        const topShield = shieldTargets[0];
+                        suggestions.push({
+                            type: 'shield',
+                            title: '🛡️ Rival Shield (Template Coverage)',
+                            subtitle: `Owned by ${topShield.rivalPct}% of managers above you — prevents rank bleed`,
+                            outPlayer: weakAsset.player,
+                            outMetrics: weakAsset,
+                            inPlayer: topShield.player,
+                            inMetrics: topShield,
+                            gain: Math.round((topShield.xp3 - weakAsset.xp3) * 10) / 10,
+                            rivalPct: topShield.rivalPct
+                        });
+                    }
+
+                    // 3. Max xP Gain Suggestion
+                    const maxXpTargets = validTargets.filter(t => t.xp3 > weakAsset.xp3 + 1.8)
+                        .sort((a, b) => b.xp3 - a.xp3);
+                    
+                    if (maxXpTargets.length > 0 && suggestions.length < 3) {
+                        const topMax = maxXpTargets[0];
+                        if (!suggestions.some(s => s.inPlayer.id === topMax.player.id)) {
+                            suggestions.push({
+                                type: 'max_xp',
+                                title: '🚀 Maximum 3-GW xP Upgrade',
+                                subtitle: `Highest overall projected points gain over next 3 fixtures`,
+                                outPlayer: weakAsset.player,
+                                outMetrics: weakAsset,
+                                inPlayer: topMax.player,
+                                inMetrics: topMax,
+                                gain: Math.round((topMax.xp3 - weakAsset.xp3) * 10) / 10,
+                                rivalPct: topMax.rivalPct
+                            });
+                        }
+                    }
+                });
+            }
+
+            // Manager Selector Options
+            const managerOptionsHtml = standings.map(m => `
+                <option value="${m.entry}" ${m.entry === userEntryId ? 'selected' : ''}>
+                    Rank #${m.rank}: ${m.entry_name} (${m.player_name}) — ${m.total} pts
+                </option>
+            `).join('');
+
+            tabContentHtml = `
+                <div style="display: flex; flex-direction: column; gap: 24px; width: 100%;">
+                    
+                    <!-- Top Controls & Summary Banner -->
+                    <div style="
+                        background: ${isLight ? '#ffffff' : 'rgba(30, 41, 59, 0.5)'};
+                        border: 1px solid var(--border-color);
+                        border-radius: 16px;
+                        padding: 20px;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 16px;
+                    ">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                            <div style="display: flex; flex-direction: column; gap: 4px;">
+                                <h3 style="margin: 0; font-size: 18px; font-weight: 800; color: var(--text-main); font-family: var(--font-header);">
+                                    🎯 Mini-League Rank Climber & Transfer Analyzer
+                                </h3>
+                                <p style="margin: 0; font-size: 12.5px; color: var(--text-muted);">
+                                    Analyze teams ranked above you, inspect their player ownership, and get optimized transfer suggestions for the next 3 fixtures.
+                                </p>
+                            </div>
+
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <label style="font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Select Your Team:</label>
+                                <select id="userEntryRivalsSelect" style="
+                                    padding: 8px 12px;
+                                    border-radius: 8px;
+                                    background: ${isLight ? '#f8fafc' : 'rgba(15, 23, 42, 0.8)'};
+                                    border: 1px solid var(--border-color);
+                                    color: var(--text-main);
+                                    font-size: 13px;
+                                    font-weight: 700;
+                                    outline: none;
+                                ">
+                                    ${managerOptionsHtml}
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Stats KPI Grid -->
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+                            <div style="
+                                padding: 14px;
+                                border-radius: 10px;
+                                background: rgba(139, 92, 246, 0.08);
+                                border: 1px solid rgba(139, 92, 246, 0.2);
+                                display: flex;
+                                flex-direction: column;
+                                gap: 4px;
+                            ">
+                                <span style="font-size: 10.5px; font-weight: 800; color: #a855f7; text-transform: uppercase;">Your Current Rank</span>
+                                <span style="font-size: 20px; font-weight: 900; color: var(--text-main);">Rank #${userRank}</span>
+                                <span style="font-size: 11px; color: var(--text-muted);">${userEntry.entry_name} (${userEntry.total} pts)</span>
+                            </div>
+
+                            <div style="
+                                padding: 14px;
+                                border-radius: 10px;
+                                background: rgba(59, 130, 246, 0.08);
+                                border: 1px solid rgba(59, 130, 246, 0.2);
+                                display: flex;
+                                flex-direction: column;
+                                gap: 4px;
+                            ">
+                                <span style="font-size: 10.5px; font-weight: 800; color: #3b82f6; text-transform: uppercase;">Target Gap to 1st Place</span>
+                                <span style="font-size: 20px; font-weight: 900; color: var(--text-main);">
+                                    ${userRank === 1 ? '👑 1st Place!' : `-${standings[0].total - userEntry.total} pts`}
+                                </span>
+                                <span style="font-size: 11px; color: var(--text-muted);">
+                                    ${userRank === 1 ? 'Defending 1st Rank' : `Leader: ${standings[0].entry_name}`}
+                                </span>
+                            </div>
+
+                            <div style="
+                                padding: 14px;
+                                border-radius: 10px;
+                                background: rgba(16, 185, 129, 0.08);
+                                border: 1px solid rgba(16, 185, 129, 0.2);
+                                display: flex;
+                                flex-direction: column;
+                                gap: 4px;
+                            ">
+                                <span style="font-size: 10.5px; font-weight: 800; color: #10b981; text-transform: uppercase;">Rival Teams Analyzed</span>
+                                <span style="font-size: 20px; font-weight: 900; color: var(--text-main);">
+                                    ${managersAbove.length} Teams Above
+                                </span>
+                                <span style="font-size: 11px; color: var(--text-muted);">
+                                    ${fetchedRivalsCount}/${managersAbove.length} Rival Squads Loaded
+                                </span>
+                            </div>
+
+                            <div style="
+                                padding: 14px;
+                                border-radius: 10px;
+                                background: rgba(245, 158, 11, 0.08);
+                                border: 1px solid rgba(245, 158, 11, 0.2);
+                                display: flex;
+                                flex-direction: column;
+                                gap: 4px;
+                            ">
+                                <span style="font-size: 10.5px; font-weight: 800; color: #f59e0b; text-transform: uppercase;">3-Fixture Horizon</span>
+                                <span style="font-size: 20px; font-weight: 900; color: var(--text-main);">
+                                    GW${currentGw} – GW${currentGw + 2}
+                                </span>
+                                <span style="font-size: 11px; color: var(--text-muted);">Projections & Fixture Difficulty</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    ${isFetchingRivalPicks ? `
+                        <div style="
+                            padding: 30px;
+                            text-align: center;
+                            background: rgba(139, 92, 246, 0.05);
+                            border: 1px dashed rgba(139, 92, 246, 0.3);
+                            border-radius: 12px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 12px;
+                            color: var(--text-main);
+                            font-weight: 700;
+                        ">
+                            <div style="
+                                width: 24px;
+                                height: 24px;
+                                border: 2.5px solid rgba(139, 92, 246, 0.2);
+                                border-top-color: #8b5cf6;
+                                border-radius: 50%;
+                                animation: spin 1s linear infinite;
+                            "></div>
+                            <span>Fetching live squad picks for ${managersAbove.length} managers ranked above you...</span>
+                        </div>
+                    ` : ''}
+
+                    <!-- 3-Gameweek Transfer Recommendations Cards -->
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <h4 style="margin: 0; font-size: 14px; font-weight: 800; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;">
+                            <i data-lucide="zap" style="width: 16px; height: 16px; color: #8b5cf6;"></i>
+                            Rank-Climbing Transfer Suggestions (Next 3 Fixtures)
+                        </h4>
+
+                        ${suggestions.length === 0 ? `
+                            <div style="
+                                padding: 24px;
+                                background: ${isLight ? '#ffffff' : 'rgba(30, 41, 59, 0.4)'};
+                                border: 1px solid var(--border-color);
+                                border-radius: 12px;
+                                text-align: center;
+                                color: var(--text-muted);
+                                font-size: 13px;
+                            ">
+                                💡 Loading rival squads or your squad is in great shape for the next 3 fixtures! Ensure your squad is set in the Transfer Planner.
+                            </div>
+                        ` : `
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px;">
+                                ${suggestions.map(s => `
+                                    <div style="
+                                        background: ${isLight ? '#ffffff' : 'rgba(30, 41, 59, 0.4)'};
+                                        border: 1px solid ${s.type === 'sword' ? 'rgba(16, 185, 129, 0.3)' : (s.type === 'shield' ? 'rgba(59, 130, 246, 0.3)' : 'rgba(139, 92, 246, 0.3)')};
+                                        border-radius: 14px;
+                                        padding: 20px;
+                                        display: flex;
+                                        flex-direction: column;
+                                        gap: 16px;
+                                        box-shadow: ${isLight ? '0 4px 10px rgba(0,0,0,0.03)' : 'none'};
+                                    ">
+                                        <!-- Header Title -->
+                                        <div style="display: flex; flex-direction: column; gap: 2px;">
+                                            <span style="font-size: 14px; font-weight: 800; color: ${s.type === 'sword' ? '#10b981' : (s.type === 'shield' ? '#3b82f6' : '#8b5cf6')};">
+                                                ${s.title}
+                                            </span>
+                                            <span style="font-size: 11px; color: var(--text-muted);">${s.subtitle}</span>
+                                        </div>
+
+                                        <!-- Transfer Swap Box -->
+                                        <div style="
+                                            display: flex;
+                                            align-items: center;
+                                            justify-content: space-between;
+                                            gap: 12px;
+                                            background: ${isLight ? '#f8fafc' : 'rgba(15, 23, 42, 0.5)'};
+                                            border: 1px solid var(--border-color);
+                                            border-radius: 10px;
+                                            padding: 12px;
+                                        ">
+                                            <!-- OUT Player -->
+                                            <div style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
+                                                <span style="font-size: 10px; font-weight: 800; color: #ef4444; text-transform: uppercase;">OUT</span>
+                                                <span style="font-size: 13.5px; font-weight: 800; color: var(--text-main);">${s.outPlayer.web_name || s.outPlayer.name}</span>
+                                                <span style="font-size: 11px; color: var(--text-muted);">${s.outPlayer.team} • £${s.outPlayer.price.toFixed(1)}m</span>
+                                                <div style="display: flex; gap: 4px; margin-top: 4px;">
+                                                    ${s.outMetrics.fixtures.map(f => `
+                                                        <span style="
+                                                            font-size: 9px;
+                                                            font-weight: 800;
+                                                            padding: 2px 4px;
+                                                            border-radius: 4px;
+                                                            background: ${getDiffColor(f.diff)};
+                                                            color: #ffffff;
+                                                        ">${f.opp}</span>
+                                                    `).join('')}
+                                                </div>
+                                                <span style="font-size: 11px; font-weight: 700; color: var(--text-muted); margin-top: 2px;">${s.outMetrics.xp3} xP</span>
+                                            </div>
+
+                                            <!-- Arrow Icon -->
+                                            <div style="
+                                                width: 32px;
+                                                height: 32px;
+                                                border-radius: 50%;
+                                                background: rgba(139, 92, 246, 0.1);
+                                                display: flex;
+                                                align-items: center;
+                                                justify-content: center;
+                                            ">
+                                                <i data-lucide="arrow-right" style="width: 16px; height: 16px; color: #8b5cf6;"></i>
+                                            </div>
+
+                                            <!-- IN Player -->
+                                            <div style="flex: 1; display: flex; flex-direction: column; gap: 4px; text-align: right; align-items: flex-end;">
+                                                <span style="font-size: 10px; font-weight: 800; color: #10b981; text-transform: uppercase;">IN</span>
+                                                <span style="font-size: 13.5px; font-weight: 800; color: var(--text-main);">${s.inPlayer.web_name || s.inPlayer.name}</span>
+                                                <span style="font-size: 11px; color: var(--text-muted);">${s.inPlayer.team} • £${s.inPlayer.price.toFixed(1)}m</span>
+                                                <div style="display: flex; gap: 4px; margin-top: 4px;">
+                                                    ${s.inMetrics.fixtures.map(f => `
+                                                        <span style="
+                                                            font-size: 9px;
+                                                            font-weight: 800;
+                                                            padding: 2px 4px;
+                                                            border-radius: 4px;
+                                                            background: ${getDiffColor(f.diff)};
+                                                            color: #ffffff;
+                                                        ">${f.opp}</span>
+                                                    `).join('')}
+                                                </div>
+                                                <span style="font-size: 11px; font-weight: 700; color: #10b981; margin-top: 2px;">${s.inMetrics.xp3} xP</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Impact Footer -->
+                                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                                            <span style="
+                                                padding: 4px 10px;
+                                                border-radius: 20px;
+                                                background: rgba(16, 185, 129, 0.1);
+                                                border: 1px solid rgba(16, 185, 129, 0.3);
+                                                color: #10b981;
+                                                font-size: 12px;
+                                                font-weight: 800;
+                                            ">+${s.gain} xP Gain (Next 3 GWs)</span>
+
+                                            <button class="apply-rival-transfer-btn" data-out="${s.outPlayer.id}" data-in="${s.inPlayer.id}" style="
+                                                padding: 8px 14px;
+                                                border-radius: 8px;
+                                                background: #8b5cf6;
+                                                color: #ffffff;
+                                                font-size: 12px;
+                                                font-weight: 800;
+                                                border: none;
+                                                cursor: pointer;
+                                                display: flex;
+                                                align-items: center;
+                                                gap: 6px;
+                                                transition: all 0.2s ease;
+                                            ">
+                                                <i data-lucide="plus-circle" style="width: 14px; height: 14px;"></i>
+                                                <span>Apply to Planner</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `}
+                    </div>
+
+                    <!-- Rival Ownership & Threat Matrix -->
+                    <div style="
+                        background: ${isLight ? '#ffffff' : 'rgba(30, 41, 59, 0.4)'};
+                        border: 1px solid var(--border-color);
+                        border-radius: 16px;
+                        padding: 20px;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 16px;
+                    ">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                            <h4 style="margin: 0; font-size: 14px; font-weight: 800; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;">
+                                <i data-lucide="shield" style="width: 16px; height: 16px; color: #3b82f6;"></i>
+                                Player Ownership Among Teams Above You
+                            </h4>
+                            <span style="font-size: 11px; color: var(--text-muted);">
+                                ${fetchedRivalsCount} Rival Squads Loaded
+                            </span>
+                        </div>
+
+                        ${rivalThreats.length === 0 ? `
+                            <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 12.5px;">
+                                Loading rival squad ownership data...
+                            </div>
+                        ` : `
+                            <div style="overflow-x: auto; width: 100%;">
+                                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
+                                    <thead>
+                                        <tr style="
+                                            border-bottom: 1px solid var(--border-color);
+                                            text-transform: uppercase;
+                                            font-size: 10.5px;
+                                            font-weight: 800;
+                                            color: var(--text-muted);
+                                        ">
+                                            <th style="padding: 10px;">Player</th>
+                                            <th style="padding: 10px; text-align: center;">Position</th>
+                                            <th style="padding: 10px; text-align: center;">Price</th>
+                                            <th style="padding: 10px; text-align: center;">Rival Ownership</th>
+                                            <th style="padding: 10px; text-align: center;">3-GW xP</th>
+                                            <th style="padding: 10px; text-align: center;">Next 3 Fixtures</th>
+                                            <th style="padding: 10px; text-align: center;">Status in Your Team</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${rivalThreats.slice(0, 15).map(t => `
+                                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                                <td style="padding: 10px; font-weight: 800; color: var(--text-main);">
+                                                    ${t.player.web_name || t.player.name}
+                                                    <span style="font-size: 11px; color: var(--text-muted); font-weight: 400; margin-left: 4px;">(${t.player.team})</span>
+                                                </td>
+                                                <td style="padding: 10px; text-align: center; font-size: 11px; font-weight: 700; color: var(--text-muted);">${t.player.position}</td>
+                                                <td style="padding: 10px; text-align: center; font-weight: 700;">£${t.player.price.toFixed(1)}m</td>
+                                                <td style="padding: 10px; text-align: center;">
+                                                    <span style="
+                                                        padding: 3px 8px;
+                                                        border-radius: 12px;
+                                                        font-size: 11px;
+                                                        font-weight: 800;
+                                                        background: ${t.pct >= 60 ? 'rgba(239, 68, 68, 0.15)' : (t.pct >= 30 ? 'rgba(245, 158, 11, 0.15)' : 'rgba(59, 130, 246, 0.15)')};
+                                                        color: ${t.pct >= 60 ? '#ef4444' : (t.pct >= 30 ? '#f59e0b' : '#3b82f6')};
+                                                    ">${t.pct}% (${t.count}/${fetchedRivalsCount})</span>
+                                                </td>
+                                                <td style="padding: 10px; text-align: center; font-weight: 800; color: #10b981;">${t.xp3} xP</td>
+                                                <td style="padding: 10px; text-align: center;">
+                                                    <div style="display: flex; gap: 4px; justify-content: center;">
+                                                        ${t.fixtures.map(f => `
+                                                            <span style="
+                                                                font-size: 9px;
+                                                                font-weight: 800;
+                                                                padding: 2px 4px;
+                                                                border-radius: 4px;
+                                                                background: ${getDiffColor(f.diff)};
+                                                                color: #ffffff;
+                                                            ">${f.opp}</span>
+                                                        `).join('')}
+                                                    </div>
+                                                </td>
+                                                <td style="padding: 10px; text-align: center;">
+                                                    <span style="
+                                                        padding: 3px 10px;
+                                                        border-radius: 20px;
+                                                        font-size: 11px;
+                                                        font-weight: 800;
+                                                        background: ${t.isUserOwned ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.08)'};
+                                                        color: ${t.isUserOwned ? '#10b981' : '#ef4444'};
+                                                        border: 1px solid ${t.isUserOwned ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.2)'};
+                                                    ">${t.isUserOwned ? '✓ In Your Squad' : '✕ Unowned'}</span>
+                                                </td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        `}
+                    </div>
+
                 </div>
             `;
         } else if (activeSubTab === 'standings') {
@@ -676,6 +1284,47 @@ export function renderLeagueAnalyzer(container, state, actions) {
             });
         });
 
+        // Attach Rivals sub-tab event listeners
+        if (activeSubTab === 'rivals') {
+            const userSelect = container.querySelector('#userEntryRivalsSelect');
+            if (userSelect) {
+                userSelect.addEventListener('change', (e) => {
+                    userEntryId = parseInt(e.target.value, 10);
+                    saveStateToContainer();
+                    render();
+                });
+            }
+
+            container.querySelectorAll('.apply-rival-transfer-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const outId = parseInt(btn.getAttribute('data-out'), 10);
+                    const inId = parseInt(btn.getAttribute('data-in'), 10);
+
+                    if (state && outId && inId) {
+                        const currentGw = state.currentGw || 2;
+                        if (!state.transfers[currentGw]) {
+                            state.transfers[currentGw] = [];
+                        }
+                        state.transfers[currentGw] = state.transfers[currentGw].filter(t => t.out !== outId);
+                        state.transfers[currentGw].push({ out: outId, in: inId });
+                        state.saveState();
+
+                        const outP = PLAYERS.find(p => p.id === outId);
+                        const inP = PLAYERS.find(p => p.id === inId);
+
+                        const outName = actions ? actions.getWebName(outP) : (outP ? outP.web_name : 'Out');
+                        const inName = actions ? actions.getWebName(inP) : (inP ? inP.web_name : 'In');
+
+                        if (actions && actions.showToast) {
+                            actions.showToast(`Applied Transfer: ${outName} ➔ ${inName} for GW${currentGw}!`, 'success');
+                        } else {
+                            alert(`Applied Transfer: ${outName} ➔ ${inName} for GW${currentGw}!`);
+                        }
+                    }
+                });
+            });
+        }
+
         // Toggle Manager Compare Selection Click Event (Chart view only)
         if (activeSubTab === 'chart') {
             container.querySelectorAll('.manager-chart-checkbox').forEach(cb => {
@@ -932,4 +1581,11 @@ function renderChipStatus(history) {
             </span>
         `;
     }).join('');
+}
+
+function getDiffColor(diff) {
+    if (diff <= 2) return '#10b981';
+    if (diff === 3) return '#64748b';
+    if (diff === 4) return '#f59e0b';
+    return '#ef4444';
 }
