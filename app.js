@@ -743,12 +743,40 @@ class AppState {
         }
     }
 
+    // Retrieves the baseline squad arrays for targetGw from imported/saved weeklyLineups if available
+    getBaselineForGw(targetGw) {
+        let baselineGw = null;
+        if (this.weeklyLineups) {
+            for (let g = targetGw; g >= 1; g--) {
+                if (this.weeklyLineups[g] && Array.isArray(this.weeklyLineups[g].starters) && this.weeklyLineups[g].starters.length > 0) {
+                    baselineGw = g;
+                    break;
+                }
+            }
+        }
+
+        if (baselineGw !== null) {
+            const wl = this.weeklyLineups[baselineGw];
+            const starters = [...(wl.starters || [])];
+            const bench = [...(wl.bench || [])];
+            const squad = [...starters, ...bench];
+            return { starters, bench, squad, baselineGw };
+        }
+
+        return {
+            starters: [...this.starters],
+            bench: [...this.bench],
+            squad: [...this.squad],
+            baselineGw: 1
+        };
+    }
+
     // Resolves squad, bench, bank, and free transfers specifically for a given gameweek
     getSquadForGw(targetGw) {
-        // Clone baseline arrays
-        let starters = [...this.starters];
-        let bench = [...this.bench];
-        let squad = [...this.squad];
+        const baseline = this.getBaselineForGw(targetGw);
+        let starters = [...baseline.starters];
+        let bench = [...baseline.bench];
+        let squad = [...baseline.squad];
         
         // Calculate initial baseline cost of the squad
         const sumCost = squad.reduce((sum, id) => {
@@ -761,7 +789,9 @@ class AppState {
         // Keep track of free transfers
         let freeTransfers = 0;
 
-        for (let gw = 1; gw <= targetGw; gw++) {
+        const startLoopGw = baseline.baselineGw < targetGw ? baseline.baselineGw + 1 : targetGw;
+
+        for (let gw = startLoopGw; gw <= targetGw; gw++) {
             // Apply this week's planned transfers
             const weeklyTransfers = this.transfers[gw] || [];
             if (gw === targetGw || !this.chips[gw]?.freeHit) {

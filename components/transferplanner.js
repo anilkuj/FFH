@@ -165,11 +165,13 @@ export function renderTransferPlanner(container, state, actions) {
                 players.push({ id: null, position: posName, isStarting: false });
             }
             players.forEach((p, idx) => {
-                let isStarting = false;
-                if (posName === 'GKP' && idx === 0) isStarting = true;
-                if (posName === 'DEF' && idx < 3) isStarting = true;
-                if (posName === 'MID' && idx < 4) isStarting = true;
-                if (posName === 'FWD' && idx < 3) isStarting = true;
+                let isStarting = p.id !== null ? p.isStarting : false;
+                if (p.id === null) {
+                    if (posName === 'GKP' && idx === 0) isStarting = true;
+                    if (posName === 'DEF' && idx < 3) isStarting = true;
+                    if (posName === 'MID' && idx < 4) isStarting = true;
+                    if (posName === 'FWD' && idx < 3) isStarting = true;
+                }
 
                 slots.push({
                     position: posName,
@@ -985,58 +987,107 @@ export function renderTransferPlanner(container, state, actions) {
         };
 
         try {
-            const res = await fetch(`/api/fpl-picks?teamId=${teamId}&gw=${state.currentGw}`);
-            if (!res.ok) {
-                const errorData = await res.json().catch(() => ({}));
-                throw new Error(errorData.error || "Failed to fetch FPL picks");
+            // Fetch picks for all available gameweeks 1..currentGw in parallel
+            const maxGw = Math.max(1, state.currentGw || 1);
+            const fetchPromises = [];
+            for (let g = 1; g <= maxGw; g++) {
+                fetchPromises.push(
+                    fetch(`/api/fpl-picks?teamId=${teamId}&gw=${g}`)
+                        .then(res => res.ok ? res.json() : null)
+                        .catch(() => null)
+                );
             }
-            const responseData = await res.json();
-            if (responseData && responseData.success && responseData.data && responseData.data.picks) {
-                const picks = responseData.data.picks;
-                const importedSlots = mapFplPicksToSquadSlots(picks);
-                const bankVal = (responseData.data.entry_history ? responseData.data.entry_history.bank : 0) / 10;
-                
-                tempSourceSlots = importedSlots;
-                tempCaptain = picks.find(p => p.is_captain)?.element || null;
-                tempVice = picks.find(p => p.is_vice_captain)?.element || null;
-                tempBank = bankVal;
 
-                const teamName = responseData.teamName;
-                const finalDraftName = teamName ? `${teamName} (ID: ${teamId})` : `FPL Team (ID: ${teamId})`;
+            const results = await Promise.all(fetchPromises);
+            const weeklyLineupsObj = {};
+            let latestPicks = null;
+            let latestBankVal = 0;
+            let latestTeamName = null;
+            let currentGwSlots = null;
+            let currentGwCaptain = null;
+            let currentGwVice = null;
+            let currentGwFormation = "4-4-2";
 
-                // Overwrite the first draft slot (FPL Team ID)
-                state.drafts[0].name = finalDraftName;
-                state.drafts[0].squadSlots = importedSlots;
-                state.drafts[0].captain = tempCaptain;
-                state.drafts[0].vice = tempVice;
-                state.drafts[0].formation = detectFormation(importedSlots);
-                state.drafts[0].transfers = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+            results.forEach((responseData, idx) => {
+                const g = idx + 1;
+                if (responseData && responseData.success && responseData.data && responseData.data.picks) {
+                    const picks = responseData.data.picks;
+                    const slots = mapFplPicksToSquadSlots(picks);
+                    const capt = picks.find(p => p.is_captain)?.element || null;
+                    const viceCapt = picks.find(p => p.is_vice_captain)?.element || null;
+                    const fmt = detectFormation(slots);
 
-                // Save to localStorage cache
-                localStorage.setItem('fpl_hub_last_imported_team_id', teamId);
-                if (teamName) {
-                    localStorage.setItem('fpl_hub_last_imported_team_name', teamName);
-                } else {
-                    localStorage.removeItem('fpl_hub_last_imported_team_name');
+                    weeklyLineupsObj[g] = {
+                        starters: slots.filter(s => s.isStarting && s.playerId !== null).map(s => s.playerId),
+                        bench: slots.filter(s => !s.isStarting && s.playerId !== null).map(s => s.playerId),
+                        captain: capt,
+                        vice: viceCapt,
+                        formation: fmt
+                    };
+
+                    latestPicks = picks;
+                    latestBankVal = (responseData.data.entry_history ? responseData.data.entry_history.bank : 0) / 10;
+                    if (responseData.teamName) latestTeamName = responseData.teamName;
+
+                    if (g === maxGw) {
+                        currentGwSlots = slots;
+                        currentGwCaptain = capt;
+                        currentGwVice = viceCapt;
+                        currentGwFormation = fmt;
+                    }
                 }
-                localStorage.setItem('fpl_hub_last_imported_squad_slots', JSON.stringify(tempSourceSlots));
-                localStorage.setItem('fpl_hub_last_imported_captain', (tempCaptain || '').toString());
-                localStorage.setItem('fpl_hub_last_imported_vice', (tempVice || '').toString());
-                localStorage.setItem('fpl_hub_last_imported_bank', tempBank.toString());
+            });
 
-                // Force state update if we are already on draft 0
-                if (state.activeDraftIndex === 0) {
-                    state.loadActiveDraftState();
-                }
+            if (!latestPicks) {
+                throw new Error("Failed to fetch FPL picks for team");
+            }
 
-                // Persist state
-                state.saveState();
+            if (!currentGwSlots && latestPicks) {
+                currentGwSlots = mapFplPicksToSquadSlots(latestPicks);
+                currentGwCaptain = latestPicks.find(p => p.is_captain)?.element || null;
+                currentGwVice = latestPicks.find(p => p.is_vice_captain)?.element || null;
+                currentGwFormation = detectFormation(currentGwSlots);
+            }
 
-                actions.showToast(`Imported FPL Team "${teamName || teamId}" successfully!`, "success");
-                updateSquadPreview();
+            tempSourceSlots = currentGwSlots;
+            tempCaptain = currentGwCaptain;
+            tempVice = currentGwVice;
+            tempBank = latestBankVal;
+
+            const teamName = latestTeamName;
+            const finalDraftName = teamName ? `${teamName} (ID: ${teamId})` : `FPL Team (ID: ${teamId})`;
+
+            // Overwrite the first draft slot (FPL Team ID)
+            state.drafts[0].name = finalDraftName;
+            state.drafts[0].squadSlots = currentGwSlots;
+            state.drafts[0].captain = currentGwCaptain;
+            state.drafts[0].vice = currentGwVice;
+            state.drafts[0].formation = detectFormation(currentGwSlots);
+            state.drafts[0].transfers = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+            state.drafts[0].weeklyLineups = weeklyLineupsObj;
+
+            // Save to localStorage cache
+            localStorage.setItem('fpl_hub_last_imported_team_id', teamId);
+            if (teamName) {
+                localStorage.setItem('fpl_hub_last_imported_team_name', teamName);
             } else {
-                throw new Error("Invalid picks data format");
+                localStorage.removeItem('fpl_hub_last_imported_team_name');
             }
+            localStorage.setItem('fpl_hub_last_imported_squad_slots', JSON.stringify(tempSourceSlots));
+            localStorage.setItem('fpl_hub_last_imported_captain', (tempCaptain || '').toString());
+            localStorage.setItem('fpl_hub_last_imported_vice', (tempVice || '').toString());
+            localStorage.setItem('fpl_hub_last_imported_bank', tempBank.toString());
+
+            // Force state update if we are already on draft 0
+            if (state.activeDraftIndex === 0) {
+                state.loadActiveDraftState();
+            }
+
+            // Persist state
+            state.saveState();
+
+            actions.showToast(`Imported FPL Team "${teamName || teamId}" successfully!`, "success");
+            updateSquadPreview();
         } catch (err) {
             console.error(err);
             actions.showToast(err.message || "Failed to fetch FPL picks. Verify ID is active.", "error");
