@@ -748,6 +748,12 @@ class AppState {
         let baselineGw = null;
         if (this.weeklyLineups) {
             for (let g = targetGw; g >= 1; g--) {
+                // If checking a prior Gameweek (g < targetGw), skip if a Free Hit was played in that week
+                // (Free Hit squads are temporary 1-week squads and do not carry over to subsequent weeks)
+                if (g < targetGw && this.chips && this.chips[g]?.freeHit) {
+                    continue;
+                }
+
                 if (this.weeklyLineups[g] && Array.isArray(this.weeklyLineups[g].starters) && this.weeklyLineups[g].starters.length > 0) {
                     baselineGw = g;
                     break;

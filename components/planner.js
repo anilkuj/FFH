@@ -1383,6 +1383,11 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
 
                 const results = await Promise.all(fetchPromises);
                 const weeklyLineupsObj = {};
+                const chipsObj = {};
+                for (let g = 1; g <= 38; g++) {
+                    chipsObj[g] = { wildcard: false, tripleCaptain: false, benchBoost: false, freeHit: false };
+                }
+
                 let latestPicks = null;
                 let latestBankVal = 0;
                 let latestTeamName = checkData.teamName || null;
@@ -1399,6 +1404,14 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
                         const capt = picks.find(p => p.is_captain)?.element || null;
                         const viceCapt = picks.find(p => p.is_vice_captain)?.element || null;
                         const fmt = detectFormation(slots);
+
+                        const activeChip = responseData.data.active_chip || null;
+                        chipsObj[g] = {
+                            wildcard: activeChip === 'wildcard',
+                            freeHit: activeChip === 'freehit',
+                            tripleCaptain: activeChip === '3xc',
+                            benchBoost: activeChip === 'bboost'
+                        };
 
                         weeklyLineupsObj[g] = {
                             starters: slots.filter(s => s.isStarting && s.playerId !== null).map(s => s.playerId),
@@ -1429,6 +1442,15 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
                     currentGwVice = latestPicks.find(p => p.is_vice_captain)?.element || null;
                     currentGwFormation = detectFormation(slots);
                     latestBankVal = (checkData.data.entry_history ? checkData.data.entry_history.bank : 0) / 10;
+                    
+                    const activeChip = checkData.data.active_chip || null;
+                    chipsObj[maxGw] = {
+                        wildcard: activeChip === 'wildcard',
+                        freeHit: activeChip === 'freehit',
+                        tripleCaptain: activeChip === '3xc',
+                        benchBoost: activeChip === 'bboost'
+                    };
+
                     weeklyLineupsObj[maxGw] = {
                         starters: slots.filter(s => s.isStarting && s.playerId !== null).map(s => s.playerId),
                         bench: slots.filter(s => !s.isStarting && s.playerId !== null).map(s => s.playerId),
@@ -1453,6 +1475,7 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
                 state.drafts[activeIdx].vice = currentGwVice;
                 state.drafts[activeIdx].formation = currentGwFormation;
                 state.drafts[activeIdx].transfers = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+                state.drafts[activeIdx].chips = chipsObj;
                 state.drafts[activeIdx].weeklyLineups = weeklyLineupsObj;
 
                 // Update current view gameweek to the latest active Gameweek
