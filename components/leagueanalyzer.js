@@ -634,6 +634,11 @@ export function renderLeagueAnalyzer(container, state, actions) {
                 </option>
             `).join('');
 
+            // Calculate Wildcard Chip Catchup Squad & 3-GW xP comparison
+            const wcSquadResult = generateWildcardCatchupSquad(PLAYERS, rivalCountMap, fetchedRivalsCount, userSquadInfo, currentGw);
+            const userCurrentXp3 = Math.round(userStarterMetrics.reduce((sum, m) => sum + m.xp3, 0) * 10) / 10;
+            const netWcGain = Math.round((wcSquadResult.startersXp3 - userCurrentXp3) * 10) / 10;
+
             tabContentHtml = `
                 <div style="display: flex; flex-direction: column; gap: 24px; width: 100%;">
                     
@@ -909,6 +914,182 @@ export function renderLeagueAnalyzer(container, state, actions) {
                                 `).join('')}
                             </div>
                         `}
+                    </div>
+
+                    <!-- 🃏 Wildcard Chip Catchup Strategy Card -->
+                    <div style="
+                        background: ${isLight ? '#ffffff' : 'rgba(30, 41, 59, 0.4)'};
+                        border: 1px solid rgba(168, 85, 247, 0.4);
+                        border-radius: 16px;
+                        padding: 24px;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 20px;
+                        box-shadow: ${isLight ? '0 10px 25px -5px rgba(168, 85, 247, 0.08)' : '0 10px 30px -10px rgba(0,0,0,0.5)'};
+                    ">
+                        <!-- Header -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="
+                                    width: 44px;
+                                    height: 44px;
+                                    border-radius: 10px;
+                                    background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+                                ">
+                                    <i data-lucide="sparkles" style="width: 22px; height: 22px; color: #ffffff;"></i>
+                                </div>
+                                <div style="display: flex; flex-direction: column; gap: 2px;">
+                                    <h4 style="margin: 0; font-size: 16px; font-weight: 800; color: var(--text-main); font-family: var(--font-header); display: flex; align-items: center; gap: 8px;">
+                                        🃏 Wildcard Chip Catchup Strategy
+                                    </h4>
+                                    <span style="font-size: 12px; color: var(--text-muted);">
+                                        Custom 15-player squad maximizing 3-GW xP using rival shields and rank-climbing differentials
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                                <!-- xP Comparison Badge -->
+                                <div style="
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 10px;
+                                    background: ${isLight ? '#f8fafc' : 'rgba(15, 23, 42, 0.6)'};
+                                    border: 1px solid var(--border-color);
+                                    border-radius: 10px;
+                                    padding: 8px 14px;
+                                ">
+                                    <div style="display: flex; flex-direction: column; text-align: right;">
+                                        <span style="font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Current Squad 3-GW xP</span>
+                                        <span style="font-size: 13px; font-weight: 800; color: var(--text-main);">${userCurrentXp3} xP</span>
+                                    </div>
+                                    <div style="font-size: 16px; font-weight: 800; color: var(--text-muted);">➔</div>
+                                    <div style="display: flex; flex-direction: column;">
+                                        <span style="font-size: 10px; font-weight: 800; color: #a855f7; text-transform: uppercase;">Wildcard 3-GW xP</span>
+                                        <span style="font-size: 13px; font-weight: 900; color: #a855f7;">${wcSquadResult.startersXp3} xP</span>
+                                    </div>
+                                    <span style="
+                                        padding: 4px 10px;
+                                        border-radius: 20px;
+                                        background: ${netWcGain >= 0 ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)'};
+                                        border: 1px solid ${netWcGain >= 0 ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)'};
+                                        color: ${netWcGain >= 0 ? '#10b981' : '#ef4444'};
+                                        font-size: 12px;
+                                        font-weight: 900;
+                                    ">${netWcGain >= 0 ? `+${netWcGain}` : netWcGain} xP Gain</span>
+                                </div>
+
+                                <button id="applyWildcardToPlannerBtn" style="
+                                    padding: 10px 18px;
+                                    border-radius: 10px;
+                                    background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+                                    color: #ffffff;
+                                    font-size: 13px;
+                                    font-weight: 800;
+                                    border: none;
+                                    cursor: pointer;
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 8px;
+                                    box-shadow: 0 4px 14px rgba(168, 85, 247, 0.35);
+                                    transition: all 0.2s ease;
+                                ">
+                                    <i data-lucide="zap" style="width: 16px; height: 16px;"></i>
+                                    <span>Apply Wildcard Squad to Planner</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Squad Metadata Bar -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text-muted); border-bottom: 1px solid var(--border-color); padding-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                            <span><strong>Total Squad Price:</strong> £${wcSquadResult.totalCost.toFixed(1)}m / £${wcSquadResult.totalBudget.toFixed(1)}m</span>
+                            <span><strong>Shield Assets:</strong> ${wcSquadResult.squad.filter(c => c.isShield).length} players (≥50% Rival Ownership)</span>
+                            <span><strong>Differential Assets:</strong> ${wcSquadResult.squad.filter(c => c.isDiff).length} players (≤25% Rival Ownership)</span>
+                        </div>
+
+                        <!-- Squad Grid (Starters & Substitutes) -->
+                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                            <!-- Starting XI Section -->
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <span style="font-size: 11px; font-weight: 800; color: #a855f7; text-transform: uppercase; letter-spacing: 0.5px;">Starting XI (11 Players)</span>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                                    ${wcSquadResult.starters.map(c => `
+                                        <div style="
+                                            background: ${isLight ? '#f8fafc' : 'rgba(15, 23, 42, 0.6)'};
+                                            border: 1px solid ${c.isShield ? 'rgba(59, 130, 246, 0.3)' : (c.isDiff ? 'rgba(16, 185, 129, 0.3)' : 'var(--border-color)')};
+                                            border-radius: 10px;
+                                            padding: 10px 12px;
+                                            display: flex;
+                                            flex-direction: column;
+                                            gap: 6px;
+                                        ">
+                                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                <span style="font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">${c.player.position}</span>
+                                                <span style="
+                                                    font-size: 9.5px;
+                                                    font-weight: 800;
+                                                    padding: 2px 6px;
+                                                    border-radius: 10px;
+                                                    background: ${c.isShield ? 'rgba(59, 130, 246, 0.15)' : (c.isDiff ? 'rgba(16, 185, 129, 0.15)' : 'rgba(139, 92, 246, 0.15)')};
+                                                    color: ${c.isShield ? '#3b82f6' : (c.isDiff ? '#10b981' : '#8b5cf6')};
+                                                ">${c.isShield ? `🛡️ Shield (${c.rivalPct}%)` : (c.isDiff ? `⚔️ Diff (${c.rivalPct}%)` : `Target (${c.rivalPct}%)`)}</span>
+                                            </div>
+                                            <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                                                <span style="font-size: 13.5px; font-weight: 800; color: var(--text-main);">${c.player.web_name || c.player.name}</span>
+                                                <span style="font-size: 11px; font-weight: 700; color: var(--text-muted);">£${c.player.price.toFixed(1)}m</span>
+                                            </div>
+                                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                <div style="display: flex; gap: 3px;">
+                                                    ${c.fixtures.map(f => `
+                                                        <span style="
+                                                            font-size: 8.5px;
+                                                            font-weight: 800;
+                                                            padding: 2px 4px;
+                                                            border-radius: 3px;
+                                                            background: ${getDiffColor(f.diff)};
+                                                            color: #ffffff;
+                                                        ">${f.opp}</span>
+                                                    `).join('')}
+                                                </div>
+                                                <span style="font-size: 11.5px; font-weight: 800; color: #10b981;">${c.xp3} xP</span>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+
+                            <!-- Substitutes Bench Section -->
+                            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">
+                                <span style="font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Substitutes Bench (4 Players)</span>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                                    ${wcSquadResult.bench.map((c, idx) => `
+                                        <div style="
+                                            background: ${isLight ? '#f1f5f9' : 'rgba(15, 23, 42, 0.3)'};
+                                            border: 1px dashed var(--border-color);
+                                            border-radius: 10px;
+                                            padding: 8px 12px;
+                                            display: flex;
+                                            flex-direction: column;
+                                            gap: 4px;
+                                            opacity: 0.9;
+                                        ">
+                                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                <span style="font-size: 9.5px; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">${idx === 0 ? 'SUB GKP' : `SUB ${idx}`} • ${c.player.position}</span>
+                                                <span style="font-size: 10.5px; font-weight: 700; color: var(--text-muted);">£${c.player.price.toFixed(1)}m</span>
+                                            </div>
+                                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                <span style="font-size: 12.5px; font-weight: 800; color: var(--text-main);">${c.player.web_name || c.player.name}</span>
+                                                <span style="font-size: 11px; font-weight: 700; color: #10b981;">${c.xp3} xP</span>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Rival Ownership & Threat Matrix -->
@@ -1326,6 +1507,96 @@ export function renderLeagueAnalyzer(container, state, actions) {
                     }
                 });
             });
+
+            const applyWcBtn = container.querySelector('#applyWildcardToPlannerBtn');
+            if (applyWcBtn) {
+                applyWcBtn.addEventListener('click', () => {
+                    if (!state) return;
+                    const currentGw = state.currentGw || 2;
+                    const standings = leagueData && leagueData.standings ? leagueData.standings.results : [];
+
+                    // Re-calculate managersAbove & rival count map to build Wildcard squad
+                    const userIndex = standings.findIndex(e => e.entry === userEntryId);
+                    let managersAbove = userIndex > 0 ? standings.slice(0, userIndex) : (userIndex === 0 && standings.length > 1 ? standings.slice(1, 6) : []);
+                    managersAbove = managersAbove.slice(0, 10);
+
+                    const rivalCountMap = {};
+                    let fetchedRivalsCount = 0;
+                    managersAbove.forEach(mgr => {
+                        const pickData = rivalPicks[mgr.entry];
+                        if (pickData && pickData.picks) {
+                            fetchedRivalsCount++;
+                            pickData.picks.forEach(p => {
+                                const pid = p.element;
+                                rivalCountMap[pid] = (rivalCountMap[pid] || 0) + 1;
+                            });
+                        }
+                    });
+
+                    const userSquadInfo = state.getSquadForGw(currentGw);
+                    const wcSquadResult = generateWildcardCatchupSquad(PLAYERS, rivalCountMap, fetchedRivalsCount, userSquadInfo, currentGw);
+
+                    const beforeSquadIds = (userSquadInfo.squad || []).filter(id => id !== null);
+                    const afterSquadIds = wcSquadResult.squad.map(c => c.player.id);
+
+                    if (currentGw === 1) {
+                        state.squadSlots = afterSquadIds;
+                    } else {
+                        state.transfers[currentGw] = [];
+                        const toSell = beforeSquadIds.filter(id => !afterSquadIds.includes(id));
+                        const toBuy = afterSquadIds.filter(id => !beforeSquadIds.includes(id));
+
+                        const toSellByPos = { GKP: [], DEF: [], MID: [], FWD: [] };
+                        const toBuyByPos = { GKP: [], DEF: [], MID: [], FWD: [] };
+
+                        toSell.forEach(id => {
+                            const p = PLAYERS.find(pl => pl.id === id);
+                            if (p) toSellByPos[p.position].push(id);
+                        });
+                        toBuy.forEach(id => {
+                            const p = PLAYERS.find(pl => pl.id === id);
+                            if (p) toBuyByPos[p.position].push(id);
+                        });
+
+                        ['GKP', 'DEF', 'MID', 'FWD'].forEach(pos => {
+                            const sellList = toSellByPos[pos];
+                            const buyList = toBuyByPos[pos];
+                            for (let i = 0; i < sellList.length; i++) {
+                                state.transfers[currentGw].push({
+                                    out: sellList[i],
+                                    in: buyList[i]
+                                });
+                            }
+                        });
+                    }
+
+                    // Activate Wildcard Chip for currentGw
+                    if (!state.chips[currentGw]) {
+                        state.chips[currentGw] = { wildcard: false, tripleCaptain: false, benchBoost: false, freeHit: false };
+                    }
+                    Object.keys(state.chips[currentGw]).forEach(k => state.chips[currentGw][k] = false);
+                    state.chips[currentGw].wildcard = true;
+
+                    if (state.drafts && state.drafts[state.activeDraftIndex]) {
+                        state.drafts[state.activeDraftIndex].chips = JSON.parse(JSON.stringify(state.chips));
+                    }
+
+                    if (typeof state.optimizeCaptaincy === 'function') {
+                        state.optimizeCaptaincy();
+                    }
+                    state.saveState();
+
+                    if (actions && actions.showToast) {
+                        actions.showToast(`Wildcard Catchup Squad applied to Planner & Wildcard Chip activated for GW${currentGw}!`, 'success');
+                    } else {
+                        alert(`Wildcard Catchup Squad applied to Planner & Wildcard Chip activated for GW${currentGw}!`);
+                    }
+
+                    if (actions && typeof actions.switchTab === 'function') {
+                        actions.switchTab('planner');
+                    }
+                });
+            }
         }
 
         // Toggle Manager Compare Selection Click Event (Chart view only)
@@ -1592,3 +1863,161 @@ function getDiffColor(diff) {
     if (diff === 4) return '#f59e0b';
     return '#ef4444';
 }
+
+export function generateWildcardCatchupSquad(PLAYERS, rivalCountMap, fetchedRivalsCount, userSquadInfo, currentGw) {
+    const targetGws = [currentGw, currentGw + 1, currentGw + 2];
+    
+    // Compute total available budget
+    const currentSquadPlayers = (userSquadInfo.squad || []).map(id => PLAYERS.find(p => p.id === id)).filter(Boolean);
+    const currentSquadCost = currentSquadPlayers.reduce((sum, p) => sum + (p.price || 0), 0);
+    const userBank = userSquadInfo.bank !== undefined ? userSquadInfo.bank : 0.5;
+    const totalBudget = Math.round((currentSquadCost + userBank) * 10) / 10;
+
+    // Helper for 3-GW metrics
+    const getMetrics = (p) => {
+        if (!p || !p.predictions) return { xp3: 0, fixtures: [] };
+        let sumXp = 0;
+        const fixtures = [];
+        targetGws.forEach(gw => {
+            const pr = p.predictions.find(x => x.gw == gw);
+            if (pr) {
+                const factor = (typeof window !== 'undefined' && window.getPlayerMinutesFactor) ? window.getPlayerMinutesFactor(p) : 1;
+                const pts = Math.round((pr.pts || 0) * factor * 10) / 10;
+                sumXp += pts;
+                fixtures.push({ gw, opp: pr.opp || 'BYE', loc: pr.loc || '', diff: pr.diff || 3, pts });
+            } else {
+                fixtures.push({ gw, opp: 'BYE', loc: '', diff: 3, pts: 0 });
+            }
+        });
+        return { xp3: Math.round(sumXp * 10) / 10, fixtures };
+    };
+
+    // Prepare candidate pool
+    const candidates = PLAYERS.filter(p => p.status !== 'i' && p.status !== 's' && p.status !== 'u').map(p => {
+        const metrics = getMetrics(p);
+        const count = rivalCountMap[p.id] || 0;
+        const rivalPct = fetchedRivalsCount > 0 ? Math.round((count / fetchedRivalsCount) * 100) : 0;
+        const isShield = rivalPct >= 50;
+        const isDiff = rivalPct <= 25;
+        // Selection score combines 3-GW xP with rival alignment preference
+        const score = metrics.xp3 + (isShield ? 0.8 : (isDiff ? 0.4 : 0));
+        return {
+            player: p,
+            xp3: metrics.xp3,
+            fixtures: metrics.fixtures,
+            rivalPct,
+            isShield,
+            isDiff,
+            score
+        };
+    });
+
+    const posLimits = { GKP: 2, DEF: 5, MID: 5, FWD: 3 };
+    
+    // Sort candidate pool per position by score desc
+    const poolByPos = { GKP: [], DEF: [], MID: [], FWD: [] };
+    Object.keys(posLimits).forEach(pos => {
+        poolByPos[pos] = candidates.filter(c => c.player.position === pos).sort((a, b) => b.score - a.score || b.xp3 - a.xp3);
+    });
+
+    // Pick top candidates per position observing team limits (max 3 per team)
+    const selected = [];
+    const teamCounts = {};
+
+    const tryAddPlayer = (cand) => {
+        const team = cand.player.team;
+        if ((teamCounts[team] || 0) >= 3) return false;
+        selected.push(cand);
+        teamCounts[team] = (teamCounts[team] || 0) + 1;
+        return true;
+    };
+
+    // First pass: Force include top Template Shields (up to 1 GKP, 2 DEF, 2 MID, 1 FWD)
+    Object.keys(posLimits).forEach(pos => {
+        const maxShields = pos === 'GKP' ? 1 : (pos === 'FWD' ? 1 : 2);
+        const shields = poolByPos[pos].filter(c => c.isShield);
+        let added = 0;
+        for (const sh of shields) {
+            if (added >= maxShields) break;
+            if (tryAddPlayer(sh)) added++;
+        }
+    });
+
+    // Second pass: Fill remaining slots by highest score
+    Object.keys(posLimits).forEach(pos => {
+        const needed = posLimits[pos] - selected.filter(c => c.player.position === pos).length;
+        if (needed > 0) {
+            const pool = poolByPos[pos].filter(c => !selected.some(s => s.player.id === c.player.id));
+            let added = 0;
+            for (const cand of pool) {
+                if (added >= needed) break;
+                if (tryAddPlayer(cand)) added++;
+            }
+        }
+    });
+
+    // Third pass: Budget adjustment if total price > totalBudget
+    let currentTotalCost = Math.round(selected.reduce((sum, c) => sum + c.player.price, 0) * 10) / 10;
+    
+    if (currentTotalCost > totalBudget) {
+        const sortedByUpgradeOrder = [...selected].sort((a, b) => a.xp3 - b.xp3);
+        
+        for (const item of sortedByUpgradeOrder) {
+            if (currentTotalCost <= totalBudget) break;
+            const pos = item.player.position;
+            const altPool = poolByPos[pos].filter(c => 
+                !selected.some(s => s.player.id === c.player.id) &&
+                c.player.price < item.player.price &&
+                ((teamCounts[c.player.team] || 0) < 3 || c.player.team === item.player.team)
+            ).sort((a, b) => a.player.price - b.player.price || b.xp3 - a.xp3);
+
+            if (altPool.length > 0) {
+                const alt = altPool[0];
+                const idx = selected.findIndex(s => s.player.id === item.player.id);
+                if (idx >= 0) {
+                    teamCounts[item.player.team]--;
+                    selected[idx] = alt;
+                    teamCounts[alt.player.team] = (teamCounts[alt.player.team] || 0) + 1;
+                    currentTotalCost = Math.round(selected.reduce((sum, c) => sum + c.player.price, 0) * 10) / 10;
+                }
+            }
+        }
+    }
+
+    // Determine Starters (1 GKP, top outfield players by xP adhering to valid formations: min 3 DEF, min 1 FWD)
+    const gkps = selected.filter(c => c.player.position === 'GKP').sort((a, b) => b.xp3 - a.xp3);
+    const defs = selected.filter(c => c.player.position === 'DEF').sort((a, b) => b.xp3 - a.xp3);
+    const mids = selected.filter(c => c.player.position === 'MID').sort((a, b) => b.xp3 - a.xp3);
+    const fwds = selected.filter(c => c.player.position === 'FWD').sort((a, b) => b.xp3 - a.xp3);
+
+    const startingGkp = gkps[0] || poolByPos.GKP[0];
+    const benchGkp = gkps[1] || poolByPos.GKP[1];
+
+    const startingDefs = defs.slice(0, 3);
+    const remainingDefs = defs.slice(3);
+    const startingFwds = fwds.slice(0, 1);
+    const remainingFwds = fwds.slice(1);
+
+    const flexPool = [...remainingDefs, ...mids, ...remainingFwds].sort((a, b) => b.xp3 - a.xp3);
+    
+    const flexStarters = flexPool.slice(0, 6);
+    const benchOutfield = flexPool.slice(6).sort((a, b) => b.xp3 - a.xp3);
+
+    const startingOutfield = [...startingDefs, ...startingFwds, ...flexStarters];
+    const starters = [startingGkp, ...startingOutfield].filter(Boolean);
+    const bench = [benchGkp, ...benchOutfield].filter(Boolean);
+
+    const startersXp3 = Math.round(starters.reduce((sum, c) => sum + c.xp3, 0) * 10) / 10;
+    const squadXp3 = Math.round(selected.reduce((sum, c) => sum + c.xp3, 0) * 10) / 10;
+
+    return {
+        squad: selected,
+        starters,
+        bench,
+        totalCost: currentTotalCost,
+        totalBudget,
+        startersXp3,
+        squadXp3
+    };
+}
+
