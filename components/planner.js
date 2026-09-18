@@ -1358,8 +1358,20 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
             };
 
             try {
-                // Fetch picks for all available gameweeks 1..currentGw in parallel
-                const maxGw = Math.max(1, state.currentGw || 1);
+                // Discover the latest active FPL gameweek by querying gw=38
+                const checkRes = await fetch(`/api/fpl-picks?teamId=${teamId}&gw=38`);
+                if (!checkRes.ok) {
+                    const errorData = await checkRes.json().catch(() => ({}));
+                    throw new Error(errorData.error || "Failed to fetch FPL picks");
+                }
+                const checkData = await checkRes.json();
+                if (!checkData || !checkData.success || !checkData.data) {
+                    throw new Error(checkData?.error || "Invalid picks data format");
+                }
+
+                const maxGw = checkData.resolvedGw || 1;
+
+                // Fetch picks for all available gameweeks 1..maxGw in parallel
                 const fetchPromises = [];
                 for (let g = 1; g <= maxGw; g++) {
                     fetchPromises.push(
@@ -1373,7 +1385,7 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
                 const weeklyLineupsObj = {};
                 let latestPicks = null;
                 let latestBankVal = 0;
-                let latestTeamName = null;
+                let latestTeamName = checkData.teamName || null;
                 let currentGwSlots = null;
                 let currentGwCaptain = null;
                 let currentGwVice = null;
@@ -1409,15 +1421,25 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
                     }
                 });
 
-                if (!latestPicks) {
-                    throw new Error("Failed to fetch FPL picks for team");
-                }
-
-                if (!currentGwSlots && latestPicks) {
-                    currentGwSlots = mapFplPicksToSquadSlots(latestPicks);
+                if (!latestPicks && checkData.data && checkData.data.picks) {
+                    latestPicks = checkData.data.picks;
+                    const slots = mapFplPicksToSquadSlots(latestPicks);
+                    currentGwSlots = slots;
                     currentGwCaptain = latestPicks.find(p => p.is_captain)?.element || null;
                     currentGwVice = latestPicks.find(p => p.is_vice_captain)?.element || null;
-                    currentGwFormation = detectFormation(currentGwSlots);
+                    currentGwFormation = detectFormation(slots);
+                    latestBankVal = (checkData.data.entry_history ? checkData.data.entry_history.bank : 0) / 10;
+                    weeklyLineupsObj[maxGw] = {
+                        starters: slots.filter(s => s.isStarting && s.playerId !== null).map(s => s.playerId),
+                        bench: slots.filter(s => !s.isStarting && s.playerId !== null).map(s => s.playerId),
+                        captain: currentGwCaptain,
+                        vice: currentGwVice,
+                        formation: currentGwFormation
+                    };
+                }
+
+                if (!latestPicks) {
+                    throw new Error("Failed to fetch FPL picks for team");
                 }
 
                 const teamName = latestTeamName;
@@ -1432,6 +1454,10 @@ function setupPlannerListeners(container, state, actions, starters, bench) {
                 state.drafts[activeIdx].formation = currentGwFormation;
                 state.drafts[activeIdx].transfers = { 1: [], 2: [], 3: [], 4: [], 5: [] };
                 state.drafts[activeIdx].weeklyLineups = weeklyLineupsObj;
+
+                // Update current view gameweek to the latest active Gameweek
+                state.currentGw = maxGw;
+                localStorage.setItem('fpl_hub_current_gw', state.currentGw.toString());
 
                 // Save last imported caches
                 localStorage.setItem('fpl_hub_last_imported_team_id', teamId);
