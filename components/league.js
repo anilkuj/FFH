@@ -5,7 +5,9 @@ export function renderLeague(container, state, actions) {
 
     // 1. Calculate user active squad stats dynamically
     const squadInfo = state.getSquadForGw(currentGw);
-    const userStarters = state.squadSlots.filter(s => s.isStarting && s.playerId !== null).map(s => PLAYERS.find(p => p.id === s.playerId));
+    const lineupInfo = state.getGwLineup(currentGw);
+    const starterIds = (lineupInfo && lineupInfo.starters && lineupInfo.starters.length > 0) ? lineupInfo.starters : (squadInfo.starters || []);
+    const userStarters = starterIds.map(id => PLAYERS.find(p => p.id === id)).filter(Boolean);
     
     const currentWeekChips = state.chips[currentGw] || { wildcard: false, tripleCaptain: false, benchBoost: false, freeHit: false };
 

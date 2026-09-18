@@ -484,10 +484,13 @@ export function renderLeagueAnalyzer(container, state, actions) {
                 }
             });
 
-            // Calculate user squad IDs & starting XI
-            const userSquadIds = state ? state.squad : [];
-            const userStarters = state ? state.starters : [];
-            const userBank = state ? state.getSquadForGw(currentGw).bank : 0.5;
+            // Calculate user squad IDs & starting XI dynamically for currentGw
+            const userSquadInfo = state ? state.getSquadForGw(currentGw) : { squad: [], starters: [], bank: 0.5 };
+            const userLineupInfo = state ? state.getGwLineup(currentGw) : { starters: [] };
+
+            const userSquadIds = userSquadInfo.squad || [];
+            const userStarters = userLineupInfo.starters && userLineupInfo.starters.length > 0 ? userLineupInfo.starters : (userSquadInfo.starters || []);
+            const userBank = userSquadInfo.bank !== undefined ? userSquadInfo.bank : 0.5;
 
             // Helper to get 3-GW fixture metrics for any player
             const get3GwMetrics = (player) => {
