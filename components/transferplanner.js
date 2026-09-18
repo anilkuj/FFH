@@ -557,19 +557,30 @@ export function renderTransferPlanner(container, state, actions) {
         let previewBank = bank;
 
         if (sourceVal === 'active') {
-            // Build the squad entering the currentGw by applying all prior-GW transfers
-            // to a clone of the base squadSlots (which is the GW1 / base squad state).
-            let slotsAtGw = JSON.parse(JSON.stringify(state.squadSlots));
-            for (let gw = 1; gw < state.currentGw; gw++) {
-                // Skip applying transfers if a Free Hit was played in that week
-                if (state.chips && state.chips[gw]?.freeHit) continue;
+            const gwInfo = state.getSquadForGw(state.currentGw);
+            const lineup = state.getGwLineup(state.currentGw);
+            const positions = ['GKP', 'DEF', 'MID', 'FWD'];
+            const requiredCounts = { GKP: 2, DEF: 5, MID: 5, FWD: 3 };
+            const squadByPos = { GKP: [], DEF: [], MID: [], FWD: [] };
+            (gwInfo.squad || []).forEach(id => {
+                const p = PLAYERS.find(pl => pl.id === id);
+                if (p) squadByPos[p.position].push(id);
+            });
 
-                const priorTx = (state.transfers && state.transfers[gw]) || [];
-                priorTx.forEach(tx => {
-                    const slot = slotsAtGw.find(s => s.playerId === tx.out);
-                    if (slot) slot.playerId = tx.in;
-                });
-            }
+            let slotsAtGw = [];
+            positions.forEach(pos => {
+                const ids = squadByPos[pos];
+                const req = requiredCounts[pos];
+                for (let i = 0; i < req; i++) {
+                    const pId = ids[i] !== undefined ? ids[i] : null;
+                    const isStarting = pId !== null ? lineup.starters.includes(pId) : false;
+                    slotsAtGw.push({
+                        position: pos,
+                        playerId: pId,
+                        isStarting
+                    });
+                }
+            });
 
             // Now apply the currentGw transfers on top to get the post-transfer preview
             const gwTxForSlots = (state.transfers && state.transfers[state.currentGw]) || [];
@@ -579,7 +590,6 @@ export function renderTransferPlanner(container, state, actions) {
                     const slot = previewSlots.find(s => s.playerId === tx.out);
                     if (slot) slot.playerId = tx.in;
                 });
-                // Recalculate bank: start from pre-transfer bank then adjust for this GW's transfers
                 const preGwInfo = state.getSquadForGw(state.currentGw - 1 < 1 ? 1 : state.currentGw - 1);
                 let adjBank = state.currentGw <= 1 ? bank : preGwInfo.bank;
                 gwTxForSlots.forEach(tx => {
@@ -590,8 +600,6 @@ export function renderTransferPlanner(container, state, actions) {
                 previewBank = Math.max(0, adjBank);
             } else {
                 previewSlots = slotsAtGw;
-                // Show the bank for this GW without transfers
-                const gwInfo = state.currentGw <= 1 ? squadInfo : state.getSquadForGw(state.currentGw);
                 previewBank = gwInfo.bank;
             }
         } else if (sourceVal.startsWith('draft_')) {

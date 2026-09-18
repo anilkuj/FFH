@@ -94,28 +94,27 @@ export function renderPlanner(container, state, actions) {
     const lineupInfo = state.getGwLineup(state.currentGw);
     const { starters, bench, captain, vice, formation } = lineupInfo;
 
-    // Clone baseline slots and apply planned transfers to show correct week-by-week squad
-    let currentSlots = JSON.parse(JSON.stringify(state.squadSlots));
-    for (let gw = 2; gw <= state.currentGw; gw++) {
-        // Skip applying transfers if a Free Hit was played in an intermediate week
-        // (but apply them if we are viewing the Free Hit week itself!)
-        if (gw !== state.currentGw && state.chips[gw]?.freeHit) continue;
+    // Construct currentSlots dynamically for state.currentGw using squadInfo.squad and starters
+    const currentSlots = [];
+    const positions = ['GKP', 'DEF', 'MID', 'FWD'];
+    const requiredCounts = { GKP: 2, DEF: 5, MID: 5, FWD: 3 };
+    const squadByPos = { GKP: [], DEF: [], MID: [], FWD: [] };
+    (squadInfo.squad || []).forEach(id => {
+        const p = PLAYERS.find(pl => pl.id === id);
+        if (p) squadByPos[p.position].push(id);
+    });
 
-        const weeklyTransfers = state.transfers[gw] || [];
-        weeklyTransfers.forEach(tx => {
-            const slot = currentSlots.find(s => s.playerId === tx.out);
-            if (slot) {
-                slot.playerId = tx.in;
-            }
-        });
-    }
-
-    // Dynamic lineup assignment: set isStarting on each slot in currentSlots based on the resolved starters list
-    currentSlots.forEach(slot => {
-        if (slot.playerId !== null) {
-            slot.isStarting = starters.includes(slot.playerId);
-        } else {
-            slot.isStarting = false;
+    positions.forEach(pos => {
+        const ids = squadByPos[pos];
+        const req = requiredCounts[pos];
+        for (let i = 0; i < req; i++) {
+            const pId = ids[i] !== undefined ? ids[i] : null;
+            const isStarting = pId !== null ? starters.includes(pId) : false;
+            currentSlots.push({
+                position: pos,
+                playerId: pId,
+                isStarting
+            });
         }
     });
 

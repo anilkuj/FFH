@@ -2438,16 +2438,8 @@ const actions = {
             state.squadSlots[slotIndex].playerId = inId;
             delete state.squadSlots[slotIndex].prevPlayerId;
         } else {
-            // Find the original player in this slot entering this GW (after applying transfers from GW2 to gw - 1)
-            let slotsAtGwStart = JSON.parse(JSON.stringify(state.squadSlots));
-            for (let g = 2; g < gw; g++) {
-                const weeklyTxs = state.transfers[g] || [];
-                weeklyTxs.forEach(tx => {
-                    const slot = slotsAtGwStart.find(s => s.playerId === tx.out);
-                    if (slot) slot.playerId = tx.in;
-                });
-            }
-            const originalPlayerId = slotsAtGwStart[slotIndex].playerId;
+            const prevGwInfo = state.getSquadForGw(gw - 1 < 1 ? 1 : gw - 1);
+            const originalPlayerId = prevGwInfo.squad[slotIndex] || null;
 
             if (originalPlayerId) {
                 if (!state.transfers[gw]) {
