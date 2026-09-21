@@ -437,6 +437,14 @@ export function renderOptimizer(container, state, actions) {
                                 <span class="setting-help">Prioritizes designated penalty takers (spot kicks), direct free-kick specialists, and corner takers across all positions.</span>
                             </div>
 
+                            <div class="setting-group" id="prioritizeHomeGamesGroup">
+                                <label for="prioritizeHomeGamesCheckbox" style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12px; font-weight: 700; color: var(--text-main); line-height: 1.3;">
+                                    <input type="checkbox" id="prioritizeHomeGamesCheckbox" ${state.prioritizeHomeGames ? 'checked' : ''} style="width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0;">
+                                    🏠 Prioritize Home Games (FDR Boost)
+                                </label>
+                                <span class="setting-help">Boosts player scores for Home fixtures proportional to fixture ease: <code>(6.0 - FDR) * 0.5</code> points boost.</span>
+                            </div>
+
                             <div class="setting-group">
                                 <label style="font-size: 12px; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 2px;">Force Include Players</label>
                                 <div style="display: flex; gap: 8px; margin-bottom: 4px;">
@@ -820,6 +828,17 @@ export function renderOptimizer(container, state, actions) {
             const isChecked = e.target.checked;
             state.prioritizeSpotKicks = isChecked;
             localStorage.setItem('fpl_hub_prioritize_spot_kicks', isChecked ? 'true' : 'false');
+            state.saveState();
+        });
+    }
+
+    // Wire Prioritize Home Games listener
+    const prioritizeHomeGamesCheckbox = container.querySelector('#prioritizeHomeGamesCheckbox');
+    if (prioritizeHomeGamesCheckbox) {
+        prioritizeHomeGamesCheckbox.addEventListener('change', (e) => {
+            const isChecked = e.target.checked;
+            state.prioritizeHomeGames = isChecked;
+            localStorage.setItem('fpl_hub_prioritize_home_games', isChecked ? 'true' : 'false');
             state.saveState();
         });
     }
@@ -1499,6 +1518,21 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
             }
         }
 
+        if (state.prioritizeHomeGames && player.predictions) {
+            let homeBoostSum = 0;
+            for (let gw = targetStartGw; gw < targetStartGw + calcHorizon; gw++) {
+                const pred = player.predictions.find(pr => pr.gw == gw);
+                if (pred) {
+                    const isHome = pred.loc === 'H' || pred.isHome === true;
+                    if (isHome) {
+                        const fdr = pred.diff !== undefined ? pred.diff : 3;
+                        homeBoostSum += (6.0 - fdr) * 0.5;
+                    }
+                }
+            }
+            baseScore += homeBoostSum;
+        }
+
         // Penalise low-data-confidence GKPs (promoted-team or otherwise) so established PL
         // keepers are always ranked above unproven options with no real PL track record.
         // This is intentional: no-data GKPs have higher variance than their point estimate shows.
@@ -1554,6 +1588,13 @@ async function _performOptimizationWithFormation(resultsGrid, state, actions, ho
             if (duty.pk) score += 2.0;
             else if (duty.fk) score += 1.0;
             else if (duty.ck) score += 0.7;
+        }
+        if (includeHeuristics && state.prioritizeHomeGames && pred) {
+            const isHome = pred.loc === 'H' || pred.isHome === true;
+            if (isHome) {
+                const fdr = pred.diff !== undefined ? pred.diff : 3;
+                score += (6.0 - fdr) * 0.5;
+            }
         }
         _scoreCache.set(key, score);
         return score;

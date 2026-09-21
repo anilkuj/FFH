@@ -1,4 +1,5 @@
 import { TEAMS } from '../data.js';
+import { SOLIO, EXACT_GW_PROFILES } from '../lib/solioData.js';
 
 let activeSubTab = 'projections';
 let searchQuery = '';
@@ -7,27 +8,113 @@ let isLoading = false;
 let loadError = null;
 
 export function syncSolioDataToPlayers(data) {
-    if (!data || typeof window === 'undefined') return;
+    if (typeof window === 'undefined') return;
     const players = window.PLAYERS || [];
-    const projectedList = data.topProjected || [];
-    
-    projectedList.forEach(item => {
-        if (!item || !item.name) return;
-        const player = players.find(p => 
-            p.name.toLowerCase() === item.name.toLowerCase() ||
-            p.name.toLowerCase().includes(item.name.toLowerCase()) ||
-            item.name.toLowerCase().includes(p.name.toLowerCase())
-        );
-        if (player) {
-            if (!player.solioPts) player.solioPts = {};
-            const gw = data.gameweek || 1;
-            const pts = parseFloat(item.xP || item.pts || item.projected);
-            if (!isNaN(pts)) {
-                player.solioPts[gw] = pts;
+    if (!players.length) return;
+
+    // 1. Sync from structured live API data payload if available
+    if (data && data.topProjected && Array.isArray(data.topProjected)) {
+        const gw = data.gameweek || 1;
+        data.topProjected.forEach(item => {
+            if (!item || !item.name) return;
+            const itemLower = item.name.toLowerCase().trim();
+            const player = players.find(p => {
+                const nameLower = (p.name || '').toLowerCase();
+                const webLower = (p.web_name || '').toLowerCase();
+                return nameLower === itemLower ||
+                       webLower === itemLower ||
+                       nameLower.includes(itemLower) ||
+                       itemLower.includes(nameLower) ||
+                       (itemLower.includes('.') && nameLower.endsWith(itemLower.split('.')[1].trim()));
+            });
+            if (player) {
+                if (!player.solioPts) player.solioPts = {};
+                const pts = parseFloat(item.prPoints || item.xP || item.pts || item.projected);
+                if (!isNaN(pts)) {
+                    player.solioPts[gw] = pts;
+                }
             }
-        }
-    });
+        });
+    }
+
+    // 2. Sync fallback/profile data from SOLIO & EXACT_GW_PROFILES in solioData.js
+    if (SOLIO) {
+        Object.keys(SOLIO).forEach(teamCode => {
+            const teamPlayers = SOLIO[teamCode];
+            if (!teamPlayers) return;
+            Object.keys(teamPlayers).forEach(solioName => {
+                const totalPts = teamPlayers[solioName];
+                const cleanSolioName = solioName.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim();
+                const player = players.find(p => {
+                    if (p.team !== teamCode && p.teamCode !== teamCode) return false;
+                    const pName = (p.name || '').toLowerCase().replace(/[^a-z0-9 ]/g, '').trim();
+                    const pWeb = (p.web_name || '').toLowerCase().replace(/[^a-z0-9 ]/g, '').trim();
+                    return pName === cleanSolioName || pWeb === cleanSolioName || pName.includes(cleanSolioName) || cleanSolioName.includes(pName);
+                });
+
+                if (player) {
+                    if (!player.solioPts) player.solioPts = {};
+                    if (player.solioTotal === undefined) player.solioTotal = totalPts;
+
+                    // Apply exact GW profile array if available
+                    const profile = EXACT_GW_PROFILES ? EXACT_GW_PROFILES[solioName] : null;
+                    if (profile && Array.isArray(profile)) {
+                        profile.forEach((pts, idx) => {
+                            const gw = idx + 1;
+                            if (player.solioPts[gw] === undefined) {
+                                player.solioPts[gw] = pts;
+                            }
+                        });
+                    }
+                }
+            });
+        });
+    }
 }
+
+export async function autoSyncSolioData() {
+    const targetUrl = "https://fpl.solioanalytics.com/api/data/latest.json";
+    const fetchers = [
+        async () => {
+            const res = await fetch('/api/solio-projections');
+            if (res.ok) {
+                const json = await res.json();
+                if (json && json.success && json.data) return json.data;
+            }
+            return null;
+        },
+        async () => {
+            const res = await fetch(targetUrl);
+            if (res.ok) return await res.json();
+            return null;
+        },
+        async () => {
+            const res = await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}`);
+            if (res.ok) return await res.json();
+            return null;
+        }
+    ];
+
+    let loaded = null;
+    for (const fetcher of fetchers) {
+        try {
+            loaded = await fetcher();
+            if (loaded && (loaded.topProjected || loaded.topCaptains || loaded.gameweek)) {
+                solioData = loaded;
+                if (typeof window !== 'undefined') window.SOLIO_DATA = loaded;
+                syncSolioDataToPlayers(loaded);
+                return loaded;
+            }
+        } catch (e) {
+            // Ignore fetch attempts and try next fallback
+        }
+    }
+
+    // Always run fallback sync if live fetch doesn't return
+    syncSolioDataToPlayers(null);
+    return null;
+}
+
 
 export function renderSolioProjections(container, state, actions) {
     
@@ -77,9 +164,14 @@ export function renderSolioProjections(container, state, actions) {
                     </div>
                     <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-top:8px; border-top:1px solid rgba(255,255,255,0.04); padding-top:12px;">
                         <span style="font-size:11px; color:var(--text-muted);">Last Sync: <strong>${genDate}</strong></span>
-                        <a href="https://fpl.solioanalytics.com" target="_blank" style="font-size:11px; color:var(--secondary); text-decoration:none; font-weight:700; display:flex; align-items:center; gap:4px;">
-                            Visit Solio Analytics <i data-lucide="external-link" style="width:12px; height:12px;"></i>
-                        </a>
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <button id="manualSolioSyncBtn" class="apply-rec-btn" style="width:auto; height:28px; padding:0 14px; font-size:11px; border-radius:6px; margin:0;">
+                                <i data-lucide="refresh-cw" style="width:12px; height:12px;"></i> Sync All Data with Solio
+                            </button>
+                            <a href="https://fpl.solioanalytics.com" target="_blank" style="font-size:11px; color:var(--secondary); text-decoration:none; font-weight:700; display:flex; align-items:center; gap:4px;">
+                                Visit Solio Analytics <i data-lucide="external-link" style="width:12px; height:12px;"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
 
@@ -614,6 +706,20 @@ export function renderSolioProjections(container, state, actions) {
             clearBtn.addEventListener('click', () => {
                 searchQuery = '';
                 render();
+            });
+        }
+
+        // Manual Sync Button
+        const manualSyncBtn = container.querySelector('#manualSolioSyncBtn');
+        if (manualSyncBtn) {
+            manualSyncBtn.addEventListener('click', async () => {
+                manualSyncBtn.disabled = true;
+                manualSyncBtn.innerHTML = `<i data-lucide="refresh-cw" class="animate-spin" style="width:12px; height:12px;"></i> Syncing...`;
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+                await fetchData();
+                if (typeof actions !== 'undefined' && actions.showToast) {
+                    actions.showToast("Synced all player data with Solio Analytics feed!", "success");
+                }
             });
         }
     }

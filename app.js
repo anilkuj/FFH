@@ -19,7 +19,7 @@ import { renderLeague } from './components/league.js';
 import { renderLiveRank } from './components/liverank.js';
 import { renderReveals } from './components/reveals.js';
 import { renderTransferPlanner } from './components/transferplanner.js';
-import { renderSolioProjections } from './components/solioprojections.js';
+import { renderSolioProjections, autoSyncSolioData } from './components/solioprojections.js';
 import { renderTopPerformers } from './components/topperformers.js';
 import { renderLeagueAnalyzer } from './components/leagueanalyzer.js';
 import { renderShotMap } from './components/shotmap.js';
@@ -75,6 +75,11 @@ window.applyUniversalMinutesDiscount = function() {
 
 // Run universal minutes discounting across all 700+ players immediately on startup
 window.applyUniversalMinutesDiscount();
+
+// Auto-sync Solio projection feed into window.PLAYERS
+if (typeof autoSyncSolioData === 'function') {
+    autoSyncSolioData();
+}
 
 // Application State class
 
@@ -185,6 +190,9 @@ class AppState {
 
         const savedPrioritizeSpotKicks = localStorage.getItem('fpl_hub_prioritize_spot_kicks');
         this.prioritizeSpotKicks = savedPrioritizeSpotKicks ? (savedPrioritizeSpotKicks === 'true') : false;
+
+        const savedPrioritizeHomeGames = localStorage.getItem('fpl_hub_prioritize_home_games');
+        this.prioritizeHomeGames = savedPrioritizeHomeGames ? (savedPrioritizeHomeGames === 'true') : false;
 
         const savedPlanBenchBoost = localStorage.getItem('fpl_hub_plan_bench_boost');
         this.planBenchBoost = savedPlanBenchBoost ? (savedPlanBenchBoost === 'true') : false;
@@ -376,6 +384,7 @@ class AppState {
         localStorage.setItem('fpl_hub_min_fwd_price', (this.minFwdPrice || 6.0).toString());
         localStorage.setItem('fpl_hub_prioritize_defcon', (this.prioritizeDefcon || false).toString());
         localStorage.setItem('fpl_hub_prioritize_spot_kicks', (this.prioritizeSpotKicks || false).toString());
+        localStorage.setItem('fpl_hub_prioritize_home_games', (this.prioritizeHomeGames || false).toString());
         localStorage.setItem('fpl_hub_optimizer_objective', this.optimizerObjective || 'xp');
         localStorage.setItem('fpl_hub_custom_ft', JSON.stringify(this.customFreeTransfers || {}));
         localStorage.setItem('fpl_hub_active_chips', JSON.stringify(this.chips));
